@@ -8,6 +8,7 @@ params:
   defaultTheme: auto
   ShowReadingTime: true
   ShowCodeCopyButtons: true
+  disableSchema: true
 
 menu:
   main:
