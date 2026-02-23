@@ -31,7 +31,17 @@ jobs:
           extended: true
 
       - name: Build
-        run: hugo --minify
+        run: |
+          set -e
+          hugo --minify || (
+            echo "==== HUGO TRANSFORM ERROR FILES ====";
+            ls -la /tmp/hugo-transform-error* || true;
+            for f in /tmp/hugo-transform-error*; do
+              echo "---- $f (first 260 lines) ----";
+              sed -n '1,260p' "$f" || true;
+            done;
+            exit 1
+          )
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
