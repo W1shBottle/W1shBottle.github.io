@@ -1,20 +1,27 @@
-﻿baseURL: "https://W1shBottle.github.io/"
-languageCode: "zh-cn"
+﻿baseURL: "https://w1shbottle.github.io/"
 title: "WishBottle"
+
+languageCode: "zh-cn"
+defaultContentLanguage: "zh"
+defaultContentLanguageInSubdir: false
+
 theme: "PaperMod"
 
 params:
   author: "W1shBottle"
-  defaultTheme: auto
+  defaultTheme: "auto"
   ShowReadingTime: true
   ShowCodeCopyButtons: true
-  disableSchema: true
+
+  # 你已经用 layouts 覆盖模板修过 schema 了；
+  # 这个参数看起来并不会关闭 JSON-LD，保留反而容易误会，所以建议删掉
+  # disableSchema: true
 
 menu:
   main:
-    - name: "Posts"
+    - name: "文章"
       url: "/posts/"
       weight: 1
-    - name: "Tags"
+    - name: "标签"
       url: "/tags/"
       weight: 2
