@@ -1,0 +1,19 @@
+﻿baseURL: "https://W1shBottle.github.io/"
+languageCode: "zh-cn"
+title: "WishBottle"
+theme: "PaperMod"
+
+params:
+  author: "W1shBottle"
+  defaultTheme: auto
+  ShowReadingTime: true
+  ShowCodeCopyButtons: true
+
+menu:
+  main:
+    - name: "Posts"
+      url: "/posts/"
+      weight: 1
+    - name: "Tags"
+      url: "/tags/"
+      weight: 2
