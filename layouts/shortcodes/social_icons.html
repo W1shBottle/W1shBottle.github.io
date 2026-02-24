@@ -1,0 +1,19 @@
+{{- /* Use PaperMod's built-in social icons partial if available */ -}}
+{{- $p := partial "social_icons.html" . -}}
+{{- if $p -}}
+{{- $p -}}
+{{- else -}}
+{{- /* Fallback: render text links if the theme partial is not available */ -}}
+<div class="social-icons">
+    {{- $icons := site.Params.socialIcons -}}
+    {{- if $icons -}}
+    {{- range $icons -}}
+    {{- $name := .name | lower -}}
+    {{- $url := .url -}}
+    <a href="{{ $url }}" target="_blank" rel="noopener noreferrer me" title="{{ $name }}" aria-label="{{ $name }}">
+        {{- $name -}}
+    </a>
+    {{- end -}}
+    {{- end -}}
+</div>
+{{- end -}}
