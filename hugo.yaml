@@ -12,19 +12,17 @@ params:
   defaultTheme: "auto"
   ShowReadingTime: true
   ShowCodeCopyButtons: true
+
   assets:
     favicon: "/favicon.svg"
+
   profileMode:
     enabled: true
     title: "你好，这里是许愿瓶的博客"
     subtitle: "Welcome to WishBottle's blog."
     buttons:
       - name: "进入文章"
-        url: "/posts/
-        
-  # 你已经用 layouts 覆盖模板修过 schema 了；
-  # 这个参数看起来并不会关闭 JSON-LD，保留反而容易误会，所以建议删掉
-  # disableSchema: true
+        url: "/posts/"
 
 menu:
   main:
@@ -46,6 +44,7 @@ menu:
     - name: "个人简介"
       url: "/about/"
       weight: 6
+
 outputs:
   home:
     - HTML
