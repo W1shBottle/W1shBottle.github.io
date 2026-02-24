@@ -12,6 +12,8 @@ params:
   defaultTheme: "auto"
   ShowReadingTime: true
   ShowCodeCopyButtons: true
+  assets:
+    favicon: "/favicon.svg"
 
   # 你已经用 layouts 覆盖模板修过 schema 了；
   # 这个参数看起来并不会关闭 JSON-LD，保留反而容易误会，所以建议删掉
