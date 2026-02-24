@@ -36,6 +36,9 @@ menu:
     - name: "友链"
       url: "/links/"
       weight: 5
+    - name: "个人简介"
+      url: "/about/"
+      weight: 6
 outputs:
   home:
     - HTML
