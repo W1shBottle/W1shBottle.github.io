@@ -18,11 +18,9 @@ params:
 
   profileMode:
     enabled: true
-    title: "你好，这里是许愿瓶的博客"
+    title: "你好，这里是许愿瓶的博客。"
     subtitle: "Welcome to WishBottle's blog."
-    buttons:
-      - name: "进入文章"
-        url: "/posts/"
+    
 
 menu:
   main:
