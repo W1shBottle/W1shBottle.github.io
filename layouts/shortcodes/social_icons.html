@@ -1,9 +1,15 @@
-{{- /* Use PaperMod's built-in social icons partial if available */ -}}
-{{- $p := partial "social_icons.html" . -}}
-{{- if $p -}}
-{{- $p -}}
+{{- $ctx := dict "Page" .Page "Site" .Site "align" "center" -}}
+{{- $out := "" -}}
+
+{{- /* Try PaperMod built-in SVG icons partial */ -}}
+{{- with (partial "social_icons.html" $ctx) -}}
+{{- $out = . -}}
+{{- end -}}
+
+{{- if $out -}}
+{{- $out -}}
 {{- else -}}
-{{- /* Fallback: render text links if the theme partial is not available */ -}}
+{{- /* Fallback: text pills */ -}}
 <div class="social-icons">
     {{- $icons := site.Params.socialIcons -}}
     {{- if $icons -}}
