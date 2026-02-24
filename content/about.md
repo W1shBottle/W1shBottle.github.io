@@ -15,4 +15,3 @@ hideMeta: true
 - [GitHub](https://github.com/W1shBottle)
 - [B 站](https://space.bilibili.com/3546733025953919)
 - [知乎](https://www.zhihu.com/people/yp-76-79)
-- 邮箱：[wishbottle@qq.com](mailto:wishbottle@qq.com)
