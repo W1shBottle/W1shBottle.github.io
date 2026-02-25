@@ -1,0 +1,14 @@
+- id: tags
+  translation: 标签
+
+- id: posts
+  translation: 文章
+
+- id: home
+  translation: 首页
+
+- id: search
+  translation: 搜索
+
+- id: archives
+  translation: 归档
