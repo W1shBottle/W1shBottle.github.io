@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- rounded square background -->
+  <rect width="512" height="512" rx="112" fill="#0B1220"/>
+
+  <!-- rounded, thin-ish W -->
+  <path d="M144 168 L208 364 L256 236 L304 364 L368 168"
+        fill="none"
+        stroke="#3B82F6"
+        stroke-width="44"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>

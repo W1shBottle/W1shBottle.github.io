@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>用 Streamlit &#43; DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘 | WishBottle</title>
+<meta name="keywords" content="">
+<meta name="description" content="这篇文章复盘我做 streamlit-ai-companion 的过程：前半部分是项目实现（Streamlit &#43; DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。
+1. 项目简介：我做了什么
+我做了一个基于 Streamlit 的 AI 智能伴侣聊天应用：
+
+聊天 UI：st.chat_input &#43; st.chat_message
+可配置“伴侣信息”：昵称 &#43; 性格（sidebar 动态修改）
+流式输出：模型一边生成一边显示，聊天更自然
+会话历史：保存为本地 JSON 文件，支持加载/删除
+
+
+2. 为什么要做工程化（而不是只停留在能跑）
+一开始我的项目确实能运行，但“能跑”和“可维护/可分享”是两回事：
+
+需要别人一眼看懂怎么运行（README）
+不能把 API Key 提交上去（.env 处理）
+需要许可证声明（LICENSE）
+最好能有自动检查（CI），避免以后改坏了都不知道
+
+所以我给仓库补齐了这些“标配”。
+3. 项目核心实现复盘（结合 AI_companion.py）
+3.1 关键配置：模型、Base URL、环境变量
+我把关键参数集中在文件顶部：
+
+DEEPSEEK_API_KEY：用环境变量读取 Key
+BASE_URL = &quot;https://api.deepseek.com&quot;
+MODEL_NAME = &quot;deepseek-chat&quot;
+SESSIONS_DIR = &quot;sessions&quot;
+
+这样做的好处是：以后换模型/换环境变量名时不会到处改。
+另外，我还加了一个“友好提示”：
+
+如果没有检测到 DEEPSEEK_API_KEY，页面会 warning
+但不会直接崩掉，便于我先调 UI
+
+3.2 会话历史：为什么用 JSON 文件而不是上数据库
+我选择每个会话一个文件：">
+<meta name="author" content="W1shBottle">
+<link rel="canonical" href="//localhost:1313/posts/streamlit-ai-companion/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a29c24210eb31d9ce56f669c66a35c9c51b17376b7764e336a49af7dec914cf0.css" integrity="sha256-opwkIQ6zHZzlb2acZqNcnFGxc3a3dk4zakmvfeyRTPA=" rel="preload stylesheet" as="style">
+<link rel="icon" href="//localhost:1313/favicon.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="//localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="//localhost:1313/posts/streamlit-ai-companion/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="//localhost:1313/" accesskey="h" title="WishBottle (Alt + H)">WishBottle</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="//localhost:1313/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/search/" title="搜索">
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/links/" title="友链">
+                    <span>友链</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/about/" title="个人简介">
+                    <span>个人简介</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      用 Streamlit &#43; DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘
+    </h1>
+    <div class="post-meta"><span title='2026-03-05 00:00:00 +0800 CST'>2026年3月5日</span>&nbsp;·&nbsp;<span>2 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>这篇文章复盘我做 <code>streamlit-ai-companion</code> 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。</p>
+<h2 id="1-项目简介我做了什么">1. 项目简介：我做了什么<a hidden class="anchor" aria-hidden="true" href="#1-项目简介我做了什么">#</a></h2>
+<p>我做了一个基于 <strong>Streamlit</strong> 的 AI 智能伴侣聊天应用：</p>
+<ul>
+<li>聊天 UI：<code>st.chat_input</code> + <code>st.chat_message</code></li>
+<li>可配置“伴侣信息”：昵称 + 性格（sidebar 动态修改）</li>
+<li>流式输出：模型一边生成一边显示，聊天更自然</li>
+<li>会话历史：保存为本地 JSON 文件，支持加载/删除
+<img alt="AI智能伴侣界面" loading="lazy" src="/posts/streamlit-ai-companion/companion.png"></li>
+</ul>
+<h2 id="2-为什么要做工程化而不是只停留在能跑">2. 为什么要做工程化（而不是只停留在能跑）<a hidden class="anchor" aria-hidden="true" href="#2-为什么要做工程化而不是只停留在能跑">#</a></h2>
+<p>一开始我的项目确实能运行，但“能跑”和“可维护/可分享”是两回事：</p>
+<ul>
+<li>需要别人一眼看懂怎么运行（README）</li>
+<li>不能把 API Key 提交上去（.env 处理）</li>
+<li>需要许可证声明（LICENSE）</li>
+<li>最好能有自动检查（CI），避免以后改坏了都不知道</li>
+</ul>
+<p>所以我给仓库补齐了这些“标配”。</p>
+<h2 id="3-项目核心实现复盘结合-ai_companionpy">3. 项目核心实现复盘（结合 AI_companion.py）<a hidden class="anchor" aria-hidden="true" href="#3-项目核心实现复盘结合-ai_companionpy">#</a></h2>
+<h3 id="31-关键配置模型base-url环境变量">3.1 关键配置：模型、Base URL、环境变量<a hidden class="anchor" aria-hidden="true" href="#31-关键配置模型base-url环境变量">#</a></h3>
+<p>我把关键参数集中在文件顶部：</p>
+<ul>
+<li><code>DEEPSEEK_API_KEY</code>：用环境变量读取 Key</li>
+<li><code>BASE_URL = &quot;https://api.deepseek.com&quot;</code></li>
+<li><code>MODEL_NAME = &quot;deepseek-chat&quot;</code></li>
+<li><code>SESSIONS_DIR = &quot;sessions&quot;</code></li>
+</ul>
+<p>这样做的好处是：以后换模型/换环境变量名时不会到处改。</p>
+<p>另外，我还加了一个“友好提示”：</p>
+<ul>
+<li>如果没有检测到 <code>DEEPSEEK_API_KEY</code>，页面会 <code>warning</code></li>
+<li>但不会直接崩掉，便于我先调 UI</li>
+</ul>
+<h3 id="32-会话历史为什么用-json-文件而不是上数据库">3.2 会话历史：为什么用 JSON 文件而不是上数据库<a hidden class="anchor" aria-hidden="true" href="#32-会话历史为什么用-json-文件而不是上数据库">#</a></h3>
+<p>我选择每个会话一个文件：</p>
+<ul>
+<li>会话名用时间戳生成：<code>YYYY-MM-DD_HH-MM-SS</code></li>
+<li>会话文件：<code>sessions/&lt;session&gt;.json</code></li>
+<li>存储内容：<code>nick_name</code> / <code>nature</code> / <code>messages</code> / <code>current_session</code></li>
+</ul>
+<p>优点是非常直接：不需要数据库，文件可读、可备份，适合这个阶段的小项目。</p>
+<h3 id="33-prompt如何让它像伴侣而不是普通客服">3.3 Prompt：如何让它“像伴侣”而不是普通客服<a hidden class="anchor" aria-hidden="true" href="#33-prompt如何让它像伴侣而不是普通客服">#</a></h3>
+<p>我在 system prompt 里写了清晰规则，例如：</p>
+<ul>
+<li>每次只回 1 条消息</li>
+<li>禁止状态/场景描述</li>
+<li>回复短一点，像微信聊天</li>
+<li>必须体现“伴侣性格”</li>
+</ul>
+<p>同时把昵称/性格注入进去，让侧边栏输入立刻影响模型输出。</p>
+<h3 id="34-流式输出为什么聊天体验明显更好">3.4 流式输出：为什么聊天体验明显更好<a hidden class="anchor" aria-hidden="true" href="#34-流式输出为什么聊天体验明显更好">#</a></h3>
+<p>我用 <code>stream=True</code> 接收增量内容（delta），然后不断把文本拼起来更新页面。<br>
+好处是：模型生成时用户不会“干等”，体验更像真实聊天。</p>
+<h2 id="4-git-同步踩坑为什么-push-会被拒绝non-fast-forward">4. Git 同步踩坑：为什么 push 会被拒绝（non-fast-forward）<a hidden class="anchor" aria-hidden="true" href="#4-git-同步踩坑为什么-push-会被拒绝non-fast-forward">#</a></h2>
+<p>第一次整理仓库时就遇到过 <code>git push</code> 被拒绝。</p>
+<p>原因其实很典型：<strong>远端 main 比我本地多一个提交</strong>，为了避免覆盖远端历史，Git 要求我先同步。</p>
+<p>最后形成的操作习惯是：</p>
+<ol>
+<li>本地改动先 <code>git add</code> + <code>git commit</code></li>
+<li><code>git pull origin main</code> 把远端更新合到本地</li>
+<li>再 <code>git push</code></li>
+</ol>
+<p>中间如果弹出 Vim 让我写 merge message，用 <code>:wq</code> 保存退出。</p>
+<h2 id="5-安全envexample--gitignore">5. 安全：<code>.env.example</code> + <code>.gitignore</code><a hidden class="anchor" aria-hidden="true" href="#5-安全envexample--gitignore">#</a></h2>
+<p>如果项目要用 API Key，最容易踩的坑就是“把 key 不小心提交到了 GitHub”。</p>
+<p>我的做法：</p>
+<ul>
+<li>提交 <code>.env.example</code>：只放变量名和示例值</li>
+<li><code>.gitignore</code> 忽略 <code>.env</code>：真实 key 放本地 <code>.env</code>，永远不提交</li>
+</ul>
+<p><code>.env.example</code> 大概是这样：</p>
+<pre tabindex="0"><code class="language-dotenv" data-lang="dotenv">DEEPSEEK_API_KEY=your_api_key_here
+</code></pre><h2 id="6-github-actions为什么加-ci以及-yaml-为什么会失败">6. GitHub Actions：为什么加 CI，以及 YAML 为什么会失败<a hidden class="anchor" aria-hidden="true" href="#6-github-actions为什么加-ci以及-yaml-为什么会失败">#</a></h2>
+<p>我给仓库加了最小 CI（push/PR 自动跑检查），核心就是跑 Ruff：</p>
+<ul>
+<li>安装依赖</li>
+<li>安装 ruff</li>
+<li><code>ruff check .</code></li>
+</ul>
+<p>我踩的最大坑在于：workflow 的 YAML 必须是严格的英文关键字和英文标点。<br>
+我当时出现过：</p>
+<ul>
+<li>把 <code>on:</code> 写成了中文的 <code>于:</code></li>
+<li>把逗号写成了中文 <code>，</code></li>
+</ul>
+<p>结果 Actions 报：<code>Invalid workflow file</code>（解析 YAML 失败）。</p>
+<p>这件事让我意识到：CI 不是玄学，很多失败就是“配置文件一处字符不对”。 其实是GitHub中文化插件害的 :(</p>
+<h2 id="7-ruff-是什么为什么我-ci-又红了i001">7. Ruff 是什么？为什么我 CI 又红了😡（I001）<a hidden class="anchor" aria-hidden="true" href="#7-ruff-是什么为什么我-ci-又红了i001">#</a></h2>
+<p>Ruff 是一个速度很快的 Python linter（代码检查工具）：</p>
+<ul>
+<li>能找出潜在错误（比如未使用变量、明显 bug）</li>
+<li>能做代码风格检查</li>
+<li>其中一部分问题还能自动修复（<code>--fix</code>）</li>
+</ul>
+<p>我加了 <code>pyproject.toml</code> 之后启用了 import 排序规则（<code>I</code>），然后 CI 报错：</p>
+<ul>
+<li><code>I001 import block is un-sorted or un-formatted</code></li>
+</ul>
+<p>这并不是“项目坏了”，而是告诉我：<strong>import 顺序不规范</strong>。</p>
+<p>我在本地修复的方式是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -m pip install ruff
+</span></span><span style="display:flex;"><span>python -m ruff check . --fix
+</span></span></code></pre></div><p>修完提交后，CI 就会重新变绿。</p>
+<h2 id="8-readme-徽章小改动但很提升第一印象">8. README 徽章：小改动但很提升“第一印象”<a hidden class="anchor" aria-hidden="true" href="#8-readme-徽章小改动但很提升第一印象">#</a></h2>
+<p>我给 README 顶部加了两个徽章：</p>
+<ul>
+<li>CI Badge：一眼看出是否通过</li>
+<li>MIT License Badge：许可证信息清晰</li>
+</ul>
+<p>这类小细节对个人项目也很有帮助：别人点进仓库更容易产生信任感。</p>
+<h2 id="9-这次真正学到的">9. 这次真正学到的<a hidden class="anchor" aria-hidden="true" href="#9-这次真正学到的">#</a></h2>
+<p>如果用一句话总结：不仅写了一个 Streamlit 应用，还把它变成了一个更像“能被别人使用/能长期维护”的仓库。</p>
+<ul>
+<li>理解为什么会 non-fast-forward，以及同步的正确节奏</li>
+<li>学会用 <code>.env.example</code> 避免密钥泄露</li>
+<li>学了配一个最小 CI</li>
+<li>第一次用 Ruff 让 CI 报红、再用工具自动修复，让它重新变绿</li>
+</ul>
+<hr>
+<h2 id="项目地址">项目地址<a hidden class="anchor" aria-hidden="true" href="#项目地址">#</a></h2>
+<hr>
+<h2 id="项目地址-1">项目地址<a hidden class="anchor" aria-hidden="true" href="#项目地址-1">#</a></h2>
+<ul>
+<li>GitHub 仓库：<a href="https://github.com/W1shBottle/streamlit-ai-companion">https://github.com/W1shBottle/streamlit-ai-companion</a></li>
+</ul>
+<h2 id="运行方式本地">运行方式（本地）<a hidden class="anchor" aria-hidden="true" href="#运行方式本地">#</a></h2>
+<blockquote>
+<p>需要：Python 3.10+（建议 3.10/3.11）</p>
+</blockquote>
+<h3 id="1-克隆项目">1) 克隆项目<a hidden class="anchor" aria-hidden="true" href="#1-克隆项目">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/W1shBottle/streamlit-ai-companion.git
+</span></span><span style="display:flex;"><span>cd streamlit-ai-companion
+</span></span></code></pre></div><h3 id="2-创建并激活虚拟环境推荐">2) 创建并激活虚拟环境（推荐）<a hidden class="anchor" aria-hidden="true" href="#2-创建并激活虚拟环境推荐">#</a></h3>
+<p><strong>Windows (PowerShell)</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>py -m venv .venv
+</span></span><span style="display:flex;"><span>.\.venv\Scripts\Activate.ps1
+</span></span></code></pre></div><p><strong>macOS / Linux</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3 -m venv .venv
+</span></span><span style="display:flex;"><span>source .venv/bin/activate
+</span></span></code></pre></div><h3 id="3-安装依赖">3) 安装依赖<a hidden class="anchor" aria-hidden="true" href="#3-安装依赖">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install -r requirements.txt
+</span></span></code></pre></div><h3 id="4-配置环境变量deepseek_api_key">4) 配置环境变量（DEEPSEEK_API_KEY）<a hidden class="anchor" aria-hidden="true" href="#4-配置环境变量deepseek_api_key">#</a></h3>
+<p>你可以用 <code>.env</code>（推荐）或直接导出环境变量。</p>
+<p><strong>方式 A：创建 <code>.env</code> 文件（推荐）</strong>
+在项目根目录新建 <code>.env</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-env" data-lang="env"><span style="display:flex;"><span>DEEPSEEK_API_KEY<span style="color:#f92672">=</span>你的key
+</span></span></code></pre></div><p><strong>方式 B：直接设置环境变量</strong>
+Windows (PowerShell)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$env:DEEPSEEK_API_KEY=<span style="color:#e6db74">&#34;你的key&#34;</span>
+</span></span></code></pre></div><p>macOS / Linux：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export DEEPSEEK_API_KEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;你的key&#34;</span>
+</span></span></code></pre></div><h3 id="5-启动">5) 启动<a hidden class="anchor" aria-hidden="true" href="#5-启动">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>streamlit run AI_companion.py
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="//localhost:1313/">WishBottle</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
