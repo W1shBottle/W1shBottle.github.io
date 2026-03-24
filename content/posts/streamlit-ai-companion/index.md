@@ -2,6 +2,7 @@
 title: "用 Streamlit + DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘"
 date: 2026-03-05T00:00:00+08:00
 draft: false
+tags: ["项目"]
 ---
 
 这篇文章复盘我做 `streamlit-ai-companion` 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。
