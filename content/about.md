@@ -17,7 +17,7 @@ hideMeta: true
   <!-- 右侧：简介（约占一半） -->
   <div style="flex:1; min-width:220px;">
     <p>你好，我是 <strong>许愿瓶（WishBottle）</strong>，目前就读于 <strong>CUMT（中国矿业大学）</strong>，软件工程专业。</p>
-    <p>这个博客主要用来记录：学习过程、踩坑笔记、随想与生活碎片。内容不一定系统，但力求真实与可复用。</p>
+    <p>这个博客主要用来记录：学习心得、笔记。内容不一定系统，但希望对你有一些帮助。</p>
     <p>如有交流/建议，欢迎通过邮箱联系我：wishbottle@qq.com</a></p>
 
 
