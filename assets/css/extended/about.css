@@ -1,0 +1,26 @@
+.about-icons{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  margin-top:12px;
+}
+
+.about-icons a{
+  display:inline-flex;
+  width:34px;
+  height:34px;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  transition: transform .12s ease, background-color .12s ease;
+}
+
+.about-icons a:hover{
+  transform: translateY(-1px);
+  background: rgba(127,127,127,.15);
+}
+
+.about-icons img{
+  width:22px;
+  height:22px;
+}
