@@ -245,14 +245,30 @@
       <description>&lt;div class=&#34;social-icons&#34; align=&#34;center&#34;&gt;
 &lt;/div&gt;
 
-&lt;p&gt;你好，我是 &lt;strong&gt;许愿瓶 (WishBottle)&lt;/strong&gt;，目前就读于 &lt;strong&gt;CUMT（中国矿业大学）&lt;/strong&gt;，软件工程专业。&lt;/p&gt;
-&lt;p&gt;这个博客主要用来记录：学习过程、踩坑笔记、随想与生活碎片。内容不一定系统，但力求真实与可复用。&lt;/p&gt;
-&lt;p&gt;如有交流/建议，欢迎通过邮箱联系我：&lt;strong&gt;&lt;a href=&#34;mailto:wishbottle@qq.com&#34;&gt;wishbottle@qq.com&lt;/a&gt;&lt;/strong&gt;。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/W1shBottle&#34;&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://space.bilibili.com/3546733025953919&#34;&gt;B 站&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/people/yp-76-79&#34;&gt;知乎&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;div style=&#34;display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;&#34;&gt;
+  &lt;!-- 左侧：头像（约占一半） --&gt;
+  &lt;div style=&#34;flex:1; min-width:220px; max-width:420px;&#34;&gt;
+    &lt;img src=&#34;//localhost:1313/img/avatar.png&#34; alt=&#34;avatar&#34;
+         style=&#34;width:100%; height:auto; border-radius:12px; object-fit:cover;&#34; /&gt;
+  &lt;/div&gt;
+  &lt;!-- 右侧：简介（约占一半） --&gt;
+  &lt;div style=&#34;flex:1; min-width:220px;&#34;&gt;
+    &lt;p&gt;你好，我是 &lt;strong&gt;许愿瓶（WishBottle）&lt;/strong&gt;，目前就读于 &lt;strong&gt;CUMT（中国矿业大学）&lt;/strong&gt;，软件工程专业。&lt;/p&gt;
+    &lt;p&gt;这个博客主要用来记录：学习心得、笔记。内容不一定系统，但希望对你有一些帮助。&lt;/p&gt;
+    &lt;p&gt;如有交流/建议，欢迎通过邮箱联系我：wishbottle@qq.com&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;about-icons&#34;&gt;
+  &lt;a href=&#34;https://github.com/W1shBottle&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34; title=&#34;GitHub&#34;&gt;
+    &lt;img src=&#34;//localhost:1313/icons/github.svg&#34; alt=&#34;GitHub&#34; /&gt;
+  &lt;/a&gt;
+  &lt;a href=&#34;https://space.bilibili.com/3546733025953919&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34; title=&#34;B站&#34;&gt;
+    &lt;img src=&#34;//localhost:1313/icons/bilibili.svg&#34; alt=&#34;B站&#34; /&gt;
+  &lt;/a&gt;
+  &lt;a href=&#34;https://www.zhihu.com/people/yp-76-79&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34; title=&#34;知乎&#34;&gt;
+    &lt;img src=&#34;//localhost:1313/icons/zhihu.svg&#34; alt=&#34;知乎&#34; /&gt;
+  &lt;/a&gt;
+&lt;/div&gt;</description>
     </item>
     <item>
       <title>友链</title>

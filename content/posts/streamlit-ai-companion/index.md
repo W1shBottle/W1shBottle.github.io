@@ -5,6 +5,11 @@ draft: false
 tags: ["项目"]
 ---
 
+> **声明 / 致谢**：这篇项目的最初版本是我在学习黑马程序员的网课时，跟着课程一步步敲出来的练习项目。课程链接：<https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47>。  
+> 本文更多是在此基础上做的**个人复盘与工程化整理**（如 .env、LICENSE、Topics、GitHub Actions、Ruff、README 徽章等），并记录我在同步、配置与 CI 上踩过的坑和解决方式。
+
+---
+
 这篇文章复盘我做 `streamlit-ai-companion` 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。
 
 ## 1. 项目简介：我做了什么
