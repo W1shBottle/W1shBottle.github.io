@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>操作系统笔记：进程 | WishBottle</title>
+<meta name="keywords" content="进程, 操作系统">
+<meta name="description" content="
+说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。
+
+摘要
+本文梳理操作系统中进程的核心知识：进程的概念与特征、PCB 与组成结构、三态/五态模型、进程控制原语（创建、终止、阻塞与唤醒）以及进程通信方式（共享存储、消息传递、管道）。
+
+1. 进程的概念和特征
+1.1 概念（常见表述）
+进程的典型定义：
+
+进程是一个正在执行程序的实例。
+进程是程序及其数据从磁盘加载到内存后，在 CPU 上执行的过程。
+进程是一个具有独立功能的程序在一个数据集合上运行的过程。
+
+1.2 特征（四个基本特征）
+
+动态性：有产生、运行、消亡的过程。
+并发性：多个进程在一段时间内并发推进。
+独立性：进程是资源分配与调度的基本单位。
+异步性：推进速度不可预知，需要同步机制保证正确性。
+
+
+2. 进程的组成
+进程由三部分组成，其中最核心是 PCB（进程控制块）：
+
+PCB（Process Control Block）
+程序段
+数据段
+
+
+记忆点：PCB 是进程存在与管理的关键依据。
+
+
+3. 进程的状态与转换
+五种状态（前三种为基本状态）：
+
+运行态（Running）：占用 CPU，正在执行。
+就绪态（Ready）：具备运行条件，仅缺 CPU，等待调度。
+阻塞态（Blocked/Waiting）：等待事件/资源（除 CPU 外），暂停推进。
+创建态（New）：正在创建，尚未进入就绪队列。
+终止态（Terminated）：正在结束并从系统消失。
+
+就绪态 vs 阻塞态
+
+就绪态：只缺 CPU。
+阻塞态：缺 事件/资源（I/O、信号、锁、数据等）。
+
+3.1 三态模型
+
+3.2 五态模型
+
+
+4. 进程控制（原语）
+操作系统中，进程控制常通过原语实现。
+原语特点：
+
+执行期间不可中断（原子性）
+通常在内核态完成
+保证进程控制操作一致、正确
+
+
+4.1 进程的创建（Create）
+父子进程关系：
+
+创建者为父进程，被创建者为子进程
+子进程可继承父进程部分资源；结束时资源归还父进程/系统
+
+创建原语典型步骤：
+
+分配 PID，申请空白 PCB（PCB 有限，失败则创建失败）。
+分配资源（内存、文件、I/O 设备、CPU 时间等）。
+初始化 PCB（标志信息、CPU 状态等），设置优先级等调度信息。
+插入就绪队列，等待调度运行。
+
+
+4.2 进程的终止（Exit / Terminate）
+终止原因：">
+<meta name="author" content="W1shBottle">
+<link rel="canonical" href="//localhost:1313/posts/%E8%BF%9B%E7%A8%8B/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a29c24210eb31d9ce56f669c66a35c9c51b17376b7764e336a49af7dec914cf0.css" integrity="sha256-opwkIQ6zHZzlb2acZqNcnFGxc3a3dk4zakmvfeyRTPA=" rel="preload stylesheet" as="style">
+<link rel="icon" href="//localhost:1313/favicon.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="//localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="//localhost:1313/posts/%E8%BF%9B%E7%A8%8B/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="//localhost:1313/" accesskey="h" title="WishBottle (Alt + H)">WishBottle</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="//localhost:1313/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/search/" title="搜索">
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/links/" title="友链">
+                    <span>友链</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/about/" title="个人简介">
+                    <span>个人简介</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      操作系统笔记：进程
+    </h1>
+    <div class="post-meta"><span title='2026-03-24 00:00:00 -0700 -0700'>2026年3月24日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span>
+
+</div>
+  </header> 
+  <div class="post-content"><blockquote>
+<p>说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。</p>
+</blockquote>
+<h2 id="摘要">摘要<a hidden class="anchor" aria-hidden="true" href="#摘要">#</a></h2>
+<p>本文梳理操作系统中<strong>进程</strong>的核心知识：进程的概念与特征、PCB 与组成结构、三态/五态模型、进程控制原语（创建、终止、阻塞与唤醒）以及进程通信方式（共享存储、消息传递、管道）。</p>
+<hr>
+<h2 id="1-进程的概念和特征">1. 进程的概念和特征<a hidden class="anchor" aria-hidden="true" href="#1-进程的概念和特征">#</a></h2>
+<h3 id="11-概念常见表述">1.1 概念（常见表述）<a hidden class="anchor" aria-hidden="true" href="#11-概念常见表述">#</a></h3>
+<p>进程的典型定义：</p>
+<ol>
+<li>进程是一个正在执行程序的实例。</li>
+<li>进程是程序及其数据从磁盘加载到内存后，在 CPU 上执行的过程。</li>
+<li>进程是一个具有独立功能的程序在一个数据集合上运行的过程。</li>
+</ol>
+<h3 id="12-特征四个基本特征">1.2 特征（四个基本特征）<a hidden class="anchor" aria-hidden="true" href="#12-特征四个基本特征">#</a></h3>
+<ul>
+<li><strong>动态性</strong>：有产生、运行、消亡的过程。</li>
+<li><strong>并发性</strong>：多个进程在一段时间内并发推进。</li>
+<li><strong>独立性</strong>：进程是资源分配与调度的基本单位。</li>
+<li><strong>异步性</strong>：推进速度不可预知，需要同步机制保证正确性。</li>
+</ul>
+<hr>
+<h2 id="2-进程的组成">2. 进程的组成<a hidden class="anchor" aria-hidden="true" href="#2-进程的组成">#</a></h2>
+<p>进程由三部分组成，其中最核心是 <strong>PCB（进程控制块）</strong>：</p>
+<ul>
+<li><strong>PCB（Process Control Block）</strong></li>
+<li><strong>程序段</strong></li>
+<li><strong>数据段</strong></li>
+</ul>
+<blockquote>
+<p>记忆点：<strong>PCB 是进程存在与管理的关键依据</strong>。</p>
+</blockquote>
+<hr>
+<h2 id="3-进程的状态与转换">3. 进程的状态与转换<a hidden class="anchor" aria-hidden="true" href="#3-进程的状态与转换">#</a></h2>
+<p>五种状态（前三种为基本状态）：</p>
+<ul>
+<li><strong>运行态（Running）</strong>：占用 CPU，正在执行。</li>
+<li><strong>就绪态（Ready）</strong>：具备运行条件，仅缺 CPU，等待调度。</li>
+<li><strong>阻塞态（Blocked/Waiting）</strong>：等待事件/资源（除 CPU 外），暂停推进。</li>
+<li><strong>创建态（New）</strong>：正在创建，尚未进入就绪队列。</li>
+<li><strong>终止态（Terminated）</strong>：正在结束并从系统消失。</li>
+</ul>
+<h3 id="就绪态-vs-阻塞态">就绪态 vs 阻塞态<a hidden class="anchor" aria-hidden="true" href="#就绪态-vs-阻塞态">#</a></h3>
+<ul>
+<li><strong>就绪态</strong>：只缺 <strong>CPU</strong>。</li>
+<li><strong>阻塞态</strong>：缺 <strong>事件/资源</strong>（I/O、信号、锁、数据等）。</li>
+</ul>
+<h3 id="31-三态模型">3.1 三态模型<a hidden class="anchor" aria-hidden="true" href="#31-三态模型">#</a></h3>
+<p><img alt="三态模型" loading="lazy" src="/posts/%E8%BF%9B%E7%A8%8B/3.png"></p>
+<h3 id="32-五态模型">3.2 五态模型<a hidden class="anchor" aria-hidden="true" href="#32-五态模型">#</a></h3>
+<p><img alt="五态模型" loading="lazy" src="/posts/%E8%BF%9B%E7%A8%8B/5.png"></p>
+<hr>
+<h2 id="4-进程控制原语">4. 进程控制（原语）<a hidden class="anchor" aria-hidden="true" href="#4-进程控制原语">#</a></h2>
+<p>操作系统中，进程控制常通过<strong>原语</strong>实现。</p>
+<p>原语特点：</p>
+<ul>
+<li><strong>执行期间不可中断</strong>（原子性）</li>
+<li>通常在<strong>内核态</strong>完成</li>
+<li>保证进程控制操作一致、正确</li>
+</ul>
+<hr>
+<h3 id="41-进程的创建create">4.1 进程的创建（Create）<a hidden class="anchor" aria-hidden="true" href="#41-进程的创建create">#</a></h3>
+<p>父子进程关系：</p>
+<ul>
+<li>创建者为<strong>父进程</strong>，被创建者为<strong>子进程</strong></li>
+<li>子进程可继承父进程部分资源；结束时资源归还父进程/系统</li>
+</ul>
+<p>创建原语典型步骤：</p>
+<ol>
+<li>分配 <strong>PID</strong>，申请空白 <strong>PCB</strong>（PCB 有限，失败则创建失败）。</li>
+<li>分配资源（内存、文件、I/O 设备、CPU 时间等）。</li>
+<li>初始化 PCB（标志信息、CPU 状态等），设置优先级等调度信息。</li>
+<li>插入<strong>就绪队列</strong>，等待调度运行。</li>
+</ol>
+<hr>
+<h3 id="42-进程的终止exit--terminate">4.2 进程的终止（Exit / Terminate）<a hidden class="anchor" aria-hidden="true" href="#42-进程的终止exit--terminate">#</a></h3>
+<p>终止原因：</p>
+<ul>
+<li><strong>正常结束</strong></li>
+<li><strong>异常结束</strong>（越界、保护错、非法指令、特权指令错、超时、算术溢出、I/O 故障等）</li>
+<li><strong>外界干预</strong>（用户/OS/其他进程请求结束）</li>
+</ul>
+<p>终止原语典型步骤：</p>
+<ol>
+<li>检索 PCB，读取状态。</li>
+<li>若处于运行态，终止执行并释放 CPU。</li>
+<li>若有子进程，通常先终止所有子进程（依系统策略）。</li>
+<li>回收资源（归还父进程或 OS）。</li>
+<li>PCB 出队并释放。</li>
+</ol>
+<hr>
+<h3 id="43-进程的阻塞与唤醒blockwakeup">4.3 进程的阻塞与唤醒（Block/Wakeup）<a hidden class="anchor" aria-hidden="true" href="#43-进程的阻塞与唤醒blockwakeup">#</a></h3>
+<h4 id="阻塞block">阻塞（Block）<a hidden class="anchor" aria-hidden="true" href="#阻塞block">#</a></h4>
+<p>触发：等待事件/资源（I/O 完成、数据到达、资源可用等）</p>
+<p>流程：</p>
+<ol>
+<li>找到进程 PCB。</li>
+<li>若为运行态：保存现场，置为阻塞态，停止运行。</li>
+<li>进入对应事件的等待队列，CPU 让给其他就绪进程。</li>
+</ol>
+<h4 id="唤醒wakeup">唤醒（Wakeup）<a hidden class="anchor" aria-hidden="true" href="#唤醒wakeup">#</a></h4>
+<p>触发：等待事件发生（I/O 完成、资源可用等）</p>
+<p>流程：</p>
+<ol>
+<li>在等待队列中找到目标 PCB。</li>
+<li>移出等待队列，置为就绪态。</li>
+<li>插入就绪队列，等待调度。</li>
+</ol>
+<h4 id="配对关系">配对关系<a hidden class="anchor" aria-hidden="true" href="#配对关系">#</a></h4>
+<ul>
+<li><strong>Block 与 Wakeup 必须成对使用</strong>：只阻塞不唤醒会导致进程长期等待（死等/永久阻塞）。</li>
+</ul>
+<hr>
+<h2 id="5-进程通信">5. 进程通信<a hidden class="anchor" aria-hidden="true" href="#5-进程通信">#</a></h2>
+<ul>
+<li><strong>低级通信</strong>：以 <strong>PV 操作</strong> 等为代表（更偏同步互斥与简单控制）。</li>
+<li><strong>高级通信</strong>：高效传输大量数据，主要三类：
+<ol>
+<li><strong>共享存储</strong></li>
+<li><strong>消息传递</strong></li>
+<li><strong>管道通信</strong></li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="6-小结">6. 小结<a hidden class="anchor" aria-hidden="true" href="#6-小结">#</a></h2>
+<ul>
+<li>进程的核心：<strong>PCB</strong>。</li>
+<li>状态区分关键：就绪只缺 CPU；阻塞缺事件/资源。</li>
+<li>进程控制靠原语：创建 / 终止 / 阻塞 / 唤醒（Block/Wakeup 配对）。</li>
+<li>通信三类：共享存储 / 消息传递 / 管道通信。</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="//localhost:1313/tags/%E8%BF%9B%E7%A8%8B/">进程</a></li>
+      <li><a href="//localhost:1313/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="//localhost:1313/">WishBottle</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

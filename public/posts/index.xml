@@ -6,8 +6,188 @@
     <description>Recent content in 文章 on WishBottle</description>
     <generator>Hugo -- 0.156.0</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 05 Mar 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 30 Mar 2026 00:00:00 -0700</lastBuildDate>
     <atom:link href="//localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>操作系统笔记：内存 (上)</title>
+      <link>//localhost:1313/posts/%E5%86%85%E5%AD%981/</link>
+      <pubDate>Mon, 30 Mar 2026 00:00:00 -0700</pubDate>
+      <guid>//localhost:1313/posts/%E5%86%85%E5%AD%981/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;摘要&#34;&gt;摘要&lt;/h2&gt;
+&lt;p&gt;本文梳理操作系统内存管理中的几个核心概念：内存的作用、地址转换（装入与重定位）、链接方式、内存保护与连续分配策略，并对常见动态分区分配算法进行对比，理解碎片与紧凑的必要性。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;内存的作用&#34;&gt;内存的作用&lt;/h2&gt;
+&lt;p&gt;程序在执行前需要先装入内存，CPU 才能对其进行处理。内存的核心作用之一是&lt;strong&gt;缓和 CPU 与硬盘之间的速度矛盾&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;硬盘/外存先把即将使用的数据读取到内存；&lt;/li&gt;
+&lt;li&gt;CPU 需要数据时直接访问内存，而不必反复访问硬盘；&lt;/li&gt;
+&lt;li&gt;从而显著提升整体执行效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;地址转换装入与重定位&#34;&gt;地址转换（装入与重定位）&lt;/h2&gt;
+&lt;h3 id=&#34;1绝对装入absolute-loading&#34;&gt;1）绝对装入（Absolute Loading）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;特点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;程序装入内存之前就确定装入位置，在编译阶段就把逻辑地址直接转换为最终物理地址。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;前提：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;必须提前知道装入模块从哪个物理地址开始装入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;灵活性极差：装入位置变化会导致地址全部失效。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;2静态重定位static-relocation&#34;&gt;2）静态重定位（Static Relocation）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;特点：&lt;strong&gt;重定位过程在&lt;/strong&gt;装入时&lt;/strong&gt;完成。&lt;/p&gt;
+&lt;p&gt;例：若装入起始物理地址为 &lt;code&gt;100&lt;/code&gt;，则所有与地址相关的值统一加上 &lt;code&gt;100&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;限制：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;作业装入内存时一次性分配其所需全部空间；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运行期间不可移动&lt;/strong&gt;（无法在内存中动态搬迁）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;3动态重定位dynamic-relocation现代-os-常用&#34;&gt;3）动态重定位（Dynamic Relocation，现代 OS 常用）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;特点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;编译/链接阶段仍使用&lt;strong&gt;逻辑地址&lt;/strong&gt;；&lt;/li&gt;
+&lt;li&gt;装入内存后&lt;strong&gt;不立即&lt;/strong&gt;把逻辑地址改写成物理地址；&lt;/li&gt;
+&lt;li&gt;运行时由硬件机制完成转换。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;关键硬件支持：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;重定位寄存器（Relocation Register）&lt;/strong&gt;：存放装入模块的起始物理地址（基址）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;地址转换：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU 执行时：&lt;code&gt;物理地址 = 逻辑地址 + 重定位寄存器(基址)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;允许程序在内存中发生移动（更灵活，也更利于多道程序和内存紧凑）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;从写程序到程序运行以-c-语言为例&#34;&gt;从写程序到程序运行（以 C 语言为例）&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;编写源代码：生成 &lt;code&gt;*.c&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;编译：生成目标模块 &lt;code&gt;*.o&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;链接：把多个目标模块 + 库函数链接成装入模块（可执行文件）&lt;code&gt;*.exe&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;装入：把装入模块装入内存，此时确定其对应的实际物理地址范围&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;链接方式&#34;&gt;链接方式&lt;/h2&gt;
+&lt;h3 id=&#34;1静态链接&#34;&gt;1）静态链接&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;在运行前&lt;/strong&gt;，把各目标模块及其所需库函数连接成一个完整可执行文件，之后不再拆分。&lt;/p&gt;
+&lt;h3 id=&#34;2装入时动态链接&#34;&gt;2）装入时动态链接&lt;/h3&gt;
+&lt;p&gt;边装入边链接：装入模块进内存时再完成链接。&lt;/p&gt;
+&lt;h3 id=&#34;3运行时动态链接&#34;&gt;3）运行时动态链接&lt;/h3&gt;
+&lt;p&gt;程序执行过程中，&lt;strong&gt;需要某个目标模块时才链接&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;便于修改、更新；&lt;/li&gt;
+&lt;li&gt;便于实现对目标模块的共享（多个进程可共享同一模块）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;内存保护&#34;&gt;内存保护&lt;/h2&gt;
+&lt;h3 id=&#34;1设置上下限寄存器limit-registers&#34;&gt;1）设置上下限寄存器（Limit Registers）&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;上下限寄存器存放进程的地址范围（通常是物理地址上下界）。&lt;/li&gt;
+&lt;li&gt;进程访问某地址时，CPU 检查是否越界，越界则触发异常。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2重定位寄存器--界地址寄存器&#34;&gt;2）重定位寄存器 + 界地址寄存器&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;重定位寄存器（基址）&lt;/strong&gt;：起始物理地址&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;界地址寄存器（界限/长度）&lt;/strong&gt;：进程最大逻辑地址（或逻辑地址范围大小）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;检查逻辑地址是否小于 &lt;code&gt; 界地址&lt;/code&gt;，通过后再做 &lt;code&gt;逻辑地址 + 基址&lt;/code&gt; 得到物理地址。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>操作系统笔记：进程</title>
+      <link>//localhost:1313/posts/%E8%BF%9B%E7%A8%8B/</link>
+      <pubDate>Tue, 24 Mar 2026 00:00:00 -0700</pubDate>
+      <guid>//localhost:1313/posts/%E8%BF%9B%E7%A8%8B/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;摘要&#34;&gt;摘要&lt;/h2&gt;
+&lt;p&gt;本文梳理操作系统中&lt;strong&gt;进程&lt;/strong&gt;的核心知识：进程的概念与特征、PCB 与组成结构、三态/五态模型、进程控制原语（创建、终止、阻塞与唤醒）以及进程通信方式（共享存储、消息传递、管道）。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;1-进程的概念和特征&#34;&gt;1. 进程的概念和特征&lt;/h2&gt;
+&lt;h3 id=&#34;11-概念常见表述&#34;&gt;1.1 概念（常见表述）&lt;/h3&gt;
+&lt;p&gt;进程的典型定义：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;进程是一个正在执行程序的实例。&lt;/li&gt;
+&lt;li&gt;进程是程序及其数据从磁盘加载到内存后，在 CPU 上执行的过程。&lt;/li&gt;
+&lt;li&gt;进程是一个具有独立功能的程序在一个数据集合上运行的过程。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;12-特征四个基本特征&#34;&gt;1.2 特征（四个基本特征）&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;动态性&lt;/strong&gt;：有产生、运行、消亡的过程。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;并发性&lt;/strong&gt;：多个进程在一段时间内并发推进。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;独立性&lt;/strong&gt;：进程是资源分配与调度的基本单位。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;异步性&lt;/strong&gt;：推进速度不可预知，需要同步机制保证正确性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;2-进程的组成&#34;&gt;2. 进程的组成&lt;/h2&gt;
+&lt;p&gt;进程由三部分组成，其中最核心是 &lt;strong&gt;PCB（进程控制块）&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;PCB（Process Control Block）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;程序段&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;数据段&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;记忆点：&lt;strong&gt;PCB 是进程存在与管理的关键依据&lt;/strong&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;3-进程的状态与转换&#34;&gt;3. 进程的状态与转换&lt;/h2&gt;
+&lt;p&gt;五种状态（前三种为基本状态）：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;运行态（Running）&lt;/strong&gt;：占用 CPU，正在执行。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;就绪态（Ready）&lt;/strong&gt;：具备运行条件，仅缺 CPU，等待调度。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;阻塞态（Blocked/Waiting）&lt;/strong&gt;：等待事件/资源（除 CPU 外），暂停推进。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;创建态（New）&lt;/strong&gt;：正在创建，尚未进入就绪队列。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;终止态（Terminated）&lt;/strong&gt;：正在结束并从系统消失。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;就绪态-vs-阻塞态&#34;&gt;就绪态 vs 阻塞态&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;就绪态&lt;/strong&gt;：只缺 &lt;strong&gt;CPU&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;阻塞态&lt;/strong&gt;：缺 &lt;strong&gt;事件/资源&lt;/strong&gt;（I/O、信号、锁、数据等）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;31-三态模型&#34;&gt;3.1 三态模型&lt;/h3&gt;
+&lt;p&gt;&lt;img alt=&#34;三态模型&#34; loading=&#34;lazy&#34; src=&#34;//localhost:1313/posts/%E8%BF%9B%E7%A8%8B/3.png&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;32-五态模型&#34;&gt;3.2 五态模型&lt;/h3&gt;
+&lt;p&gt;&lt;img alt=&#34;五态模型&#34; loading=&#34;lazy&#34; src=&#34;//localhost:1313/posts/%E8%BF%9B%E7%A8%8B/5.png&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;4-进程控制原语&#34;&gt;4. 进程控制（原语）&lt;/h2&gt;
+&lt;p&gt;操作系统中，进程控制常通过&lt;strong&gt;原语&lt;/strong&gt;实现。&lt;/p&gt;
+&lt;p&gt;原语特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;执行期间不可中断&lt;/strong&gt;（原子性）&lt;/li&gt;
+&lt;li&gt;通常在&lt;strong&gt;内核态&lt;/strong&gt;完成&lt;/li&gt;
+&lt;li&gt;保证进程控制操作一致、正确&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;41-进程的创建create&#34;&gt;4.1 进程的创建（Create）&lt;/h3&gt;
+&lt;p&gt;父子进程关系：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创建者为&lt;strong&gt;父进程&lt;/strong&gt;，被创建者为&lt;strong&gt;子进程&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;子进程可继承父进程部分资源；结束时资源归还父进程/系统&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;创建原语典型步骤：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;分配 &lt;strong&gt;PID&lt;/strong&gt;，申请空白 &lt;strong&gt;PCB&lt;/strong&gt;（PCB 有限，失败则创建失败）。&lt;/li&gt;
+&lt;li&gt;分配资源（内存、文件、I/O 设备、CPU 时间等）。&lt;/li&gt;
+&lt;li&gt;初始化 PCB（标志信息、CPU 状态等），设置优先级等调度信息。&lt;/li&gt;
+&lt;li&gt;插入&lt;strong&gt;就绪队列&lt;/strong&gt;，等待调度运行。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;42-进程的终止exit--terminate&#34;&gt;4.2 进程的终止（Exit / Terminate）&lt;/h3&gt;
+&lt;p&gt;终止原因：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>用 Streamlit &#43; DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘</title>
       <link>//localhost:1313/posts/streamlit-ai-companion/</link>

@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>标签 | WishBottle</title>
+<title>内存管理 | WishBottle</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="W1shBottle">
-<link rel="canonical" href="//localhost:1313/tags/">
+<link rel="canonical" href="//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.a29c24210eb31d9ce56f669c66a35c9c51b17376b7764e336a49af7dec914cf0.css" integrity="sha256-opwkIQ6zHZzlb2acZqNcnFGxc3a3dk4zakmvfeyRTPA=" rel="preload stylesheet" as="style">
 <link rel="icon" href="//localhost:1313/favicon.svg">
 <link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="//localhost:1313/tags/index.xml" title="rss">
-<link rel="alternate" hreflang="zh" href="//localhost:1313/tags/">
+<link rel="alternate" type="application/rss+xml" href="//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.xml" title="rss">
+<link rel="alternate" hreflang="zh" href="//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
 <noscript>
     <style>
         #theme-toggle,
@@ -109,7 +109,7 @@
             </li>
             <li>
                 <a href="//localhost:1313/tags/" title="标签">
-                    <span class="active">标签</span>
+                    <span>标签</span>
                 </a>
             </li>
             <li>
@@ -135,25 +135,42 @@
         </ul>
     </nav>
 </header>
-<main class="main">
+<main class="main"> 
 <header class="page-header">
-    <h1>标签</h1>
+  <h1>
+    内存管理
+  </h1>
 </header>
 
-<ul class="terms-tags">
-    <li>
-        <a href="//localhost:1313/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统 <sup><strong><sup>2</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E8%BF%9B%E7%A8%8B/">进程 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/">项目 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-</ul>
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">操作系统笔记：内存 (上)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。
+摘要 本文梳理操作系统内存管理中的几个核心概念：内存的作用、地址转换（装入与重定位）、链接方式、内存保护与连续分配策略，并对常见动态分区分配算法进行对比，理解碎片与紧凑的必要性。
+内存的作用 程序在执行前需要先装入内存，CPU 才能对其进行处理。内存的核心作用之一是缓和 CPU 与硬盘之间的速度矛盾：
+硬盘/外存先把即将使用的数据读取到内存； CPU 需要数据时直接访问内存，而不必反复访问硬盘； 从而显著提升整体执行效率。 地址转换（装入与重定位） 1）绝对装入（Absolute Loading） 特点：
+程序装入内存之前就确定装入位置，在编译阶段就把逻辑地址直接转换为最终物理地址。 前提：
+必须提前知道装入模块从哪个物理地址开始装入。 缺点：
+灵活性极差：装入位置变化会导致地址全部失效。 2）静态重定位（Static Relocation） 特点：重定位过程在装入时完成。
+例：若装入起始物理地址为 100，则所有与地址相关的值统一加上 100。
+限制：
+作业装入内存时一次性分配其所需全部空间； 运行期间不可移动（无法在内存中动态搬迁）。 3）动态重定位（Dynamic Relocation，现代 OS 常用） 特点：
+编译/链接阶段仍使用逻辑地址； 装入内存后不立即把逻辑地址改写成物理地址； 运行时由硬件机制完成转换。 关键硬件支持：
+重定位寄存器（Relocation Register）：存放装入模块的起始物理地址（基址）。 地址转换：
+CPU 执行时：物理地址 = 逻辑地址 &#43; 重定位寄存器(基址) 优势：
+允许程序在内存中发生移动（更灵活，也更利于多道程序和内存紧凑）。 从写程序到程序运行（以 C 语言为例） 编写源代码：生成 *.c 编译：生成目标模块 *.o 链接：把多个目标模块 &#43; 库函数链接成装入模块（可执行文件）*.exe 装入：把装入模块装入内存，此时确定其对应的实际物理地址范围 链接方式 1）静态链接 在运行前，把各目标模块及其所需库函数连接成一个完整可执行文件，之后不再拆分。
+2）装入时动态链接 边装入边链接：装入模块进内存时再完成链接。
+3）运行时动态链接 程序执行过程中，需要某个目标模块时才链接。
+优点：
+便于修改、更新； 便于实现对目标模块的共享（多个进程可共享同一模块）。 内存保护 1）设置上下限寄存器（Limit Registers） 上下限寄存器存放进程的地址范围（通常是物理地址上下界）。 进程访问某地址时，CPU 检查是否越界，越界则触发异常。 2）重定位寄存器 &#43; 界地址寄存器 重定位寄存器（基址）：起始物理地址 界地址寄存器（界限/长度）：进程最大逻辑地址（或逻辑地址范围大小） 检查逻辑地址是否小于 界地址，通过后再做 逻辑地址 &#43; 基址 得到物理地址。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-30 00:00:00 -0700 -0700'>2026年3月30日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span></footer>
+  <a class="entry-link" aria-label="post link to 操作系统笔记：内存 (上)" href="//localhost:1313/posts/%E5%86%85%E5%AD%981/"></a>
+</article>
     </main>
     
 <footer class="footer">

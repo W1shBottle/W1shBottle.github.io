@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>内存管理 on WishBottle</title>
+    <link>//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</link>
+    <description>Recent content in 内存管理 on WishBottle</description>
+    <generator>Hugo -- 0.156.0</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 30 Mar 2026 00:00:00 -0700</lastBuildDate>
+    <atom:link href="//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>操作系统笔记：内存 (上)</title>
+      <link>//localhost:1313/posts/%E5%86%85%E5%AD%981/</link>
+      <pubDate>Mon, 30 Mar 2026 00:00:00 -0700</pubDate>
+      <guid>//localhost:1313/posts/%E5%86%85%E5%AD%981/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;摘要&#34;&gt;摘要&lt;/h2&gt;
+&lt;p&gt;本文梳理操作系统内存管理中的几个核心概念：内存的作用、地址转换（装入与重定位）、链接方式、内存保护与连续分配策略，并对常见动态分区分配算法进行对比，理解碎片与紧凑的必要性。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;内存的作用&#34;&gt;内存的作用&lt;/h2&gt;
+&lt;p&gt;程序在执行前需要先装入内存，CPU 才能对其进行处理。内存的核心作用之一是&lt;strong&gt;缓和 CPU 与硬盘之间的速度矛盾&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;硬盘/外存先把即将使用的数据读取到内存；&lt;/li&gt;
+&lt;li&gt;CPU 需要数据时直接访问内存，而不必反复访问硬盘；&lt;/li&gt;
+&lt;li&gt;从而显著提升整体执行效率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;地址转换装入与重定位&#34;&gt;地址转换（装入与重定位）&lt;/h2&gt;
+&lt;h3 id=&#34;1绝对装入absolute-loading&#34;&gt;1）绝对装入（Absolute Loading）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;特点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;程序装入内存之前就确定装入位置，在编译阶段就把逻辑地址直接转换为最终物理地址。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;前提：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;必须提前知道装入模块从哪个物理地址开始装入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;灵活性极差：装入位置变化会导致地址全部失效。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;2静态重定位static-relocation&#34;&gt;2）静态重定位（Static Relocation）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;特点：&lt;strong&gt;重定位过程在&lt;/strong&gt;装入时&lt;/strong&gt;完成。&lt;/p&gt;
+&lt;p&gt;例：若装入起始物理地址为 &lt;code&gt;100&lt;/code&gt;，则所有与地址相关的值统一加上 &lt;code&gt;100&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;限制：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;作业装入内存时一次性分配其所需全部空间；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;运行期间不可移动&lt;/strong&gt;（无法在内存中动态搬迁）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;3动态重定位dynamic-relocation现代-os-常用&#34;&gt;3）动态重定位（Dynamic Relocation，现代 OS 常用）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;特点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;编译/链接阶段仍使用&lt;strong&gt;逻辑地址&lt;/strong&gt;；&lt;/li&gt;
+&lt;li&gt;装入内存后&lt;strong&gt;不立即&lt;/strong&gt;把逻辑地址改写成物理地址；&lt;/li&gt;
+&lt;li&gt;运行时由硬件机制完成转换。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;关键硬件支持：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;重定位寄存器（Relocation Register）&lt;/strong&gt;：存放装入模块的起始物理地址（基址）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;地址转换：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU 执行时：&lt;code&gt;物理地址 = 逻辑地址 + 重定位寄存器(基址)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;允许程序在内存中发生移动（更灵活，也更利于多道程序和内存紧凑）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;从写程序到程序运行以-c-语言为例&#34;&gt;从写程序到程序运行（以 C 语言为例）&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;编写源代码：生成 &lt;code&gt;*.c&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;编译：生成目标模块 &lt;code&gt;*.o&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;链接：把多个目标模块 + 库函数链接成装入模块（可执行文件）&lt;code&gt;*.exe&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;装入：把装入模块装入内存，此时确定其对应的实际物理地址范围&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;链接方式&#34;&gt;链接方式&lt;/h2&gt;
+&lt;h3 id=&#34;1静态链接&#34;&gt;1）静态链接&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;在运行前&lt;/strong&gt;，把各目标模块及其所需库函数连接成一个完整可执行文件，之后不再拆分。&lt;/p&gt;
+&lt;h3 id=&#34;2装入时动态链接&#34;&gt;2）装入时动态链接&lt;/h3&gt;
+&lt;p&gt;边装入边链接：装入模块进内存时再完成链接。&lt;/p&gt;
+&lt;h3 id=&#34;3运行时动态链接&#34;&gt;3）运行时动态链接&lt;/h3&gt;
+&lt;p&gt;程序执行过程中，&lt;strong&gt;需要某个目标模块时才链接&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;便于修改、更新；&lt;/li&gt;
+&lt;li&gt;便于实现对目标模块的共享（多个进程可共享同一模块）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;内存保护&#34;&gt;内存保护&lt;/h2&gt;
+&lt;h3 id=&#34;1设置上下限寄存器limit-registers&#34;&gt;1）设置上下限寄存器（Limit Registers）&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;上下限寄存器存放进程的地址范围（通常是物理地址上下界）。&lt;/li&gt;
+&lt;li&gt;进程访问某地址时，CPU 检查是否越界，越界则触发异常。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2重定位寄存器--界地址寄存器&#34;&gt;2）重定位寄存器 + 界地址寄存器&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;重定位寄存器（基址）&lt;/strong&gt;：起始物理地址&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;界地址寄存器（界限/长度）&lt;/strong&gt;：进程最大逻辑地址（或逻辑地址范围大小）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;检查逻辑地址是否小于 &lt;code&gt; 界地址&lt;/code&gt;，通过后再做 &lt;code&gt;逻辑地址 + 基址&lt;/code&gt; 得到物理地址。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

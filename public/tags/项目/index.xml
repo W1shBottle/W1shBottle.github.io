@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>项目 on WishBottle</title>
+    <link>//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/</link>
+    <description>Recent content in 项目 on WishBottle</description>
+    <generator>Hugo -- 0.156.0</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 05 Mar 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用 Streamlit &#43; DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘</title>
+      <link>//localhost:1313/posts/streamlit-ai-companion/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0800</pubDate>
+      <guid>//localhost:1313/posts/streamlit-ai-companion/</guid>
+      <description>&lt;p&gt;这篇文章复盘我做 &lt;code&gt;streamlit-ai-companion&lt;/code&gt; 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。&lt;/p&gt;
+&lt;h2 id=&#34;1-项目简介我做了什么&#34;&gt;1. 项目简介：我做了什么&lt;/h2&gt;
+&lt;p&gt;我做了一个基于 &lt;strong&gt;Streamlit&lt;/strong&gt; 的 AI 智能伴侣聊天应用：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;聊天 UI：&lt;code&gt;st.chat_input&lt;/code&gt; + &lt;code&gt;st.chat_message&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;可配置“伴侣信息”：昵称 + 性格（sidebar 动态修改）&lt;/li&gt;
+&lt;li&gt;流式输出：模型一边生成一边显示，聊天更自然&lt;/li&gt;
+&lt;li&gt;会话历史：保存为本地 JSON 文件，支持加载/删除
+&lt;img alt=&#34;AI智能伴侣界面&#34; loading=&#34;lazy&#34; src=&#34;//localhost:1313/posts/streamlit-ai-companion/companion.png&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2-为什么要做工程化而不是只停留在能跑&#34;&gt;2. 为什么要做工程化（而不是只停留在能跑）&lt;/h2&gt;
+&lt;p&gt;一开始我的项目确实能运行，但“能跑”和“可维护/可分享”是两回事：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要别人一眼看懂怎么运行（README）&lt;/li&gt;
+&lt;li&gt;不能把 API Key 提交上去（.env 处理）&lt;/li&gt;
+&lt;li&gt;需要许可证声明（LICENSE）&lt;/li&gt;
+&lt;li&gt;最好能有自动检查（CI），避免以后改坏了都不知道&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以我给仓库补齐了这些“标配”。&lt;/p&gt;
+&lt;h2 id=&#34;3-项目核心实现复盘结合-ai_companionpy&#34;&gt;3. 项目核心实现复盘（结合 AI_companion.py）&lt;/h2&gt;
+&lt;h3 id=&#34;31-关键配置模型base-url环境变量&#34;&gt;3.1 关键配置：模型、Base URL、环境变量&lt;/h3&gt;
+&lt;p&gt;我把关键参数集中在文件顶部：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DEEPSEEK_API_KEY&lt;/code&gt;：用环境变量读取 Key&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BASE_URL = &amp;quot;https://api.deepseek.com&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MODEL_NAME = &amp;quot;deepseek-chat&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SESSIONS_DIR = &amp;quot;sessions&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这样做的好处是：以后换模型/换环境变量名时不会到处改。&lt;/p&gt;
+&lt;p&gt;另外，我还加了一个“友好提示”：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果没有检测到 &lt;code&gt;DEEPSEEK_API_KEY&lt;/code&gt;，页面会 &lt;code&gt;warning&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;但不会直接崩掉，便于我先调 UI&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;32-会话历史为什么用-json-文件而不是上数据库&#34;&gt;3.2 会话历史：为什么用 JSON 文件而不是上数据库&lt;/h3&gt;
+&lt;p&gt;我选择每个会话一个文件：&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

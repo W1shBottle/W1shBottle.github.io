@@ -5,14 +5,9 @@ summary: "朋友们的站点"
 
 ## 朋友们
 
-- [示例站点 A](https://example.com/) — 简短介绍
-- [示例站点 B](https://example.org/) — 简短介绍
+- <img src="https://azusaq.moe/upload/thumbnails/2025/w1600/avatar-modified.png" width="24" height="24" style="display:inline-block; border-radius:50%; vertical-align:middle; margin-right:8px;" /> [Azusaq](https://azusaq.moe/) - A CUMTer, majoring in Information Security, enjoying CTF with a focus on Reverse Engineering.
 
-## 交换友链
 
-欢迎留言/发邮件给我，格式：
 
-- 名称：
-- 链接：
-- 简介：
-- 头像（可选）：
+
+

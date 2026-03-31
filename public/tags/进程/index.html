@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>标签 | WishBottle</title>
+<title>进程 | WishBottle</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="W1shBottle">
-<link rel="canonical" href="//localhost:1313/tags/">
+<link rel="canonical" href="//localhost:1313/tags/%E8%BF%9B%E7%A8%8B/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.a29c24210eb31d9ce56f669c66a35c9c51b17376b7764e336a49af7dec914cf0.css" integrity="sha256-opwkIQ6zHZzlb2acZqNcnFGxc3a3dk4zakmvfeyRTPA=" rel="preload stylesheet" as="style">
 <link rel="icon" href="//localhost:1313/favicon.svg">
 <link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="//localhost:1313/tags/index.xml" title="rss">
-<link rel="alternate" hreflang="zh" href="//localhost:1313/tags/">
+<link rel="alternate" type="application/rss+xml" href="//localhost:1313/tags/%E8%BF%9B%E7%A8%8B/index.xml" title="rss">
+<link rel="alternate" hreflang="zh" href="//localhost:1313/tags/%E8%BF%9B%E7%A8%8B/">
 <noscript>
     <style>
         #theme-toggle,
@@ -109,7 +109,7 @@
             </li>
             <li>
                 <a href="//localhost:1313/tags/" title="标签">
-                    <span class="active">标签</span>
+                    <span>标签</span>
                 </a>
             </li>
             <li>
@@ -135,25 +135,35 @@
         </ul>
     </nav>
 </header>
-<main class="main">
+<main class="main"> 
 <header class="page-header">
-    <h1>标签</h1>
+  <h1>
+    进程
+  </h1>
 </header>
 
-<ul class="terms-tags">
-    <li>
-        <a href="//localhost:1313/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统 <sup><strong><sup>2</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E8%BF%9B%E7%A8%8B/">进程 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/">项目 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-</ul>
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">操作系统笔记：进程
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。
+摘要 本文梳理操作系统中进程的核心知识：进程的概念与特征、PCB 与组成结构、三态/五态模型、进程控制原语（创建、终止、阻塞与唤醒）以及进程通信方式（共享存储、消息传递、管道）。
+1. 进程的概念和特征 1.1 概念（常见表述） 进程的典型定义：
+进程是一个正在执行程序的实例。 进程是程序及其数据从磁盘加载到内存后，在 CPU 上执行的过程。 进程是一个具有独立功能的程序在一个数据集合上运行的过程。 1.2 特征（四个基本特征） 动态性：有产生、运行、消亡的过程。 并发性：多个进程在一段时间内并发推进。 独立性：进程是资源分配与调度的基本单位。 异步性：推进速度不可预知，需要同步机制保证正确性。 2. 进程的组成 进程由三部分组成，其中最核心是 PCB（进程控制块）：
+PCB（Process Control Block） 程序段 数据段 记忆点：PCB 是进程存在与管理的关键依据。
+3. 进程的状态与转换 五种状态（前三种为基本状态）：
+运行态（Running）：占用 CPU，正在执行。 就绪态（Ready）：具备运行条件，仅缺 CPU，等待调度。 阻塞态（Blocked/Waiting）：等待事件/资源（除 CPU 外），暂停推进。 创建态（New）：正在创建，尚未进入就绪队列。 终止态（Terminated）：正在结束并从系统消失。 就绪态 vs 阻塞态 就绪态：只缺 CPU。 阻塞态：缺 事件/资源（I/O、信号、锁、数据等）。 3.1 三态模型 3.2 五态模型 4. 进程控制（原语） 操作系统中，进程控制常通过原语实现。
+原语特点：
+执行期间不可中断（原子性） 通常在内核态完成 保证进程控制操作一致、正确 4.1 进程的创建（Create） 父子进程关系：
+创建者为父进程，被创建者为子进程 子进程可继承父进程部分资源；结束时资源归还父进程/系统 创建原语典型步骤：
+分配 PID，申请空白 PCB（PCB 有限，失败则创建失败）。 分配资源（内存、文件、I/O 设备、CPU 时间等）。 初始化 PCB（标志信息、CPU 状态等），设置优先级等调度信息。 插入就绪队列，等待调度运行。 4.2 进程的终止（Exit / Terminate） 终止原因：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-24 00:00:00 -0700 -0700'>2026年3月24日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span></footer>
+  <a class="entry-link" aria-label="post link to 操作系统笔记：进程" href="//localhost:1313/posts/%E8%BF%9B%E7%A8%8B/"></a>
+</article>
     </main>
     
 <footer class="footer">

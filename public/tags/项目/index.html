@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>标签 | WishBottle</title>
+<title>项目 | WishBottle</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="W1shBottle">
-<link rel="canonical" href="//localhost:1313/tags/">
+<link rel="canonical" href="//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.a29c24210eb31d9ce56f669c66a35c9c51b17376b7764e336a49af7dec914cf0.css" integrity="sha256-opwkIQ6zHZzlb2acZqNcnFGxc3a3dk4zakmvfeyRTPA=" rel="preload stylesheet" as="style">
 <link rel="icon" href="//localhost:1313/favicon.svg">
 <link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="//localhost:1313/tags/index.xml" title="rss">
-<link rel="alternate" hreflang="zh" href="//localhost:1313/tags/">
+<link rel="alternate" type="application/rss+xml" href="//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/index.xml" title="rss">
+<link rel="alternate" hreflang="zh" href="//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/">
 <noscript>
     <style>
         #theme-toggle,
@@ -109,7 +109,7 @@
             </li>
             <li>
                 <a href="//localhost:1313/tags/" title="标签">
-                    <span class="active">标签</span>
+                    <span>标签</span>
                 </a>
             </li>
             <li>
@@ -135,25 +135,32 @@
         </ul>
     </nav>
 </header>
-<main class="main">
+<main class="main"> 
 <header class="page-header">
-    <h1>标签</h1>
+  <h1>
+    项目
+  </h1>
 </header>
 
-<ul class="terms-tags">
-    <li>
-        <a href="//localhost:1313/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统 <sup><strong><sup>2</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E8%BF%9B%E7%A8%8B/">进程 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="//localhost:1313/tags/%E9%A1%B9%E7%9B%AE/">项目 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-</ul>
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">用 Streamlit &#43; DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>这篇文章复盘我做 streamlit-ai-companion 的过程：前半部分是项目实现（Streamlit &#43; DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。
+1. 项目简介：我做了什么 我做了一个基于 Streamlit 的 AI 智能伴侣聊天应用：
+聊天 UI：st.chat_input &#43; st.chat_message 可配置“伴侣信息”：昵称 &#43; 性格（sidebar 动态修改） 流式输出：模型一边生成一边显示，聊天更自然 会话历史：保存为本地 JSON 文件，支持加载/删除 2. 为什么要做工程化（而不是只停留在能跑） 一开始我的项目确实能运行，但“能跑”和“可维护/可分享”是两回事：
+需要别人一眼看懂怎么运行（README） 不能把 API Key 提交上去（.env 处理） 需要许可证声明（LICENSE） 最好能有自动检查（CI），避免以后改坏了都不知道 所以我给仓库补齐了这些“标配”。
+3. 项目核心实现复盘（结合 AI_companion.py） 3.1 关键配置：模型、Base URL、环境变量 我把关键参数集中在文件顶部：
+DEEPSEEK_API_KEY：用环境变量读取 Key BASE_URL = &#34;https://api.deepseek.com&#34; MODEL_NAME = &#34;deepseek-chat&#34; SESSIONS_DIR = &#34;sessions&#34; 这样做的好处是：以后换模型/换环境变量名时不会到处改。
+另外，我还加了一个“友好提示”：
+如果没有检测到 DEEPSEEK_API_KEY，页面会 warning 但不会直接崩掉，便于我先调 UI 3.2 会话历史：为什么用 JSON 文件而不是上数据库 我选择每个会话一个文件：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-05 00:00:00 +0800 CST'>2026年3月5日</span>&nbsp;·&nbsp;<span>2 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span></footer>
+  <a class="entry-link" aria-label="post link to 用 Streamlit &#43; DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘" href="//localhost:1313/posts/streamlit-ai-companion/"></a>
+</article>
     </main>
     
 <footer class="footer">
