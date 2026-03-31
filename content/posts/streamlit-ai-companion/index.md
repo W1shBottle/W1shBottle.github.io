@@ -5,7 +5,7 @@ draft: false
 tags: ["项目"]
 ---
 
-> **声明 / 致谢**：这篇项目的最初版本是我在学习黑马程序员的网课时，跟着课程一步步敲出来的练习项目。课程链接：<https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47>。  
+> **声明 / 致谢**：此项目的最初版本是我在学习黑马程序员的网课时，跟着课程一步步敲出来的练习项目。课程链接：<https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47>。  
 > 本文更多是在此基础上做的**个人复盘与工程化整理**（如 .env、LICENSE、Topics、GitHub Actions、Ruff、README 徽章等），并记录我在同步、配置与 CI 上踩过的坑和解决方式。
 
 ---
