@@ -13,7 +13,12 @@
       <link>//localhost:1313/posts/streamlit-ai-companion/</link>
       <pubDate>Thu, 05 Mar 2026 00:00:00 +0800</pubDate>
       <guid>//localhost:1313/posts/streamlit-ai-companion/</guid>
-      <description>&lt;p&gt;这篇文章复盘我做 &lt;code&gt;streamlit-ai-companion&lt;/code&gt; 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。&lt;/p&gt;
+      <description>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;声明 / 致谢&lt;/strong&gt;：此项目的最初版本是我在学习黑马程序员的网课时，跟着课程一步步敲出来的练习项目。课程链接：&lt;a href=&#34;https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47&#34;&gt;https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47&lt;/a&gt;。&lt;br&gt;
+本文更多是在此基础上做的&lt;strong&gt;个人复盘与工程化整理&lt;/strong&gt;（如 .env、LICENSE、Topics、GitHub Actions、Ruff、README 徽章等），并记录我在同步、配置与 CI 上踩过的坑和解决方式。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;p&gt;这篇文章复盘我做 &lt;code&gt;streamlit-ai-companion&lt;/code&gt; 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。&lt;/p&gt;
 &lt;h2 id=&#34;1-项目简介我做了什么&#34;&gt;1. 项目简介：我做了什么&lt;/h2&gt;
 &lt;p&gt;我做了一个基于 &lt;strong&gt;Streamlit&lt;/strong&gt; 的 AI 智能伴侣聊天应用：&lt;/p&gt;
 &lt;ul&gt;
@@ -41,14 +46,7 @@
 &lt;li&gt;&lt;code&gt;MODEL_NAME = &amp;quot;deepseek-chat&amp;quot;&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;SESSIONS_DIR = &amp;quot;sessions&amp;quot;&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;这样做的好处是：以后换模型/换环境变量名时不会到处改。&lt;/p&gt;
-&lt;p&gt;另外，我还加了一个“友好提示”：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;如果没有检测到 &lt;code&gt;DEEPSEEK_API_KEY&lt;/code&gt;，页面会 &lt;code&gt;warning&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;但不会直接崩掉，便于我先调 UI&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;32-会话历史为什么用-json-文件而不是上数据库&#34;&gt;3.2 会话历史：为什么用 JSON 文件而不是上数据库&lt;/h3&gt;
-&lt;p&gt;我选择每个会话一个文件：&lt;/p&gt;</description>
+&lt;p&gt;这样做的好处是：以后换模型/换环境变量名时不会到处改。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

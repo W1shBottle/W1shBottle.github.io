@@ -221,7 +221,63 @@ PCB（Process Control Block）
     <div class="post-meta"><span title='2026-03-24 00:00:00 -0700 -0700'>2026年3月24日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span>
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%91%98%e8%a6%81" aria-label="摘要">摘要</a></li>
+                <li>
+                    <a href="#1-%e8%bf%9b%e7%a8%8b%e7%9a%84%e6%a6%82%e5%bf%b5%e5%92%8c%e7%89%b9%e5%be%81" aria-label="1. 进程的概念和特征">1. 进程的概念和特征</a><ul>
+                        
+                <li>
+                    <a href="#11-%e6%a6%82%e5%bf%b5%e5%b8%b8%e8%a7%81%e8%a1%a8%e8%bf%b0" aria-label="1.1 概念（常见表述）">1.1 概念（常见表述）</a></li>
+                <li>
+                    <a href="#12-%e7%89%b9%e5%be%81%e5%9b%9b%e4%b8%aa%e5%9f%ba%e6%9c%ac%e7%89%b9%e5%be%81" aria-label="1.2 特征（四个基本特征）">1.2 特征（四个基本特征）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2-%e8%bf%9b%e7%a8%8b%e7%9a%84%e7%bb%84%e6%88%90" aria-label="2. 进程的组成">2. 进程的组成</a></li>
+                <li>
+                    <a href="#3-%e8%bf%9b%e7%a8%8b%e7%9a%84%e7%8a%b6%e6%80%81%e4%b8%8e%e8%bd%ac%e6%8d%a2" aria-label="3. 进程的状态与转换">3. 进程的状态与转换</a><ul>
+                        
+                <li>
+                    <a href="#%e5%b0%b1%e7%bb%aa%e6%80%81-vs-%e9%98%bb%e5%a1%9e%e6%80%81" aria-label="就绪态 vs 阻塞态">就绪态 vs 阻塞态</a></li>
+                <li>
+                    <a href="#31-%e4%b8%89%e6%80%81%e6%a8%a1%e5%9e%8b" aria-label="3.1 三态模型">3.1 三态模型</a></li>
+                <li>
+                    <a href="#32-%e4%ba%94%e6%80%81%e6%a8%a1%e5%9e%8b" aria-label="3.2 五态模型">3.2 五态模型</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4-%e8%bf%9b%e7%a8%8b%e6%8e%a7%e5%88%b6%e5%8e%9f%e8%af%ad" aria-label="4. 进程控制（原语）">4. 进程控制（原语）</a><ul>
+                        
+                <li>
+                    <a href="#41-%e8%bf%9b%e7%a8%8b%e7%9a%84%e5%88%9b%e5%bb%bacreate" aria-label="4.1 进程的创建（Create）">4.1 进程的创建（Create）</a></li>
+                <li>
+                    <a href="#42-%e8%bf%9b%e7%a8%8b%e7%9a%84%e7%bb%88%e6%ad%a2exit--terminate" aria-label="4.2 进程的终止（Exit / Terminate）">4.2 进程的终止（Exit / Terminate）</a></li>
+                <li>
+                    <a href="#43-%e8%bf%9b%e7%a8%8b%e7%9a%84%e9%98%bb%e5%a1%9e%e4%b8%8e%e5%94%a4%e9%86%92blockwakeup" aria-label="4.3 进程的阻塞与唤醒（Block/Wakeup）">4.3 进程的阻塞与唤醒（Block/Wakeup）</a><ul>
+                        
+                <li>
+                    <a href="#%e9%98%bb%e5%a1%9eblock" aria-label="阻塞（Block）">阻塞（Block）</a></li>
+                <li>
+                    <a href="#%e5%94%a4%e9%86%92wakeup" aria-label="唤醒（Wakeup）">唤醒（Wakeup）</a></li>
+                <li>
+                    <a href="#%e9%85%8d%e5%af%b9%e5%85%b3%e7%b3%bb" aria-label="配对关系">配对关系</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#5-%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1" aria-label="5. 进程通信">5. 进程通信</a></li>
+                <li>
+                    <a href="#6-%e5%b0%8f%e7%bb%93" aria-label="6. 小结">6. 小结</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
   <div class="post-content"><blockquote>
 <p>说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。</p>
 </blockquote>

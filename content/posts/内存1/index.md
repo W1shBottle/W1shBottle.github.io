@@ -3,6 +3,10 @@ title: "操作系统笔记：内存 (上)"
 date: 2026-03-30T00:00:00-07:00
 tags: ["内存管理", "操作系统"]
 draft: false
+ShowToc: true
+TocOpen: false
+ShowReadingTime: true
+math: true
 ---
 
 > 说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。

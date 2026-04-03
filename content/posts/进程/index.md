@@ -3,6 +3,10 @@ title: "操作系统笔记：进程"
 date: 2026-03-24T00:00:00-07:00
 draft: false
 tags: ["进程", "操作系统"]
+ShowToc: true
+TocOpen: false
+ShowReadingTime: true
+math: true
 ---
 
 > 说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。

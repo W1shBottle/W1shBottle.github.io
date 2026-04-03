@@ -235,7 +235,107 @@ CPU 执行时：物理地址 = 逻辑地址 &#43; 重定位寄存器(基址)
     <div class="post-meta"><span title='2026-03-30 00:00:00 -0700 -0700'>2026年3月30日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span>
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%91%98%e8%a6%81" aria-label="摘要">摘要</a></li>
+                <li>
+                    <a href="#%e5%86%85%e5%ad%98%e7%9a%84%e4%bd%9c%e7%94%a8" aria-label="内存的作用">内存的作用</a></li>
+                <li>
+                    <a href="#%e5%9c%b0%e5%9d%80%e8%bd%ac%e6%8d%a2%e8%a3%85%e5%85%a5%e4%b8%8e%e9%87%8d%e5%ae%9a%e4%bd%8d" aria-label="地址转换（装入与重定位）">地址转换（装入与重定位）</a><ul>
+                        
+                <li>
+                    <a href="#1%e7%bb%9d%e5%af%b9%e8%a3%85%e5%85%a5absolute-loading" aria-label="1）绝对装入（Absolute Loading）">1）绝对装入（Absolute Loading）</a></li>
+                <li>
+                    <a href="#2%e9%9d%99%e6%80%81%e9%87%8d%e5%ae%9a%e4%bd%8dstatic-relocation" aria-label="2）静态重定位（Static Relocation）">2）静态重定位（Static Relocation）</a></li>
+                <li>
+                    <a href="#3%e5%8a%a8%e6%80%81%e9%87%8d%e5%ae%9a%e4%bd%8ddynamic-relocation%e7%8e%b0%e4%bb%a3-os-%e5%b8%b8%e7%94%a8" aria-label="3）动态重定位（Dynamic Relocation，现代 OS 常用）">3）动态重定位（Dynamic Relocation，现代 OS 常用）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%bb%8e%e5%86%99%e7%a8%8b%e5%ba%8f%e5%88%b0%e7%a8%8b%e5%ba%8f%e8%bf%90%e8%a1%8c%e4%bb%a5-c-%e8%af%ad%e8%a8%80%e4%b8%ba%e4%be%8b" aria-label="从写程序到程序运行（以 C 语言为例）">从写程序到程序运行（以 C 语言为例）</a></li>
+                <li>
+                    <a href="#%e9%93%be%e6%8e%a5%e6%96%b9%e5%bc%8f" aria-label="链接方式">链接方式</a><ul>
+                        
+                <li>
+                    <a href="#1%e9%9d%99%e6%80%81%e9%93%be%e6%8e%a5" aria-label="1）静态链接">1）静态链接</a></li>
+                <li>
+                    <a href="#2%e8%a3%85%e5%85%a5%e6%97%b6%e5%8a%a8%e6%80%81%e9%93%be%e6%8e%a5" aria-label="2）装入时动态链接">2）装入时动态链接</a></li>
+                <li>
+                    <a href="#3%e8%bf%90%e8%a1%8c%e6%97%b6%e5%8a%a8%e6%80%81%e9%93%be%e6%8e%a5" aria-label="3）运行时动态链接">3）运行时动态链接</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%86%85%e5%ad%98%e4%bf%9d%e6%8a%a4" aria-label="内存保护">内存保护</a><ul>
+                        
+                <li>
+                    <a href="#1%e8%ae%be%e7%bd%ae%e4%b8%8a%e4%b8%8b%e9%99%90%e5%af%84%e5%ad%98%e5%99%a8limit-registers" aria-label="1）设置上下限寄存器（Limit Registers）">1）设置上下限寄存器（Limit Registers）</a></li>
+                <li>
+                    <a href="#2%e9%87%8d%e5%ae%9a%e4%bd%8d%e5%af%84%e5%ad%98%e5%99%a8--%e7%95%8c%e5%9c%b0%e5%9d%80%e5%af%84%e5%ad%98%e5%99%a8" aria-label="2）重定位寄存器 &#43; 界地址寄存器">2）重定位寄存器 + 界地址寄存器</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e8%bf%9b%e7%a8%8b%e7%9a%84%e5%86%85%e5%ad%98%e6%98%a0%e5%83%8f" aria-label="进程的内存映像">进程的内存映像</a></li>
+                <li>
+                    <a href="#%e8%bf%9e%e7%bb%ad%e5%88%86%e9%85%8d%e7%ae%a1%e7%90%86%e6%96%b9%e5%bc%8fcontiguous-allocation" aria-label="连续分配管理方式（Contiguous Allocation）">连续分配管理方式（Contiguous Allocation）</a><ul>
+                        
+                <li>
+                    <a href="#1%e5%8d%95%e4%b8%80%e8%bf%9e%e7%bb%ad%e5%88%86%e9%85%8d" aria-label="1）单一连续分配">1）单一连续分配</a></li>
+                <li>
+                    <a href="#2%e5%9b%ba%e5%ae%9a%e5%88%86%e5%8c%ba%e5%88%86%e9%85%8dfixed-partitioning" aria-label="2）固定分区分配（Fixed Partitioning）">2）固定分区分配（Fixed Partitioning）</a><ul>
+                        
+                <li>
+                    <a href="#%e5%88%86%e5%8c%ba%e5%a4%a7%e5%b0%8f%e7%9b%b8%e7%ad%89" aria-label="分区大小相等">分区大小相等</a></li>
+                <li>
+                    <a href="#%e5%88%86%e5%8c%ba%e5%a4%a7%e5%b0%8f%e4%b8%8d%e7%ad%89" aria-label="分区大小不等">分区大小不等</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3%e5%88%86%e5%8c%ba%e8%af%b4%e6%98%8e%e8%a1%a8" aria-label="3）分区说明表">3）分区说明表</a></li>
+                <li>
+                    <a href="#4%e5%8a%a8%e6%80%81%e5%88%86%e5%8c%ba%e5%88%86%e9%85%8ddynamic-partitioning" aria-label="4）动态分区分配（Dynamic Partitioning）">4）动态分区分配（Dynamic Partitioning）</a><ul>
+                        
+                <li>
+                    <a href="#%e7%b3%bb%e7%bb%9f%e7%94%a8%e4%bb%80%e4%b9%88%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e8%ae%b0%e5%bd%95%e5%86%85%e5%ad%98%e4%bd%bf%e7%94%a8%e6%83%85%e5%86%b5" aria-label="系统用什么数据结构记录内存使用情况？">系统用什么数据结构记录内存使用情况？</a></li>
+                <li>
+                    <a href="#%e5%88%86%e5%8c%ba%e7%9a%84%e5%88%86%e9%85%8d%e4%b8%8e%e5%9b%9e%e6%94%b6" aria-label="分区的分配与回收">分区的分配与回收</a><ul>
+                        
+                <li>
+                    <a href="#%e5%88%86%e9%85%8d" aria-label="分配">分配</a></li>
+                <li>
+                    <a href="#%e5%9b%9e%e6%94%b6%e5%90%88%e5%b9%b6%e7%9b%b8%e9%82%bb%e7%a9%ba%e9%97%b2%e5%8c%ba" aria-label="回收（合并相邻空闲区）">回收（合并相邻空闲区）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e7%a2%8e%e7%89%87%e9%97%ae%e9%a2%98" aria-label="碎片问题">碎片问题</a><ul>
+                        
+                <li>
+                    <a href="#%e7%b4%a7%e5%87%91compaction" aria-label="紧凑（Compaction）">紧凑（Compaction）</a></li></ul>
+                </li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%8a%a8%e6%80%81%e5%88%86%e5%8c%ba%e5%88%86%e9%85%8d%e7%ae%97%e6%b3%95" aria-label="动态分区分配算法">动态分区分配算法</a><ul>
+                        
+                <li>
+                    <a href="#1%e9%a6%96%e6%ac%a1%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95first-fit" aria-label="1）首次适应算法（First-Fit）">1）首次适应算法（First-Fit）</a></li>
+                <li>
+                    <a href="#2%e6%9c%80%e4%bd%b3%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95best-fit" aria-label="2）最佳适应算法（Best-Fit）">2）最佳适应算法（Best-Fit）</a></li>
+                <li>
+                    <a href="#3%e6%9c%80%e5%9d%8f%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95worst-fit" aria-label="3）最坏适应算法（Worst-Fit）">3）最坏适应算法（Worst-Fit）</a></li>
+                <li>
+                    <a href="#4%e4%b8%b4%e8%bf%91%e9%80%82%e5%ba%94%e7%ae%97%e6%b3%95next-fit" aria-label="4）临近适应算法（Next-Fit）">4）临近适应算法（Next-Fit）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9b%9b%e7%a7%8d%e5%8a%a8%e6%80%81%e5%88%86%e5%8c%ba%e7%ae%97%e6%b3%95" aria-label="四种动态分区算法">四种动态分区算法</a></li>
+                <li>
+                    <a href="#%e5%85%a8%e6%96%87%e5%b0%8f%e7%bb%93" aria-label="全文小结">全文小结</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
   <div class="post-content"><blockquote>
 <p>说明：本文为个人学习笔记，内容参考王道《操作系统》网课与配套讲义，按个人理解整理总结，仅用于学习交流，如有疏漏欢迎指正。</p>
 </blockquote>

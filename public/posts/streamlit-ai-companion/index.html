@@ -7,7 +7,12 @@
 <meta name="robots" content="noindex, nofollow">
 <title>用 Streamlit &#43; DeepSeek 做一个 AI 智能伴侣：从能跑到工程化的复盘 | WishBottle</title>
 <meta name="keywords" content="项目">
-<meta name="description" content="这篇文章复盘我做 streamlit-ai-companion 的过程：前半部分是项目实现（Streamlit &#43; DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。
+<meta name="description" content="
+声明 / 致谢：此项目的最初版本是我在学习黑马程序员的网课时，跟着课程一步步敲出来的练习项目。课程链接：https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47。
+本文更多是在此基础上做的个人复盘与工程化整理（如 .env、LICENSE、Topics、GitHub Actions、Ruff、README 徽章等），并记录我在同步、配置与 CI 上踩过的坑和解决方式。
+
+
+这篇文章复盘我做 streamlit-ai-companion 的过程：前半部分是项目实现（Streamlit &#43; DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。
 1. 项目简介：我做了什么
 我做了一个基于 Streamlit 的 AI 智能伴侣聊天应用：
 
@@ -35,14 +40,7 @@ BASE_URL = &quot;https://api.deepseek.com&quot;
 MODEL_NAME = &quot;deepseek-chat&quot;
 SESSIONS_DIR = &quot;sessions&quot;
 
-这样做的好处是：以后换模型/换环境变量名时不会到处改。
-另外，我还加了一个“友好提示”：
-
-如果没有检测到 DEEPSEEK_API_KEY，页面会 warning
-但不会直接崩掉，便于我先调 UI
-
-3.2 会话历史：为什么用 JSON 文件而不是上数据库
-我选择每个会话一个文件：">
+这样做的好处是：以后换模型/换环境变量名时不会到处改。">
 <meta name="author" content="W1shBottle">
 <link rel="canonical" href="//localhost:1313/posts/streamlit-ai-companion/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.2a55bb945c54f45c868538af5b8d1df80ffa5d637750ba1ae20a7c57e1c34d85.css" integrity="sha256-KlW7lFxU9FyGhTivW40d&#43;A/6XWN3ULoa4gp8V&#43;HDTYU=" rel="preload stylesheet" as="style">
@@ -180,8 +178,72 @@ SESSIONS_DIR = &quot;sessions&quot;
     <div class="post-meta"><span title='2026-03-05 00:00:00 +0800 CST'>2026年3月5日</span>&nbsp;·&nbsp;<span>2 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span>
 
 </div>
-  </header> 
-  <div class="post-content"><p>这篇文章复盘我做 <code>streamlit-ai-companion</code> 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。</p>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1-%e9%a1%b9%e7%9b%ae%e7%ae%80%e4%bb%8b%e6%88%91%e5%81%9a%e4%ba%86%e4%bb%80%e4%b9%88" aria-label="1. 项目简介：我做了什么">1. 项目简介：我做了什么</a></li>
+                <li>
+                    <a href="#2-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e5%81%9a%e5%b7%a5%e7%a8%8b%e5%8c%96%e8%80%8c%e4%b8%8d%e6%98%af%e5%8f%aa%e5%81%9c%e7%95%99%e5%9c%a8%e8%83%bd%e8%b7%91" aria-label="2. 为什么要做工程化（而不是只停留在能跑）">2. 为什么要做工程化（而不是只停留在能跑）</a></li>
+                <li>
+                    <a href="#3-%e9%a1%b9%e7%9b%ae%e6%a0%b8%e5%bf%83%e5%ae%9e%e7%8e%b0%e5%a4%8d%e7%9b%98%e7%bb%93%e5%90%88-ai_companionpy" aria-label="3. 项目核心实现复盘（结合 AI_companion.py）">3. 项目核心实现复盘（结合 AI_companion.py）</a><ul>
+                        
+                <li>
+                    <a href="#31-%e5%85%b3%e9%94%ae%e9%85%8d%e7%bd%ae%e6%a8%a1%e5%9e%8bbase-url%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f" aria-label="3.1 关键配置：模型、Base URL、环境变量">3.1 关键配置：模型、Base URL、环境变量</a></li>
+                <li>
+                    <a href="#32-%e4%bc%9a%e8%af%9d%e5%8e%86%e5%8f%b2%e4%b8%ba%e4%bb%80%e4%b9%88%e7%94%a8-json-%e6%96%87%e4%bb%b6%e8%80%8c%e4%b8%8d%e6%98%af%e4%b8%8a%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="3.2 会话历史：为什么用 JSON 文件而不是上数据库">3.2 会话历史：为什么用 JSON 文件而不是上数据库</a></li>
+                <li>
+                    <a href="#33-prompt%e5%a6%82%e4%bd%95%e8%ae%a9%e5%ae%83%e5%83%8f%e4%bc%b4%e4%be%a3%e8%80%8c%e4%b8%8d%e6%98%af%e6%99%ae%e9%80%9a%e5%ae%a2%e6%9c%8d" aria-label="3.3 Prompt：如何让它“像伴侣”而不是普通客服">3.3 Prompt：如何让它“像伴侣”而不是普通客服</a></li>
+                <li>
+                    <a href="#34-%e6%b5%81%e5%bc%8f%e8%be%93%e5%87%ba%e4%b8%ba%e4%bb%80%e4%b9%88%e8%81%8a%e5%a4%a9%e4%bd%93%e9%aa%8c%e6%98%8e%e6%98%be%e6%9b%b4%e5%a5%bd" aria-label="3.4 流式输出：为什么聊天体验明显更好">3.4 流式输出：为什么聊天体验明显更好</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4-git-%e5%90%8c%e6%ad%a5%e8%b8%a9%e5%9d%91%e4%b8%ba%e4%bb%80%e4%b9%88-push-%e4%bc%9a%e8%a2%ab%e6%8b%92%e7%bb%9dnon-fast-forward" aria-label="4. Git 同步踩坑：为什么 push 会被拒绝（non-fast-forward）">4. Git 同步踩坑：为什么 push 会被拒绝（non-fast-forward）</a></li>
+                <li>
+                    <a href="#5-%e5%ae%89%e5%85%a8envexample--gitignore" aria-label="5. 安全：.env.example &#43; .gitignore">5. 安全：.env.example + .gitignore</a></li>
+                <li>
+                    <a href="#6-github-actions%e4%b8%ba%e4%bb%80%e4%b9%88%e5%8a%a0-ci%e4%bb%a5%e5%8f%8a-yaml-%e4%b8%ba%e4%bb%80%e4%b9%88%e4%bc%9a%e5%a4%b1%e8%b4%a5" aria-label="6. GitHub Actions：为什么加 CI，以及 YAML 为什么会失败">6. GitHub Actions：为什么加 CI，以及 YAML 为什么会失败</a></li>
+                <li>
+                    <a href="#7-ruff-%e6%98%af%e4%bb%80%e4%b9%88%e4%b8%ba%e4%bb%80%e4%b9%88%e6%88%91-ci-%e5%8f%88%e7%ba%a2%e4%ba%86i001" aria-label="7. Ruff 是什么？为什么我 CI 又红了😡（I001）">7. Ruff 是什么？为什么我 CI 又红了😡（I001）</a></li>
+                <li>
+                    <a href="#8-readme-%e5%be%bd%e7%ab%a0%e5%b0%8f%e6%94%b9%e5%8a%a8%e4%bd%86%e5%be%88%e6%8f%90%e5%8d%87%e7%ac%ac%e4%b8%80%e5%8d%b0%e8%b1%a1" aria-label="8. README 徽章：小改动但很提升“第一印象”">8. README 徽章：小改动但很提升“第一印象”</a></li>
+                <li>
+                    <a href="#9-%e8%bf%99%e6%ac%a1%e7%9c%9f%e6%ad%a3%e5%ad%a6%e5%88%b0%e7%9a%84" aria-label="9. 这次真正学到的">9. 这次真正学到的</a></li>
+                <li>
+                    <a href="#%e9%a1%b9%e7%9b%ae%e5%9c%b0%e5%9d%80" aria-label="项目地址">项目地址</a></li>
+                <li>
+                    <a href="#%e9%a1%b9%e7%9b%ae%e5%9c%b0%e5%9d%80-1" aria-label="项目地址">项目地址</a></li>
+                <li>
+                    <a href="#%e8%bf%90%e8%a1%8c%e6%96%b9%e5%bc%8f%e6%9c%ac%e5%9c%b0" aria-label="运行方式（本地）">运行方式（本地）</a><ul>
+                        
+                <li>
+                    <a href="#1-%e5%85%8b%e9%9a%86%e9%a1%b9%e7%9b%ae" aria-label="1) 克隆项目">1) 克隆项目</a></li>
+                <li>
+                    <a href="#2-%e5%88%9b%e5%bb%ba%e5%b9%b6%e6%bf%80%e6%b4%bb%e8%99%9a%e6%8b%9f%e7%8e%af%e5%a2%83%e6%8e%a8%e8%8d%90" aria-label="2) 创建并激活虚拟环境（推荐）">2) 创建并激活虚拟环境（推荐）</a></li>
+                <li>
+                    <a href="#3-%e5%ae%89%e8%a3%85%e4%be%9d%e8%b5%96" aria-label="3) 安装依赖">3) 安装依赖</a></li>
+                <li>
+                    <a href="#4-%e9%85%8d%e7%bd%ae%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8fdeepseek_api_key" aria-label="4) 配置环境变量（DEEPSEEK_API_KEY）">4) 配置环境变量（DEEPSEEK_API_KEY）</a></li>
+                <li>
+                    <a href="#5-%e5%90%af%e5%8a%a8" aria-label="5) 启动">5) 启动</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><blockquote>
+<p><strong>声明 / 致谢</strong>：此项目的最初版本是我在学习黑马程序员的网课时，跟着课程一步步敲出来的练习项目。课程链接：<a href="https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47">https://www.bilibili.com/video/BV1sHU9BmEne/?vd_source=b7fe282ae22dcad10ba845b5eea36a47</a>。<br>
+本文更多是在此基础上做的<strong>个人复盘与工程化整理</strong>（如 .env、LICENSE、Topics、GitHub Actions、Ruff、README 徽章等），并记录我在同步、配置与 CI 上踩过的坑和解决方式。</p>
+</blockquote>
+<hr>
+<p>这篇文章复盘我做 <code>streamlit-ai-companion</code> 的过程：前半部分是项目实现（Streamlit + DeepSeek API），后半部分是把仓库“工程化”的学习经历（.env、License、Topics、GitHub Actions、Ruff、README 徽章）。整体不是教程流水账，而是按“我遇到的问题 → 为什么 → 怎么解决”的方式写。</p>
 <h2 id="1-项目简介我做了什么">1. 项目简介：我做了什么<a hidden class="anchor" aria-hidden="true" href="#1-项目简介我做了什么">#</a></h2>
 <p>我做了一个基于 <strong>Streamlit</strong> 的 AI 智能伴侣聊天应用：</p>
 <ul>
