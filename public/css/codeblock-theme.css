@@ -1,0 +1,15 @@
+/* PaperMod: code blocks follow theme background */
+body { outline: 6px solid red !important; }
+div.highlight pre,
+.highlight pre,
+pre,
+.chroma {
+  background: var(--theme) !important;
+  color: var(--content) !important;
+  border: 1px solid var(--border) !important;
+}
+
+pre code {
+  background: transparent !important;
+  color: inherit !important;
+}

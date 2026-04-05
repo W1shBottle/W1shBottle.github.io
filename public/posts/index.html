@@ -144,6 +144,24 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CS336 Tokenization
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 说明：这是我在学习Stanford CS336(2025版)课程时整理的 Tokenization 笔记，主要依据课程讲义与课堂内容，并加入了我自己的理解与例子。内容涵盖 tokenizer 的基本概念、vocabulary size、character/byte/word 三种朴素分词方案的优缺点，以及 BPE（Byte Pair Encoding）的核心思路与动机。
+tokenization(分词) 把原始文本（Unicode 字符串）切分并编码成 tokens / token IDs 的过程。
+Tokenization = 将 Unicode 字符串通过 tokenizer encode 成 token 序列（通常是整数 ID） 并且支持 decode 把 ID 序列还原为字符串。 Tokenizer 提供： - encode: string -&gt; token IDs (整数, 比如 15496, 11, 995, 0) - decode: token IDs -&gt; string (字符串) Vocabulary size(词表大小) 就是Tokenizer 允许使用的“token 种类”的总数，也等价于 token ID 的取值范围大小。 更具体的说:
+Tokenizer 会维护一张“词表”（vocabulary）：
+token（文本片段） ↔ token ID（整数编号） 的映射表。 Vocabulary size就是这张表里一共有多少个条目（多少个不同 token）。 因为每个 token 都对应一个唯一的整数 ID，所以也可以理解为：
+一共有多少个可用的 token ID（通常 ID 从 0 到 vocab_size-1）。 举个极简例子 假设词表里只有 5 个 token：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-05 00:00:00 +0000 UTC'>2026年4月5日</span>&nbsp;·&nbsp;<span>3 分钟</span>&nbsp;·&nbsp;<span>W1shBottle</span></footer>
+  <a class="entry-link" aria-label="post link to CS336 Tokenization" href="//localhost:1313/posts/cs336_tokenization/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">操作系统笔记：内存 (中)
     </h2>
   </header>

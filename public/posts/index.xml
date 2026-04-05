@@ -6,8 +6,41 @@
     <description>Recent content in 文章 on WishBottle</description>
     <generator>Hugo -- 0.156.0</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 03 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 05 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="//localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CS336 Tokenization</title>
+      <link>//localhost:1313/posts/cs336_tokenization/</link>
+      <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/cs336_tokenization/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;说明：这是我在学习Stanford CS336(2025版)课程时整理的 Tokenization 笔记，主要依据课程讲义与课堂内容，并加入了我自己的理解与例子。内容涵盖 tokenizer 的基本概念、vocabulary size、character/byte/word 三种朴素分词方案的优缺点，以及 BPE（Byte Pair Encoding）的核心思路与动机。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;tokenization分词&#34;&gt;tokenization(分词)&lt;/h1&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;把原始文本（Unicode 字符串）切分并编码成 tokens / token IDs 的过程&lt;/strong&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tokenization = 将 Unicode 字符串通过 tokenizer &lt;strong&gt;encode&lt;/strong&gt; 成 token 序列（通常是整数 ID）&lt;/li&gt;
+&lt;li&gt;并且支持 &lt;strong&gt;decode&lt;/strong&gt; 把 ID 序列还原为字符串。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Tokenizer 提供：
+- encode: string -&amp;gt; token IDs (整数, 比如 15496, 11, 995, 0)
+- decode: token IDs -&amp;gt; string (字符串)
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id=&#34;vocabulary-size词表大小&#34;&gt;Vocabulary size(词表大小)&lt;/h2&gt;
+&lt;p&gt;就是&lt;strong&gt;Tokenizer 允许使用的“token 种类”的总数&lt;/strong&gt;，也等价于 &lt;strong&gt;token ID 的取值范围大小&lt;/strong&gt;。
+更具体的说:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tokenizer 会维护一张“词表”（vocabulary）：&lt;br&gt;
+&lt;strong&gt;token（文本片段） ↔ token ID（整数编号）&lt;/strong&gt; 的映射表。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vocabulary size&lt;/strong&gt;就是这张表里一共有多少个条目（多少个不同 token）。&lt;/li&gt;
+&lt;li&gt;因为每个 token 都对应一个唯一的整数 ID，所以也可以理解为：&lt;br&gt;
+&lt;strong&gt;一共有多少个可用的 token ID&lt;/strong&gt;（通常 ID 从 0 到 vocab_size-1）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;举个极简例子&#34;&gt;举个极简例子&lt;/h3&gt;
+&lt;p&gt;假设词表里只有 5 个 token：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>操作系统笔记：内存 (中)</title>
       <link>//localhost:1313/posts/%E5%86%85%E5%AD%982/</link>
