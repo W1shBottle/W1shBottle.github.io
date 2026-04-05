@@ -9,6 +9,9 @@ TocOpen: false
 ShowReadingTime: true
 math: true
 ---
+> 说明：这是我在学习 **Stanford CS336（2025 版）**课程时整理的 Tokenization 笔记，主要依据课程讲义与课堂内容，并加入了我自己的理解与例子。内容涵盖 tokenizer 的基本概念、vocabulary size、character/byte/word 三种朴素分词方案的优缺点，以及 BPE（Byte Pair Encoding）的核心思路与动机。
+
+---
 
 # tokenization(分词)
 ---
