@@ -308,32 +308,132 @@ Student(String name, int score) {
 
 ## 10. throw 和打印提示不是一回事
 
-`System.out.println()` 负责输出文字；`throw` 会中断当前方法的正常执行，向外寻找能够处理异常的 `catch`。
+这里之前只记住了“成绩不合法就抛异常”，但没有把谁抛出、谁捕获、谁输出连起来。完整的过程应该是：**方法内部通过 `throw` 抛出异常，调用处匹配的 `catch` 捕获异常，再由里面的打印语句输出提示。**
 
-例如这段独立演示：
+### 10.1 方法里：创建异常对象，再抛出去
+
+在 `Student` 类的 `setScore()` 中：
+
+```java
+public void setScore(int score) {
+    if (score < 0 || score > 100) {
+        // 创建异常对象，附上原因，再把异常抛出去
+        throw new IllegalArgumentException("成绩必须在 0 到 100 之间！");
+    }
+
+    this.score = score;
+}
+```
+
+`new IllegalArgumentException(...)` 创建了一个异常对象，括号里的文字是它携带的详细信息。**这一步把信息放进异常对象，并没有输出到控制台。**
+
+`throw` 把异常抛出去。这个方法内部没有相应的 `catch`，异常就沿着方法调用关系向外传播，寻找能够处理它的代码。当前方法不会继续执行 `this.score = score;`，因此非法成绩不会覆盖原成绩。
+
+### 10.2 调用处：catch 接住异常，e 指向这个对象
+
+下面是一段独立演示，说明调用者怎样接住异常，不代表目前菜单里已经加入了这段 `try-catch`：
 
 ```java
 Student student = new Student("小明", 85);
 
 try {
-    student.setScore(150);
+    student.setScore(150); // 进入方法后，发现 150 不合法，抛出异常
+    System.out.println("修改成功！"); // 本次不会执行
 } catch (IllegalArgumentException e) {
+    // 捕获上面抛出的异常，再取出文字并打印
     System.out.println(e.getMessage());
 }
 
-System.out.println(student.getScore());
+System.out.println(student.getScore()); // 异常处理完，继续执行这里
 ```
 
-输出为：
+`catch (IllegalArgumentException e)` 可以拆开看：
+
+- `IllegalArgumentException`：这里能够捕获的异常类型，也能捕获它的子类异常。
+- `e`：异常变量，指向这次被捕获的异常对象。它不是提示文字本身，名字也不一定非要叫 `e`。
+- 大括号里的代码：匹配到异常后执行的处理逻辑。
+
+执行 `student.setScore(150)` 时，异常先从方法内部传回这个调用位置，再由对应的 `catch` 捕获。`try` 中剩下的“修改成功”不会执行。
+
+### 10.3 输出时：先取出信息，再打印
+
+这一句其实包含两步：
+
+```java
+System.out.println(e.getMessage());
+```
+
+拆开可以写成：
+
+```java
+String message = e.getMessage(); // 取出创建异常时附上的提示文字
+System.out.println(message);    // 把这段文字输出到控制台
+```
+
+所以前面的完整演示输出为：
 
 ```text
 成绩必须在 0 到 100 之间！
 85
 ```
 
-150 没有通过检查，因此原成绩仍然是 85。如果异常一直没有被捕获，当前这个单线程控制台程序会结束，不能把 `throw` 当成普通提示语句。
+整个过程串起来就是：
 
-目前菜单和文件读取中的范围检查仍然保留：菜单负责提示和重新输入，读取文件时负责跳过坏记录，`Student` 自己也保证成绩合法。特别是加载方法里的 `catch (NumberFormatException e)`，不会捕获 setter 抛出的普通 `IllegalArgumentException`；当前已有的范围检查会提前跳过这类记录。
+```text
+调用 student.setScore(150)
+    ↓
+方法内检查出 150 不合法
+    ↓
+new 创建异常对象，保存提示文字
+    ↓
+throw 抛出异常，跳过后面的成绩赋值
+    ↓
+调用处的 try 不再往下执行，进入匹配的 catch
+    ↓
+异常变量 e 指向被捕获的异常对象
+    ↓
+e.getMessage() 取出提示文字
+    ↓
+System.out.println(...) 输出到控制台
+    ↓
+catch 正常结束，继续执行后面的代码，读到原成绩 85
+```
+
+**`throw` 负责抛出，`catch` 负责捕获，`getMessage()` 负责取出信息，`println()` 才负责输出。** 捕获异常本身不会自动打印提示，也不会自动重新执行失败的语句。
+
+这个例子里，`catch` 正常执行结束，程序才会继续到后面的打印语句。如果异常一直没有被捕获，它会继续向外传播；在当前这个单线程控制台程序中，最终会导致程序结束，并由运行时报告未捕获的异常。
+
+### 10.4 读取文件时，异常是谁抛出的
+
+文件里写着 `小红,abc` 时，调用的是：
+
+```java
+Integer.parseInt("abc");
+```
+
+虽然我没有在这里手写 `throw`，但 `Integer.parseInt()` 内部会在转换失败时抛出 `NumberFormatException`。它随后被加载方法中的这一段捕获：
+
+```java
+catch (NumberFormatException e) {
+    System.out.println("成绩不是有效整数，跳过：" + line);
+}
+```
+
+和成绩 setter 的演示相比，这里有两个区别：
+
+| 对比项 | 成绩 setter | 文件里的错误数字 |
+| --- | --- | --- |
+| 谁抛出异常 | 自己在 `setScore()` 中写的 `throw` | `Integer.parseInt()` 方法内部 |
+| 抛出的类型 | `IllegalArgumentException` | `NumberFormatException` |
+| 示例中打印的内容 | 用 `e.getMessage()` 取出的异常信息 | 自己拼接的中文提示加上原始行 `line` |
+
+因此，这段 `catch` 虽然用 `e` 接住了异常，但并没有读取 `e.getMessage()`，而是选择输出自己写的提示。这两种写法都可以，取决于希望给使用者展示什么信息。
+
+### 10.5 当前程序中的检查仍然保留
+
+目前菜单和文件读取中的范围检查仍然保留：菜单负责提示和重新输入，读取文件时负责跳过坏记录，`Student` 自己也保证成绩合法。因此，从当前菜单正常操作时，不合法成绩通常已经被前面的 `if` 拦住，不会走到 setter 抛异常的地方。
+
+另外，`catch` 需要匹配异常类型。加载方法里的 `catch (NumberFormatException e)` 不会捕获 `new IllegalArgumentException(...)` 创建的异常；当前文件加载中的范围检查会提前跳过这类不合法记录。如果以后改变检查方式，也要一起考虑调用处应该捕获什么异常。
 
 ---
 
