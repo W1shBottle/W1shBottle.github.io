@@ -1,4 +1,5 @@
 ---
+description: "重新理解 BufferedReader、BufferedWriter，以及程序启动时的数据加载过程。"
 title: "Java 学习笔记（五）：重新理解文件读写与自动加载"
 date: 2026-10-10T00:00:00+08:00
 draft: false

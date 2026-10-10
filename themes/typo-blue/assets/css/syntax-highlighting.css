@@ -1,0 +1,258 @@
+/* Generated using: hugo gen chromastyles --style bw and manually tweaked */
+
+/* Background */
+.bg {
+  background-color: var(--code-background);
+}
+
+/* PreWrapper */
+.chroma {
+  background-color: var(--code-background);
+}
+
+/* LineLink */
+.chroma .lnlinks {
+  outline: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* LineTableTD */
+.chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+/* LineTable */
+.chroma .lntable {
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+/* LineHighlight */
+.chroma .hl {
+  background-color: var(--code-border);
+}
+
+/* LineNumbersTable */
+.chroma .lnt {
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: var(--content-secondary);
+}
+
+/* LineNumbers */
+.chroma .ln {
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: var(--content-secondary);
+}
+
+/* Line */
+.chroma .line {
+  display: flex;
+}
+
+/* Keyword */
+.chroma .k {
+  font-weight: bold;
+}
+
+/* KeywordConstant */
+.chroma .kc {
+  font-weight: bold;
+}
+
+/* KeywordDeclaration */
+.chroma .kd {
+  font-weight: bold;
+}
+
+/* KeywordNamespace */
+.chroma .kn {
+  font-weight: bold;
+}
+
+/* KeywordReserved */
+.chroma .kr {
+  font-weight: bold;
+}
+
+/* NameClass */
+.chroma .nc {
+  font-weight: bold;
+}
+
+/* NameEntity */
+.chroma .ni {
+  font-weight: bold;
+}
+
+/* NameException */
+.chroma .ne {
+  font-weight: bold;
+}
+
+/* NameNamespace */
+.chroma .nn {
+  font-weight: bold;
+}
+
+/* NameTag */
+.chroma .nt {
+  font-weight: bold;
+}
+
+/* Function Names */
+.chroma .nf {
+  font-weight: bold;
+}
+
+/* LiteralString */
+.chroma .s {
+  font-style: bold;
+}
+
+/* LiteralStringAffix */
+.chroma .sa {
+  font-style: italic;
+}
+
+/* LiteralStringBacktick */
+.chroma .sb {
+  font-style: italic;
+}
+
+/* LiteralStringChar */
+.chroma .sc {
+  font-style: italic;
+}
+
+/* LiteralStringDelimiter */
+.chroma .dl {
+  font-style: italic;
+}
+
+/* LiteralStringDoc */
+.chroma .sd {
+  font-style: italic;
+}
+
+/* LiteralStringDouble */
+.chroma .s2 {
+  font-style: italic;
+}
+
+/* LiteralStringEscape */
+.chroma .se {
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* LiteralStringHeredoc */
+.chroma .sh {
+  font-style: italic;
+}
+
+/* LiteralStringInterpol */
+.chroma .si {
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* LiteralStringOther */
+.chroma .sx {
+  font-style: italic;
+}
+
+/* LiteralStringRegex */
+.chroma .sr {
+  font-style: italic;
+}
+
+/* LiteralStringSingle */
+.chroma .s1 {
+  font-style: italic;
+}
+
+/* LiteralStringSymbol */
+.chroma .ss {
+  font-style: italic;
+}
+
+/* OperatorWord */
+.chroma .ow {
+  font-weight: bold;
+}
+
+/* Comment */
+.chroma .c {
+  font-style: italic;
+  color: var(--content-secondary);
+}
+
+/* CommentHashbang */
+.chroma .ch {
+  font-style: italic;
+  color: var(--content-secondary);
+}
+
+/* CommentMultiline */
+.chroma .cm {
+  font-style: italic;
+  color: var(--content-secondary);
+}
+
+/* CommentSingle */
+.chroma .c1 {
+  font-style: italic;
+  color: var(--content-secondary);
+}
+
+/* CommentSpecial */
+.chroma .cs {
+  font-style: italic;
+  color: var(--content-secondary);
+}
+
+/* GenericEmph */
+.chroma .ge {
+  font-style: italic;
+}
+
+/* GenericHeading */
+.chroma .gh {
+  font-weight: bold;
+}
+
+/* GenericPrompt */
+.chroma .gp {
+  font-weight: bold;
+}
+
+/* GenericStrong */
+.chroma .gs {
+  font-weight: bold;
+}
+
+/* GenericSubheading */
+.chroma .gu {
+  font-weight: bold;
+}
+
+sup {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.4em;
+  line-height: 0;
+}

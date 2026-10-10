@@ -1,55 +1,39 @@
-﻿baseURL: "https://w1shbottle.github.io/"
+baseURL: "https://wishbottle.cn/"
 title: "WishBottle"
-
 languageCode: "zh-cn"
 defaultContentLanguage: "zh"
-defaultContentLanguageInSubdir: false
-
-theme: "PaperMod"
-
+hasCJKLanguage: true
+theme: "typo-blue"
+taxonomies:
+  tag: tags
 params:
-  author: "W1shBottle"
-  defaultTheme: "auto"
-  ShowReadingTime: true
-  ShowCodeCopyButtons: true
-
-  assets:
-    favicon: "/favicon.svg"
-
-  profileMode:
-    enabled: true
-    title: "你好，这里是许愿瓶的博客。"
-    subtitle: "Welcome to WishBottle's blog."
-    
-
-menu:
-  main:
-    - name: "文章"
-      url: "/posts/"
-      weight: 1
-    - name: "标签"
-      url: "/tags/"
-      weight: 2
-    - name: "归档"
-      url: "/archives/"
-      weight: 3
-    - name: "搜索"
-      url: "/search/"
-      weight: 4
-    - name: "友链"
-      url: "/links/"
-      weight: 5
-    - name: "个人简介"
-      url: "/about/"
-      weight: 6
-
+  description: "记录代码，也记录理解的过程。Java、操作系统与 AI 学习笔记。"
+  theme: light
+  colorPalette: blue
+  hideHeader: false
+  listSummaries: true
+  paginationSize: 30
+  listDateFormat: "2006.01.02"
+  singleDateFormat: "2006.01.02"
+  breadcrumbs:
+    enabled: false
+  menu:
+    - { name: "文章", url: "/posts/" }
+    - { name: "系列", url: "/series/" }
+    - { name: "归档", url: "/archives/" }
+    - { name: "搜索", url: "/search/" }
+    - { name: "关于", url: "/about/" }
 outputs:
-  home:
-    - HTML
-    - RSS
-    - JSON
-
+  home: [HTML, RSS, JSON]
 markup:
+  highlight:
+    noClasses: false
   goldmark:
     renderer:
       unsafe: true
+    extensions:
+      passthrough:
+        enable: true
+        delimiters:
+          block: [['$$', '$$'], ['\[', '\]']]
+          inline: [['$', '$'], ['\(', '\)']]

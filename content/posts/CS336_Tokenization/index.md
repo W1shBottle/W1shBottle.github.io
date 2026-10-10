@@ -1,4 +1,5 @@
 ---
+description: "从字符、字节与词的编码出发，理解 Tokenizer 的设计选择与 BPE 的基本思路。"
 title: "CS336 Tokenization"
 date: 2026-04-05
 lastmod: 2026-04-05

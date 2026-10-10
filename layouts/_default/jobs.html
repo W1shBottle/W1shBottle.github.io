@@ -1,0 +1,16 @@
+{{ define "main" }}
+<div class="page-heading"><a href="{{ "/" | relURL }}">← 返回首页</a><h1>杭州招聘</h1><p>Java 后端与 AI 开发 · 实习 / 校招</p></div>
+<section class="jobs-board" data-feed="{{ "/data/hangzhou-jobs.json" | relURL }}" aria-label="招聘岗位列表">
+  <div class="jobs-board-summary"><p id="jobs-total" role="status">正在读取企业招聘信息…</p><p>{{ if hugo.IsServer }}本地预览：定时同步将在上线后启用。{{ else }}每小时查询来源。{{ end }}首页按北京时间每天轮换推荐；新收录不等于当天发布，录用要求与开放状态以企业原文为准。</p></div>
+  <div class="jobs-filters">
+    <label>企业<select id="jobs-company"><option value="">全部企业</option></select></label>
+    <label>类型<select id="jobs-type"><option value="">实习与校招</option><option>实习</option><option>校招</option></select></label>
+    <label>方向<select id="jobs-direction"><option value="">全部方向</option><option>Java 后端</option><option>AI 应用</option></select></label>
+  </div>
+  <p id="jobs-result-count" role="status"></p><div id="jobs-results"></div>
+  <details class="jobs-sources"><summary>数据来源与同步状态</summary><div id="jobs-source-list"></div></details>
+  <noscript><p>请启用 JavaScript，或直接访问企业招聘官网。</p></noscript>
+</section>
+{{ $feed := resources.Get "js/jobs-feed.js" | minify | fingerprint }}<script defer src="{{ $feed.RelPermalink }}"></script>
+{{ $board := resources.Get "js/jobs-board.js" | minify | fingerprint }}<script defer src="{{ $board.RelPermalink }}"></script>
+{{ end }}

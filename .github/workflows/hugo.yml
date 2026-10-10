@@ -1,9 +1,12 @@
-﻿name: Deploy Hugo site to Pages
+name: Deploy Hugo site and refresh jobs
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  schedule:
+    # UTC; avoid the busy start of each hour. Actual execution may be delayed.
+    - cron: '17 * * * *'
 
 permissions:
   contents: read
@@ -11,43 +14,49 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
         with:
-          hugo-version: "0.156.0"
-          extended: true
-
-      - name: Build
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Restore the last recruitment snapshot
+        uses: actions/cache/restore@v4
+        with:
+          path: static/data/hangzhou-jobs.json
+          key: jobs-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: jobs-v1-
+      - name: Check recruitment filtering and fallback
         run: |
-          set -e
-          hugo --minify || (
-            echo "==== HUGO TRANSFORM ERROR FILES ====";
-            ls -la /tmp/hugo-transform-error* || true;
-            for f in /tmp/hugo-transform-error*; do
-              echo "---- $f (first 260 lines) ----";
-              sed -n '1,260p' "$f" || true;
-            done;
-            exit 1
-          )
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          python -m unittest discover -s scripts -p 'test_*.py'
+          node scripts/test_jobs_feed.cjs
+      - name: Refresh public recruitment sources
+        run: python scripts/update_jobs.py
+      - name: Keep the recruitment snapshot
+        uses: actions/cache/save@v4
+        with:
+          path: static/data/hangzhou-jobs.json
+          key: jobs-v1-${{ github.run_id }}-${{ github.run_attempt }}
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.156.0'
+          extended: true
+      - name: Build
+        run: hugo --minify
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
-
   deploy:
     environment:
       name: github-pages
@@ -55,6 +64,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

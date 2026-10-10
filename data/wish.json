@@ -1,0 +1,7 @@
+{
+  "collections": [
+    {"id":"java","number":"01","title":"Java 实践笔记","subtitle":"从一个小程序，理解每一行代码。","tags":["Java"],"label":"JAVA / PRACTICE","class":"java"},
+    {"id":"systems","number":"02","title":"操作系统","subtitle":"进程、内存，以及计算机背后的秩序。","tags":["操作系统"],"label":"COMPUTER SYSTEMS","class":"systems"},
+    {"id":"ai","number":"03","title":"AI 学习笔记","subtitle":"从分词到图网络，慢慢把概念串起来。","tags":["CS336","GNN"],"label":"AI / EXPLORATION","class":"ai"}
+  ]
+}

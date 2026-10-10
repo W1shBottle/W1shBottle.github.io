@@ -1,0 +1,4 @@
+<link rel="icon" type="image/svg+xml" href="{{ "/favicon.svg" | relURL }}">
+{{ if or .IsHome (eq .Layout "jobs") }}{{ $jobsCSS := resources.Get "css/jobs.css" | minify | fingerprint }}<link rel="stylesheet" href="{{ $jobsCSS.RelPermalink }}">{{ end }}
+{{ $appleCSS := resources.Get "css/apple.css" | minify | fingerprint }}<link rel="stylesheet" href="{{ $appleCSS.RelPermalink }}">
+<script>try { const mode = localStorage.getItem('wish-typo-theme'); if (mode === 'dark') document.documentElement.style.colorScheme = 'dark'; } catch {}</script>
