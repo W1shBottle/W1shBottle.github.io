@@ -5,9 +5,6 @@ date: 2026-04-05
 lastmod: 2026-04-05
 draft: false
 tags: ["内存管理", "操作系统"]
-ShowToc: true
-TocOpen: false
-ShowReadingTime: true
 math: true
 ---
 

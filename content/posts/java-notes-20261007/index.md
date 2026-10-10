@@ -4,9 +4,6 @@ title: "Java 学习笔记（二）：查询、修改与边界情况"
 date: 2026-10-07T00:00:00+08:00
 draft: false
 tags: ["Java", "学习笔记"]
-ShowToc: true
-TocOpen: false
-ShowReadingTime: true
 ---
 
 > 说明：本文记录学生成绩管理程序的功能扩展，重点整理循环、条件判断和实际遇到的遗漏。姓名与成绩均为示例数据。

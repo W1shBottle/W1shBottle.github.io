@@ -4,9 +4,6 @@ title: "操作系统笔记：进程"
 date: 2026-03-24T00:00:00+08:00
 draft: false
 tags: ["进程", "操作系统"]
-ShowToc: true
-TocOpen: false
-ShowReadingTime: true
 math: true
 ---
 

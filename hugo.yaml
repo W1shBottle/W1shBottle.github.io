@@ -9,14 +9,7 @@ taxonomies:
 params:
   description: "记录代码，也记录理解的过程。Java、操作系统与 AI 学习笔记。"
   theme: light
-  colorPalette: blue
-  hideHeader: false
-  listSummaries: true
   paginationSize: 30
-  listDateFormat: "2006.01.02"
-  singleDateFormat: "2006.01.02"
-  breadcrumbs:
-    enabled: false
   menu:
     - { name: "文章", url: "/posts/" }
     - { name: "系列", url: "/series/" }

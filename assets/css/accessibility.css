@@ -1,0 +1,36 @@
+/* Material fallbacks and user accessibility preferences. Loaded last. */
+@media (prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  .site-header,.jobs-widget,.topic-strip a {
+    background: var(--glass-solid);
+  }
+
+}
+@media (prefers-reduced-transparency:reduce),(prefers-contrast:more) {
+  .site-header,.jobs-widget,.topic-strip a,.note-entry,.single-content,.project-note {
+    background: var(--glass-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: var(--line);
+  }
+
+  body {
+    background-image: none;
+  }
+
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    transition: none !important;
+  }
+
+  .topic-strip a:hover {
+    transform: none;
+  }
+
+}

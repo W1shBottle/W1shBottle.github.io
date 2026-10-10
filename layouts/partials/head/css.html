@@ -1,0 +1,19 @@
+{{/* Vendor foundations remain untouched; site-owned CSS has one explicit load order. */}}
+{{ $styles := slice
+    (resources.Get "css/reset.css")
+    (resources.Get "css/vars.css")
+    (resources.Get "css/utils.css")
+    (resources.Get "css/fonts.css")
+    (resources.Get "css/syntax-highlighting.css")
+    (resources.Get "css/main.css")
+    (resources.Get "css/tokens.css")
+    (resources.Get "css/site.css")
+}}
+{{ if or .IsHome (eq .Layout "jobs") }}
+    {{ $styles = $styles | append (resources.Get "css/jobs.css") }}
+{{ end }}
+{{ $styles = $styles | append (resources.Get "css/accessibility.css") }}
+{{ $bundlePath := "assets/site.css" }}
+{{ if or .IsHome (eq .Layout "jobs") }}{{ $bundlePath = "assets/site-jobs.css" }}{{ end }}
+{{ $combined := $styles | resources.Concat $bundlePath | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $combined.RelPermalink }}" media="all">

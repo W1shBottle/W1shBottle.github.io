@@ -1,5 +1,7 @@
-+++
-date = '{{ .Date }}'
-draft = true
-title = '{{ replace .File.ContentBaseName "-" " " | title }}'
-+++
+---
+title: {{ replace .File.ContentBaseName "-" " " | title | jsonify }}
+description: ""
+date: {{ .Date }}
+draft: true
+tags: []
+---

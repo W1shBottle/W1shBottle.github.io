@@ -4,9 +4,6 @@ title: "Java 学习笔记（五）：文件读写、自动加载与对象封装"
 date: 2026-10-10T00:00:00+08:00
 draft: false
 tags: ["Java", "文件读写", "面向对象", "学习笔记"]
-ShowToc: true
-TocOpen: false
-ShowReadingTime: true
 ---
 
 > 说明：本文围绕学生管理程序，记录文件读写、异常提示和对象封装中实际遇到的问题，以及当天完成的修改与验证。

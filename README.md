@@ -21,10 +21,14 @@ hugo server -D
 新建文章（示例）：
 
 ```bash
-hugo new posts/my-post.md
+hugo new content --kind posts posts/my-post
 ```
 
-然后编辑 `content/posts/my-post.md`，写完把 `draft: true` 改为 `false`。
+这会生成 `content/posts/my-post/index.md`，编辑摘要、标题、标签和正文，写完把 `draft: true` 改为 `false`。文章图片放在同一个目录，使用相对路径引用，例如 `![示意图](memory-layout.png)`。
+
+新文章目录建议使用小写英文与连字符，例如 `java-file-io`；图片使用能说明内容的名称，例如 `student-menu.png`。历史文章目录、图片名和已发布地址保持原样，避免让已有链接失效。单独的 Markdown 页面也受 Hugo 支持，无需为了统一形式迁移已有文件。
+
+需要公式的文章可在头部增加 `math: true`。文章目录和阅读时间由当前站点模板统一展示，不需要添加旧主题的 `ShowToc`、`TocOpen`、`ShowReadingTime` 配置。
 
 ## 部署
 
@@ -54,14 +58,43 @@ hugo --minify
 
 ## 外观
 
-定制样式位于 `assets/css/apple.css`，招聘样式位于 `assets/css/jobs.css`。支持深浅色切换、手机布局与减少动态效果。字体优先使用本机苹方，未安装时使用系统字体；没有分发苹方字体文件。
+定制样式按用途划分，加载顺序由 `layouts/partials/head/css.html` 统一管理：
+
+- `assets/css/tokens.css`：暖灰靛蓝配色、字体、内容宽度等公共变量。强调色使用 `--accent`，浅色背景使用 `--accent-soft`。
+- `assets/css/site.css`：导航、文章、首页、归档、搜索、简介等公共布局与组件。
+- `assets/css/jobs.css`：首页招聘卡片与完整岗位列表，仅相关页面加载。
+- `assets/css/accessibility.css`：玻璃效果回退、减少动态效果与透明度等偏好，最后加载。
+
+支持深浅色切换和手机布局。字体优先使用本机苹方，未安装时使用系统字体；没有分发苹方字体文件。修改简介外观时编辑 `site.css` 中的 `.about-profile`、`.about-avatar`、`.about-bio`，无需在正文中写 CSS。
+
+简介页的 `summary` 单独保留既有 RSS 摘要及其内联样式，让不加载站点 CSS 的订阅阅读器仍按原样显示。正文中的布局使用上述 CSS 类；以后修改简介首段时，也应检查这份摘要是否需要同步。
 
 主题保存在 `themes/typo-blue`，保留 MIT 许可证；站点模板覆盖位于 `layouts/`。文章原有地址和图片保持兼容。
 
-## 目录结构（简要）
+## 目录结构
 
-- `content/`：文章与页面内容
-- `static/`：静态资源（favicon、图片等）
-- `layouts/`：自定义模板覆盖（可选）
-- `i18n/`：界面文字翻译（可选）
-- `hugo.yaml`：站点配置
+```text
+.
+├── .github/workflows/hugo.yml  # 自动同步、检查、构建和发布
+├── archetypes/                # 新内容模板
+│   ├── default.md             # 普通页面模板
+│   └── posts/index.md         # 带独立目录的文章模板
+├── assets/
+│   ├── css/                   # 按职责划分的站点样式
+│   └── js/                    # 招聘展示与筛选逻辑
+├── content/
+│   ├── posts/                 # 文章和对应图片
+│   └── *.md                   # 简介、归档、搜索、系列等页面
+├── data/wish.json             # 学习系列配置
+├── layouts/                  # 站点模板，覆盖主题同名模板
+├── scripts/                  # 招聘同步脚本和相关检查
+├── static/                   # 原样复制的图标、头像、CNAME 和招聘快照
+├── themes/typo-blue/          # 第三方主题，保留上游文件和许可证
+├── .gitignore
+├── hugo.yaml                 # 站点配置，paginationSize 控制列表分页
+└── README.md
+```
+
+`assets/` 中的样式与脚本经过 Hugo 处理，`static/` 中的文件直接复制，二者用途不同。构建时出现的 `public/`、`resources/` 是可再生成的输出和缓存，已忽略，不放文章源码，也不手工修改。
+
+当前页面文字由站点模板提供，没有使用翻译表。旧 PaperMod 主题不再作为依赖。第三方 Typo 主题的说明、示例和许可证保留在主题目录；网站定制集中放在根目录的 `assets/` 与 `layouts/`，便于以后核对上游版本。

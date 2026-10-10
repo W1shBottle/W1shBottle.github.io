@@ -5,9 +5,6 @@ date: 2026-04-06
 lastmod: 2026-04-06
 draft: false
 tags: ["GNN"]
-ShowToc: true
-TocOpen: false
-ShowReadingTime: true
 math: true
 ---
 

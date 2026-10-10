@@ -5,5 +5,5 @@
 <link rel="canonical" href="{{ .Permalink }}">
 {{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }}">{{ end }}
 {{ partial "opengraph.html" . }}
-{{ partialCached "head/css.html" . }}
+{{ partial "head/css.html" . }}
 {{ partial "hooks/head_end.html" . }}

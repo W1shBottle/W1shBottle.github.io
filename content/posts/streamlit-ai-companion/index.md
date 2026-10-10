@@ -4,9 +4,6 @@ title: "用 Streamlit + DeepSeek 做一个 AI 智能伴侣：从能跑到工程�
 date: 2026-03-05T00:00:00+08:00
 draft: false
 tags: ["项目"]
-ShowToc: true
-TocOpen: false
-ShowReadingTime: true
 math: true
 ---
 

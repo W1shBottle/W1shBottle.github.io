@@ -4,7 +4,7 @@
 {{ if eq .Kind "taxonomy" }}
 <div class="tag-cloud">{{ range .Pages }}<a href="{{ .RelPermalink }}">{{ .Title }} <small>{{ len .Pages }}</small></a>{{ end }}</div>
 {{ else }}
-{{ $paginator := .Paginate .Pages 30 }}{{ range $paginator.Pages }}{{ partial "post-entry.html" . }}{{ end }}
+{{ $paginator := .Paginate .Pages (site.Params.paginationSize | default 30) }}{{ range $paginator.Pages }}{{ partial "post-entry.html" . }}{{ end }}
 {{ if gt $paginator.TotalPages 1 }}{{ partial "pagination-controls.html" $paginator }}{{ end }}
 {{ end }}
 {{ end }}

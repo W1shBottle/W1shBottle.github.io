@@ -4,9 +4,6 @@ title: "Java 学习笔记（四）：存档校验与项目拆分"
 date: 2026-10-09T00:00:00+08:00
 draft: false
 tags: ["Java", "文件读写", "项目结构"]
-ShowToc: true
-TocOpen: false
-ShowReadingTime: true
 ---
 
 > 说明：本文整理成绩管理程序的存档处理和项目结构调整，保留实际遇到的问题，以及刚接触、还需要继续练习的内容。
