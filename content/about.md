@@ -38,12 +38,9 @@ summary: |-
 
 <div class="about-icons">
   <a href="https://github.com/W1shBottle" target="_blank" rel="noopener" title="GitHub">
-    <img src="/icons/github.svg" alt="GitHub" />
+    <img src="/icons/github.svg?v=2" alt="GitHub" />
   </a>
   <a href="https://space.bilibili.com/3546733025953919" target="_blank" rel="noopener" title="B站">
-    <img src="/icons/bilibili.svg" alt="B站" />
-  </a>
-  <a href="https://www.zhihu.com/people/yp-76-79" target="_blank" rel="noopener" title="知乎">
-    <img src="/icons/zhihu.svg" alt="知乎" />
+    <img src="/icons/bilibili.svg?v=2" alt="B站" />
   </a>
 </div>
