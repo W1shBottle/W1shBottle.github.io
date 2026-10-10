@@ -1,6 +1,6 @@
 # WishBottle's Blog
 
-这是我的个人博客源码仓库，使用 **Hugo** + [Typo](https://github.com/tomfran/typo) 主题搭建，定制蓝色配色、圆角卡片和玻璃质感导航。
+这是我的个人博客源码仓库，使用 **Hugo** + [Typo](https://github.com/tomfran/typo) 主题搭建，定制暖灰靛蓝配色、圆角卡片和半透明导航。
 
 - 站点地址：<https://wishbottle.cn/>
 - GitHub Pages：<https://w1shbottle.github.io/>
