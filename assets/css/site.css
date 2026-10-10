@@ -1088,3 +1088,9 @@ body {
   flex: 1;
   min-width: 220px;
 }
+
+@media (max-width:360px) {
+  .site-nav a {
+    padding: 8px 5px;
+  }
+}
