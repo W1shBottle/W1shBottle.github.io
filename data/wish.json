@@ -1,7 +1,51 @@
 {
   "collections": [
-    {"id":"java","number":"01","title":"Java 实践笔记","subtitle":"从一个小程序，理解每一行代码。","tags":["Java"],"label":"JAVA / PRACTICE","class":"java"},
-    {"id":"systems","number":"02","title":"操作系统","subtitle":"进程、内存，以及计算机背后的秩序。","tags":["操作系统"],"label":"COMPUTER SYSTEMS","class":"systems"},
-    {"id":"ai","number":"03","title":"AI 学习笔记","subtitle":"从分词到图网络，慢慢把概念串起来。","tags":["CS336","GNN"],"label":"AI / EXPLORATION","class":"ai"}
+    {
+      "id": "ops-ticket",
+      "number": "01",
+      "title": "设备运维工单开发",
+      "subtitle": "从工单对象到后端接口，记录业务规则与工程实践。",
+      "tags": [
+        "设备运维工单"
+      ],
+      "series": "ops-ticket",
+      "label": "JAVA / TICKET",
+      "class": "java"
+    },
+    {
+      "id": "java",
+      "number": "02",
+      "title": "学生管理系统",
+      "subtitle": "集合增删改查、文件读写与第一个控制台项目。",
+      "tags": [
+        "Java"
+      ],
+      "label": "JAVA / PRACTICE",
+      "class": "java",
+      "series": "student-management"
+    },
+    {
+      "id": "systems",
+      "number": "03",
+      "title": "操作系统",
+      "subtitle": "进程、内存，以及计算机背后的秩序。",
+      "tags": [
+        "操作系统"
+      ],
+      "label": "COMPUTER SYSTEMS",
+      "class": "systems"
+    },
+    {
+      "id": "ai",
+      "number": "04",
+      "title": "AI 学习笔记",
+      "subtitle": "从分词到图网络，慢慢把概念串起来。",
+      "tags": [
+        "CS336",
+        "GNN"
+      ],
+      "label": "AI / EXPLORATION",
+      "class": "ai"
+    }
   ]
 }

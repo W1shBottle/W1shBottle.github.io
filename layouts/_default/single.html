@@ -3,17 +3,21 @@
 <article>
   <div class="page-heading article-intro">
     {{ if $isPost }}<a href="{{ "/posts/" | relURL }}">← 返回文章</a>{{ end }}
+    {{ if .Params.learning_series }}
+    <div class="article-series">{{ .Params.series_title }} · 第 {{ .Params.series_order }} 篇</div><h1>{{ .Params.chapter_title | default .Title }}</h1>
+    {{ else }}
     {{ $parts := split .Title "｜" }}
-    {{ if and (hasPrefix .Title "Java 学习笔记") (in .Title "：") }}{{ $parts = split .Title "：" }}{{ end }}
     {{ if gt (len $parts) 1 }}<div class="article-series">{{ index $parts 0 }}</div><h1>{{ delimit (after 1 $parts) "｜" }}</h1>{{ else }}<h1>{{ .Title }}</h1>{{ end }}
+    {{ end }}
     {{ if $isPost }}<div class="article-meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time> · 约 {{ .ReadingTime }} 分钟</div><div class="entry-tags">{{ range .GetTerms "tags" }}<a href="{{ .RelPermalink }}"># {{ .LinkTitle }}</a>{{ end }}</div>{{ end }}
   </div>
   {{ if and $isPost (ne .TableOfContents "<nav id=\"TableOfContents\"></nav>") }}<details class="toc"><summary>文章目录</summary>{{ .TableOfContents }}</details>{{ end }}
   <div class="single-content">{{ .Content }}</div>
 </article>
-{{ if and $isPost (in (.Params.tags | default slice) "Java") }}
-<nav class="series-nav" aria-label="Java 学习系列"><h2>继续阅读 · Java 学习笔记</h2><ol>
-{{ $current := .RelPermalink }}{{ range (where site.RegularPages "Section" "posts").ByDate }}{{ if in (.Params.tags | default slice) "Java" }}<li><a href="{{ .RelPermalink }}" {{ if eq .RelPermalink $current }}aria-current="page"{{ end }}>{{ .Title }}</a></li>{{ end }}{{ end }}
-</ol></nav>{{ end }}
+{{ if and $isPost .Params.learning_series }}
+{{ $series := .Params.learning_series }}{{ $current := .RelPermalink }}
+<nav class="series-nav" aria-label="{{ .Params.series_title }}系列"><h2>继续阅读 · {{ .Params.series_title }}</h2><ol>
+{{ range (where (where site.RegularPages "Section" "posts") "Params.learning_series" $series).ByDate }}<li><a href="{{ .RelPermalink }}" {{ if eq .RelPermalink $current }}aria-current="page"{{ end }}>{{ .Title }}</a></li>{{ end }}
+</ol><a href="{{ "/series/" | relURL }}">查看全部学习系列 →</a></nav>{{ end }}
 <div class="article-bottom"><a href="{{ "/posts/" | relURL }}">← 浏览全部文章</a><a href="#top">回到顶部 ↑</a></div>
 {{ end }}

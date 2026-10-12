@@ -1,9 +1,13 @@
 ---
 description: "从学生对象、列表和菜单循环开始，把基础语法组合成一个能运行的小程序。"
-title: "Java 学习笔记（一）：从基础语法到控制台程序"
+title: "学生管理系统 01 从基础语法到控制台程序"
 date: 2026-10-06T00:00:00+08:00
 draft: false
-tags: ["Java", "学习笔记"]
+tags: ["Java", "学习笔记", "学生管理系统"]
+learning_series: "student-management"
+series_title: "学生管理系统"
+series_order: 1
+chapter_title: "从基础语法到控制台程序"
 ---
 
 > 说明：本文记录一个 Java 控制台练习的实现思路，结合代码示例和自己的理解整理。代码按学习阶段逐步完善，文中的学生姓名和成绩均为示例数据。

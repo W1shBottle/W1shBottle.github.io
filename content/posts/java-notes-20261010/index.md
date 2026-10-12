@@ -1,9 +1,13 @@
 ---
 description: "从文件加载时的异常提示，到 private、getter/setter 和成绩范围校验，继续整理学生管理程序。"
-title: "Java 学习笔记（五）：文件读写、自动加载与对象封装"
+title: "学生管理系统 05 文件读写自动加载与对象封装"
 date: 2026-10-10T00:00:00+08:00
 draft: false
-tags: ["Java", "文件读写", "面向对象", "学习笔记"]
+tags: ["Java", "文件读写", "面向对象", "学习笔记", "学生管理系统"]
+learning_series: "student-management"
+series_title: "学生管理系统"
+series_order: 5
+chapter_title: "文件读写自动加载与对象封装"
 ---
 
 > 说明：本文围绕学生管理程序，记录文件读写、异常提示和对象封装中实际遇到的问题，以及当天完成的修改与验证。

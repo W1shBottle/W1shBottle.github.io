@@ -1,9 +1,13 @@
 ---
 description: "让输错的内容不再中断程序，再把学生名单保存成文本文件。"
-title: "Java 学习笔记（三）：异常处理与文件保存"
+title: "学生管理系统 03 异常处理与文件保存"
 date: 2026-10-08T00:00:00+08:00
 draft: false
-tags: ["Java", "异常处理", "文件读写"]
+tags: ["Java", "异常处理", "文件读写", "学生管理系统"]
+learning_series: "student-management"
+series_title: "学生管理系统"
+series_order: 3
+chapter_title: "异常处理与文件保存"
 ---
 
 > 说明：本文记录整数输入重试和文本文件保存的学习过程。代码片段按当日练习阶段整理，文件路径统一使用示例写法。

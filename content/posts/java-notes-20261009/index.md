@@ -1,9 +1,13 @@
 ---
 description: "完善自动保存与存档校验，按职责拆分类，整理第一个 Java 项目的结构。"
-title: "Java 学习笔记（四）：存档校验与项目拆分"
+title: "学生管理系统 04 存档校验与项目拆分"
 date: 2026-10-09T00:00:00+08:00
 draft: false
-tags: ["Java", "文件读写", "项目结构"]
+tags: ["Java", "文件读写", "项目结构", "学生管理系统"]
+learning_series: "student-management"
+series_title: "学生管理系统"
+series_order: 4
+chapter_title: "存档校验与项目拆分"
 ---
 
 > 说明：本文整理成绩管理程序的存档处理和项目结构调整，保留实际遇到的问题，以及刚接触、还需要继续练习的内容。
