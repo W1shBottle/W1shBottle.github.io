@@ -12,6 +12,7 @@ params:
   paginationSize: 30
   menu:
     - { name: "首页", url: "/" }
+    - { name: "学习", url: "/learning/" }
     - { name: "文章", url: "/posts/" }
     - { name: "系列", url: "/series/" }
     - { name: "归档", url: "/archives/" }

@@ -1,6 +1,6 @@
 {{ define "main" }}
-<div class="page-heading"><h1>搜索</h1><p>找找写过的概念、代码和问题。</p></div>
-<label class="sr-only" for="search-input">搜索文章</label><input class="search-box" id="search-input" type="search" placeholder="输入关键词，例如 Java、内存、GNN" autocomplete="off">
+<div class="page-heading"><h1>搜索</h1><p>查找文章与课程里的概念、代码和问题。</p></div>
+<label class="sr-only" for="search-input">搜索文章与课程</label><input class="search-box" id="search-input" type="search" placeholder="输入关键词，例如 Java、工单、内存" autocomplete="off">
 <p id="search-status" role="status">输入关键词开始搜索。</p><div id="search-results"></div>
 <script>
 (() => {
@@ -15,10 +15,10 @@
       const posts = await load(); if (input.value.trim().toLocaleLowerCase() !== query) return;
       const words = query.split(/\s+/);
       const matches = posts.filter(post => words.every(word => [post.title,post.content,...(post.tags || [])].join(' ').toLocaleLowerCase().includes(word)));
-      status.textContent = matches.length ? `找到 ${matches.length} 篇文章` : '没有找到相关文章，试试其他关键词。';
+      status.textContent = matches.length ? `找到 ${matches.length} 项文章与课程` : '没有找到相关内容，试试其他关键词。';
       for (const post of matches) {
         const row = document.createElement('article'); row.className = 'note-entry';
-        const date = document.createElement('time'); date.className = 'note-date'; date.textContent = post.date;
+        const date = document.createElement('div'); date.className = 'note-date'; date.textContent = post.section === 'learning' ? '学习 · 课程' : post.date;
         const body = document.createElement('div'), title = document.createElement('h3'), link = document.createElement('a'), text = document.createElement('p');
         link.href = post.url; link.textContent = post.title; text.textContent = post.description;
         title.append(link); body.append(title,text); row.append(date,body); results.append(row);

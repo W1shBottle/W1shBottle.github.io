@@ -1089,8 +1089,24 @@ body {
   min-width: 220px;
 }
 
-@media (max-width:360px) {
+@media (min-width:701px) and (max-width:800px) {
+  .site-header {
+    gap: 16px;
+  }
+
+  .site-nav a {
+    padding: 10px;
+  }
+}
+
+@media (max-width:450px) {
   .site-nav a {
     padding: 8px 5px;
+  }
+}
+
+@media (max-width:360px) {
+  .site-nav a {
+    padding: 8px 3px;
   }
 }

@@ -1,5 +1,5 @@
 {{- $items := slice -}}
-{{- range where site.RegularPages "Section" "posts" -}}
-{{- $items = $items | append (dict "title" .Title "url" .RelPermalink "description" (.Description | default (.Summary | plainify | truncate 110)) "content" .Plain "tags" .Params.tags "date" (.Date.Format "2006.01.02")) -}}
+{{- range where site.RegularPages "Section" "in" (slice "posts" "learning") -}}
+{{- $items = $items | append (dict "title" .Title "url" .RelPermalink "description" (.Description | default (.Summary | plainify | truncate 110)) "content" .Plain "tags" .Params.tags "date" (.Date.Format "2006.01.02") "section" .Section) -}}
 {{- end -}}
 {{- $items | jsonify -}}

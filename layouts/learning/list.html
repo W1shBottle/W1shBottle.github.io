@@ -1,0 +1,55 @@
+{{ define "main" }}
+<div class="learning-page">
+  <header class="page-heading learning-intro">
+    <p class="eyebrow">JAVA 后端 · 从练习到项目</p>
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Description | default "用设备运维工单平台串起 Java、数据库、Web、测试与部署，为暑期实习做准备。" }}</p>
+    <dl class="learning-facts">
+      <div><dt>20 周</dt><dd>按周设目标，保留弹性</dd></div>
+      <div><dt>15—18 小时</dt><dd>每周建议投入</dd></div>
+      <div><dt>一个项目</dt><dd>设备运维工单平台</dd></div>
+    </dl>
+    <div class="learning-actions">
+      <a class="learning-button learning-button-primary" href="{{ "/learning/start/" | relURL }}">开始阅读 →</a>
+      <a class="learning-button" href="{{ "/learning/schedule/" | relURL }}">查看 20 周日程</a>
+    </div>
+    <p class="learning-scope">这是一套学习计划与参考材料，项目功能需要亲手实现和验收。</p>
+  </header>
+
+  {{ with .Content }}<div class="single-content learning-overview">{{ . }}</div>{{ end }}
+
+  {{ $pages := .RegularPages.ByWeight }}
+  {{ $groups := slice
+    (dict "id" "start" "title" "起步与路线" "description" "先了解目标、项目和安排，再开始第一步。")
+    (dict "id" "course" "title" "项目课程" "description" "从一个工单对象出发，逐步完成可演示、可测试的应用。")
+    (dict "id" "tools" "title" "工具与求职" "description" "查约定、解决卡点，留下验收证据并准备投递。")
+    (dict "id" "answers" "title" "自测答案" "description" "先独立尝试并保留自己的答案，再核对实现思路。")
+  }}
+  <nav class="learning-group-links" aria-label="学习目录分组">
+    {{ range $groups }}<a href="#{{ .id }}">{{ .title }}</a>{{ end }}
+  </nav>
+  {{ range $groups }}
+    {{ $group := . }}
+    <section class="learning-group" id="{{ .id }}" aria-labelledby="{{ .id }}-title">
+      <div class="learning-group-heading"><h2 id="{{ .id }}-title">{{ .title }}</h2><p>{{ .description }}</p></div>
+      <div class="learning-grid">
+        {{ range where $pages "Params.group" $group.id }}
+        <article class="learning-card">
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }} <span aria-hidden="true">↗</span></a></h3>
+          <p>{{ .Description }}</p>
+        </article>
+        {{ end }}
+      </div>
+    </section>
+  {{ end }}
+
+  <aside class="learning-download" aria-labelledby="learning-download-title">
+    <h2 id="learning-download-title">保存一份，随时接着学</h2>
+    <p>完整课程、日程、自测答案和记录模板可保存到本地。离线阅读不依赖账号；开发工具和首次下载依赖仍需按阶段准备。</p>
+    <div class="learning-actions">
+      <a class="learning-button" href="{{ "/learning/downloads/java-internship-self-study.zip" | relURL }}" download>下载完整自学包 ZIP ↓</a>
+      <a class="learning-button" href="{{ "/learning/downloads/reader.html" | relURL }}">打开单页阅读版 ↗</a>
+    </div>
+  </aside>
+</div>
+{{ end }}

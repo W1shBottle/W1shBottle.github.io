@@ -2,7 +2,7 @@
   <a class="brand" href="{{ "/" | relURL }}">WishBottle<span>.</span></a>
   <nav class="site-nav" aria-label="主导航">
     {{ $current := .RelPermalink }}
-    {{ range site.Params.menu }}<a href="{{ .url | relURL }}" {{ if eq $current .url }}aria-current="page"{{ end }}>{{ .name }}</a>{{ end }}
+    {{ range site.Params.menu }}<a href="{{ .url | relURL }}" {{ if eq $current .url }}aria-current="page"{{ else if and (eq .url "/learning/") (hasPrefix $current "/learning/") }}aria-current="true"{{ end }}>{{ .name }}</a>{{ end }}
     <button id="theme-toggle" type="button" aria-label="切换深浅主题" title="切换深浅主题"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg></button>
   </nav>
 </div>

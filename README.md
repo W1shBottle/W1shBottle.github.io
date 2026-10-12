@@ -30,6 +30,22 @@ hugo new content --kind posts posts/my-post
 
 需要公式的文章可在头部增加 `math: true`。文章目录和阅读时间由当前站点模板统一展示，不需要添加旧主题的 `ShowToc`、`TocOpen`、`ShowReadingTime` 配置。
 
+## 学习板块
+
+`/learning/` 单独承载 Java 实习自学计划，顶部导航的“学习”进入。14 篇资料包括20周弹性日程、设备运维工单项目、第一课、三个阶段课程、春季投递安排、资料与排错、接口约定、验收模板和参考答案。课程属于学习材料，项目功能需学习者亲手实现与验收。
+
+课程源码在 `content/learning/`，使用 JSON front matter：`weight` 控制阅读顺序，`group` 为 `start`、`course`、`tools` 或 `answers`。修改正文时维护站内 `/learning/<slug>/` 链接，保持已有网址稳定。模板位于 `layouts/learning/`，样式位于 `assets/css/learning.css`；课程同时进入全站搜索，日常笔记仍放 `content/posts/`。
+
+更新课程后，从同一份公开正文重新生成离线下载，再构建博客：
+
+```bash
+python -m pip install markdown beautifulsoup4
+python scripts/build_learning_downloads.py
+hugo --minify
+```
+
+生成器只需要在编辑课程时运行；GitHub Actions 直接发布已提交的静态文件。下载产物在 `static/learning/downloads/`：`reader.html` 为不依赖网络资源的单页阅读版，`java-internship-self-study.zip` 包含14篇 Markdown 与阅读版。正文内的外部文档仍需联网访问，开发工具和依赖按阶段另行准备。不要将个人进度记录、本机路径、账号或私人聊天复制进公开课程或附件。
+
 ## 部署
 
 本仓库通过 GitHub Actions 自动构建并部署到 GitHub Pages：
