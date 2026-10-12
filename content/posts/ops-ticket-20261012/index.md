@@ -229,6 +229,51 @@ private Long assigneeId;
 
 新工单默认 `OPEN`。处理人用 `Long`，允许以 `null` 表示尚未分配；基本类型 `long` 不能取 `null`。
 
+### Long 和 long 的区别
+
+`long` 是 Java 的基本数据类型，用来保存 64 位有符号整数；`Long` 是它对应的包装类，变量可以引用一个包装了整数值的对象，也可以为 `null`。两者表示的整数范围相同，区别不在数字能有多大。
+
+| 对比 | `long` | `Long` |
+| --- | --- | --- |
+| 类型 | 基本类型 | 引用类型，对应的包装类 |
+| 能否为 `null` | 不能 | 可以 |
+| 未显式初始化的实例字段默认值 | `0L` | `null` |
+| 本项目中的例子 | 工单编号 `id`、派单参数 `engineerId` | 允许暂未分配的 `assigneeId` |
+
+表中的默认值针对字段。方法里的局部变量无论声明为 `long` 还是 `Long`，都必须先完成赋值才能读取，不能认为局部变量也会自动得到 0 或 `null`。
+
+对于处理人编号，`null` 表示“还没有处理人”，0 则是一个具体的数值；当前业务规则规定工程师编号必须大于 0。使用 `Long`，就能直接区分“尚未分配”和“已经有编号”。工单本身必须有合法编号，因此 `id` 使用 `long`，并在构造器里检查它大于 0。
+
+Java 可以在基本类型和包装类型之间自动转换：
+
+```java
+Long boxed = 20L;    // 自动装箱：把 long 值转换为 Long 引用
+long value = boxed; // 自动拆箱：从 Long 中取出 long 值
+```
+
+数字后的 `L` 表示这个整数字面量是 `long` 类型，并不表示它本身就是 `Long` 对象。派单方法接收 `long engineerId`，再执行 `this.assigneeId = engineerId` 时，就发生了自动装箱，所以参数和字段的类型可以不同。
+
+拆箱前必须注意空引用。下面是会报错的示例：
+
+```java
+Long assigneeId = null;
+long engineerId = assigneeId; // 拆箱时抛出 NullPointerException
+```
+
+同样，直接对空的 `assigneeId` 做 `assigneeId > 0` 判断，也会因为拆箱而报错。需要先判断是否为空，例如：
+
+```java
+if (assigneeId != null && assigneeId > 0) {
+    System.out.println("已分配工程师：" + assigneeId);
+}
+```
+
+`&&` 会先判断左边；左边为 `false` 时不执行右边，因此不会对 `null` 拆箱。当前 Demo 里用字符串拼接打印 `getAssigneeId()`，可以显示 `null`，不需要先把它转换为 `long`。
+
+比较时也要区分：两个 `long` 用 `==` 比较数值；两个 `Long` 变量直接用 `==` 比较的是对象引用。若要比较两个可能为空的 `Long` 编号是否相等，可以使用 `java.util.Objects.equals(a, b)`。如果一边是 `Long`、另一边是 `long`，比较会涉及拆箱，同样要留意空引用。
+
+### 派单时先检查再赋值
+
 今天只实现从 `OPEN` 到 `IN_PROGRESS` 的派单。其余两个状态先定义下来，处理和验收功能还没有写。状态变化由业务方法控制：
 
 ```java
