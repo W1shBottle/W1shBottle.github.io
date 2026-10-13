@@ -63,6 +63,9 @@ def read_chapters() -> list[Chapter]:
             continue
         raw = path.read_text(encoding="utf-8-sig").lstrip()
         metadata, end = json.JSONDecoder().raw_decode(raw)
+        # Project implementation docs are separate from the 14-chapter course.
+        if metadata.get("group") == "project-docs":
+            continue
         if metadata.get("draft", False):
             continue
         if not metadata.get("title") or not isinstance(metadata.get("weight"), int):

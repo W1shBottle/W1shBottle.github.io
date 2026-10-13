@@ -1,12 +1,15 @@
 {{ define "main" }}
-{{ $chapters := .CurrentSection.Pages.ByWeight }}
+{{ $isProjectDoc := eq .Params.group "project-docs" }}
+{{ $chapters := where .CurrentSection.Pages.ByWeight "Params.group" "ne" "project-docs" }}
+{{ if $isProjectDoc }}{{ $chapters = where .CurrentSection.Pages.ByWeight "Params.group" "project-docs" }}{{ end }}
+{{ $directoryTitle := cond $isProjectDoc "项目文档目录" "完整学习目录" }}
 {{ $current := .RelPermalink }}
 {{ $position := 0 }}
 {{ range $index, $chapter := $chapters }}{{ if eq $chapter.RelPermalink $current }}{{ $position = $index }}{{ end }}{{ end }}
 <article class="learning-article">
   <header class="page-heading article-intro">
     <a href="{{ "/learning/" | relURL }}">← 返回学习板块</a>
-    <div class="article-series">Java 实习自学 · 设备运维工单平台</div>
+    <div class="article-series">{{ if $isProjectDoc }}项目文档 · 设备运维工单平台{{ else }}Java 实习自学 · 设备运维工单平台{{ end }}</div>
     <h1>{{ .Title }}</h1>
     {{ with .Description }}<p>{{ . }}</p>{{ end }}
   </header>
@@ -14,17 +17,17 @@
   <aside class="learning-hint"><strong>先做，再看答案。</strong> 先写下自己的思路和预测结果；核对后关闭答案，独立完成一个小变体。示例中的局部代码需要按说明补入自己的项目。</aside>
   {{ end }}
   <details class="toc learning-chapters">
-    <summary>完整学习目录 · {{ len $chapters }} 篇</summary>
-    <nav aria-label="完整学习目录"><ol>
+    <summary>{{ $directoryTitle }} · {{ len $chapters }} 篇</summary>
+    <nav aria-label="{{ $directoryTitle }}"><ol>
       {{ range $chapters }}<li><a href="{{ .RelPermalink }}"{{ if eq .RelPermalink $current }} aria-current="page"{{ end }}>{{ .Title }}</a></li>{{ end }}
     </ol></nav>
   </details>
   {{ if .Fragments.Headings }}<details class="toc learning-toc" open><summary>本篇目录</summary>{{ .TableOfContents }}</details>{{ end }}
   <div class="single-content">{{ .Content }}</div>
 </article>
-<nav class="learning-pagination" aria-label="课程章节切换">
+<nav class="learning-pagination" aria-label="{{ if $isProjectDoc }}项目文档切换{{ else }}课程章节切换{{ end }}">
   {{ if gt $position 0 }}{{ with index $chapters (sub $position 1) }}<a href="{{ .RelPermalink }}"><span>← 上一篇</span><strong>{{ .Title }}</strong></a>{{ end }}{{ else }}<a href="{{ "/learning/" | relURL }}"><span>← 学习首页</span><strong>查看完整学习路线</strong></a>{{ end }}
-  {{ if lt (add $position 1) (len $chapters) }}{{ with index $chapters (add $position 1) }}<a href="{{ .RelPermalink }}"><span>下一篇 →</span><strong>{{ .Title }}</strong></a>{{ end }}{{ else }}<a href="{{ "/learning/checklists/" | relURL }}"><span>继续实践 →</span><strong>回到验收与记录模板</strong></a>{{ end }}
+  {{ if lt (add $position 1) (len $chapters) }}{{ with index $chapters (add $position 1) }}<a href="{{ .RelPermalink }}"><span>下一篇 →</span><strong>{{ .Title }}</strong></a>{{ end }}{{ else if $isProjectDoc }}<a href="{{ "/learning/project-docs/" | relURL }}"><span>返回项目文档 →</span><strong>查看项目概览</strong></a>{{ else }}<a href="{{ "/learning/checklists/" | relURL }}"><span>继续实践 →</span><strong>回到验收与记录模板</strong></a>{{ end }}
 </nav>
 <div class="article-bottom"><a href="{{ "/learning/" | relURL }}">← 浏览全部课程</a><a href="#top">回到顶部 ↑</a></div>
 {{ end }}
