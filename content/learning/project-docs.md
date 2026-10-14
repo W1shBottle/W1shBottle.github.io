@@ -1,8 +1,8 @@
 {
   "title": "设备运维工单项目文档",
   "description": "项目当前能力、代码结构和运行入口。",
-  "date": "2026-10-13T00:00:00+08:00",
-  "lastmod": "2026-10-13T00:00:00+08:00",
+  "date": "2026-10-14T00:00:00+08:00",
+  "lastmod": "2026-10-14T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
@@ -12,7 +12,7 @@
 
 围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 Java 项目。当前处于 **v0.1 开发阶段**，以控制台 Demo 验证领域对象、集合管理和文件读写；版本名称是里程碑规划，尚未发布正式版本。
 
-文档核对日期：2026-10-13。
+文档核对日期：2026-10-14。
 
 ## 项目文档
 
@@ -28,10 +28,11 @@
 
 - 工单编号、标题校验，修改标题时复用校验规则。
 - 待处理工单派给指定工程师，拒绝重复派单。
-- 使用 LinkedHashMap 按编号管理工单，支持编号查询、状态筛选。
-- 单张示例工单以 UTF-8 Properties 文件保存，另一个 Demo 读取、解析并通过校验恢复 Ticket 对象。
+- 使用 LinkedHashMap 按编号管理工单，支持编号查询、状态筛选和取得全部工单。
+- TicketFileStore.save 保存工单列表，loadAll 按 count 读取并恢复多张工单，文件编码为 UTF-8。
+- TicketLoadDemo 用显式 AssertionError 检查两张示例工单的数量和字段。正常场景此前通过，错预期值能触发失败。
 
-已完成单张工单恢复，尚未恢复整个 TicketService；count 未用于遍历，多张工单与加载失败保护仍待实现。数据库、HTTP 接口、登录权限与完整验收流程属于后续规划。
+已完成多张工单的保存与列表恢复，尚未把恢复列表整体装入 TicketService；重复编号检查、坏文件专项测试和写入失败保护仍待完成。数据库、HTTP 接口、登录权限与完整验收流程属于后续规划。
 
 ## 快速运行
 
@@ -70,12 +71,15 @@ JavaProject/
 │   ├── TicketPractice.java
 │   ├── TicketArrayDemo.java
 │   ├── TicketServiceDemo.java
+│   ├── TicketFileStore.java
 │   ├── TicketFileDemo.java
 │   └── TicketLoadDemo.java
 └── .gitignore
 ```
 
-运行保存 Demo 会在工作目录生成 ticket-demo.properties；编译产物 out/ 已被 Git 忽略。
+运行保存 Demo 会在工作目录生成或覆盖 tickets.properties；旧的 ticket-demo.properties 和 ticket-invalid.properties 不再是当前多记录 Demo 的默认输入。编译产物 out/ 已被 Git 忽略。
+
+收尾核对时，TicketLoadDemo 的第一张工单预期编号仍为故意失败用的 999L；正常验收应恢复为 1001L 并保存。详见运行与验收。当前没有 JUnit 或 Maven 配置。
 
 ## 文档维护
 

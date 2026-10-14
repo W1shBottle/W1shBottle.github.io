@@ -90,11 +90,12 @@
     {
       "date": "2026-10-14",
       "project": "ops-ticket",
-      "title": "把保存逻辑拆到 TicketFileStore",
-      "summary": "提取 save 方法并让 Demo 调用，理解 throw、throws 与异常向外传递。",
-      "verification": "save 的正常与失败场景已验证；拆分后的 Demo 保存、读取也运行通过。",
-      "next": "提取 load 方法，再接入 count 和多张工单。",
-      "status": "in-progress"
+      "title": "多张工单存取与 Demo 自测",
+      "summary": "提取 TicketFileStore，理解异常传递，利用 count 保存和恢复工单列表，并为 Demo 增加断言。",
+      "verification": "经提示修正后两张工单正常读取通过；用户验证错预期值会报错。收尾源码仍保留故意失败值，坏文件测试待完成。",
+      "next": "确认正常测试预期编号改回并保存，再完成第二张工单缺标题的异常测试。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261014/"
     }
   ],
   "current_project": "ops-ticket"
