@@ -41,6 +41,8 @@ jobs:
         run: |
           python -m unittest discover -s scripts -p 'test_*.py'
           node scripts/test_jobs_feed.cjs
+      - name: Validate learning progress
+        run: python scripts/validate_learning_progress.py
       - name: Refresh public recruitment sources
         run: python scripts/update_jobs.py
       - name: Keep the recruitment snapshot

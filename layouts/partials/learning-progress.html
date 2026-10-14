@@ -1,0 +1,42 @@
+{{ with site.Data.learning_progress }}
+{{ $entries := sort .entries "date" "desc" }}
+{{ $latest := index (where $entries "project" .current_project) 0 }}
+<section class="learning-progress" id="progress" aria-labelledby="progress-title" data-learning-progress>
+  <div class="progress-heading">
+    <div><p class="progress-eyebrow">每天留下一个具体进展</p><h2 id="progress-title">学习时间线</h2></div>
+    <p class="progress-updated">更新至 <time datetime="{{ .updated }}">{{ time.Format "2006.01.02" .updated }}</time></p>
+  </div>
+  <div class="progress-overview">
+    <div><span>当前阶段</span><strong>{{ .stage }}</strong><p>下一步：{{ $latest.next }}</p></div>
+    <div class="progress-count"><strong>{{ len $entries }}</strong><span>条学习记录</span></div>
+  </div>
+  <p class="progress-note">按实际练习与验证记录进度。项目从学生管理系统延续到设备运维工单，每条保留当时的学习状态。</p>
+  <div class="progress-filters" role="group" aria-label="按学习项目筛选" hidden>
+    <button type="button" data-project-filter="all" aria-pressed="true">全部记录</button>
+    {{ range $key, $label := .projects }}<button type="button" data-project-filter="{{ $key }}" aria-pressed="false">{{ $label }}</button>{{ end }}
+  </div>
+  <ol class="progress-list" id="progress-records">
+    {{ range $entries }}
+    <li class="progress-entry" data-project="{{ .project }}" data-date="{{ .date }}">
+      <div class="progress-date"><time datetime="{{ .date }}">{{ time.Format "01.02" .date }}</time><span>{{ time.Format "2006" .date }}</span></div>
+      <article class="progress-card">
+        <div class="progress-card-meta"><span>{{ index site.Data.learning_progress.projects .project }}</span><span class="progress-state{{ if eq .status "in-progress" }} progress-state-current{{ end }}">{{ if eq .status "in-progress" }}{{ if eq .date site.Data.learning_progress.updated }}学习中{{ else }}当日记录{{ end }}{{ else }}当日已复盘{{ end }}</span></div>
+        <h3>{{ .title }}</h3>
+        <p>{{ .summary }}</p>
+        <details class="progress-evidence"{{ if and (eq .status "in-progress") (eq .date site.Data.learning_progress.updated) }} open{{ end }}>
+          <summary>验证与后续</summary>
+          <p><strong>验证情况</strong>{{ .verification }}</p>
+          <p><strong>{{ if eq .date site.Data.learning_progress.updated }}下一步{{ else }}当时的下一步{{ end }}</strong>{{ .next }}</p>
+        </details>
+        {{ with .note }}<a class="progress-note-link" href="{{ . | relURL }}">阅读当天笔记 <span aria-hidden="true">↗</span></a>{{ else }}<span class="progress-note-pending">当天笔记待整理</span>{{ end }}
+      </article>
+    </li>
+    {{ end }}
+  </ol>
+  <div class="progress-footer" hidden>
+    <p class="progress-visible-count" aria-live="polite" aria-atomic="true"></p>
+    <button class="learning-button progress-more" type="button" aria-controls="progress-records" aria-expanded="false">展开更早记录</button>
+  </div>
+</section>
+{{ $script := resources.Get "js/learning-progress.js" | minify | fingerprint }}<script defer src="{{ $script.RelPermalink }}"></script>
+{{ end }}

@@ -13,9 +13,12 @@
       <a class="learning-button learning-button-primary" href="{{ "/learning/start/" | relURL }}">开始阅读 →</a>
       <a class="learning-button" href="{{ "/learning/schedule/" | relURL }}">查看 20 周日程</a>
       <a class="learning-button" href="{{ "/learning/project-docs/" | relURL }}">阅读项目文档</a>
+      <a class="learning-button" href="#progress">查看学习进度</a>
     </div>
     <p class="learning-scope">这是一套学习计划与参考材料，项目功能需要亲手实现和验收。</p>
   </header>
+
+  {{ partial "learning-progress.html" . }}
 
   {{ with .Content }}<div class="single-content learning-overview">{{ . }}</div>{{ end }}
 

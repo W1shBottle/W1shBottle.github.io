@@ -32,6 +32,8 @@ hugo new content --kind posts posts/my-post
 
 ## 学习板块
 
+学习首页增加[每日学习时间线](https://wishbottle.cn/learning/#progress)。每次检查阶段成果或发布每日笔记时维护公开进度，详见[时间线维护说明](scripts/learning-progress.md)。数据位于 data/learning_progress.json，日期、笔记链接和重复记录由部署前检查校验。
+
 `/learning/` 单独承载 Java 实习自学计划，顶部导航的“学习”进入。14 篇资料包括20周弹性日程、设备运维工单项目、第一课、三个阶段课程、春季投递安排、资料与排错、接口约定、验收模板和参考答案。课程属于学习材料，项目功能需学习者亲手实现与验收。
 
 课程源码在 `content/learning/`，使用 JSON front matter：`weight` 控制阅读顺序，`group` 为 `start`、`course`、`tools` 或 `answers`。修改正文时维护站内 `/learning/<slug>/` 链接，保持已有网址稳定。模板位于 `layouts/learning/`，样式位于 `assets/css/learning.css`；课程同时进入全站搜索，日常笔记仍放 `content/posts/`。

@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "updated": "2026-10-14",
+  "stage": "Java 基础业务与文件持久化",
+  "projects": {
+    "ops-ticket": "设备运维工单",
+    "student-management": "学生管理系统"
+  },
+  "entries": [
+    {
+      "date": "2026-10-06",
+      "project": "student-management",
+      "title": "从对象和列表搭起控制台结构",
+      "summary": "结合示例梳理学生对象、ArrayList、菜单循环和平均分计算。",
+      "verification": "以阅读示例和理解结构为主，尚未独立完成整套程序。",
+      "next": "尝试独立增加功能，再补输入容错与文件保存。",
+      "status": "reviewed",
+      "note": "/posts/java-notes-20261006/"
+    },
+    {
+      "date": "2026-10-07",
+      "project": "student-management",
+      "title": "查询修改与边界检查",
+      "summary": "增加不及格筛选、姓名查询、修改成绩和并列最高分统计。",
+      "verification": "新增功能检查通过；非整数输入和同名学生处理仍需完善。",
+      "next": "处理非法输入，避免程序直接退出。",
+      "status": "reviewed",
+      "note": "/posts/java-notes-20261007/"
+    },
+    {
+      "date": "2026-10-08",
+      "project": "student-management",
+      "title": "输入重试与 UTF-8 文件保存",
+      "summary": "提取整数输入重试方法，修正重复读取问题，把名单写入 UTF-8 文件。",
+      "verification": "按反馈修正输入流程并完成保存练习，文件读取刚开始接触。",
+      "next": "继续文件读取、坏存档处理与保存结果反馈。",
+      "status": "reviewed",
+      "note": "/posts/java-notes-20261008/"
+    },
+    {
+      "date": "2026-10-09",
+      "project": "student-management",
+      "title": "校验存档并按职责拆分类",
+      "summary": "补上退出保存和坏记录处理，将程序拆成五个类。",
+      "verification": "编译与临时存档检查通过；封装刚开始学习。",
+      "next": "继续对象封装，巩固文件读写的执行顺序。",
+      "status": "reviewed",
+      "note": "/posts/java-notes-20261009/"
+    },
+    {
+      "date": "2026-10-10",
+      "project": "student-management",
+      "title": "让创建和修改遵守同一规则",
+      "summary": "接入私有字段与 getter/setter，统一创建和修改时的成绩校验。",
+      "verification": "10 项边界检查通过；加载计数和姓名非空规则尚未完善。",
+      "next": "补充加载统计，并整理输入与保存逻辑。",
+      "status": "reviewed",
+      "note": "/posts/java-notes-20261010/"
+    },
+    {
+      "date": "2026-10-11",
+      "project": "student-management",
+      "title": "加载统计与删除后保存",
+      "summary": "完成加载计数、删除确认与删除后保存，提取路径常量和姓名查询方法。",
+      "verification": "代码检查通过；修改成绩复用查找尚未验收，自动保存分支仍需进一步运行验证。",
+      "next": "继续巩固查询返回值和保存时机。",
+      "status": "reviewed",
+      "note": "/posts/java-notes-20261011/"
+    },
+    {
+      "date": "2026-10-12",
+      "project": "ops-ticket",
+      "title": "开启工单项目：封装、Git 与派单",
+      "summary": "完成工单校验、服务集合与派单规则，练习 Git 暂存和提交。",
+      "verification": "在指导与反馈中完成，派单 Demo 运行通过；状态筛选当时只有骨架。",
+      "next": "实现状态筛选，检查结果列表与工单引用的关系。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261012/"
+    },
+    {
+      "date": "2026-10-13",
+      "project": "ops-ticket",
+      "title": "Map 管理与单张工单恢复",
+      "summary": "完成状态筛选和 Map 改造，跑通 UTF-8 文件保存、读取及对象恢复。",
+      "verification": "跟写后验收通过；助手临时程序的 21 项恢复检查通过，尚未建立 JUnit 测试套件。",
+      "next": "抽取文件持久化类，再逐步支持多张工单。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261013/"
+    },
+    {
+      "date": "2026-10-14",
+      "project": "ops-ticket",
+      "title": "把保存逻辑拆到 TicketFileStore",
+      "summary": "提取 save 方法并让 Demo 调用，理解 throw、throws 与异常向外传递。",
+      "verification": "save 的正常与失败场景已验证；拆分后的 Demo 保存、读取也运行通过。",
+      "next": "提取 load 方法，再接入 count 和多张工单。",
+      "status": "in-progress"
+    }
+  ],
+  "current_project": "ops-ticket"
+}
