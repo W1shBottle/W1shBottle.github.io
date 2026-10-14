@@ -54,6 +54,23 @@ def relevant(title, locations, category, description=''):
     return bool(java or (ai and development))
 
 
+def bachelor_eligible(education):
+    """Require an explicit bachelor-level label; unknown/lower/graduate minimums do not qualify."""
+    if not isinstance(education, str):
+        return False
+    text = re.sub(r'\s+', '', education).lower()
+    if not re.search(r'本科|学士|bachelor', text):
+        return False
+    if re.search(r'大专|专科|中专|高中|不限|无要求|不接受本科|不招本科|本科不可', text):
+        return False
+    # A preference is not a higher minimum; retain 本科及以上，硕士优先.
+    if re.search(r'(?:硕士(?:研究生)?|博士(?:研究生)?|研究生)(?:及以上|以上|起步|起)', text):
+        return False
+    if re.search(r'(?:仅限|只招|必须|要求|至少|最低)(?:为)?(?:硕士|博士|研究生)', text):
+        return False
+    return True
+
+
 def enrich(duty, requirement, degree=None, salary=None, series=''):
     """Only factual fields and short topic labels; never invent missing requirements."""
     duty, requirement = plain(duty), plain(requirement)
@@ -197,7 +214,7 @@ def refresh(previous, providers, now):
     known_sources = {source['id'] for source in previous.get('sources', []) if source.get('checkedAt')}
     for identifier, name, url, loader in providers:
         try:
-            incoming = loader(now)
+            incoming = [job for job in loader(now) if bachelor_eligible(job.get('education'))]
             for job in incoming:
                 history = seen.get(job['id'])
                 if history is None:
@@ -213,7 +230,7 @@ def refresh(previous, providers, now):
             jobs.extend(incoming)
             states.append({'id': identifier, 'name': name, 'url': url, 'status': 'ok', 'checkedAt': stamp(now), 'count': len(incoming)})
         except Exception as error:
-            cached = [j for j in previous.get('jobs', []) if j.get('sourceId') == identifier and fresh(j, now)]
+            cached = [j for j in previous.get('jobs', []) if j.get('sourceId') == identifier and fresh(j, now) and bachelor_eligible(j.get('education'))]
             jobs.extend(cached)
             last = next((s.get('checkedAt') for s in previous.get('sources', []) if s.get('id') == identifier), None)
             states.append({'id': identifier, 'name': name, 'url': url, 'status': 'error', 'checkedAt': last, 'count': len(cached)})

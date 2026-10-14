@@ -9,9 +9,17 @@
   function safeLink(value) {
     try { const url = new URL(value); return url.protocol === 'https:' && hosts.has(url.hostname) && !url.username && !url.password ? url.href : null; } catch { return null; }
   }
+  function bachelorEligible(education) {
+    if (typeof education !== 'string') return false;
+    const text = education.replace(/\s+/g, '').toLowerCase();
+    return /本科|学士|bachelor/.test(text)
+      && !/大专|专科|中专|高中|不限|无要求|不接受本科|不招本科|本科不可/.test(text)
+      && !/(?:硕士(?:研究生)?|博士(?:研究生)?|研究生)(?:及以上|以上|起步|起)/.test(text)
+      && !/(?:仅限|只招|必须|要求|至少|最低)(?:为)?(?:硕士|博士|研究生)/.test(text);
+  }
   function eligible(job, now=Date.now()) {
     const age = now - Date.parse(job.checkedAt);
-    return job.location === '杭州' && ['实习','校招'].includes(job.type) && typeof job.title === 'string' && !!safeLink(job.url) && Number.isFinite(age) && age >= -300000 && age <= 72*3600000;
+    return bachelorEligible(job.education) && job.location === '杭州' && ['实习','校招'].includes(job.type) && typeof job.title === 'string' && !!safeLink(job.url) && Number.isFinite(age) && age >= -300000 && age <= 72*3600000;
   }
   function today(value, now) {
     const time = Date.parse(value);
@@ -42,5 +50,5 @@
     }
     return selected;
   }
-  return {dayKey,eligible,safeLink,daily,changes,today};
+  return {dayKey,bachelorEligible,eligible,safeLink,daily,changes,today};
 });

@@ -52,7 +52,7 @@
     position = selectionDay === today ? Math.max(0, jobs.findIndex(job => job.id === current)) : 0;
     selectionDay = today;
     const activity = data.changes(all,now);
-    widget.querySelector('.jobs-overview').textContent = `${new Set(all.map(job=>job.company)).size} 家企业 · ${all.length} 个岗位 · ${activity.added ? `今日新收录 ${activity.added} 个` : '今日暂无新收录'}${activity.changed ? ` · 信息更新 ${activity.changed} 个` : ''}`;
+    widget.querySelector('.jobs-overview').textContent = `本科可申请 · ${new Set(all.map(job=>job.company)).size} 家企业 · ${all.length} 个岗位 · ${activity.added ? `今日新收录 ${activity.added} 个` : '今日暂无新收录'}${activity.changed ? ` · 信息更新 ${activity.changed} 个` : ''}`;
     widget.querySelector('.jobs-scope').textContent = `${today.slice(5).replace('-','/')} 推荐`;
     const dates = jobs.map(job => Date.parse(job.checkedAt));
     const last = dates.length ? Math.min(...dates) : NaN;

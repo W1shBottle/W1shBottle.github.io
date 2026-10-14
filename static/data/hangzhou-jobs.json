@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "attemptedAt": "2026-10-10T09:40:38+00:00",
+  "attemptedAt": "2026-10-14T15:39:54+00:00",
   "refreshMinutes": 60,
   "maxAgeHours": 72,
   "sources": [
@@ -9,7 +9,7 @@
       "name": "迪普科技招聘官网",
       "url": "https://dptech.zhiye.com/jobs",
       "status": "ok",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "count": 3
     },
     {
@@ -17,7 +17,7 @@
       "name": "海康威视招聘官网",
       "url": "https://talent.hikvision.com/home/socity/position?postId=3DBC4346A3391150639BCB4895723F64",
       "status": "ok",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "count": 1
     },
     {
@@ -25,15 +25,15 @@
       "name": "恒生电子招聘官网",
       "url": "https://hscampus.zhiye.com/",
       "status": "ok",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "count": 2
+      "checkedAt": "2026-10-14T15:39:54+00:00",
+      "count": 1
     },
     {
       "id": "h3c",
       "name": "新华三招聘官网",
       "url": "https://h3c.zhiye.com/",
       "status": "ok",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "count": 1
     },
     {
@@ -41,16 +41,16 @@
       "name": "大华股份招聘官网",
       "url": "https://dahua.zhiye.com/",
       "status": "ok",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "count": 3
+      "checkedAt": "2026-10-14T15:39:54+00:00",
+      "count": 1
     },
     {
       "id": "ths",
       "name": "同花顺招聘官网",
       "url": "https://campus.10jqka.com.cn/",
       "status": "ok",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "count": 7
+      "checkedAt": "2026-10-14T15:39:54+00:00",
+      "count": 3
     }
   ],
   "jobs": [
@@ -68,7 +68,7 @@
       "url": "https://dptech.zhiye.com/campus/detail?jobAdId=7bfcb2d5-7b24-4759-b049-34e4c50c4d03",
       "source": "迪普科技招聘官网",
       "sourceId": "dptech",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科",
       "salary": "面议",
       "cohort": null,
@@ -99,7 +99,7 @@
       "url": "https://dptech.zhiye.com/campus/detail?jobAdId=bcaf57c8-80bf-4cf4-b1c8-e564a6428aa5",
       "source": "迪普科技招聘官网",
       "sourceId": "dptech",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科",
       "salary": "面议",
       "cohort": null,
@@ -111,38 +111,6 @@
       "firstSeenAt": "2026-10-10T09:26:11+00:00",
       "newAt": null,
       "fingerprint": "3aa1c8d933c65519367aa4c545cfacc190fcd6306e95b9286dbb8e639c0c7abc",
-      "changedAt": null
-    },
-    {
-      "id": "dahua-946e5fa0-14fd-4493-86d4-2938633f28c1",
-      "title": "【研发中心】2027届大模型应用工程师(J24455)",
-      "company": "大华股份",
-      "location": "杭州",
-      "locations": [
-        "浙江省·杭州市"
-      ],
-      "type": "校招",
-      "direction": "AI 应用",
-      "publishedAt": "2026-08-25",
-      "url": "https://dahua.zhiye.com/campus/detail?jobAdId=946e5fa0-14fd-4493-86d4-2938633f28c1",
-      "source": "大华股份招聘官网",
-      "sourceId": "dahua",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "education": "硕士研究生",
-      "salary": "面议",
-      "cohort": "2027届",
-      "skills": [
-        "RAG",
-        "Agent",
-        "大模型"
-      ],
-      "focus": [
-        "Agent 开发"
-      ],
-      "internshipDuration": null,
-      "firstSeenAt": "2026-10-10T09:35:42+00:00",
-      "newAt": null,
-      "fingerprint": "c348b75e22f381c5bd9a4ba5dadc75cda5101c7e5d8604997c07878e2e3c96b1",
       "changedAt": null
     },
     {
@@ -159,7 +127,7 @@
       "url": "https://dahua.zhiye.com/campus/detail?jobAdId=cc425147-ec13-45d8-b704-f4c6632f0f89",
       "source": "大华股份招聘官网",
       "sourceId": "dahua",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科",
       "salary": "面议",
       "cohort": "2027届",
@@ -180,40 +148,6 @@
       "changedAt": null
     },
     {
-      "id": "dahua-8603b805-ba07-4bd3-8a73-6898f9e71132",
-      "title": "【研发中心】2027届大数据工程师（Agent方向）(J24380)",
-      "company": "大华股份",
-      "location": "杭州",
-      "locations": [
-        "浙江省·杭州市"
-      ],
-      "type": "校招",
-      "direction": "AI 应用",
-      "publishedAt": "2026-08-13",
-      "url": "https://dahua.zhiye.com/campus/detail?jobAdId=8603b805-ba07-4bd3-8a73-6898f9e71132",
-      "source": "大华股份招聘官网",
-      "sourceId": "dahua",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "education": "硕士研究生",
-      "salary": "面议",
-      "cohort": "2027届",
-      "skills": [
-        "Java",
-        "Python",
-        "RAG",
-        "Agent",
-        "大模型"
-      ],
-      "focus": [
-        "Agent 开发"
-      ],
-      "internshipDuration": null,
-      "firstSeenAt": "2026-10-10T09:35:42+00:00",
-      "newAt": null,
-      "fingerprint": "d1f7906220989192228973267a841259c10a9130b45bd9d68a0e1a5336c12236",
-      "changedAt": null
-    },
-    {
       "id": "h3c-d674209d-3260-43e9-96b5-262a55a8ccb9",
       "title": "软件开发工程师-Java(J18704)",
       "company": "新华三",
@@ -230,7 +164,7 @@
       "url": "https://h3c.zhiye.com/campus/detail?jobAdId=d674209d-3260-43e9-96b5-262a55a8ccb9",
       "source": "新华三招聘官网",
       "sourceId": "h3c",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科及以上",
       "salary": "面议",
       "cohort": null,
@@ -253,40 +187,6 @@
       "changedAt": null
     },
     {
-      "id": "hundsun-dc8f55b6-c779-418b-9f26-9ccc16a4d155",
-      "title": "Java开发工程师(J10359)",
-      "company": "恒生电子",
-      "location": "杭州",
-      "locations": [
-        "湖北省·武汉市",
-        "浙江省·杭州市"
-      ],
-      "type": "校招",
-      "direction": "Java 后端",
-      "publishedAt": "2026-07-22",
-      "url": "https://hscampus.zhiye.com/campus/detail?jobAdId=dc8f55b6-c779-418b-9f26-9ccc16a4d155",
-      "source": "恒生电子招聘官网",
-      "sourceId": "hundsun",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "education": null,
-      "salary": "面议",
-      "cohort": null,
-      "skills": [
-        "Java",
-        "MySQL",
-        "SQL"
-      ],
-      "focus": [
-        "后端接口",
-        "金融软件"
-      ],
-      "internshipDuration": null,
-      "firstSeenAt": "2026-10-10T09:35:42+00:00",
-      "newAt": null,
-      "fingerprint": "06b366dd1591fcd40e892109b50fde10165093093e93cfec474944b37654d194",
-      "changedAt": null
-    },
-    {
       "id": "hundsun-2dd3bd66-bed9-43ba-9318-e3226102066d",
       "title": "AI应用开发工程师(J10355)",
       "company": "恒生电子",
@@ -300,7 +200,7 @@
       "url": "https://hscampus.zhiye.com/campus/detail?jobAdId=2dd3bd66-bed9-43ba-9318-e3226102066d",
       "source": "恒生电子招聘官网",
       "sourceId": "hundsun",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科及以上学历",
       "salary": "面议",
       "cohort": null,
@@ -339,7 +239,7 @@
       "url": "https://dptech.zhiye.com/campus/detail?jobAdId=9a60a872-5fbe-4505-af8c-d78ac143554f",
       "source": "迪普科技招聘官网",
       "sourceId": "dptech",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科",
       "salary": "面议",
       "cohort": "2027届",
@@ -370,7 +270,7 @@
       "url": "https://talent.hikvision.com/home/socity/position?postId=3DBC4346A3391150639BCB4895723F64",
       "source": "海康威视招聘官网",
       "sourceId": "hikvision",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科及以上学历",
       "salary": null,
       "cohort": null,
@@ -403,7 +303,7 @@
       "url": "https://campus.10jqka.com.cn/job/detail?id=2179",
       "source": "同花顺招聘官网",
       "sourceId": "ths",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科及以上学历",
       "salary": null,
       "cohort": "2027届",
@@ -422,74 +322,6 @@
       "changedAt": null
     },
     {
-      "id": "ths-2193",
-      "title": "AI开发工程师",
-      "company": "同花顺",
-      "location": "杭州",
-      "locations": [
-        "杭州"
-      ],
-      "type": "校招",
-      "direction": "AI 应用",
-      "publishedAt": null,
-      "url": "https://campus.10jqka.com.cn/job/detail?id=2193",
-      "source": "同花顺招聘官网",
-      "sourceId": "ths",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "education": "硕士及以上学历",
-      "salary": null,
-      "cohort": "2027届",
-      "skills": [
-        "Java",
-        "Python",
-        "RAG",
-        "Agent",
-        "LangChain"
-      ],
-      "focus": [
-        "Agent 开发",
-        "知识库 / RAG",
-        "部署与工程化",
-        "微服务 / 分布式"
-      ],
-      "internshipDuration": null,
-      "firstSeenAt": "2026-10-10T09:39:27+00:00",
-      "newAt": null,
-      "fingerprint": "86391821118f740e48762d70f19977d5679757aa3d26f1d6a04d3e72f976f0d0",
-      "changedAt": null
-    },
-    {
-      "id": "ths-2196",
-      "title": "AI Agent应用开发工程师",
-      "company": "同花顺",
-      "location": "杭州",
-      "locations": [
-        "杭州"
-      ],
-      "type": "校招",
-      "direction": "AI 应用",
-      "publishedAt": null,
-      "url": "https://campus.10jqka.com.cn/job/detail?id=2196",
-      "source": "同花顺招聘官网",
-      "sourceId": "ths",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "education": null,
-      "salary": null,
-      "cohort": "2027届",
-      "skills": [
-        "Agent",
-        "大模型"
-      ],
-      "focus": [
-        "后端接口"
-      ],
-      "internshipDuration": null,
-      "firstSeenAt": "2026-10-10T09:39:27+00:00",
-      "newAt": null,
-      "fingerprint": "7bc926fce089bcceb516162fe973b92808ce2a500fc870881baa2b53707d0e08",
-      "changedAt": null
-    },
-    {
       "id": "ths-2257",
       "title": "后端开发工程师（实习转正）",
       "company": "同花顺",
@@ -503,7 +335,7 @@
       "url": "https://campus.10jqka.com.cn/job/detail?id=2257",
       "source": "同花顺招聘官网",
       "sourceId": "ths",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科及以上学历",
       "salary": null,
       "cohort": "2027届",
@@ -540,7 +372,7 @@
       "url": "https://campus.10jqka.com.cn/job/detail?id=2189",
       "source": "同花顺招聘官网",
       "sourceId": "ths",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
+      "checkedAt": "2026-10-14T15:39:54+00:00",
       "education": "本科及以上",
       "salary": null,
       "cohort": "2027届",
@@ -560,116 +392,43 @@
       "newAt": null,
       "fingerprint": "7a5dd329b273f750cdb19ea0ba2b32ac2e62e80352b0a40e19acfa1498bda294",
       "changedAt": null
-    },
-    {
-      "id": "ths-2156",
-      "title": "AI开发工程师",
-      "company": "同花顺",
-      "location": "杭州",
-      "locations": [
-        "杭州"
-      ],
-      "type": "实习",
-      "direction": "AI 应用",
-      "publishedAt": null,
-      "url": "https://campus.10jqka.com.cn/job/detail?id=2156",
-      "source": "同花顺招聘官网",
-      "sourceId": "ths",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "education": "硕士及以上学历",
-      "salary": null,
-      "cohort": "2027届",
-      "skills": [
-        "Java",
-        "Python",
-        "RAG",
-        "Agent",
-        "LangChain"
-      ],
-      "focus": [
-        "Agent 开发",
-        "知识库 / RAG",
-        "部署与工程化",
-        "微服务 / 分布式"
-      ],
-      "internshipDuration": "6个月",
-      "firstSeenAt": "2026-10-10T09:39:27+00:00",
-      "newAt": null,
-      "fingerprint": "956162e4545c36891ac6da0b6456f149f0706feb9896386353038a201678df4a",
-      "changedAt": null
-    },
-    {
-      "id": "ths-517",
-      "title": "Agent开发实习生",
-      "company": "同花顺",
-      "location": "杭州",
-      "locations": [
-        "杭州"
-      ],
-      "type": "实习",
-      "direction": "AI 应用",
-      "publishedAt": null,
-      "url": "https://campus.10jqka.com.cn/job/detail?id=517",
-      "source": "同花顺招聘官网",
-      "sourceId": "ths",
-      "checkedAt": "2026-10-10T09:40:38+00:00",
-      "education": null,
-      "salary": null,
-      "cohort": null,
-      "skills": [
-        "Spring Boot",
-        "Spring Cloud",
-        "MySQL",
-        "Redis",
-        "Agent",
-        "SQL"
-      ],
-      "focus": [
-        "后端接口",
-        "Agent 开发"
-      ],
-      "internshipDuration": null,
-      "firstSeenAt": "2026-10-10T09:39:27+00:00",
-      "newAt": null,
-      "fingerprint": "7416b1eb0d12186eeb492d20fad3f245273a4f5121577558e85c9fd088732cb0",
-      "changedAt": null
     }
   ],
   "seen": {
     "dptech-7bfcb2d5-7b24-4759-b049-34e4c50c4d03": {
       "firstSeenAt": "2026-10-10T09:26:11+00:00",
-      "lastSeenAt": "2026-10-10T09:40:38+00:00",
+      "lastSeenAt": "2026-10-14T15:39:54+00:00",
       "newAt": null
     },
     "dptech-bcaf57c8-80bf-4cf4-b1c8-e564a6428aa5": {
       "firstSeenAt": "2026-10-10T09:26:11+00:00",
-      "lastSeenAt": "2026-10-10T09:40:38+00:00",
+      "lastSeenAt": "2026-10-14T15:39:54+00:00",
       "newAt": null
     },
     "dptech-9a60a872-5fbe-4505-af8c-d78ac143554f": {
       "firstSeenAt": "2026-10-10T09:26:11+00:00",
-      "lastSeenAt": "2026-10-10T09:40:38+00:00",
+      "lastSeenAt": "2026-10-14T15:39:54+00:00",
       "newAt": null
     },
     "hikvision-3DBC4346A3391150639BCB4895723F64": {
       "firstSeenAt": "2026-10-10T09:26:11+00:00",
-      "lastSeenAt": "2026-10-10T09:40:38+00:00",
+      "lastSeenAt": "2026-10-14T15:39:54+00:00",
       "newAt": null
     },
     "hundsun-dc8f55b6-c779-418b-9f26-9ccc16a4d155": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:26:46+00:00"
     },
     "hundsun-2dd3bd66-bed9-43ba-9318-e3226102066d": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:39:54+00:00"
     },
     "h3c-d674209d-3260-43e9-96b5-262a55a8ccb9": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:39:54+00:00"
     },
     "h3c-4e601374-0524-480b-a2b7-287f91076e68": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
@@ -689,12 +448,12 @@
     "dahua-cc425147-ec13-45d8-b704-f4c6632f0f89": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:39:54+00:00"
     },
     "dahua-8603b805-ba07-4bd3-8a73-6898f9e71132": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T01:54:47+00:00"
     },
     "dahua-ab575805-1661-47f0-8e75-ecc0f3e4b760": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
@@ -709,7 +468,7 @@
     "dahua-946e5fa0-14fd-4493-86d4-2938633f28c1": {
       "firstSeenAt": "2026-10-10T09:35:42+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:26:46+00:00"
     },
     "ths-2163": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
@@ -729,17 +488,17 @@
     "ths-2179": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:39:54+00:00"
     },
     "ths-2193": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:26:46+00:00"
     },
     "ths-2196": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:26:46+00:00"
     },
     "ths-2248": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
@@ -749,7 +508,7 @@
     "ths-2257": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:39:54+00:00"
     },
     "ths-2230": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
@@ -769,7 +528,7 @@
     "ths-2189": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:39:54+00:00"
     },
     "ths-2210": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
@@ -789,7 +548,7 @@
     "ths-2156": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:26:46+00:00"
     },
     "ths-2159": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
@@ -799,7 +558,7 @@
     "ths-517": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
       "newAt": null,
-      "lastSeenAt": "2026-10-10T09:40:38+00:00"
+      "lastSeenAt": "2026-10-14T15:26:46+00:00"
     },
     "ths-518": {
       "firstSeenAt": "2026-10-10T09:39:27+00:00",
