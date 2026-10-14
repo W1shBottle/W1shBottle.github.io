@@ -173,24 +173,22 @@ button,input {
   color: var(--accent);
 }
 
-/* Series names are quiet context; chapter numbers and titles remain prominent. */
+/* Series names sit above the chapter title at every screen width. */
 .post-title-prefix {
-  white-space: nowrap;
+  display: block;
+  margin-bottom: .3em;
+  line-height: 1.5;
 }
 
-.post-title-series,
-.post-title-divider {
+.post-title-series {
   color: var(--content-secondary);
-  font-size: .82em;
+  font-size: clamp(12px, .75em, 14px);
   font-weight: 400;
   letter-spacing: .02em;
 }
 
-.post-title-divider {
-  margin-inline: .35em;
-}
-
 .post-title-chapter {
+  display: block;
   font-weight: 600;
 }
 
@@ -204,14 +202,12 @@ button,input {
 }
 
 .article-title .post-title-prefix {
-  display: block;
-  font-size: .6em;
+  font-size: 14px;
   letter-spacing: normal;
-  margin-bottom: .35em;
+  margin-bottom: 8px;
 }
 
-.article-title .post-title-series,
-.article-title .post-title-divider {
+.article-title .post-title-series {
   font-size: 1em;
 }
 
@@ -226,14 +222,6 @@ button,input {
 
 .archive-item > a {
   min-width: 0;
-}
-
-@media (max-width:700px) {
-  .note-entry .post-title-prefix,
-  .archive-item .post-title-prefix {
-    display: block;
-    margin-bottom: .25em;
-  }
 }
 
 .note-entry p {

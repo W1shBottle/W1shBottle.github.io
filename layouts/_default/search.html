@@ -27,7 +27,7 @@
             node.className = className; node.textContent = value; return node;
           };
           const formatted = span('post-title', ''), prefix = span('post-title-prefix', ''), chapter = span('post-title-chapter', '');
-          prefix.append(span('post-title-series', post.seriesTitle), span('post-title-divider', ' — '));
+          prefix.append(span('post-title-series', post.seriesTitle));
           chapter.append(span('post-title-number', post.seriesOrder), document.createTextNode(' ' + post.chapterTitle));
           formatted.append(prefix, chapter); link.append(formatted);
         } else {
