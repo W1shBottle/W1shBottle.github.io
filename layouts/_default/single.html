@@ -4,7 +4,7 @@
   <div class="page-heading article-intro">
     {{ if $isPost }}<a href="{{ "/posts/" | relURL }}">← 返回文章</a>{{ end }}
     {{ if .Params.learning_series }}
-    <div class="article-series">{{ .Params.series_title }} · 第 {{ .Params.series_order }} 篇</div><h1>{{ .Params.chapter_title | default .Title }}</h1>
+    <h1 class="article-title">{{ partial "post-title.html" . }}</h1>
     {{ else }}
     {{ $parts := split .Title "｜" }}
     {{ if gt (len $parts) 1 }}<div class="article-series">{{ index $parts 0 }}</div><h1>{{ delimit (after 1 $parts) "｜" }}</h1>{{ else }}<h1>{{ .Title }}</h1>{{ end }}
@@ -17,7 +17,7 @@
 {{ if and $isPost .Params.learning_series }}
 {{ $series := .Params.learning_series }}{{ $current := .RelPermalink }}
 <nav class="series-nav" aria-label="{{ .Params.series_title }}系列"><h2>继续阅读 · {{ .Params.series_title }}</h2><ol>
-{{ range (where (where site.RegularPages "Section" "posts") "Params.learning_series" $series).ByDate }}<li><a href="{{ .RelPermalink }}" {{ if eq .RelPermalink $current }}aria-current="page"{{ end }}>{{ .Title }}</a></li>{{ end }}
+{{ range (where (where site.RegularPages "Section" "posts") "Params.learning_series" $series).ByDate }}<li><a href="{{ .RelPermalink }}" {{ if eq .RelPermalink $current }}aria-current="page"{{ end }}>{{ partial "post-title.html" . }}</a></li>{{ end }}
 </ol><a href="{{ "/series/" | relURL }}">查看全部学习系列 →</a></nav>{{ end }}
 <div class="article-bottom"><a href="{{ "/posts/" | relURL }}">← 浏览全部文章</a><a href="#top">回到顶部 ↑</a></div>
 {{ end }}

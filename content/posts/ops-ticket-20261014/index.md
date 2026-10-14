@@ -1,5 +1,5 @@
 ---
-title: "设备运维工单开发 03 多张工单存取与 Demo 自测"
+title: "设备运维工单开发 — 03 多张工单存取与 Demo 自测"
 description: "提取 TicketFileStore，理解 throw、throws 与 Reader，使用 count 保存和恢复多张工单，并在 Demo 中检查数量、字段和测试失败。"
 date: 2026-10-14T00:00:00+08:00
 draft: false

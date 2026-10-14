@@ -1,0 +1,5 @@
+{{- if and .Params.learning_series .Params.series_title .Params.series_order .Params.chapter_title -}}
+<span class="post-title"><span class="post-title-prefix"><span class="post-title-series">{{ .Params.series_title }}</span><span class="post-title-divider"> — </span></span><span class="post-title-chapter"><span class="post-title-number">{{ printf "%02d" (int .Params.series_order) }}</span> {{ .Params.chapter_title }}</span></span>
+{{- else -}}
+{{ .Title }}
+{{- end -}}

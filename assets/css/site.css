@@ -173,6 +173,69 @@ button,input {
   color: var(--accent);
 }
 
+/* Series names are quiet context; chapter numbers and titles remain prominent. */
+.post-title-prefix {
+  white-space: nowrap;
+}
+
+.post-title-series,
+.post-title-divider {
+  color: var(--content-secondary);
+  font-size: .82em;
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+
+.post-title-divider {
+  margin-inline: .35em;
+}
+
+.post-title-chapter {
+  font-weight: 600;
+}
+
+.post-title-number {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: .85em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  margin-inline-end: .15em;
+}
+
+.article-title .post-title-prefix {
+  display: block;
+  font-size: .6em;
+  letter-spacing: normal;
+  margin-bottom: .35em;
+}
+
+.article-title .post-title-series,
+.article-title .post-title-divider {
+  font-size: 1em;
+}
+
+.article-title .post-title-number {
+  font-size: .7em;
+  letter-spacing: normal;
+}
+
+.series-nav [aria-current] .post-title-chapter {
+  font-weight: 700;
+}
+
+.archive-item > a {
+  min-width: 0;
+}
+
+@media (max-width:700px) {
+  .note-entry .post-title-prefix,
+  .archive-item .post-title-prefix {
+    display: block;
+    margin-bottom: .25em;
+  }
+}
+
 .note-entry p {
   color: var(--content-secondary);
   line-height: 1.8;

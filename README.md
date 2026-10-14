@@ -30,6 +30,22 @@ hugo new content --kind posts posts/my-post
 
 需要公式的文章可在头部增加 `math: true`。文章目录和阅读时间由当前站点模板统一展示，不需要添加旧主题的 `ShowToc`、`TocOpen`、`ShowReadingTime` 配置。
 
+## 系列文章标题
+
+带有 learning_series、series_title、series_order 和 chapter_title 的文章，统一使用“系列名 — 两位序号 章节标题”。例如：
+
+```yaml
+title: "设备运维工单开发 — 03 多张工单存取与 Demo 自测"
+learning_series: "ops-ticket"
+series_title: "设备运维工单开发"
+series_order: 3
+chapter_title: "多张工单存取与 Demo 自测"
+```
+
+标题正文只写在 chapter_title，系列名只写在 series_title；序号使用数值。title 同步完整格式，便于 RSS 和社交分享显示一致。模板 post-title.html 统一首页、列表、归档、文章标题和系列内导航的视觉层次；post-title-text.html 生成页面与搜索索引的纯文本标题。搜索结果按索引的结构化字段渲染，不解析拼接后的标题，不使用 innerHTML 插入文章数据。
+
+系列名使用较小的次要文字，破折号分隔，序号采用现有强调色与等宽数字，章节标题保留较高字重。手机列表把系列信息放在标题上方，文章页也采用两级排版。没有系列字段的普通文章沿用原标题。
+
 ## 学习板块
 
 学习首页增加[每日学习时间线](https://wishbottle.cn/learning/#progress)。每次检查阶段成果或发布每日笔记时维护公开进度，详见[时间线维护说明](scripts/learning-progress.md)。数据位于 data/learning_progress.json，日期、笔记链接和重复记录由部署前检查校验。

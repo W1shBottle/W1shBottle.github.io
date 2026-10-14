@@ -1,0 +1,5 @@
+{{- $title := .Title -}}
+{{- if and .Params.learning_series .Params.series_title .Params.series_order .Params.chapter_title -}}
+  {{- $title = printf "%s — %02d %s" .Params.series_title (int .Params.series_order) .Params.chapter_title -}}
+{{- end -}}
+{{- return $title -}}

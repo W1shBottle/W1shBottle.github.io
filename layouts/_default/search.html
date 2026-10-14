@@ -20,7 +20,20 @@
         const row = document.createElement('article'); row.className = 'note-entry';
         const date = document.createElement('div'); date.className = 'note-date'; date.textContent = post.section === 'learning' ? '学习 · 课程' : post.date;
         const body = document.createElement('div'), title = document.createElement('h3'), link = document.createElement('a'), text = document.createElement('p');
-        link.href = post.url; link.textContent = post.title; text.textContent = post.description;
+        link.href = post.url;
+        if (post.seriesTitle && post.seriesOrder && post.chapterTitle) {
+          const span = (className, value) => {
+            const node = document.createElement('span');
+            node.className = className; node.textContent = value; return node;
+          };
+          const formatted = span('post-title', ''), prefix = span('post-title-prefix', ''), chapter = span('post-title-chapter', '');
+          prefix.append(span('post-title-series', post.seriesTitle), span('post-title-divider', ' — '));
+          chapter.append(span('post-title-number', post.seriesOrder), document.createTextNode(' ' + post.chapterTitle));
+          formatted.append(prefix, chapter); link.append(formatted);
+        } else {
+          link.textContent = post.title;
+        }
+        text.textContent = post.description;
         title.append(link); body.append(title,text); row.append(date,body); results.append(row);
       }
     } catch { if (input.value.trim().toLocaleLowerCase() === query) status.textContent = '搜索暂时无法加载，请重新输入或刷新页面。'; }

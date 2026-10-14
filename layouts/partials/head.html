@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} | {{ site.Title }}{{ end }}</title>
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ partial "post-title-text.html" . }} | {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ .Description | default site.Params.description }}">
 <link rel="canonical" href="{{ .Permalink }}">
 {{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }}">{{ end }}

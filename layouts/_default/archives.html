@@ -1,6 +1,6 @@
 {{ define "main" }}
 <div class="page-heading"><h1>归档</h1><p>按时间回看每一步。</p></div>
 {{ range (where site.RegularPages "Section" "posts").GroupByDate "2006" }}
-<h2 class="archive-year">{{ .Key }}</h2>{{ range .Pages }}<div class="archive-item"><time>{{ .Date.Format "01.02" }}</time><a href="{{ .RelPermalink }}">{{ .Title }}</a></div>{{ end }}
+<h2 class="archive-year">{{ .Key }}</h2>{{ range .Pages }}<div class="archive-item"><time>{{ .Date.Format "01.02" }}</time><a href="{{ .RelPermalink }}">{{ partial "post-title.html" . }}</a></div>{{ end }}
 {{ end }}
 {{ end }}

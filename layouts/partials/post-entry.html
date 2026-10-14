@@ -1,6 +1,6 @@
 <article class="note-entry">
   <time class="note-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
-  <div><h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+  <div><h3><a href="{{ .RelPermalink }}">{{ partial "post-title.html" . }}</a></h3>
     <p>{{ .Description | default (.Summary | plainify | truncate 110) }}</p>
     <div class="entry-tags">{{ range .GetTerms "tags" }}<a href="{{ .RelPermalink }}"># {{ .LinkTitle }}</a>{{ end }}</div>
   </div>
