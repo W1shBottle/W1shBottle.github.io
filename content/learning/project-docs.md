@@ -1,8 +1,8 @@
 {
   "title": "设备运维工单项目文档",
   "description": "项目当前能力、代码结构和运行入口。",
-  "date": "2026-10-14T00:00:00+08:00",
-  "lastmod": "2026-10-14T00:00:00+08:00",
+  "date": "2026-10-17T00:00:00+08:00",
+  "lastmod": "2026-10-17T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
@@ -10,77 +10,107 @@
 
 > 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。后续功能以各页的实现状态为准。
 
-围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 Java 项目。当前处于 **v0.1 开发阶段**，以控制台 Demo 验证领域对象、集合管理和文件读写；版本名称是里程碑规划，尚未发布正式版本。
+围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 Java 项目。当前处于 **v0.1 开发阶段**，已实现领域对象、集合管理、工单列表文件存取和基础自动化测试；版本名称是里程碑规划，尚未发布正式版本。
 
-文档核对日期：2026-10-14。
+文档核对日期：2026-10-17（凌晨）。本次学习归 2026-10-16，包含持续到次日凌晨的学习。
 
 ## 项目文档
 
 | 文档 | 解决的问题 |
 | --- | --- |
-| [需求与开发计划](/learning/project-requirements/) | 为什么做、有哪些业务规则、已经做了什么、下一步做什么 |
-| [设计与数据约定](/learning/project-design/) | 类如何分工、方法如何调用、状态和存档如何表达 |
-| [运行与验收](/learning/project-verification/) | 怎么运行、如何判断结果正确、哪些验收还没有完成 |
+| [需求与开发计划](/learning/project-requirements/) | 业务规则、已实现功能和待完成任务 |
+| [设计与数据约定](/learning/project-design/) | 类的分工、方法契约、状态和存档格式 |
+| [运行与验收](/learning/project-verification/) | 环境、运行命令、测试证据和验收边界 |
 
-课程路线见 [博客学习板块](https://wishbottle.cn/learning/)。课程负责安排学习顺序，本仓库文档负责描述项目本身；以源码与验证结果为依据更新。
+课程路线见 [博客学习板块](https://wishbottle.cn/learning/)。课程负责安排学习顺序，仓库文档描述项目现状；源码、实际验证和学习记录共同作为进度依据。
 
-## 当前能力
+## 当前能力与边界
 
-- 工单编号、标题校验，修改标题时复用校验规则。
-- 待处理工单派给指定工程师，拒绝重复派单。
+- 工单编号、标题校验，修改标题时复用校验规则，非法修改保留原标题。
+- 待处理工单派给正数编号的工程师，拒绝重复派单。
 - 使用 LinkedHashMap 按编号管理工单，支持编号查询、状态筛选和取得全部工单。
-- TicketFileStore.save 保存工单列表，loadAll 按 count 读取并恢复多张工单，文件编码为 UTF-8。
-- TicketLoadDemo 用显式 AssertionError 检查两张示例工单的数量和字段。正常场景此前通过，错预期值能触发失败。
+- TicketFileStore.save 以 UTF-8 保存列表；loadAll 按 count 读取、检查字段、恢复工单，使用 Set 拒绝存档中的重复编号。
+- 空列表保存为 count=0，读回非 null 的空列表；第二张工单缺字段时抛异常，不返回部分结果。
+- TicketLoadDemo 在完整读取成功后，把工单逐张加入新 TicketService，并查询恢复后的数量和状态。
+- 已引入 Maven 和 JUnit Jupiter，当前有 8 个正式 JUnit 测试：标题修改 6 项、文件往返 2 项。普通 Demo 与独立练习仍保留。
 
-已完成多张工单的保存与列表恢复，尚未把恢复列表整体装入 TicketService；重复编号检查、坏文件专项测试和写入失败保护仍待完成。数据库、HTTP 接口、登录权限与完整验收流程属于后续规划。
+**尚未实现**自动生成编号的 TicketService.create(String title)、首次无文件时初始化空服务、带记录位置和字段名的完整错误提示，以及保存—退出—重启—继续编号的整体验收。保存直接覆盖目标文件，尚无原子替换或备份保护。数据库、HTTP 接口、登录权限与完整状态流属于后续规划。
 
 ## 快速运行
 
-当前是普通 Java 项目，没有 Maven 或 Gradle。需要 JDK（包含 javac）；本次命令验证使用 JDK 8。后续迁移 Maven 时计划统一到 JDK 21。
-
-在项目根目录打开 PowerShell：
+当前使用 Maven，编译目标为 **Java 21**。先配置 JDK 21 和 Maven，并在项目根目录检查：
 
 ```powershell
-New-Item -ItemType Directory -Force -Path out | Out-Null
-$sourceFiles = (Get-ChildItem -LiteralPath .\src -Filter '*.java').FullName
-javac -encoding UTF-8 -d out $sourceFiles
+java -version
+javac -version
+mvn -v
+mvn test
 ```
 
-确认编译成功后运行：
+三处 Java 环境应核对一致，尤其是 mvn -v 中实际使用的 Java。项目的 JUnit 依赖与插件首次运行时需要下载；JDK 8 已不适用于当前完整项目。
+
+也可以在 IDEA 中加载 pom.xml，设置项目 SDK 和 Maven Runner 使用 JDK 21，再在 Maven 面板运行 test。没有配置命令行 mvn 时，可先使用 IDEA 自带的 Maven；项目尚未提供 Maven Wrapper。
+
+mvn test 自动执行符合命名约定的 JUnit 测试，**不会自动执行每个 Demo 的 main 方法**。需要运行普通演示时，先编译测试源码，再运行对应类：
 
 ```powershell
-java '-Dfile.encoding=UTF-8' -cp out TicketServiceDemo
+mvn test-compile
+java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' TicketServiceDemo
+java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' TicketLoadDemo
 ```
 
-IDEA 中也可以直接运行对应类的 main 方法。文件读写 Demo 的运行顺序、工作目录与预期输出见 [运行与验收](/learning/project-verification/)。
+上面的 classpath 分隔符适用于 Windows PowerShell。IDEA 中也可直接运行 Demo 的 main。项目仍使用默认包；文件 Demo 的工作目录必须为项目根目录，使用其中的 data/。
+
+当前没有可直接 java -jar 启动的应用入口配置。详细输出、存档写入影响及测试范围见 [运行与验收](/learning/project-verification/)。
 
 ## 目录
 
 ```text
 JavaProject/
+├── pom.xml                       # Java 21、JUnit 和 Maven 插件配置
 ├── README.md
 ├── docs/
 │   ├── requirements.md
 │   ├── design.md
 │   └── verification.md
 ├── src/
-│   ├── Ticket.java
-│   ├── TicketStatus.java
-│   ├── TicketService.java
-│   ├── TicketDemo.java
-│   ├── TicketPractice.java
-│   ├── TicketArrayDemo.java
-│   ├── TicketServiceDemo.java
-│   ├── TicketFileStore.java
-│   ├── TicketFileDemo.java
-│   └── TicketLoadDemo.java
+│   ├── main/java/                # 4 个业务类
+│   │   ├── Ticket.java
+│   │   ├── TicketStatus.java
+│   │   ├── TicketService.java
+│   │   └── TicketFileStore.java
+│   └── test/java/                # JUnit、main Demo 与独立练习
+│       ├── TicketTest.java
+│       ├── TicketFileStoreTest.java
+│       ├── TicketDemo.java
+│       ├── TicketPractice.java
+│       ├── TicketArrayDemo.java
+│       ├── TicketServiceDemo.java
+│       ├── TicketFileDemo.java
+│       ├── TicketLoadDemo.java
+│       ├── TicketLoadFailureDemo.java
+│       ├── TicketEmptyDemo.java
+│       ├── ArrayPractice.java
+│       └── TitleValidationPractice.java
+├── data/
+│   ├── tickets.properties        # 正常两张工单存档
+│   ├── tickets-invalid.properties # 缺少第二张标题的测试副本
+│   ├── tickets-empty.properties  # count=0 的空列表存档
+│   ├── ticket-demo.properties    # 早期单张工单练习
+│   └── ticket-invalid.properties # 早期单张坏存档练习
 └── .gitignore
 ```
 
-运行保存 Demo 会在工作目录生成或覆盖 tickets.properties；旧的 ticket-demo.properties 和 ticket-invalid.properties 不再是当前多记录 Demo 的默认输入。编译产物 out/ 已被 Git 忽略。
+TicketFileDemo 会生成或覆盖 data/tickets.properties，TicketEmptyDemo 会生成或覆盖 data/tickets-empty.properties。当前 save 不自动创建父目录，需保留 data 文件夹。JUnit 文件测试使用 @TempDir 分配的临时目录，不操作这些项目存档。
 
-收尾核对时，TicketLoadDemo 的第一张工单预期编号仍为故意失败用的 999L；正常验收应恢复为 1001L 并保存。详见运行与验收。当前没有 JUnit 或 Maven 配置。
+target/ 为 Maven 生成目录，out/ 是早期编译输出；两者及 .qa/、.idea/、*.class 均已忽略，不提交构建产物。
 
-## 文档维护
+## 学习进度与下一步
 
-新增业务功能时同步更新需求状态、方法契约和验收记录。数据库和 Web 阶段再补实际的数据库设计、接口文档与部署文档。演示成功仅代表对应场景通过；边界、异常和权限场景应分别记录。
+第一周的数组最大值、独立标题校验和 static 概念补验收已经完成；第二周已补齐 Set 检测重复编号、Map 统计数字次数、读回列表加入服务。主线仍在第二周，整周尚未完成。
+
+Maven 属于原计划第三周，本次提前接触了 Maven 和 JUnit；保留现有工具和测试，暂停继续扩展第三周内容，先补齐前两周验收。
+
+下一步由学习者实现 **TicketService.create(String title)**：遍历当前工单找最大编号，用最大编号加 1 创建并加入服务，返回新工单；空服务从 1 开始，标题非法时不增加记录。该方法目前仅布置，尚未编写或验收。随后补首次无文件、坏存档明确报错，以及完整重启后继续编号的流程。
+
+新增业务功能时同步更新需求、方法契约和验收记录。测试通过只代表对应场景通过，不等同于全部业务或整周学习目标完成。

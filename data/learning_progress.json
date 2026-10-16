@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-14",
-  "stage": "Java 基础业务与文件持久化",
+  "updated": "2026-10-16",
+  "stage": "第 2 周：集合与文件恢复验收（Maven/JUnit 提前接触）",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -96,6 +96,16 @@
       "next": "确认正常测试预期编号改回并保存，再完成第二张工单缺标题的异常测试。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261014/"
+    },
+    {
+      "date": "2026-10-16",
+      "project": "ops-ticket",
+      "title": "补齐基础验收，接入 JUnit 与服务恢复",
+      "summary": "完成坏存档和空列表 Demo，整理源码、测试与数据目录；补齐数组、标题和 static 练习，加入 Set 查重、Map 计数，并把存档恢复到服务。",
+      "verification": "在指导和反馈中修正；正式 JUnit 为 8 个（标题 6 个、文件 2 个），均通过。临时检查另记，服务恢复后的查询结果符合预期。第一周补漏完成，第二周尚未完整验收。",
+      "next": "实现 TicketService.create(String title)，按最大已有编号加 1 创建工单；再补首次缺文件、坏数据的具体提示与完整重启验收。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261016/"
     }
   ],
   "current_project": "ops-ticket"
