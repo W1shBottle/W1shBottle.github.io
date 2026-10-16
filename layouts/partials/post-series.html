@@ -1,0 +1,19 @@
+{{ $latest := index .pages 0 }}
+<details class="post-series">
+  <summary class="post-series-summary">
+    <span class="post-series-overview">
+      <span class="post-series-meta">学习系列 <span class="post-series-count">{{ len .pages }} 篇</span></span>
+      <span class="post-series-name">{{ .title }}</span>
+      <span class="post-series-latest">最新 · {{ $latest.Params.chapter_title | default $latest.Title }}</span>
+      <time class="post-series-updated" datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date.Format "2006.01.02" }} 更新</time>
+    </span>
+    <span class="post-series-toggle">
+      <span class="post-series-expand">展开</span><span class="post-series-collapse">收起</span>
+      <svg class="post-series-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+    </span>
+  </summary>
+  <div class="post-series-content">
+    <p class="post-series-reading-order">按时间从早到晚，顺着学习过程阅读。</p>
+    {{ range sort .pages "Date" "asc" }}{{ partial "post-entry.html" . }}{{ end }}
+  </div>
+</details>

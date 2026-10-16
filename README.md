@@ -46,6 +46,14 @@ chapter_title: "多张工单存取与 Demo 自测"
 
 所有屏幕宽度统一为上下两层：系列名在顶部使用较小、较轻的次要文字，下面展示序号与章节标题；网页展示不再插入破折号。序号采用现有强调色与等宽数字，章节标题保留较高字重。首页、文章列表、系列页、归档、搜索和文章页共用这套层次。纯文本 title 继续用破折号分隔，便于 RSS、浏览器标签和社交分享阅读。没有系列字段的普通文章沿用原标题。
 
+## 文章页系列折叠
+
+`/posts/` 按最新文章日期排列，每个系列默认收起；展开后按文章日期从早到晚显示该系列全部文章。使用原生 `details` / `summary`，鼠标、键盘和关闭 JavaScript 的浏览器都能操作。普通文章仍单独展示，首页、标签、系列页、归档和搜索保持原有展示方式。
+
+新文章填写相同的 `learning_series` 即自动归入同组，`series_title` 作为组名。历史操作系统笔记暂不修改文章头部，使用 `data/wish.json` 对应集合的 `group_posts: true` 按标签归组。明确的 `learning_series` 优先；普通主题集合不会自动折叠，避免把不同项目的 Java 或 AI 文章混成一个系列。以后需要将其他历史集合视为系列时，显式设置 `group_posts`。
+
+文章页先收集完整系列，不按单篇文章分页，以免展开时遗漏后续页面的章节；`paginationSize` 仍用于标签等普通列表。模板在 `layouts/posts/list.html`、`layouts/partials/post-series-list.html` 和 `layouts/partials/post-series.html`，样式集中在 `site.css` 的 Article index 段落。
+
 ## 学习板块
 
 学习首页增加[每日学习时间线](https://wishbottle.cn/learning/#progress)。每次检查阶段成果或发布每日笔记时维护公开进度，详见[时间线维护说明](scripts/learning-progress.md)。数据位于 data/learning_progress.json，日期、笔记链接和重复记录由部署前检查校验。

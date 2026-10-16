@@ -1,0 +1,7 @@
+{{ define "main" }}
+<div class="page-heading"><h1>文章</h1><p>共 {{ len .RegularPages }} 篇记录。系列文章收在一起，点击展开阅读。</p></div>
+{{ .Content }}
+<div class="posts-list">
+  {{ partial "post-series-list.html" .RegularPages }}
+</div>
+{{ end }}

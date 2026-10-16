@@ -1,0 +1,38 @@
+{{/* Collect all members before rendering, so a series never gets split by post pagination. */}}
+{{ $groups := newScratch }}
+{{ $entries := slice }}
+{{ range .ByDate.Reverse }}
+  {{ $page := . }}
+  {{ $key := "" }}
+  {{ $title := "" }}
+  {{ with .Params.learning_series }}
+    {{ $key = printf "series:%s" . }}
+    {{ $title = $page.Params.series_title | default . }}
+  {{ else }}
+    {{/* Only opt-in legacy collections use tags; broad topic tags are not series. */}}
+    {{ range site.Data.wish.collections }}
+      {{ if and (not $key) .group_posts (intersect ($page.Params.tags | default slice) .tags) }}
+        {{ $key = printf "collection:%s" .id }}
+        {{ $title = .title }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if $key }}
+    {{ if $groups.Get $key }}
+      {{ $groups.Set $key (($groups.Get $key) | append $page) }}
+    {{ else }}
+      {{ $groups.Set $key (slice $page) }}
+      {{ $entries = $entries | append (dict "key" $key "title" $title) }}
+    {{ end }}
+  {{ else }}
+    {{ $entries = $entries | append (dict "page" $page) }}
+  {{ end }}
+{{ end }}
+{{/* Entries retain the date of their newest post; chapters read from oldest to newest. */}}
+{{ range $entries }}
+  {{ if .page }}
+    {{ partial "post-entry.html" .page }}
+  {{ else }}
+    {{ partial "post-series.html" (dict "title" .title "pages" ($groups.Get .key)) }}
+  {{ end }}
+{{ end }}

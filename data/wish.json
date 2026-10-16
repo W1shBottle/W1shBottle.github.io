@@ -33,7 +33,8 @@
         "操作系统"
       ],
       "label": "COMPUTER SYSTEMS",
-      "class": "systems"
+      "class": "systems",
+      "group_posts": true
     },
     {
       "id": "ai",
