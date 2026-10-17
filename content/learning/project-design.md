@@ -10,97 +10,94 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-17（凌晨）。本次学习归 2026-10-16。本文描述当前实现，未实现内容单独标明。
+核对日期：2026-10-17。本文描述当前实现，计划中的改造单独标明。
 
 ## 1. 当前结构
 
+所有业务类、Demo 和测试均使用 `cn.wishbottle.opsticket` 包，分别位于 Maven 的 `src/main/java` 与 `src/test/java` 源码根下。
+
 ```text
-TicketFileDemo → TicketService.findAll() → List<Ticket>
-                                            ↓
-                               TicketFileStore.save
-                                            ↓
-                                  UTF-8 Properties 文件
-                                            ↓
-                               TicketFileStore.loadAll
-                                            ↓
-            检查 count、字段和重复编号 → Ticket.restore
-                                            ↓
-                                完整的 List<Ticket>
-                                            ↓
-                TicketLoadDemo → 新 TicketService → 逐张 add
-                                            ↓
-                               数量、编号和状态查询
+保存端：TicketService → findAll → TicketFileStore.save → UTF-8 Properties
+读取端：Properties → loadAll → 全部记录校验与 restore → 完整列表
+                                                   ↓
+                                        新 TicketService 逐张 add
+                                                   ↓
+                                        查询、筛选、继续 create
+
+新增的独立练习：TicketRepository ← InMemoryTicketRepository
+                              （尚未注入 TicketService）
 ```
 
-保存端从服务取得列表；读取端在 loadAll 完整成功后，把列表装入新服务。尚无数据库、网络层或完整控制台菜单。
-
-| 类 | 职责 |
+| 类或接口 | 当前职责 |
 | --- | --- |
-| Ticket | 数据、编号标题校验、派单规则和恢复入口 |
-| TicketStatus | 四种状态名称 |
-| TicketService | LinkedHashMap 管理工单，添加、编号查询、状态筛选、返回全部列表 |
-| TicketFileStore | 工单列表与 UTF-8 Properties 文件的转换和读写，加载时检查重复编号 |
-| TicketDemo / TicketPractice / TicketArrayDemo | 早期对象和数组练习 |
-| TicketServiceDemo | 派单、集合查询与引用关系演示 |
-| TicketFileDemo | 创建两张工单、加入服务、调用 save |
-| TicketLoadDemo | loadAll 后恢复新服务，查询数量和状态，并保留原来的字段断言 |
-| TicketLoadFailureDemo | 验证缺少第二张标题时正确抛异常，其他结果判定失败 |
-| TicketEmptyDemo | 保存空列表，再读回并检查非 null 且为空 |
-| TicketTest | 6 个标题修改 JUnit 测试 |
-| TicketFileStoreTest | 2 个文件往返 JUnit 测试，使用 @TempDir |
-| ArrayPractice | 数组最大值与数字出现次数；main 目前只测试最大值 |
-| TitleValidationPractice | 独立重写标题校验；当前没有 main 或 JUnit 测试方法 |
+| Ticket | 数据封装、编号标题校验、派单规则和恢复入口 |
+| TicketStatus | OPEN、IN_PROGRESS、RESOLVED、CLOSED 状态名称 |
+| TicketService | 内置 LinkedHashMap，新增、查询、筛选和自动编号创建 |
+| TicketFileStore | 列表与 UTF-8 Properties 文件转换；读回时检查字段、类型、重复编号和业务一致性 |
+| TicketRepository | 约定 add、findById、findAll、update 四种存取操作 |
+| InMemoryTicketRepository | 用自己的 LinkedHashMap 实现接口，尚未取代 Service 中的 Map |
+| TicketStartupDemo | 缺文件使用空服务；其他加载错误停止启动 |
+| TicketRestartSaveDemo / TicketRestartLoadDemo | 两次独立进程运行，验证保存与重启恢复 |
+| TicketLoadFailureDemo / TicketInvalidNumberDemo / TicketInvalidStatusDemo | 检查特定坏存档的异常类型与完整消息 |
+| 三个 JUnit 测试类 | 标题 6 项、文件往返 2 项、仓库查询 2 项 |
 
-业务类位于 src/main/java；测试、Demo 和练习位于 src/test/java。已使用 Maven，但仍采用默认包，后续再安排包名和接口分层。业务类不依赖测试类。
+其余对象、集合、单张/多张文件 Demo 和 ArrayPractice、TitleValidationPractice 保留学习过程。当前没有数据库、网络层或正式应用菜单。
 
-## 2. Ticket 字段与规则
+## 2. 领域对象与状态
 
-| 字段 | 类型 | 当前约定 |
-| --- | --- | --- |
-| id | long | > 0，由调用方提供，无公开修改入口 |
-| title | String | 非 null，trim 后非空，String.length() ≤ 50 |
-| status | TicketStatus | 新建 OPEN，派单改为 IN_PROGRESS，恢复可还原合法存档状态 |
-| assigneeId | Long | 未派单为 null，其他状态要求正数处理人编号 |
+Ticket 的 id 为 long，title 为 String，status 初始 OPEN，assigneeId 为可空的 Long。创建要求编号为正；标题先检查 null，再 trim，拒绝空白和长度超过 50。rename 先完成校验再赋值，失败保留原标题。
 
-这些数据属于每张工单的实例字段，不能改成所有工单共享的 static 字段。编号唯一性由 TicketService.add 和文件读取中的 Set 分别检查；单个 Ticket 构造器无法检查其他记录。
+assign 要求工程师编号 > 0 且状态为 OPEN，成功时修改处理人并转为 IN_PROGRESS。restore 要求状态非 null，OPEN 没有处理人，其他状态有正数处理人，再通过构造器校验编号和标题。能恢复 RESOLVED/CLOSED 不等于已经提供提交处理和验收方法。
 
-## 3. 公开方法契约
+## 3. 当前公开方法契约
 
-| 方法 | 正常结果 | 拒绝条件或特殊结果 |
-| --- | --- | --- |
-| new Ticket(id, title) | 新建 OPEN、无处理人的工单 | 非正编号、非法标题抛 IllegalArgumentException |
-| rename(newTitle) | 校验并更新 trim 后的标题 | 校验失败保留原标题 |
-| assign(engineerId) | OPEN 变为 IN_PROGRESS 并设置处理人 | 非正编号抛 IllegalArgumentException，非 OPEN 抛 IllegalStateException；失败不改状态和处理人 |
-| Ticket.restore(id, title, status, assigneeId) | 创建新对象并恢复字段 | 状态为空、状态与处理人冲突、构造器校验失败时抛 IllegalArgumentException |
-| getId/getTitle/getStatus/getAssigneeId | 返回当前字段 | assigneeId 可为 null |
-| service.add(ticket) | 按编号加入集合 | null 或重复编号抛 IllegalArgumentException，不覆盖旧记录 |
-| service.findById(id) | 返回原工单引用 | 不存在返回 null |
-| service.findByStatus(status) | 按插入顺序返回新列表 | null 状态被拒绝，无匹配返回空列表 |
-| service.findAll() | 按插入顺序返回全部工单的新列表 | 元素仍引用服务里的原工单 |
-| store.save(tickets, path) | 将列表写为 count 和分组字段 | null 列表、null 元素或 null 路径被拒绝；空列表写 count=0；IOException 向外传递 |
-| store.loadAll(path) | 按序号解析并返回新建工单列表 | null 路径、缺失/非法 count、缺字段、重复编号、非法类型或业务数据被拒绝；IOException 向外传递 |
+| 方法 | 返回与失败行为 |
+| --- | --- |
+| TicketService.add(Ticket) | 拒绝 null 和重复编号，通过后加入 Map |
+| TicketService.findById(long) | 找到返回原对象；未找到返回 null |
+| TicketService.findByStatus(TicketStatus) | 拒绝 null；返回按插入顺序排列的新列表，无匹配返回空列表 |
+| TicketService.findAll() | 返回包含现有对象引用的新列表 |
+| TicketService.create(String) | 遍历取最大编号，使用最大值加 1 构造工单、add 并返回；空服务从 1 开始 |
+| TicketFileStore.save(List<Ticket>, Path) | 拒绝 null 列表、路径或列表元素；用 UTF-8 写文件；I/O 失败向外抛 IOException |
+| TicketFileStore.loadAll(Path) | 拒绝 null 路径；所有记录成功后才返回新列表；缺文件等抛 IOException，内容错误抛 IllegalArgumentException |
+| Ticket.restore(long, String, TicketStatus, Long) | 校验后构造新对象，恢复原编号、标题、状态与处理人 |
 
-标题校验由 Ticket 负责，持久化类不重复实现标题规则。计划中的 create(String title) 尚不存在，不应作为当前可调用 API。
+create 的 maxId 每次从 0 开始，但会遍历现有数据；恢复编号 1、2、5 后得到下一号 6，而不是 size()+1 得到的 4。先构造后 add，使标题校验失败时不会新增记录。当前没有并发控制或数据库序列。
 
-## 4. 集合与引用
+## 4. 接口、实现类与 Optional
 
-Map 接口配合 LinkedHashMap 保持插入顺序，编号不是数组下标。add 在 put 前检查重复编号。
+```java
+public interface TicketRepository {
+    void add(Ticket ticket);
+    Optional<Ticket> findById(long id);
+    List<Ticket> findAll();
+    void update(Ticket ticket);
+}
+```
 
-findAll 和 findByStatus 创建新 ArrayList，但共享 Ticket 引用：清空结果列表不删除服务记录；修改结果中的工单会修改原对象。findById 也返回原对象。
+这些没有方法体的接口方法默认 public、abstract。当前普通实现类声明 `implements TicketRepository` 后，必须实现它们（或从父类继承符合要求的实现）。`@Override` 是让编译器核对覆盖关系的注解，建议使用，但删掉注解本身不等于删掉方法实现。
 
-loadAll 通过 restore 创建新的 Ticket；再调用 service.add(ticket) 时，服务保存的是这些已恢复对象的引用，不会再次复制对象。
+```java
+TicketRepository repository = new InMemoryTicketRepository();
+```
 
-文件去重使用循环外的 Set<Long> seenIds = new HashSet<>()。每读到一个编号，先 contains 检查，重复则抛出包含编号的 IllegalArgumentException；不重复再 add。contains 只查询，不会自动记录编号。HashSet 不需要保持顺序，结果列表的顺序仍由文件序号决定。
+变量类型是接口，实际对象是内存实现，调用 add 等方法执行具体实现。InMemoryTicketRepository 的 add 拒绝已有编号；update 则要求编号已存在，用传入的新对象替换旧值，不会新增未知编号。两个方法都拒绝 null。
 
-ArrayPractice.countOccurrences 则使用 LinkedHashMap<Integer, Integer>：键是数组中的数字，值是次数。每次 getOrDefault(number, 0) 后，用 put(number, oldCount + 1) 写回。空数组返回空 Map，null 被拒绝；保持首次出现顺序，不限制数字在 0～9。
+findById 使用 `Optional.ofNullable(ticketsById.get(id))`：有对象时包装该对象，无对象时返回空 Optional；`orElseThrow()` 在有值时取出、无值时抛异常，`isEmpty()` 检查是否没有值。当前 Service.findById 仍返回 Ticket/null，接入仓库时需要明确处理这项接口差异。
 
-当前采用单线程模型，集合操作没有并发保障。
+新建接口和实现类并没有自动改变已有 Service 的行为；当前文件存储也未实现仓库接口。
 
-## 5. 文件格式与路径
+## 5. 集合与引用边界
 
-正常保存和读取 Demo 使用 data/tickets.properties，失败测试使用 data/tickets-invalid.properties，空列表 Demo 使用 data/tickets-empty.properties。代码使用 Paths.get("data", "文件名")，路径相对于运行时工作目录；IDEA 文件 Demo 应以项目根目录为工作目录。
+Service 和内存仓库使用 LinkedHashMap，保持插入顺序。`put` 对已有键会替换值，因此新增前必须检查重复编号；更新则先检查存在。
 
-保存和读取方法接受调用方传入的 Path，不在 TicketFileStore 内硬编码 data。父目录需预先存在。两份早期单张练习文件也保留在 data 中。
+findAll 和 findByStatus 返回新列表，清空列表不改变内部 Map。列表元素仍是原 Ticket 引用，修改其中一个工单的标题会影响仓库/服务中对应对象；这是浅层结构隔离，不是深拷贝。Optional 包装的也不是对象副本。
+
+loadAll 通过 restore 创建新 Ticket，随后 service.add 保存这些对象引用。文件去重使用循环外的 HashSet<Long>，先 contains 检查再 add 记录；contains 不会自动记住编号。文件列表顺序由序号决定，不依赖 Set 顺序。
+
+ArrayPractice.countOccurrences 使用 LinkedHashMap<Integer, Integer>，键是数组元素，值是次数；getOrDefault 后 put 更新计数，空数组返回空 Map，null 被拒绝，保持首次出现顺序。所有集合操作目前都按单线程场景设计。
+
+## 6. 文件格式、编码与路径
 
 ```properties
 count=2
@@ -114,39 +111,51 @@ ticket.1.status=OPEN
 ticket.1.assigneeId=
 ```
 
-空列表的有效存档包含 count=0，不是零字节空文件。count 是列表大小；ticket.i 中的 i 是从 0 开始的记录序号，与工单编号不同。四个字段的键必须存在，空处理人字符串表示 null；没有处理人键属于缺字段。状态写入 enum.name()，读取用 valueOf。
+count 是列表数量，ticket.i 的 i 是从 0 开始的记录位置，不是工单编号。四个键都必须存在；空 assigneeId 字符串表示 null，缺键则是坏存档。有效空列表存档包含 count=0，不是零字节文件。
 
-Properties 的键是普通字符串，不形成嵌套对象，也不保证输出顺序。读取按序号拼键，不依赖文件行顺序。使用其 API 处理转义；转换后的字符串是当时的快照，不随工单后续修改。
+Properties 的键是普通字符串，不构成嵌套对象；输出行序不保证，读取按 i 拼接键。状态用 enum.name() 保存，valueOf 读取。Writer/Reader 显式使用 UTF-8，try-with-resources 关闭资源；Properties API 负责等号、反斜杠等转义。Java 字面量 `"A=B\\C"` 表示实际标题 `A=B\C`，存档显示的转义形式由 load 还原。
 
-Files.newBufferedWriter/Reader 显式使用 UTF-8，Properties.store(Writer, ...) 与 load(Reader) 处理键值，try-with-resources 关闭资源。
+调用方传 Path，存储类不硬编码 data，也不自动创建父目录。`Paths.get("data", "tickets.properties")` 相对于运行时工作目录，同样的字符串在两个不同工作目录下会指向不同文件。排查时比较保存端和读取端的 toAbsolutePath()。
 
-JUnit 使用 @TempDir Path tempDir。tempDir.resolve("tickets-empty.properties") 只是组合临时目录中的路径；真正创建文件的是后续 save。这个名字与 data/tickets-empty.properties 恰好相同，**不是同一个文件，也不是读取现有 data 文件的快捷方式**。测试结束后临时资源由 JUnit 默认清理。
+JUnit 使用 `@TempDir Path tempDir`。`tempDir.resolve("tickets-empty.properties")` 只是得到临时目录中的路径，后续 save 才创建文件；这个文件与项目 data 中的同名文件位置不同，不会因此读取或覆盖现有存档。JUnit 默认清理临时资源。
 
-## 6. 加载流程与异常边界
+## 7. 加载校验与异常传播
 
-1. 拒绝 null 路径，用 Reader 读取 Properties。
-2. 检查 count 存在，用 Integer.parseInt 解析并拒绝负数。
-3. 新建结果列表和 seenIds，按 0 到 count-1 逐条取四个字段并检查缺失。
-4. 解析 id，检查重复并加入 seenIds；解析枚举、Long，空处理人字符串转 null。
-5. 调用 Ticket.restore 并加入局部结果列表；全部完成后才返回。
-6. TicketLoadDemo 取得完整列表后新建 TicketService，循环 add，再执行查询。
+1. 用 UTF-8 Reader 加载 Properties。
+2. requireProperty 检查 count 存在，parseIntProperty 转为 int，再拒绝负数。
+3. 新建结果列表与 seenIds，按 count 逐条读取四个必要字段。
+4. parseLongProperty 解析编号并检查重复；parseStatusProperty 解析状态；空处理人转 null，非空值解析为 long。
+5. 调用 restore 进行业务校验；失败补充 ticket.i，成功则加入局部列表。
+6. 全部成功才 return；调用方再把工单装入新服务。
 
-Ticket.restore 要求状态非 null，OPEN 无处理人，其他状态有正数处理人编号，再通过 new Ticket 复用标题和编号校验。restore 不写文件。能够恢复 RESOLVED、CLOSED 不代表相应业务流转已实现。
+| 输入问题 | 当前错误消息示例 |
+| --- | --- |
+| 缺少第二张标题键 | 存档缺少必要字段：ticket.1.title |
+| 第二张编号为 abc | 存档字段格式错误：ticket.1.id，应为整数，实际值：abc |
+| 第二张状态为 DONE | 存档状态不合法：ticket.1.status，实际值：DONE |
+| count 为 abc | 存档字段格式错误：count，应为整数，实际值：abc |
+| count 为 -1 | 存档字段不合法：count，不能为负数，实际值：-1 |
+| 第二张编号为 0 | 存档记录不合法：ticket.1，原因：工单编号必须大于0 |
+| 记录编号重复 | 存档中工单编号重复：2 |
 
-解析失败时不会正常返回部分列表；loadAll 不修改服务和原文件。当前恢复演示创建新服务，没有“用新数据整体替换已有服务”的接口，不把这个演示描述为通用事务恢复。
+requireProperty 只拒绝 null，不统一拒绝空字符串，因为空 assigneeId 合法。数字能被解析不等于符合业务规则，编号 0 还要由 Ticket 校验。
 
-TicketLoadDemo 捕获 IOException 与 IllegalArgumentException 并打印提示；AssertionError 不会被这两个分支捕获。文件不存在目前仍抛 IOException，没有首次启动初始化分支。部分内容错误只给通用消息，尚未统一标出记录序号和字段。
+辅助方法捕获原异常后，用 `new IllegalArgumentException(message, e)` 包装；新异常包含更具体消息，cause 指向原异常。调用方 getMessage() 得到新说明，getCause() 取得原原因，打印调用栈时可见 Caused by。捕获后的代码由 catch 决定，不会回到 loadAll 的出错位置继续读下一条。AssertionError 不会被 IllegalArgumentException 或 IOException 的 catch 捕获。
 
-当前不检测超出 count 的额外记录，没有格式版本号，也没有自动接续编号。
+读取不修改原文件，不返回部分结果，不提供替换已有服务的通用事务接口；当前也不检查 count 之外的多余记录或格式版本。
 
-## 7. 构建与测试
+## 8. 启动与重启验收
 
-pom.xml 固定了 Java release 21、UTF-8、JUnit Jupiter 5.14.4（test 作用域）、maven-compiler-plugin 3.13.0 和 maven-surefire-plugin 3.5.5。Maven 编译输出为 target/classes 与 target/test-classes，测试报告位于 target/surefire-reports。
+TicketStartupDemo 在 try 外创建空服务，加载成功后逐张 add。NoSuchFileException 必须在其父类 IOException 前捕获：缺文件继续打印启动完成、数量 0；其他 IOException 或 IllegalArgumentException 提示原因并 return，停止启动。该 Demo 不调用 save。
 
-测试方法使用 @Test，由测试引擎调用，不需要 main。现有 8 项 JUnit 不包括所有 main Demo 和助手临时验收；运行 mvn test 不能代替尚未完成的完整业务重启验证。
+两阶段验收中，保存端创建 1、2、3，将第 2 张派给处理人 20，并写入单独的重启存档；结束进程后，读取端恢复三张，检查全部字段和 OPEN 的 1、3，再 create 得到编号 4。新建 4 只在内存，读取端没有保存，所以重复运行仍从原来三张开始。
 
-## 8. 当前保存限制与下一步
+坏存档启动前后哈希一致，证明这些读取失败路径没有改写文件；不代表后续保存操作具备抗中断保障。
 
-save 在内存中准备全部 Properties 后才打开 Writer，列表含 null 时不会因提前打开文件而覆盖旧内容。但写入会直接截断/覆盖同名文件，没有临时文件替换、备份或原子保存策略，写入过程中失败仍可能损坏已有存档。save 本身不检查传入列表的重复编号；正常服务通过 add 防重，loadAll 另行拒绝重复存档。
+## 9. 构建、保存限制与后续拆分
 
-下一步先实现最大现有编号加 1 的 create(String title)，再区分首次无文件和存档损坏、补充错误上下文及重启验收，防止加载失败后把空数据保存到原存档。既有 Maven/JUnit 保留，主线继续补齐第二周。
+pom.xml 使用 release 21、UTF-8、JUnit Jupiter 5.14.4（test 作用域）、maven-compiler-plugin 3.13.0、maven-surefire-plugin 3.5.5。业务与测试编译产物分别为 target/classes、target/test-classes，Surefire 报告位于 target/surefire-reports。clean package 编译并执行正式 JUnit 后打包普通 JAR，不自动执行 Demo，也未配置可直接 java -jar 的入口。
+
+save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前被拒绝；打开后直接截断或覆盖目标文件，写入中途失败仍可能破坏存档。save 不检查传入列表的重复编号，正常 Service/Repository 新增会拒绝重复，loadAll 另行防重。
+
+下一步先补仓库失败边界与列表结构隔离测试，再通过接口拆分 Service；文件原子替换、备份、数据库和并发控制仍属后续工作。

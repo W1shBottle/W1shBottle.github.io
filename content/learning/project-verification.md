@@ -10,186 +10,183 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
 
-核对日期：2026-10-17（凌晨）。本次学习归 2026-10-16，包含持续到次日凌晨的学习。本页区分现有源码、已有运行证据和待完成验收；本次日结整理不重复执行已通过的业务测试。
+核对日期：2026-10-17。本页区分正式 JUnit、main Demo、用户自报和助手复核。第二周本轮验收已完成，当前进入第三周仓库接口与测试。
 
 ## 1. 环境与构建
 
-当前为 Maven 项目，编译目标 Java 21。项目已配置 JUnit Jupiter 5.14.4、maven-compiler-plugin 3.13.0 和 maven-surefire-plugin 3.5.5。
+编译目标为 Java 21。pom.xml 使用 JUnit Jupiter 5.14.4、maven-compiler-plugin 3.13.0、maven-surefire-plugin 3.5.5。所有源码已迁至 cn.wishbottle.opsticket 包，业务源码根为 src/main/java，测试、Demo 与练习源码根为 src/test/java。
 
-命令行使用前配置 JDK 21、JAVA_HOME 和 Maven，并在项目根目录核对：
+命令行使用前配置 JDK 21 和 Maven，在项目根目录核对：
 
 ```powershell
 java -version
 javac -version
 mvn -v
-mvn test
+mvn clean package
 ```
 
-重点检查 mvn -v 中实际使用的 Java，不要只看 IDEA 的项目 SDK。学习环境曾出现终端仍使用 JDK 8、IDEA 使用 JDK 21 的情况；已通过显式使用 JDK 21 和 IDEA 自带 Maven 运行测试，没有宣称系统 PATH 已统一。命令行尚未识别 mvn 时，可从 IDEA Maven 面板运行 test，并设置 Maven Runner 使用 JDK 21。
+若终端未配置 mvn，可在 IDEA Maven 面板执行 clean、package，或调用 IDEA 自带 Maven 的完整可执行路径；不要把“IDEA 有 Maven”理解成系统终端必然能执行 mvn。Maven Runner 的 JDK 也需核对，pom 的 release=21 不会替换运行 Maven 的 JDK。
 
-当前不再沿用早期“用 JDK 8 直接编译全部 Demo”的命令：测试源码已依赖 JUnit，部分练习使用较新的 Java API。项目没有 Maven Wrapper，也没有可直接 java -jar 启动的入口配置。
+本次学习中曾发现终端 Java 8 与 IDEA Java 21 不一致；通过当前 PowerShell 会话的 JAVA_HOME、PATH 临时切换，学习者确认 java、javac、Maven 均使用 21.0.8。此设置未永久写入系统环境，关闭终端后需重新核对。
 
-IDEA 加载 pom.xml 后，业务源码为 src/main/java，测试源码为 src/test/java；仍使用默认包。target/ 是 Maven 构建输出，已加入 .gitignore。
+用户报告 clean package 的 8 项旧测试通过、BUILD SUCCESS，包迁移后的构建及重启读取也已验证。package 会执行前面的编译和测试阶段，生成 target/ops-ticket-0.1.0-SNAPSHOT.jar；当前是普通 JAR，没有配置 java -jar 启动入口，也没有 Maven Wrapper。clean 清理 target 构建产物，不清理项目 data。
 
-## 2. JUnit 自动测试
+## 2. 当前正式 JUnit：10 项
 
 ```powershell
 mvn test
 ```
 
-已有运行报告：Tests run: 8, Failures: 0, Errors: 0, Skipped: 0，BUILD SUCCESS。报告位于 target/surefire-reports。
+2026-10-17 日结时，助手以当前 pom.xml 和 src 的隔离临时副本、JDK 21 与 Maven 离线运行 test：编译 6 个业务源码和 18 个测试/Demo/练习源码，**Tests run: 10, Failures: 0, Errors: 0, Skipped: 0，BUILD SUCCESS**。这次未改变原项目的 target、数据或 Git 暂存区。
 
 | 测试类 | 场景 | 数量 |
 | --- | --- | --- |
-| TicketTest | 正常修改；拒绝 null 并保留原标题；接受 50 字符；拒绝 51 字符并保留原标题；先 trim 再检查长度；拒绝空白并保留原标题 | 6 |
-| TicketFileStoreTest | 空列表保存读回；两张工单保存读回，逐项核对编号、标题、状态和处理人 | 2 |
+| TicketTest | 正常修改；拒绝 null；接受 50 字符；拒绝 51 字符；先 trim 再检查长度；拒绝空白；非法修改还检查原标题保留 | 6 |
+| TicketFileStoreTest | 空列表往返；两张工单往返并核对编号、标题、状态、处理人 | 2 |
+| InMemoryTicketRepositoryTest | 新增后按编号找到且数量正确；不存在的编号返回空 Optional | 2 |
 
-学习者逐项运行并报告通过；助手核对源码并实际运行过 8 项测试。通过临时注释 rename 调用让测试失败，再恢复为通过，验证过断言确实检查实际行为。曾把期望值和自身比较的问题也已修正。
+前 8 项此前已有学习者自测和助手运行证据；仓库两个测试当前已在源码中完成，本次由助手复核通过，不能写成学习者已独立完成全部仓库边界验收。仓库更新、重复新增、null 和列表结构隔离等专项断言尚未编写。
 
-JUnit 文件测试使用 @TempDir。tempDir.resolve("tickets-empty.properties") 指向临时目录下的新文件路径；save 才创建文件。它只是与 data 中的文件同名，不会读取或覆盖 data/tickets-empty.properties。两张工单测试也在临时目录中写 tickets.properties。
+JUnit 通过 @Test 调用测试方法，不需要 main。每个仓库测试自己 new 仓库，数据独立、不依赖运行顺序；orElseThrow 使意外查不到直接失败，isEmpty 检查不存在编号的预期结果。
 
-mvn test 不会自动运行每个 Demo 的 main，也不包括助手的临时检查。坏存档的第 9 个 JUnit 测试曾被布置，但主线调整后暂停，当前没有这个测试方法。
+文件测试使用 @TempDir。tempDir.resolve("tickets-empty.properties") 指向临时目录中的新路径，save 才创建文件；与 data 中已有文件只是同名，**不是同一个文件，不会读取或覆盖原存档**。JUnit 默认清理临时资源。
 
-## 3. 运行普通 Demo
+mvn test 不会自动执行 main Demo，不把临时检查或口头题计入 10 项；此前暂停的“坏存档第 9 个 JUnit”也没有突然完成，新增的两项来自仓库查询。
 
-修改源码后先编译，再运行；以下 classpath 分隔符适用于 Windows PowerShell：
+## 3. 运行普通 Demo 与路径
+
+修改源码后先编译。下面 classpath 分隔符适用于 Windows PowerShell，须在项目根目录运行：
 
 ```powershell
 mvn test-compile
-java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' TicketServiceDemo
+java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' cn.wishbottle.opsticket.TicketServiceDemo
+java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' cn.wishbottle.opsticket.TicketLoadDemo
 ```
 
-业务类输出到 target/classes，测试、Demo 与练习输出到 target/test-classes。普通 Demo 不调用 JUnit API，所以其 main 可使用上面的 classpath；不要照此直接调用没有 main 的 JUnit 测试类。
+包迁移后必须使用完整类名。IDEA 中可打开移动后的类，从 main 旁重新运行，核对 Working directory；不要设为 data，否则路径可能变为 data/data。用 path.toAbsolutePath() 比较保存和读取实际位置，同样的相对路径不保证在不同工作目录中指向同一个文件。
 
-IDEA 也可直接运行对应 main。文件 Demo 的 Working directory 应为项目根目录，data 文件夹需存在；不要把工作目录设为 data，否则相对路径会变成 data/data。
+普通 Demo 可使用上面的类路径；JUnit 测试类没有 main，交给 Maven/IDEA 测试引擎运行。源码中的待清理 TODO 注释不代表已实现的代码仍为空，验收以实际代码和行为为准。
 
-TicketServiceDemo 已有运行证据覆盖首次派单、重复派单失败后原处理人保留、第二张工单不受影响、筛选结果列表独立但工单引用共享。findAll 的演示输出包括：
+| Demo | 文件影响或检查范围 |
+| --- | --- |
+| TicketServiceDemo | 只操作内存；派单、列表引用和自动编号边界 |
+| TicketFileDemo | 生成或覆盖 data/tickets.properties 的两张示例工单 |
+| TicketLoadDemo | 只读取正常两张工单；恢复服务、检查字段和查询输出 |
+| TicketEmptyDemo | 生成或覆盖 data/tickets-empty.properties，再读取检查空列表 |
+| TicketStartupDemo | 只读取；正常、缺文件与坏文件三个启动分支 |
+| TicketLoadFailureDemo | 只读取缺少第二张标题的副本，核对完整异常消息 |
+| TicketInvalidNumberDemo | 只读取 ticket.1.id=abc 的副本 |
+| TicketInvalidStatusDemo | 只读取 ticket.1.status=DONE 的副本 |
+| TicketRestartSaveDemo | 生成或覆盖 data/tickets-restart.properties |
+| TicketRestartLoadDemo | 只读重启存档，编号 4 仅在内存，不保存 |
 
-```text
-全部工单数：2
-结果列表数：0
-服务中的工单数：2
-```
+保存 Demo 会覆盖指定练习文件，需保留现有内容时先复制到隔离练习目录并建立 data；不要为文档验收重复覆盖原始数据。
 
-## 4. 正常文件存取与恢复服务
+## 4. 第二周已完成的功能验收
 
-TicketFileDemo 会创建两张固定示例工单并覆盖 data/tickets.properties；需要保留已有数据时先备份，或在隔离练习目录运行并建立 data。TicketLoadDemo 使用相同路径，只读取文件。
+### 自动编号与失败后数据不变
 
-```powershell
-java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' TicketFileDemo
-java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' TicketLoadDemo
-```
+TicketServiceDemo 已补 main 断言，学习者报告通过，教学中也已核对：
 
-正常读取当前预期：
+- 现有 1001、1002 时 create 得到 1003，返回对象与服务中对象相同，数量变为 3。
+- 空服务得到编号 1、数量 1；原服务继续创建得到 1004、数量 4。
+- 空白标题抛 IllegalArgumentException，服务数量保持不变。
 
-```text
-读取文件：<项目根目录>/data/tickets.properties
-服务中的工单数：2
-IN_PROGRESS
-1
-测试通过：两张工单的所有字段都正确
-读回数量：2
-1001 | 投影仪无信号 | IN_PROGRESS | 20
-1002 | 打印机卡纸 | OPEN | null
-```
+编号取最大已有值加 1，不取集合大小加 1。标题先由构造器校验，通过才 add。原有演示还保留派单后状态、重复派单不改变原处理人、清空结果列表不清空服务、修改列表元素会反映到原对象等内容。
 
-新增的三项输出来自恢复后的 TicketService：全部数量 2、编号 1001 的状态 IN_PROGRESS、OPEN 数量 1。助手另外检查过 OPEN 对象的编号是 1002；当前 Demo 没有单独打印这条筛选结果的编号。
+### 启动分支
 
-原来的字段断言仍检查返回列表中的两张工单。用户曾故意把预期 1001L 改成 999L，确认 AssertionError，再恢复正确预期。当前服务查询结果是打印值，尚未全部变成自动断言；不能把输出正确说成已建立完整服务回归测试。
+TicketStartupDemo 当前路径已恢复为 data/tickets.properties。学习者分别测试并报告：
 
-TicketLoadDemo 先取得完整列表，再创建新服务并逐张 add。读取抛异常就不会执行恢复步骤。IOException 和 IllegalArgumentException 当前会打印后结束，不保证非零退出码，不能仅凭进程正常退出认定验收通过。
+| 输入 | 预期与已报告结果 |
+| --- | --- |
+| 正常两张存档 | 恢复后打印启动完成，数量 2 |
+| 确认不存在的文件 | 提示缺文件，继续启动，数量 0 |
+| 已有坏存档 | 提示错误并 return，不打印启动完成 |
 
-## 5. 坏文件、空列表和重复编号
+NoSuchFileException 是 IOException 的子类，catch 放前面。后两个失败分支是 I/O 失败与内容错误；缺文件不能和所有读取错误一起当成正常空数据。该 Demo 不调用 save，也不保证错误时进程返回非零退出码；检查输出和控制流，不能只看“程序结束”。
 
-### 缺少第二张标题
+### 精确定位坏字段与业务错误
 
-```powershell
-java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' TicketLoadFailureDemo
-```
+缺字段、非法数字与非法状态已有专用 Demo，对异常消息进行精确比较；正常返回或 IOException 会转为 AssertionError，不能误判通过。其他场景在坏存档副本上通过 Startup Demo 逐个验证，测后恢复正常读取路径。
 
-Demo 读取 data/tickets-invalid.properties。该副本保留 count=2，删除 ticket.1.title 整行；清空值测试的是空标题，含义不同。
+| 测试修改 | 预期错误消息或关键部分 | 证据 |
+| --- | --- | --- |
+| 删除 ticket.1.title 整行 | 存档缺少必要字段：ticket.1.title | 专用 Demo 与用户通过反馈 |
+| ticket.1.id=abc | 存档字段格式错误：ticket.1.id，应为整数，实际值：abc | 专用 Demo 与用户通过反馈 |
+| ticket.1.status=DONE | 存档状态不合法：ticket.1.status，实际值：DONE | 专用 Demo 与用户通过反馈 |
+| count=abc | 存档字段格式错误：count，应为整数，实际值：abc | 用户报告启动验收通过 |
+| count=-1 | 存档字段不合法：count，不能为负数，实际值：-1 | 用户报告启动验收通过 |
+| 删除 count 键 | 存档缺少必要字段：count | 用户报告启动验收通过 |
+| ticket.1.id=0 | 存档记录不合法：ticket.1，原因：工单编号必须大于0 | 用户报告启动验收通过 |
+| ticket.1.title= | 存档记录不合法：ticket.1，原因：工单标题不能为空 | 用户报告启动验收通过 |
+| OPEN 工单的 assigneeId=20 | 存档记录不合法：ticket.1，原因：待派单工单不能有处理人 | 用户报告启动验收通过 |
 
-只有捕获 IllegalArgumentException 且消息等于“存档缺少必要字段”，才打印“测试通过：缺少标题的存档被正确拒绝”。正常返回、其他内容错误或 IOException 都用 AssertionError 判定失败。AssertionError 不会被现有两个 catch 捕获。
+每个场景应从正常副本开始只改一项，避免前面的错误遮住本次目标。缺键与空值不同；assigneeId= 是合法未派单状态，字符串 "null" 则不能当数字解析。parseLongProperty 同时用于工单编号和非空处理人编号；本轮专用非法数字 Demo 测的是工单编号，不扩张为全部数字边界已覆盖。
 
-用户已经验证坏文件通过、改读正常文件会失败，并恢复路径。助手在目录整理期间重跑通过，还在隔离目录确认正常文件、缺文件和 count=abc 不会误判为这项测试通过。count=abc 在这里只验证“异常原因不匹配”，不等于完整的数量边界测试。
+转换失败与恢复失败的包装异常保留 cause，便于追查原始原因。第二条恢复失败时不会正常返回第一条的局部结果，也不会回到出错位置继续。
 
 ### 空列表
 
+TicketEmptyDemo 已验证保存 count=0 再读回非 null、isEmpty 的列表；文件不存在和零字节空文件不是这个场景。正式 JUnit 中也有临时目录空列表往返测试。
+
+## 5. 完整重启与坏存档保护
+
+在项目根目录分两次执行，保存端结束后再运行读取端：
+
 ```powershell
-java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' TicketEmptyDemo
+java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' cn.wishbottle.opsticket.TicketRestartSaveDemo
+java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' cn.wishbottle.opsticket.TicketRestartLoadDemo
 ```
 
-当前已完成：保存空列表到 data/tickets-empty.properties，读回后检查非 null 且 isEmpty()，成功打印“测试通过：空列表保存和读取正常”。IOException 会转换为 AssertionError。运行会覆盖该空列表存档。
+两端已有用户通过反馈；教学中对代码和读取运行作过核对。验收内容：
 
-有效空列表文件包含 count=0；零字节文件缺少 count，不是同一种输入。这个场景也已在 JUnit 临时目录中验证。
-
-### 重复编号
-
-loadAll 在循环外创建 Set<Long>，读取编号后 contains 检查，随后 add 记录。最初只有 contains，导致集合一直为空；补 add 后助手临时检查以下三项通过：
-
-| 存档编号 | 结果 |
+| 检查点 | 结果 |
 | --- | --- |
-| 1001、1002 | 恢复两张工单 |
-| count=0 | 返回空列表 |
-| 1001、1001 | 抛 IllegalArgumentException，消息包含重复编号 1001 |
+| 保存端编号和数量 | 1、2、3，共三张 |
+| 第一张特殊字符 | Java 字面量 `"A=B\\C"` 对应的标题往返后仍为 `A=B\C` |
+| 第二张派单 | 标题空调不制冷、IN_PROGRESS、处理人 20 |
+| 第三张 | 标题打印机卡纸、OPEN、处理人 null |
+| 重启后筛选 | 创建第四张之前，OPEN 仍为编号 1、3 |
+| 恢复后继续创建 | 新编号 4、总数 4，返回对象与服务中对象相同 |
+| 原存档 | 读取端不保存，仍是原来三张 |
 
-这三项临时检查不计入正式 8 项 JUnit，用户原存档未用于破坏性实验。
+预期输出分别为“阶段一通过：已保存3张工单”和“阶段二通过：数据恢复正确，新工单编号为4”。重复执行读取端仍从三张开始，编号 4 不会自动写回文件。
 
-## 6. 第一、二周补验收与剩余任务
+最后，学习者复制重启存档为 tickets-restart-invalid.properties，分别制造第三张与第二张编号重复、第三张状态 DONE，使用 Startup Demo 验证停止启动。**用户报告两个场景的运行前后 Get-FileHash 比较均为 True，并已恢复正常路径。** 比较基线是在造好坏数据之后记录，每个场景各取一次。
 
-| 项目 | 当前证据与限制 |
-| --- | --- |
-| 数组最大值 | ArrayPractice.main 的普通、全负数、单元素、空数组、null 五项通过；失败提示已引用各自实际值 |
-| 独立标题校验 | TitleValidationPractice 已实现；助手临时验证 8 个边界输入通过，学习者没有在类中编写完整自测 |
-| static 共享字段 | 学习者正确解释第二个对象会覆盖类共享 id/title，第一周这轮补验收完成 |
-| 数字出现次数 | countOccurrences 经修正使用数组元素作键、getOrDefault 加 put、LinkedHashMap 保序；助手 7 项临时检查通过，未加入 main 或 JUnit |
-| 列表恢复到服务 | 最新 TicketLoadDemo 经助手运行通过，恢复数量、状态和 OPEN 编号符合预期 |
-| 自动接续编号 | create(String title) 仅布置，源码未实现、未验收 |
-| 异常 count 全部边界 | 代码已有缺失、解析失败和负数分支，完整专项验收未完成 |
-| 首次无文件初始化 | 未实现；目前只报告读取失败 |
-| 精确错误上下文 | 重复编号已有编号消息，其他错误尚未统一指出记录和字段 |
-| 完整重启流程 | 未完成创建、派单、保存、退出、重启、筛选、新编号 4 的整体验收 |
-| 写入中途失败保护 | 未实现原子替换或备份 |
+这项证据说明读取失败没有修改这两个坏存档副本，不证明写入中途断电或异常时文件也安全。当前 save 直接覆盖文件，尚无原子替换和备份机制。
 
-第一周补验收已完成，第二周仍未完整完成。Maven 原定第三周，本次提前学习了 Maven 和 JUnit；保留工具与已有测试，继续补第二周。下一课先实现 create(String title)，并验证空服务从 1 开始、恢复 1001/1002 后新建为 1003、再次新建为 1004，以及非法标题不改变记录数。
+## 6. 第二周结论与第三周下一步
 
-## 7. 历史迁移验收
+第二周本轮的集合、文件、启动边界、重启流程和理解验收完成。学习者正确解释了 Map 同键替换为何要防重、最大编号与 size 的区别、maxId 每次从 0 开始仍会遍历，以及工作目录如何影响相对路径。第一周此前的数组、标题和 static 补验收继续保留有效。
 
-以下是 2026-10-16 引入 Maven 之前的记录，保留当时事实，不代表当前编译环境或文件状态：
+第三周当前已经完成 JDK/Maven 环境核对、构建、包迁移；创建了仓库接口、内存实现以及两个查询测试。尚未完成：
 
-- 源码目录整理时，4 个业务类和 8 个 Demo/练习类可分别编译，7 个当时已完成 Demo 在 JDK 8 与 JDK 21 下输出一致；TicketEmptyDemo 当时仅有可编译框架。11 个其他 Java 文件迁移前后 SHA256 一致，原 properties 内容未改变。
-- data 整理时，5 个 properties 全部迁入 data，4 个文件 Demo 修改相对路径。保存验证使用隔离副本，原存档迁移前后 SHA256 一致，根目录无遗留 properties。记录在 .qa/data-layout-20261016/verification.json。
-- IDEA 模块修复时，先前根据手工替换变量判断配置正确的结论不足。之后实际调用已安装 IDEA 的 JPS 模块加载器，验证只有一个 ops-ticket 模块、项目根与业务/测试源码根正确；用户关闭项目后再次解析通过。记录在 .qa/idea-module-repair-20261016/model-after-close.txt。用户随后截图显示目录已恢复。
-- 之后完成 TicketEmptyDemo，并引入 pom.xml、JUnit 和新的练习类。当前运行方法、测试数量与完成状态以本页前述章节为准。
+1. 重复 add 拒绝且保留原对象与数量。
+2. update 已有编号能替换，更新不存在编号拒绝且不新增。
+3. add/update 的 null 检查和失败后状态不变。
+4. findAll 返回列表的结构隔离、插入顺序，以及元素共享引用的理解与必要测试。
+5. 将仓库注入 Service，保持 create、查询、筛选和恢复行为；再安排后续存储实现。
 
-更早的对象恢复 21 项助手临时检查、单张文件提取阶段的数字与缺文件检查仍是历史证据，不计入当前 8 项 JUnit，也不代替新的多记录边界验收。
+当前 Service 与 Repository 各自有 Map，没有自动联动。文件异常仍以 main Demo 为主，不能把 10 项 JUnit 说成完整业务回归覆盖。
+
+## 7. 历史验收记录
+
+以下记录保留当时事实，不能用于替代当前 Maven/包结构运行说明：
+
+- 2026-10-16 引入 Maven 前，4 个业务类与 8 个 Demo/练习类曾分别编译，7 个当时完成的 Demo 在 JDK 8 与 JDK 21 下输出一致，TicketEmptyDemo 当时仅有框架；11 个其他源码迁移前后 SHA256 一致。现在完整项目需要 JDK 21，测试依赖 JUnit。
+- 当日 5 个 properties 迁入 data，4 个文件 Demo 改相对路径；隔离副本验证后原存档 SHA256 不变。后续又新增了本页所列的坏存档与重启验收文件。
+- IDEA 模块修复曾通过实际 JPS 模块加载器确认源码根与项目根，用户关闭后再次解析并重新打开；之后又以 Maven 重新导入并迁入命名包，旧配置检查不是当前模块结构的唯一证据。
+- 第一周补漏：数组最大值 main 的普通、全负、单元素、空数组、null 五项；标题练习的助手临时 8 项；static 共享字段口头解释。Map 次数统计的助手临时 7 项、早期 Set 查重临时 3 项分别通过，均不计入正式 JUnit。
+- 10 月 16 日正式测试数量为 8；10 月 17 日新增仓库两项后为 10。历史文章保留当时数量，不回写成已提前完成。
 
 ## 8. 常见问题
 
-### main Demo 与 JUnit 有什么区别
+**重构预览是不是报错？** 普通 Refactoring Preview 列出待更新引用；Conflicts Detected 需要检查原因，不能一概忽略。移动测试类时保留 test 源码根，README 文本引用不必随类移动批量改成完整名称。
 
-main 由程序入口执行，需要自己组织检查和错误报告；JUnit 通过 @Test 发现并执行测试，提供 assertEquals、assertThrows 等断言和结果汇总。源码位于 test/java 不代表 main 会被 Maven 自动执行。
+**方法一定要写 @Override 吗？** 注解不强制，但建议接口实现方法都写，用于编译期核对。缺少接口要求的方法与缺少注解是不同问题；当前普通实现类不能少实现 update。
 
-### catch 下面为什么一片报错
+**抛 AssertionError 是业务失败吗？** 它通常表示测试预期不成立，先核对数据和断言；故意改错预期让测试失败，是确认检查有效，不能捕获忽略来伪造通过。
 
-检查外层是否缺少 try，以及 for、try、方法和类的右括号是否分别闭合。catch 不能直接跟在 for 后面。
-
-### 找不到文件
-
-查看读取端打印的绝对路径，核对工作目录、data 子目录和文件名 tickets 的复数 s。保存和读取都从项目根目录运行，旧 ticket-demo.properties 不是当前默认文件。
-
-### 中文乱码
-
-源文件、存档、IDE 显示和终端显示分别排查。文件读写已指定 UTF-8，IDEA Properties 文件也应按 UTF-8 查看，避免将乱码另存覆盖原数据。
-
-### null、空字符串和字符串 null
-
-getProperty 找不到键返回 null；assigneeId= 返回空字符串，转换成无处理人的 null；文字 "null" 是字符串，在当前编号解析中会失败。
-
-### 报 AssertionError 是不是业务代码坏了
-
-先确认预期值和文件正确。故意将 1001L 改成 999L 应当失败；修复后保存并重新编译。不能捕获后忽略 AssertionError 来制造通过结果。
-
-### 抛异常后还能拿到局部结果吗
-
-当前正常执行路径中断，转到匹配的 catch。loadAll 在循环全部成功后才 return；第二张工单解析失败时，调用方拿不到局部列表中的第一张。现有成功输出都位于 try 中，不会在读取异常后继续执行。
+**中文乱码怎么排查？** 源码、存档、IDE 与终端显示分别检查，文件读写已指定 UTF-8；不要把显示乱码另存覆盖正常文件。终端的 Git/包版本/Java 提示只是环境信息，不能替代实际的版本命令。

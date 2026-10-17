@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-16",
-  "stage": "第 2 周：集合与文件恢复验收（Maven/JUnit 提前接触）",
+  "updated": "2026-10-17",
+  "stage": "第 3 周：职责拆分与仓库接口（服务尚未接入仓库）",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -106,6 +106,16 @@
       "next": "实现 TicketService.create(String title)，按最大已有编号加 1 创建工单；再补首次缺文件、坏数据的具体提示与完整重启验收。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261016/"
+    },
+    {
+      "date": "2026-10-17",
+      "project": "ops-ticket",
+      "title": "完成重启验收，开始仓库接口拆分",
+      "summary": "完成自动编号、启动分支和存档错误上下文，验收重启恢复与坏档保护；核对 JDK/Maven、迁移包结构，编写仓库接口和内存实现。",
+      "verification": "第二周收尾经指导完成，用户自测两次坏档哈希均未变化；助手日结补验 10 项 JUnit 全通过（标题 6、文件 2、仓库 2）。服务仍自行管理 Map。",
+      "next": "补齐仓库的重复新增、更新、null 和返回列表隔离测试，再把仓库注入 TicketService；文件仓库与正式控制台入口尚未实现。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261017/"
     }
   ],
   "current_project": "ops-ticket"
