@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-17",
-  "stage": "第 3 周：职责拆分与仓库接口（服务尚未接入仓库）",
+  "updated": "2026-10-21",
+  "stage": "第 3 周控制台交付完成；第 4 周准备连接 MySQL",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -116,6 +116,16 @@
       "next": "补齐仓库的重复新增、更新、null 和返回列表隔离测试，再把仓库注入 TicketService；文件仓库与正式控制台入口尚未实现。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261017/"
+    },
+    {
+      "date": "2026-10-21",
+      "project": "ops-ticket",
+      "title": "仓库切换、文件自动保存与控制台交付",
+      "summary": "将上篇之后尚未归档的学习合并为今天的复盘：完成仓库注入、文件自动保存、控制台交互和可执行 JAR，练习 Lambda 与两数之和，并同步项目文档。",
+      "verification": "经指导与反馈实现；助手日结用隔离副本构建，17 项 JUnit 全通过，并运行仓库切换、重新加载、JAR 菜单与独立进程重启，验证坏存档启动失败且文件不变。此前学习者自报结果另记；尚未进行 MySQL 登录或 SQL 实操。",
+      "next": "从第四周数据库连接开始：使用 mysql 客户端登录，执行 SELECT VERSION(), DATABASE()，确认服务端版本与当前数据库后再创建练习库。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261021/"
     }
   ],
   "current_project": "ops-ticket"
