@@ -1,17 +1,2 @@
-<script>
-(() => {
-  let theme = 'light';
-  try { theme = localStorage.getItem('wish-typo-theme') === 'dark' ? 'dark' : 'light'; } catch {}
-  const setTheme = value => {
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(value);
-    document.documentElement.style.colorScheme = value;
-    document.getElementById('theme-toggle').setAttribute('aria-label', value === 'dark' ? '切换浅色主题' : '切换深色主题');
-  };
-  setTheme(theme);
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    theme = theme === 'light' ? 'dark' : 'light'; setTheme(theme);
-    try { localStorage.setItem('wish-typo-theme', theme); } catch {}
-  });
-})();
-</script>
+{{ $script := resources.Get "js/appearance.js" | minify | fingerprint }}
+<script defer src="{{ $script.RelPermalink }}"></script>

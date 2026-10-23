@@ -1,19 +1,47 @@
 {{ define "main" }}
-<section class="hero">
-  <p class="eyebrow">学习 · 实践 · 记录</p>
-  <h1>你好</h1>
-  <p class="intro-copy">关于 Java、操作系统与 AI 的学习笔记。<br>把遇到的问题、写过的代码和想明白的事情，慢慢整理在这里。</p>
+{{ $posts := (where site.RegularPages "Section" "posts").ByDate.Reverse }}
+<section class="hero hero-balanced">
+  <div class="hero-copy">
+    <p class="kicker">软件工程在读 · Java 后端学习中</p>
+    <h1>你好，我是许愿瓶<span class="greeting-dot">。</span></h1>
+    <p class="hero-description">把遇到的问题想明白，<br class="hero-break">把学到的东西做成项目。<br>这里记录我的 Java 实践、操作系统笔记和 AI 探索。</p>
+    <div class="inline-links"><a href="/learning/#progress">我的学习足迹 <span aria-hidden="true">↗</span></a><a href="https://github.com/W1shBottle" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a href="/about/">关于我 <span aria-hidden="true">↗</span></a></div>
+  </div>
+  <aside class="project-panel hero-project" aria-label="正在做的项目">
+    <p class="kicker"><span class="status-dot" aria-hidden="true"></span>正在做的项目<span class="project-week">WEEK 04</span></p>
+    <h2>设备运维工单平台</h2>
+    <p>从一个 Java 对象，到可以交付的后端应用。</p>
+    <p class="stack mono">Java 21 / Maven / MySQL</p>
+    <ol class="steps"><li class="done"><span class="dot"></span>对象建模与文件存档</li><li class="done"><span class="dot"></span>仓库接口与控制台交付</li><li class="current"><span class="dot"></span>MySQL 表关联与外键<small>正在学习 · 第 4 周内容</small></li></ol>
+    <div class="project-links"><a href="/learning/project-docs/">项目文档 ↗</a><a href="/learning/#progress">学习时间线 →</a></div>
+  </aside>
 </section>
-<nav class="topic-strip" aria-label="学习系列">
-  <a href="{{ "/series/#ops-ticket" | relURL }}"><strong>Java 实践 <b>↗</b></strong><span>学生管理 · 运维工单</span></a>
-  <a href="{{ "/series/#systems" | relURL }}"><strong>操作系统 <b>↗</b></strong><span>进程 · 内存管理</span></a>
-  <a href="{{ "/series/#ai" | relURL }}"><strong>AI 学习 <b>↗</b></strong><span>Tokenization · GNN</span></a>
-</nav>
-<section aria-labelledby="latest-title">
-  <div class="section-head"><h2 id="latest-title">最近更新</h2><a href="{{ "/posts/" | relURL }}">全部文章 ↗</a></div>
-  {{ range first 5 (where site.RegularPages "Section" "posts").ByDate.Reverse }}{{ partial "post-entry.html" . }}{{ end }}
+<section class="recent-section" aria-labelledby="recent-heading">
+  <div class="section-title"><h2 id="recent-heading">最近写下<span class="section-label"> / NOTES</span></h2><a href="/posts/">全部 {{ len $posts }} 篇文章 ↗</a></div>
+  <div class="recent-grid">
+    {{ range first 1 $posts }}
+    <article class="featured">
+      <div class="post-meta"><span class="series-label">{{ .Params.series_title | default "学习笔记" }}</span><time class="mono" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }} · {{ .ReadingTime }} 分钟</time></div>
+      <h3><a href="{{ .RelPermalink }}">{{ with .Params.series_order }}<span class="chapter">{{ printf "%02d" (int .) }}</span>{{ end }}{{ .Params.chapter_title | default .Title }}</a></h3>
+      <p>{{ .Description }}</p>
+      <div class="post-footer"><span class="text-tags">{{ delimit (first 3 (.Params.tags | default slice)) " · " }}</span><a class="read-link" href="{{ .RelPermalink }}">继续阅读 <span aria-hidden="true">→</span></a></div>
+    </article>
+    {{ end }}
+    <div class="recent-more">
+      {{ range first 2 (after 1 $posts) }}
+      <article class="compact-post"><time class="mono" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time><div><span class="series-label">{{ .Params.series_title | default "学习笔记" }}</span><h3><a href="{{ .RelPermalink }}">{{ with .Params.series_order }}<span class="chapter">{{ printf "%02d" (int .) }}</span>{{ end }}{{ .Params.chapter_title | default .Title }}</a></h3></div></article>
+      {{ end }}
+      <a class="notes-archive-link" href="/archives/">按时间回看每一步 <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
 </section>
-{{ with site.GetPage "/posts/streamlit-ai-companion" }}
-<aside class="project-note"><p class="eyebrow">PROJECT / 实践记录</p><h3><a href="{{ .RelPermalink }}">{{ .Title }} ↗</a></h3><p>{{ .Description }}</p></aside>
+<aside class="small-insight"><span class="insight-label">边做边记</span><p>外键保证关联记录存在；用户角色是否合适，还需要业务规则来判断。</p><a href="/learning/" aria-label="到学习栏目继续阅读">继续学习 <span aria-hidden="true">↗</span></a></aside>
+<section class="series-section"><div class="section-title"><h2>沿着一个主题读<span class="section-label"> / SERIES</span></h2><a href="/series/">所有系列 ↗</a></div><div class="series-grid">
+{{ range first 3 site.Data.wish.collections }}
+  {{ $collection := . }}{{ $members := slice }}
+  {{ if .series }}{{ $members = where $posts "Params.learning_series" .series }}{{ else }}{{ range $posts }}{{ if intersect (.Params.tags | default slice) $collection.tags }}{{ $members = $members | append . }}{{ end }}{{ end }}{{ end }}
+  <details class="series-item"><summary><div><span class="serial mono">{{ .label }}</span><strong>{{ .title }}</strong><p>{{ len $members }} 篇 · {{ if eq .id "ops-ticket" }}从对象到可运行的应用{{ else if eq .id "java" }}Java 基础与第一次实践{{ else }}进程与内存管理{{ end }}</p></div><span class="arrow" aria-hidden="true">+</span></summary>
+  <div class="series-chapters">{{ range sort $members "Date" "asc" }}<a href="{{ .RelPermalink }}">{{ with .Params.series_order }}<span class="chapter-number">{{ printf "%02d" (int .) }}</span>{{ end }}{{ .Params.chapter_title | default .Title }}</a>{{ end }}</div></details>
 {{ end }}
+</div></section>
 {{ end }}

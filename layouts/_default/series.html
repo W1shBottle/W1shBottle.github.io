@@ -1,13 +1,13 @@
 {{ define "main" }}
-<div class="page-heading"><h1>学习系列</h1><p>按项目和主题阅读，沿着各自的进度继续学习。</p></div>
+<div class="page-heading"><p class="eyebrow">TOPICS / 按主题阅读</p><h1>学习系列</h1><p>从第一篇读起，沿着一个项目或主题慢慢深入。</p></div>
+<nav class="collection-index" aria-label="系列索引">{{ range site.Data.wish.collections }}<a href="#{{ .id }}">{{ .title }}</a>{{ end }}</nav>
 {{ range site.Data.wish.collections }}
 {{ $collection := . }}
-<section class="series-section" id="{{ .id }}"><h2>{{ .title }}</h2><p>{{ .subtitle }}</p>
-{{ $posts := (where site.RegularPages "Section" "posts").ByDate }}
-{{ if .series }}
-  {{ range where $posts "Params.learning_series" .series }}{{ partial "post-entry.html" . }}{{ end }}
-{{ else }}
-  {{ range $posts }}{{ if intersect (.Params.tags | default slice) $collection.tags }}{{ partial "post-entry.html" . }}{{ end }}{{ end }}
-{{ end }}
+{{ $posts := (where site.RegularPages "Section" "posts").ByDate.Reverse }}
+{{ $members := slice }}
+{{ if .series }}{{ $members = where $posts "Params.learning_series" .series }}
+{{ else }}{{ range $posts }}{{ if intersect (.Params.tags | default slice) $collection.tags }}{{ $members = $members | append . }}{{ end }}{{ end }}{{ end }}
+<section class="collection-section" id="{{ .id }}"><p class="collection-caption">{{ .subtitle }}</p>
+{{ if $members }}{{ partial "post-series.html" (dict "title" .title "pages" $members) }}{{ end }}
 </section>{{ end }}
 {{ end }}

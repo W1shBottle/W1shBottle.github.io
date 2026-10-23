@@ -48,11 +48,11 @@ chapter_title: "多张工单存取与 Demo 自测"
 
 ## 文章页系列折叠
 
-`/posts/` 按最新文章日期排列，每个系列默认收起；展开后按文章日期从早到晚显示该系列全部文章。使用原生 `details` / `summary`，鼠标、键盘和关闭 JavaScript 的浏览器都能操作。普通文章仍单独展示，首页、标签、系列页、归档和搜索保持原有展示方式。
+`/posts/` 按最新文章日期排列，每个系列默认收起；展开后按文章日期从早到晚显示该系列全部文章。使用原生 `details` / `summary`，鼠标、键盘和关闭 JavaScript 的浏览器都能操作。普通文章仍单独展示，首页展示最近三篇文章，并为三个主要系列提供折叠入口；系列页同样默认折叠，标签、归档和搜索仍按文章列出。
 
 新文章填写相同的 `learning_series` 即自动归入同组，`series_title` 作为组名。历史操作系统笔记暂不修改文章头部，使用 `data/wish.json` 对应集合的 `group_posts: true` 按标签归组。明确的 `learning_series` 优先；普通主题集合不会自动折叠，避免把不同项目的 Java 或 AI 文章混成一个系列。以后需要将其他历史集合视为系列时，显式设置 `group_posts`。
 
-文章页先收集完整系列，不按单篇文章分页，以免展开时遗漏后续页面的章节；`paginationSize` 仍用于标签等普通列表。模板在 `layouts/posts/list.html`、`layouts/partials/post-series-list.html` 和 `layouts/partials/post-series.html`，样式集中在 `site.css` 的 Article index 段落。
+文章页先收集完整系列，不按单篇文章分页，以免展开时遗漏后续页面的章节；`paginationSize` 仍用于标签等普通列表。模板在 `layouts/posts/list.html`、`layouts/partials/post-series-list.html` 和 `layouts/partials/post-series.html`，基础样式位于 `site.css` 的 Article index 段落，新版材质、间距和动效由 `appearance.css` 与 `appearance.js` 补充。
 
 ## 学习板块
 
@@ -83,7 +83,7 @@ hugo --minify
 
 ## 招聘信息
 
-首页展示杭州 Java 后端 / AI 开发的实习及校招岗位；`/jobs/` 提供全部岗位和企业、类型、方向筛选。
+首页已移除招聘卡片；保留独立的 `/jobs/` 页面，提供杭州 Java 后端 / AI 开发的实习及校招岗位，以及企业、类型、方向筛选。
 
 学历筛选只保留明确接受本科或本科及以上的岗位；本科可申请但硕士优先的岗位保留，硕士/博士起步、学历未注明/不限及专科起步的岗位不展示。规则同时用于来源同步、同步失败时保留的缓存和前端推荐/全部岗位列表，旧缓存不会绕过筛选。
 
@@ -91,7 +91,7 @@ hugo --minify
 
 `scripts/update_jobs.py` 将公开信息保存到 `static/data/hangzhou-jobs.json`。Actions Cache 保存前次快照，页面每 10 分钟重新读取。失败来源保留最后成功核验时间，超过 72 小时未核验的岗位移除；成功返回空列表时清空该来源旧岗位。未披露的薪资、学历或发布日期不推断。
 
-首页按北京时间日期选择至多 8 条推荐，并优先展示当日新收录岗位。每日组合可以包含重复岗位；企业没有新增时明确显示“今日暂无新收录”。首次接入来源建立基线，不将已有岗位计为当天新增。岗位发布时间、收录时间和核验时间分别记录。
+招聘推荐组件仍保留按北京时间日期选择岗位的逻辑，目前未挂载到首页。首次接入来源建立基线，不将已有岗位计为当天新增。岗位发布时间、收录时间和核验时间分别记录。
 
 ```bash
 python -m unittest discover -s scripts -p 'test_*.py'
@@ -106,8 +106,14 @@ hugo --minify
 
 - `assets/css/tokens.css`：暖灰靛蓝配色、字体、内容宽度等公共变量。强调色使用 `--accent`，浅色背景使用 `--accent-soft`。
 - `assets/css/site.css`：导航、文章、首页、归档、搜索、简介等公共布局与组件。
-- `assets/css/jobs.css`：首页招聘卡片与完整岗位列表，仅相关页面加载。
+- `assets/css/jobs.css`：独立招聘页面的样式，仅 `/jobs/` 加载。
+- `assets/css/appearance.css`：暖白灰紫视觉、响应式首页、系列卡片、学习页信息顺序和文章侧边目录。
+- `assets/js/appearance.js`：导航滑动、系列展开、主题切换、章节高亮、阅读进度和返回顶部；兼容减少动态效果偏好。
 - `assets/css/accessibility.css`：玻璃效果回退、减少动态效果与透明度等偏好，最后加载。
+
+首页的文章和系列条目从内容与集合数据生成；学习页优先展示已归档的时间线，课程与日程放在后面。电脑端文章目录跟随阅读位置高亮，手机端默认折叠；关闭 JavaScript 时文章和原生折叠目录仍可阅读。深浅色偏好继续保存到原有的 `wish-typo-theme` 键。
+
+导航胶囊使用 [Lens / design-systems](https://github.com/ruiqichenbiec/design-systems) 的 Spring 计算器，按博客阅读场景降低运动幅度。原始 MIT 许可保存在 `static/licenses/lens.txt`，站点在页头提供许可链接。
 
 支持深浅色切换和手机布局。字体优先使用本机苹方，未安装时使用系统字体；没有分发苹方字体文件。修改简介外观时编辑 `site.css` 中的 `.about-profile`、`.about-avatar`、`.about-bio`，无需在正文中写 CSS。
 

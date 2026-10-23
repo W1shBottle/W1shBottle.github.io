@@ -3,11 +3,13 @@
 <head>{{ partial "head.html" . }}</head>
 <body class="{{ .Param "theme" | default "light" }}">
   <a class="skip-content" href="#main-content">跳转到正文</a>
+  {{ if and .IsPage (eq .Section "posts") }}<div class="reading-progress" role="progressbar" aria-label="文章阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>{{ end }}
   <div class="content">
     <header class="site-shell" id="top">{{ partial "header.html" . }}</header>
-    <main id="main-content" class="main {{ if .IsHome }}home-main{{ else }}reading-main{{ end }}">{{ block "main" . }}{{ end }}</main>
+    <main id="main-content" class="main {{ if .IsHome }}home-main{{ else }}reading-main{{ if and .IsPage (eq .Section "posts") }} article-main{{ end }}{{ end }}">{{ block "main" . }}{{ end }}</main>
   </div>
   {{ partial "functions/get_hook.html" (dict "hook" "body_end" "context" .) }}
+  <button class="back-to-top" type="button" aria-label="回到页面顶部" hidden>↑</button>
   <footer>{{ partial "footer.html" . }}</footer>
   {{ if .Param "math" }}{{ partialCached "math.html" . }}{{ end }}
   <script defer src="{{ "js/copy-code.js" | relURL }}"></script>

@@ -6,13 +6,13 @@
 
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
-  .site-header,.jobs-widget,.topic-strip a {
+  .site-header,.site-head,.motion-capsule,.project-panel,.back-to-top,.jobs-widget,.topic-strip a {
     background: var(--glass-solid);
   }
 
 }
 @media (prefers-reduced-transparency:reduce),(prefers-contrast:more) {
-  .site-header,.jobs-widget,.topic-strip a,.note-entry,.single-content,.project-note {
+  .site-header,.site-head,.motion-capsule,.project-panel,.back-to-top,.jobs-widget,.topic-strip a,.note-entry,.single-content,.project-note {
     background: var(--glass-solid);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;

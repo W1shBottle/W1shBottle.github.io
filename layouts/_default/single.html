@@ -11,8 +11,10 @@
     {{ end }}
     {{ if $isPost }}<div class="article-meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time> · 约 {{ .ReadingTime }} 分钟</div><div class="entry-tags">{{ range .GetTerms "tags" }}<a href="{{ .RelPermalink }}"># {{ .LinkTitle }}</a>{{ end }}</div>{{ end }}
   </div>
-  {{ if and $isPost (ne .TableOfContents "<nav id=\"TableOfContents\"></nav>") }}<details class="toc"><summary>文章目录</summary>{{ .TableOfContents }}</details>{{ end }}
-  <div class="single-content">{{ .Content }}</div>
+  {{ if $isPost }}<div class="article-layout{{ if not .Fragments.Headings }} article-layout-no-toc{{ end }}">{{ end }}
+  {{ if and $isPost .Fragments.Headings }}<aside class="article-rail"><details class="toc article-toc"><summary>本篇目录</summary>{{ .TableOfContents }}</details><a class="rail-top" href="#top">回到开头 ↑</a></aside>{{ end }}
+  <div class="single-content"{{ if $isPost }} id="article-body"{{ end }}>{{ .Content }}</div>
+  {{ if $isPost }}</div>{{ end }}
 </article>
 {{ if and $isPost .Params.learning_series }}
 {{ $series := .Params.learning_series }}{{ $current := .RelPermalink }}

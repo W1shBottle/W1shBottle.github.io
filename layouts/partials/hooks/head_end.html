@@ -1,2 +1,3 @@
 <link rel="icon" type="image/svg+xml" href="{{ "/favicon.svg" | relURL }}">
-<script>try { const mode = localStorage.getItem('wish-typo-theme'); if (mode === 'dark') document.documentElement.style.colorScheme = 'dark'; } catch {}</script>
+<script>try{const t=localStorage.getItem('wish-typo-theme')==='dark'?'dark':'light';document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch{}</script>
+<link rel="license" href="{{ "/licenses/lens.txt" | relURL }}">
