@@ -1,91 +1,87 @@
 {
   "title": "设备工单的数据与接口约定",
-  "description": "统一角色、工单状态、六张数据表、请求字段、响应与错误码。",
+  "description": "现有三表与计划中的动作日志、最小接口、权限和只读AI建议边界。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 100,
   "group": "tools",
-  "draft": false
+  "draft": false,
+  "lastmod": "2026-10-26T00:00:00+08:00"
 }
-这份约定在第4周以后逐步使用，避免不同阶段对字段和业务含义理解不同。第一周只实现Ticket编号与标题，不需要预先建全部表或接口。它描述计划中的最终约定，具体SQL和代码随课程完成。
 
-## 角色与状态
+2026-10-26 更新。这里区分当前数据与未来设计；项目内 `docs/design.md` 与实际 SQL 是实现依据。本文的接口均为计划，当前控制台尚无 HTTP、登录或 AI。保留 `cn.wishbottle.opsticket` 包名，不因新路线改项目主题。
 
-角色固定为REPORTER、ENGINEER、ADMIN。REPORTER只能查看和操作自己的工单；ENGINEER只能查看和处理分配给自己的工单；ADMIN可看全部并维护设备、对待派单工单派单。演示系统不提供公开注册，不让前端自行指定当前身份。
+## 当前样本和状态
+
+`ops_ticket_dev` 已有 `device`、`app_user`、`ticket`；建表依据项目 `sql/01_schema.sql`。用户/设备实际编号为1至4、1至3：reporter_a=1、engineer_a=2、admin_a=3、reporter_b=4；投影仪=1且已停用，空调=2，打印机=3。学习记录确认工单1“空调不制冷”已派给2，状态IN_PROGRESS。之后的插入和查询以实际 SELECT 为准，不能假定打印机工单一定是2或已插入。
+
+旧教材中的工单101/102/103是另设的教学样本，**不是当前库的现状**。需要时在隔离测试库创建，不覆盖开发数据来凑教材输出；自增编号允许有空洞。
+
+## 第一版的角色与流程
 
 ```text
-OPEN → IN_PROGRESS → RESOLVED → CLOSED
-          ↑              │
-          └── reject ────┘
+报修人创建 OPEN → 管理员派单 IN_PROGRESS → 指定工程师解决 RESOLVED → 原报修人验收 CLOSED
 ```
 
-assign由管理员触发；resolve由当前工程师触发；accept/reject由原报修人触发。关闭后第一版不再变更。所有状态变更都检查当前状态和权限，最终版本带期望版本以识别并发冲突。评论本身不变更工单状态。
+REPORTER看自己的工单；ENGINEER看分给自己的工单；ADMIN看全部。创建身份来自会话；不能由请求自报actorId或reporterId。派单必须目标用户存在、启用且为ENGINEER，设备须在创建时启用。FK只保证存在，CHECK只保证定义的行内约束，不自动实现上述权限与业务规则。
 
-## 字段约定
+首版不做退回、评论、附件、任意状态设置、复杂设备后台或公开注册。三类演示账号和设备通过明确的初始化流程准备；密码占位 `NOT_A_LOGIN_HASH` 不可登录，登录阶段用Spring Security PasswordEncoder生成哈希。
 
-Java属性用驼峰，例如reporterId；SQL用下划线，例如reporter_id。编号用Java long/Long、MySQL BIGINT。还没分配的处理人用NULL，不用0冒充用户。标题trim后长度1—50；本课程Java长度按String.length计算，验收长短边界使用英文字母。
+## 表与字段
 
-| 表 | 关键字段 | 约束与含义 |
+| 表/记录 | 当前或计划 | 用途 |
 | --- | --- | --- |
-| app_user | id, username, password_hash, role, enabled | username唯一；role为三个角色之一；停用保留历史记录 |
-| device | id, code, name, location, enabled | code唯一；停用后不再接受新报修；已有历史保留 |
-| ticket | id, title, description, device_id, reporter_id, assignee_id, status, version, created_at, updated_at | device/reporter存在；assignee可空；创建状态OPEN、version=0 |
-| ticket_comment | id, ticket_id, author_id, content, created_at | 有访问权限者评论；内容非空；身份取自会话 |
-| ticket_action_log | id, ticket_id, actor_id, action, from_status, to_status, note, created_at | 记录关键状态操作；与状态更新同事务；创建的from_status可空 |
-| ticket_resolution | id, ticket_id, engineer_id, content, created_at | 每次提交处理结果保存一条；验收退回后可以再次提交 |
+| app_user | 已有SQL | id、username、password_hash、role、enabled |
+| device | 已有SQL | id、code、name、location、enabled；停用保留历史 |
+| ticket | 已有SQL | id、title、description、device_id、reporter_id、assignee_id、status、version、created_at、updated_at |
+| ticket_action_log | A1计划新增 | 工单状态动作、操作者、前后状态、note、时间；resolve的处理说明写note，与状态同事务 |
+| 创建请求去重信息 | A2在ticket_action_log补充 | CREATE动作使用request_key、request_hash，按(actor_id, action, request_key)唯一；保存对应ticket_id；非创建动作不要求request_key；当前尚无此实现 |
+| ticket_comment / ticket_resolution | 延后 | 首版不必为评论或多轮处理新增表；已有教材案例仅供扩展参考 |
 
-先在`ops_ticket_dev`练习，自动测试使用独立的`ops_ticket_test`；恢复演练另建`ops_ticket_restore`。建表脚本分版本保存在项目中，不让自动测试连接自己仍需保留的开发数据。
+编号Java用long/Long、数据库BIGINT。数据库新增ID由AUTO_INCREMENT产生，不照搬文件仓库的maxId+1；创建命令与已持久化对象可分开建模，得到真实ID后再构造对象。不为了实现旧 `void add(Ticket)` 签名让数据库插入虚假编号；到接库时有意识地调整契约。
 
-## 全课程的基础样本
+待派单处理人是SQL NULL，对应Java Long null，不是0。数据库目前允许description默认空字符串；Web创建要求trim后1—2000长度，这是未来应用规则，要与现有演示数据/迁移明确区分。标题沿用trim后1—50，Java当前按String.length计；补充字符/emoji与数据库字符长度的差异在Web校验任务中统一约定并测边界，不宣称天然一致。
 
-| 对象 | 编号与内容 |
-| --- | --- |
-| 用户 | 1 reporter_a、2 engineer_a、3 admin_a、4 reporter_b |
-| 设备 | 1 PJ-001投影仪、2 AC-001空调、3 PR-001打印机 |
-| 工单101 | device_id=1，reporter_id=1，assignee_id=NULL，status=OPEN，version=0 |
-| 工单102 | device_id=2，reporter_id=1，assignee_id=2，status=IN_PROGRESS，version=0 |
-| 工单103 | device_id=1，reporter_id=4，assignee_id=NULL，status=OPEN，version=0 |
+开发库ops_ticket_dev，测试用独立ops_ticket_test，恢复演练用新库；测试账号不应写开发库。数据和脚本保留来源，DDL迁移不能当普通事务回滚演示。
 
-这个样本应查询到3张工单：OPEN有2张，IN_PROGRESS有1张；设备1有2张、设备2有1张、设备3有0张。做聚合时是否显示0条设备，是INNER JOIN与LEFT JOIN练习的区别。
+## A 阶段最小接口（待实现）
 
-做权限实验可额外创建engineer_b，验证工程师之间不能互相操作。建表阶段的password_hash可以用明确的非登录占位值；第12周必须由PasswordEncoder生成演示密码的哈希后再验证登录。占位值不是可用密码，更不是加密实现。
+| 请求 | 输入与成功结果 | 核心规则 |
+| --- | --- | --- |
+| POST /api/tickets | title、description、deviceId；A2加入requestKey；首次201返回ticketId；同键同内容重试200返回原ticketId，最新状态/版本从GET详情取得 | 当前报修人；启用设备；同一人的同键同内容返回原ticketId，可查详情取最新状态；不同内容409 |
+| GET /api/tickets | status、keyword、deviceId、page、size；items/total | 先限制当前用户可见范围，再一致筛选与计数；稳定排序 |
+| GET /api/tickets/{id} | 详情和必要动作记录 | 角色与归属限制同列表 |
+| POST /api/tickets/{id}/assign | engineerId、expectedVersion | ADMIN、OPEN、启用ENGINEER；成功IN_PROGRESS |
+| POST /api/tickets/{id}/resolve | content、expectedVersion | 当前处理人、IN_PROGRESS；非空处理说明；成功RESOLVED |
+| POST /api/tickets/{id}/accept | expectedVersion | 原报修人、RESOLVED；成功CLOSED |
+| GET /api/devices | 可报修设备列表 | 已登录；创建时服务端再次检查是否启用 |
+| GET /api/users/engineers | 启用工程师的最小id/name列表 | 仅管理员派单需要；不返回密码或整张用户表 |
 
-各实验改变状态后，使用新的测试记录或专用测试库重新准备初始条件。不要依赖在开发库全表删除来重置实验。
+列表page从1开始，size默认10、限制1—100；排序created_at DESC,id DESC。第一版采用普通分页，记录并发新增导致后页移动的限制。时间统一记录本地业务时区Asia/Shanghai；LocalDateTime本身无时区，部署须保持约定。
 
-## 请求与响应
+状态码：校验400，未认证401，禁止访问403，资源不存在404，状态/旧版本/请求键冲突409，意外故障500。缺CSRF的写请求可能先403，权限测试应带有效认证和CSRF再验证越权，不能把所有403都当授权正确。
 
-| 请求 | 主要输入 | 成功结果 | 主要规则 |
-| --- | --- | --- | --- |
-| POST /api/tickets | title, description, deviceId | 201，返回工单id与初始状态 | reporter取当前用户；设备必须启用 |
-| GET /api/tickets | page, size, status等 | 200，返回items与total | page从1起，size限制1—100；先限制可见范围再筛选 |
-| GET /api/tickets/{id} | 路径编号 | 200，返回详情，含actionLogs与resolutions | 先检查资源是否存在及当前用户的访问范围 |
-| POST /api/tickets/{id}/assign | engineerId, expectedVersion | 200，返回新状态与版本 | 管理员、OPEN、工程师存在且启用 |
-| POST /api/tickets/{id}/resolve | content, expectedVersion | 200，返回新状态与版本 | 当前工程师、IN_PROGRESS、处理说明非空 |
-| POST /api/tickets/{id}/accept | expectedVersion | 200，返回CLOSED与版本 | 原报修人、RESOLVED |
-| POST /api/tickets/{id}/reject | reason, expectedVersion | 200，返回IN_PROGRESS与版本 | 原报修人、RESOLVED、退回原因非空 |
-| POST /api/tickets/{id}/comments | content | 201，返回评论id | 有工单访问权、内容非空 |
-| GET /api/tickets/{id}/comments | page, size | 200，分页返回评论 | 先检查工单访问权，再按时间和id正序读取 |
-| GET /api/devices | 可选启用状态 | 200，设备列表 | 已登录用户可读；创建报修时只选择启用设备 |
-| POST /api/devices | code, name, location | 201，返回设备id | 仅管理员；编码唯一、名称非空 |
-| PATCH /api/devices/{id}/enabled | enabled | 200，返回设备状态 | 仅管理员；停用保留历史工单 |
+## A2 工程规则
 
-时间显示采用明确时区，列表固定排序，例如created_at DESC, id DESC。创建时间相同也能保持相对顺序；分页时插入新数据仍可能使后续页移动，第一版接受这一限制并记录。
+Session Cookie + Spring Security，同源最小页面；formLogin使用username/password表单及有效CSRF token，不先引入JWT。使用框架密码编码，不自己写加密；页面隐藏按钮不替代授权。
 
-Web版创建请求的description去掉首尾空白后长度为1—2000；评论content为1—1000。标题、描述和评论的请求校验与页面提示保持一致。详情中的日志和处理记录同样受工单访问权限保护。
+状态变化使用带id、预期状态、版本和适当归属条件的UPDATE，检查影响行数；成功后同事务写动作记录。任何日志写失败都须回滚状态/版本。0行不是成功，不能继续插成功日志。创建去重在ticket_action_log用(actor_id, action, request_key)唯一约束和request_hash；创建工单与CREATE日志同事务。同键同内容返回原ticketId，不同内容409；唯一冲突后按事务失败处理并在正确事务边界重读。派单/解决/验收不建通用幂等框架，重复或旧版本返回409且不追加日志。确切迁移和重读实现到A2任务学习。
 
-状态码约定：400输入格式或校验错误；401身份未认证；403无权限或CSRF校验失败；404资源不存在；409当前状态或版本冲突。访问别人工单在本教学项目按403处理；若选择统一404以隐藏资源存在性，须保持一致并调整对应测试。
+外部模型调用不在业务数据库事务里执行，不拿着锁等待模型。日志带requestId与错误原因，避免记录密码、Cookie、API key和完整敏感描述。
 
-CSRF校验可能先于认证失败处理：未登录GET受保护API通常401；缺失CSRF的POST可能先403。错误响应不能只靠状态码猜原因，应读取错误体和服务端日志。
+## B 阶段 AI 契约（待实现）
 
-## 认证方案
+`POST /api/tickets/{id}/ai-assistance` 由路径id定位当前用户有权访问的已有工单，服务端读取description和必要设备信息，不接收客户端自报身份或整张工单，输出受约束的 `summary`、`category`、`missingInformation`；category限定DISPLAY/PRINTING/HVAC/OTHER/UNKNOWN。输入/输出限长；仅整理描述和提出补充信息，不生成维修操作指令，不调用派单/解决/验收写接口。
 
-第12周使用Spring Security框架formLogin、Session Cookie和框架密码编码。静态页面与API同源，避免一开始引入跨域复杂度。登录请求使用表单字段username/password，携带有效CSRF token；登录成功由框架保存会话认证。登录和退出后按课程重新取得token。
+Java先按已有详情规则校验当前用户对工单的访问权，再读取真实description；负责上下文限长、结构解析和枚举/字段验证。模型给出正确JSON也可能语义错误，必须由用户审阅；人工后续操作仍走原业务校验。超时、限流、无效JSON、缺字段时返回可理解的建议不可用提示，保留原输入，人工业务仍可继续。模型功能可用配置关闭。
 
-API认证失败与禁止访问返回JSON错误；页面可以自行跳转登录页。后端不接受请求体传入的actorId或reporterId作为当前用户身份。前端隐藏按钮只能改善界面，不能替代服务端授权。
+待配置：提供方、API端点、模型名、环境变量key、单次超时、最大输入/输出与调用预算、费用币种/价格依据。未填之前只做本地契约和故障测试，标记真实模型未验证。
 
-## 并发与事务
+## 可选 RAG / Agent 边界
 
-派单必须把“判断仍为OPEN且版本相同”和“写入新处理人”放进一次条件UPDATE；检查影响行数为1后写操作记录。受影响行为0表示条件已变化，应返回冲突，不把它当作正常完成。
+RAG资料导入须有来源、版本和访问范围；检索结果给可定位引用，无依据时明确不足。工具Agent第一步只读：允许的查询函数复用Service授权，不暴露任意SQL执行，身份不取模型参数；限制调用数量、步骤、总时长和上下文，异常有明确停止路径。
 
-同一事务覆盖工单更新与操作记录，提交结果才能一起可见。需要持久化处理说明时，处理记录同样参与事务。单独在Java里先查状态再无条件更新，会在并发时留下覆盖窗口；仅在一个JVM里synchronized也无法保护多个进程的数据库写入。
+以后若增加写工具，先展示动作参数和必要确认；执行时再次校验权限、参数、状态、版本和重复请求。模型输出、检索文档和聊天内容均不是授权凭证。第一版不要求RAG、Agent框架或多Agent。
 
-核心SQL与实现练习在各周参考答案中给出，所有实验只针对自己创建的练习数据。
+## 首版建议的使用边界
+
+B首版只展示/复制参考，不提供直接回写按钮。现有rename只在控制台，不能视为已有HTTP修改接口；以后若加入人工采纳改标题，须单独定义报修人归属、允许状态、expectedVersion和日志同事务的HTTP接口，再实施并验收。

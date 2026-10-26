@@ -1,12 +1,14 @@
 {
   "title": "资料索引与排错手册",
-  "description": "按阶段查官方资料、核对工具版本，按层排查编译与运行问题。",
+  "description": "按阶段查官方资料、选择兼容版本，定位Java、SQL、Web和AI调用问题。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 80,
   "group": "tools",
-  "draft": false
+  "draft": false,
+  "lastmod": "2026-10-26T00:00:00+08:00"
 }
-这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。入口于2026年10月12日核对；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
+
+这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年10月26日调整；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
 
 ## 按阶段选择资料
 
@@ -15,7 +17,7 @@
 | R01 | [Dev.java 学习入口](https://dev.java/learn/) | 第1—3周读对象、集合、异常；第14周再读线程主题。英文概念先与本包中文解释对照 |
 | R02 | [Pro Git 中文版](https://git-scm.com/book/zh/v2) | 第1周看起步与Git基础；先学status、diff、add、commit、log，后面再学分支 |
 | R03 | [Maven 入门](https://maven.apache.org/guides/getting-started/index.html) | 第3周看pom、标准目录、compile/test/package；不先研究自定义插件 |
-| R04 | [MySQL 教程](https://dev.mysql.com/doc/refman/8.4/en/tutorial.html) | 第4—5周看连接、建表、查询、多表与聚合；完成自己的SQL而不是通读整本手册 |
+| R04 | [MySQL 教程](https://dev.mysql.com/doc/refman/8.0/en/tutorial.html) | 第4—5周看连接、建表、查询、多表与聚合；完成自己的SQL而不是通读整本手册 |
 | R05 | [Connector/J 兼容说明](https://dev.mysql.com/doc/connector-j/en/connector-j-versions.html) | 第6周连接前核对JDK、数据库服务端与驱动版本，不把动态最新驱动当作旧服务器必然兼容 |
 | R06 | [Spring REST 入门](https://spring.io/guides/gs/rest-service/) | 第7周观察请求参数如何变成JSON响应，再改成工单接口 |
 | R07 | [Spring Boot 系统要求](https://docs.spring.io/spring-boot/system-requirements.html) | 创建Web项目时核对正式版本、Java和构建工具要求 |
@@ -45,7 +47,7 @@ IDEA中的项目SDK、终端PATH和Maven使用的Java可能不同。终端显示
 
 ## 固定版本的方法
 
-在项目README记录Java、Maven、Spring Boot、MyBatis Starter、MySQL服务端和Connector/J版本。Web计划使用Java21、Boot4.1系列和MyBatis Starter4.0系列；以[兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)为依据。只使用正式版本，学习期间不因“出现新版本”频繁升级。
+在项目README记录Java、Maven、Spring Boot、MyBatis Starter、MySQL服务端和Connector/J版本。沿用Java21和当前MySQL8.0.44；进入Web时按[MyBatis兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)选择匹配的Boot/Starter正式版本，不把旧教材补丁号当作当前安装情况。只使用正式版本，学习期间不因“出现新版本”频繁升级。
 
 Spring Boot管理的依赖优先跟随其依赖管理清单。若使用本机MySQL8.0练习，仍须核对被选中的驱动能否连接8.0；使用较新驱动不能自动推导为旧服务端兼容。课程JDBC阶段若指定驱动版本，按该阶段说明核对；进入Web阶段再检查实际依赖树。升级另建练习环境，不直接替换其他项目的数据库。
 
@@ -85,3 +87,18 @@ Spring Boot管理的依赖优先跟随其依赖管理清单。若使用本机MyS
 把解释拆成三句话：输入是什么、这一行改变了什么、输出或异常是什么。用两个不同的输入手工执行一遍。比如构造器调用校验方法，是让创建与修改遵守相同规则；`private`本身不会判断数值范围。
 
 每次看完参考代码，关闭它并改变一项需求：标题上限、筛选条件、状态操作或查询字段。能根据变化调整实现，才算从复制过渡到理解。
+
+## AI接入时才需要的资料与排错
+
+先读所选提供方的官方API文档，核对请求协议、模型名、结构化输出支持、错误码、用量字段与计费；目前提供方未选择，key/端点/预算仍待配置。Java客户端先查[JDK21 HttpClient](https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/HttpClient.html)，不必先安装Agent框架。
+
+概念参考：[结构化输出与校验](https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html)、[应用端工具执行](https://docs.spring.io/spring-ai/reference/api/tools.html)。这些链接用于理解，并不代表项目已安装Spring AI。
+
+| 现象 | 先检查 | 验证边界 |
+| --- | --- | --- |
+| 模型401/403 | key是否配置、端点与账号模型权限；不打印key | 记录错误类别，人工业务继续 |
+| 429/5xx/超时 | 额度、限流、服务状态、总超时与重试次数 | 用本地替身验错误分支，真API另记结果 |
+| 返回非JSON或缺字段 | 提供方协议、输出schema、Java解析与校验 | 原始失败脱敏留样，不把文本直接写库 |
+| 看似正确但事实不符 | 输入事实、模糊信息、prompt版本 | 纳入固定评估集，不用一次成功掩盖错误 |
+| 用量/费用缺失 | 提供方是否返回用量、价格和币种来源 | 标未知或有依据估算，不能填0当免费 |
+| Agent查到别人数据 | 工具是否真正复用Service授权、会话身份和范围 | 先关闭工具入口并修权限，模型提示词不能代替鉴权 |

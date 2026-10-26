@@ -1,11 +1,16 @@
 {
   "title": "第7至13周自测答案与关键实现提示",
-  "description": "第7—13周接口、MyBatis、事务、浏览器请求与安全配置参考。",
+  "description": "HTTP、MyBatis、事务与权限的局部参考，明确首版范围和延后扩展。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 120,
   "group": "answers",
-  "draft": false
+  "draft": false,
+  "lastmod": "2026-10-26T00:00:00+08:00"
 }
+
+> 2026-10-26说明：这是原教材的局部参考答案，周号和固定样本仅作索引。当前路线以[阶段日程](/learning/schedule/)和[数据接口约定](/learning/contracts/)为准；评论、退回、独立处理记录表、缓存与性能专题均不作为接AI门槛。未来依赖版本到接入时再核对，不能把示例代码视为当前实现或本人已掌握。
+
+
 对应[Web与权限课程](/learning/web-security/)。先完成自己的解答，再逐项对照；答案不要求逐字背诵。能把解释用于一个新例子，比记住术语更重要。
 
 下列代码分为可以单独运行的最小示例和必须嵌入项目的局部示例，均明确标注。业务类、Mapper与Service应由你按课程逐步完成；本资料不是一个已构建、已联调的完整应用，也不替代你运行验收。
@@ -20,12 +25,12 @@
 
 ### Boot工程依赖参考
 
-在生成的Boot4.1工程里检查依赖。Web MVC使用 `spring-boot-starter-webmvc`，Validation使用 `spring-boot-starter-validation`；第12周才加 `spring-boot-starter-security`。这些依赖使用 `org.springframework.boot` groupId，版本跟随Boot父POM。Boot4官方已把旧 `spring-boot-starter-web` 标为由webmvc替代，不把旧教程整份POM复制过来。[Boot依赖与Starter](https://docs.spring.io/spring-boot/reference/using/build-systems.html)
+进入Web时再核对所选正式Boot版本和MyBatis兼容组合，并使用该版本生成的依赖。Boot4示例的Web MVC使用 `spring-boot-starter-webmvc`；Boot3材料常见 `spring-boot-starter-web`，不能混拷整份POM。Validation使用 `spring-boot-starter-validation`，A2身份任务加入 `spring-boot-starter-security`；依赖跟随所选Boot管理。[Boot依赖与Starter](https://docs.spring.io/spring-boot/reference/using/build-systems.html)
 
-Boot主类位于顶层包，以下是**可放进已生成Boot工程的完整最小Controller**，业务接口仍需自己实现。文件名为 `PingController.java`，位于 `com.example.opsticket.controller` 包。
+Boot主类位于顶层包，以下是**可放进已生成Boot工程的完整最小Controller**，业务接口仍需自己实现。文件名为 `PingController.java`，位于 `cn.wishbottle.opsticket.controller` 包。
 
 ```java
-package com.example.opsticket.controller;
+package cn.wishbottle.opsticket.controller;
 
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -188,7 +193,7 @@ int assign(@Param("id") long id,
   8. 正常结束提交；异常越过方法时回滚
 ```
 
-`resolve`同一事务内更新工单、插入 `ticket_resolution`、写日志；accept/reject更新和写日志。MyBatis使用Spring管理的同一DataSource和事务，别在某个Mapper旁边额外 `DriverManager.getConnection`另开连接。[MyBatis事务说明](https://mybatis.org/spring/transactions.html)
+首版 `resolve` 在同一事务内更新工单并写 `ticket_action_log`，处理说明放 `note`；accept同事务更新和写日志。`ticket_resolution` 与reject是后续多轮处理扩展，不是当前门槛。MyBatis使用Spring管理的同一DataSource和事务，别在某个Mapper旁边额外 `DriverManager.getConnection`另开连接。[MyBatis事务说明](https://mybatis.org/spring/transactions.html)
 
 **回滚实验的证据：** 先记录工单的status/version与日志、结果条数；使更新之后且日志插入之前出现运行时异常；调用真实HTTP接口；再用新的SQL连接查询，前后完全一致才算通过。仅看到500，或仅靠Mock对象证明“抛了异常”，都不能证明数据库回滚。
 
@@ -205,7 +210,7 @@ int assign(@Param("id") long id,
 以下是**完整DTO类**，依赖Boot Validation starter，文件名 `CreateTicketRequest.java`。Java21支持record；它自动保存构造参数并提供 `title()` 等访问方法，适合短小的请求类型。不会record时可用普通类写相同字段和getter，不影响业务设计。
 
 ```java
-package com.example.opsticket.dto;
+package cn.wishbottle.opsticket.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -258,7 +263,7 @@ long offset = ((long) page - 1) * size;
   <include refid="ticketFilters"/>
 </select>
 
-<select id="findPage" resultType="com.example.opsticket.model.TicketRow">
+<select id="findPage" resultType="cn.wishbottle.opsticket.model.TicketRow">
   SELECT id, title, description, device_id, reporter_id, assignee_id,
          status, version, created_at, updated_at
   FROM ticket
@@ -369,7 +374,7 @@ UserDetailsService userDetailsService(AppUserMapper users) {
 这是**一个完整配置类模板**，前提是已加入Security依赖、上面的UserDetailsService Bean已由另一个配置类提供，并且登录页、CSRF端点及业务Controller存在。它只完成认证接线；第13周Service里的数据权限仍需自己写。若项目已有SecurityFilterChain，要修改现有配置，不叠加第二份不明顺序的配置。
 
 ```java
-package com.example.opsticket.security;
+package cn.wishbottle.opsticket.security;
 
 import java.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -449,7 +454,7 @@ public class SecurityConfig {
 以下是**完整Controller模板**，继续使用默认会话CSRF存储，并通过参数取得框架已经处理的令牌，不自行替换令牌编码方式。
 
 ```java
-package com.example.opsticket.controller;
+package cn.wishbottle.opsticket.controller;
 
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;

@@ -30,6 +30,9 @@ def validate(as_of=None):
         for field in ("title", "summary", "verification", "next"):
             assert isinstance(entry[field], str) and entry[field].strip(), "Empty " + field
         assert entry["status"] in ("reviewed", "in-progress")
+        assert entry.get("kind", "learning") in ("learning", "plan-update"), "Unknown record kind"
+        if entry.get("kind") == "plan-update":
+            assert entry["status"] == "in-progress" and not entry.get("note"), "Plan updates must not imply a published daily note"
         note = entry.get("note")
         if entry["status"] == "reviewed":
             assert note, "Reviewed records should link to their daily note"

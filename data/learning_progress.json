@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-21",
-  "stage": "第 3 周控制台交付完成；第 4 周准备连接 MySQL",
+  "updated": "2026-10-26",
+  "stage": "A0 · MySQL 条件查询；Java＋AI 路线已调整",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -126,6 +126,16 @@
       "next": "从第四周数据库连接开始：使用 mysql 客户端登录，执行 SELECT VERSION(), DATABASE()，确认服务端版本与当前数据库后再创建练习库。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261021/"
+    },
+    {
+      "date": "2026-10-26",
+      "project": "ops-ticket",
+      "kind": "plan-update",
+      "title": "调整 Java＋AI 路线，明确阶段与技能清单",
+      "summary": "保留控制台与 SQL 成果，将同一项目安排为后端业务、一个 AI 功能、效果验证三个阶段；同步技能清单，区分已练习、正在学和按需扩展。",
+      "verification": "当前已有 MySQL 三表与基础操作反馈；17 项现有 JUnit 在本次方案核对中通过。组合查询独立变体尚待验收，Java 尚未接库，Web 与 AI 均未实现；方案更新不等于技能完成。",
+      "next": "独立完成打印机＋OPEN＋IS NULL组合查询，解释各条件，再学习 JOIN/LEFT JOIN。",
+      "status": "in-progress"
     }
   ],
   "current_project": "ops-ticket"

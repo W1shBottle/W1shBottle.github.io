@@ -95,8 +95,11 @@ def read_chapters() -> list[Chapter]:
             table.wrap(soup.new_tag("div", attrs={"class": "table-scroll", "tabindex": "0"}))
         for item in soup.find_all("li"):
             first = item.contents[0] if item.contents else None
-            if isinstance(first, str) and first.startswith("[ ] "):
-                first.replace_with("□ " + first[4:])
+            if isinstance(first, str):
+                if first.startswith("[ ] "):
+                    first.replace_with("□ " + first[4:])
+                elif first.startswith(("[x] ", "[X] ")):
+                    first.replace_with("☑ " + first[4:])
         chapters.append(Chapter(path.stem, metadata, body, soup, headings, fragments))
     chapters.sort(key=lambda item: (item.metadata["weight"], item.slug))
     if len(chapters) != EXPECTED_CHAPTERS:
@@ -147,7 +150,7 @@ a{color:var(--accent);text-underline-offset:4px}a:hover{color:#0a453e}a:focus-vi
 nav ul{padding:0;list-style:none;margin:20px 0}nav li{margin:0 0 7px}nav a{display:block;border-radius:7px;padding:6px 10px;text-decoration:none;line-height:1.6}nav a:hover{background:#e4efec}aside details{border-top:1px solid var(--line);padding-top:12px}summary{cursor:pointer;font-weight:600}
 main{min-width:0;max-width:1120px}.hero{padding:36px 42px;background:var(--ink);border-radius:12px;color:#fff;margin-bottom:28px}.eyebrow{color:#9ce1cf;font-size:13px;letter-spacing:1px}.hero h1{margin:12px 0;font-size:clamp(27px,3vw,40px);line-height:1.3;border:0;color:#fff}.hero p{color:#dce7ea;margin:12px 0 20px;max-width:50em}.hero a{color:#b1eadb}
 .meta{display:flex;flex-wrap:wrap;gap:10px}.meta span{background:#2c4552;color:#f1f7f8;padding:5px 12px;border-radius:6px;font-size:13px}.download{display:inline-block;margin-top:18px}
-.chapter{background:var(--paper);padding:36px 42px;margin:0 0 28px;border:1px solid var(--line);border-radius:10px;scroll-margin-top:24px;min-width:0}.chapter-meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;letter-spacing:.5px}
+.chapter{background:var(--paper);padding:36px 42px;margin:0 0 28px;border:1px solid var(--line);border-radius:10px;scroll-margin-top:24px;min-width:0;overflow-wrap:anywhere}.chapter-meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;letter-spacing:.5px}
 h1{font-size:28px;line-height:1.4;margin:18px 0 24px;color:var(--ink)}h2{font-size:22px;margin:36px 0 16px;padding-top:18px;border-top:1px solid var(--line);line-height:1.5}h3{font-size:18px;line-height:1.6;margin:26px 0 12px}p{margin:14px 0}strong{font-weight:700;color:#143e44}li{margin:5px 0}ul,ol{padding-left:1.7em}blockquote{margin:18px 0;padding:4px 20px;border-left:4px solid #86b5a9;background:#f2f8f6}
 .table-scroll{overflow:auto;margin:20px 0;max-width:100%;border:1px solid var(--line);border-radius:7px}table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.75;min-width:550px}th,td{padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;overflow-wrap:anywhere}th{background:#eaf2ef;color:#1b4e48;font-weight:700}tbody tr:nth-child(even){background:#f9fbfa}tbody tr:last-child td{border-bottom:0}
 code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#edf2f4;padding:2px 5px;border-radius:4px;overflow-wrap:anywhere}pre{background:#122938;color:#e6f0f4;border-radius:8px;padding:18px 20px;line-height:1.65;font-size:13px;overflow-x:auto;max-width:100%}pre code{color:inherit;background:none;padding:0;overflow-wrap:normal;white-space:pre}
@@ -170,7 +173,7 @@ def build() -> dict:
         chapter_nav.append(f'<li><a href="#{chapter.anchor}">{html.escape(chapter.title)}</a></li>')
         if chapter.metadata.get("group") != "answers":
             for anchor, title in chapter.headings:
-                if re.match(r"第\s*\d+\s*周", title):
+                if re.match(r"第\s*\d+\s*(?:周|单元)", title):
                     week_nav.append(f'<li><a href="#{anchor}">{html.escape(title)}</a></li>')
         sections.append(
             f'<section id="{chapter.anchor}" class="chapter">'
@@ -185,14 +188,14 @@ def build() -> dict:
             "# " + chapter.title + "\n\n" + MARKDOWN_LINK.sub(replace_link, chapter.body)
         )
     navigation, weeks = "".join(chapter_nav), "".join(week_nav)
-    if len(week_nav) != 20:
-        raise ValueError(f"Expected 20 distinct teaching weeks; found {len(week_nav)}")
+    if not week_nav:
+        raise ValueError("Missing teaching-unit navigation")
     document = f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="设备运维工单平台：20周Java项目主线、自测答案与2027春季投递计划，支持离线阅读。"><title>Java 实习自学计划 · WishBottle</title><style>{STYLE}</style></head>
-<body id="top"><div class="layout"><aside><div class="brand">Java 实习自学计划</div><div class="sidebar-note">2028 届 · 2027 暑期目标<br>每周目标制 / 连续阅读版</div><a class="site-return" href="{SITE}/learning/">返回博客学习板块 ↗</a><nav aria-label="章节目录"><ul>{navigation}</ul></nav><details><summary>按学习周查找</summary><nav aria-label="周目录"><ul>{weeks}</ul></nav></details><p class="sidebar-note">Ctrl+F 查找 · Ctrl+P 打印<br>保存这一份 HTML 即可离线阅读<br>正文无需加载外部资源</p></aside>
-<main><header class="hero"><div class="eyebrow">WISHBOTTLE / 学习板块</div><h1>Java 实习完整自学计划</h1><p>用设备运维工单平台学习 Java、数据库、接口、权限、测试与部署。每周完成一个具体成果，保留考试和复习的弹性。</p><div class="meta"><span>20 周项目主线</span><span>每周 15—18 小时</span><span>14 篇课程与参考资料</span><span>2027 春季投递安排</span></div><a class="download" href="{ZIP_URL}">下载完整自学包（HTML + Markdown）↗</a></header>
-<details class="mobile-nav"><summary>打开课程目录</summary><nav aria-label="手机章节目录"><ul>{navigation}</ul></nav><details><summary>按学习周查找</summary><nav aria-label="手机周目录"><ul>{weeks}</ul></nav></details></details>
-{''.join(sections)}<footer class="footer">编制日期：2026年10月12日。计划日期可顺延，以实际验收为准。<br>这是学习路线与局部参考示例，完整项目需随课程实现和验证。<br><a href="{SITE}/learning/">返回 WishBottle 学习板块 ↗</a> · <a href="#top">回到顶部</a></footer></main></div></body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="同一个Java＋AI工单项目的阶段计划、55项技能清单、课程与参考答案，支持离线阅读。"><title>Java＋AI 项目学习计划 · WishBottle</title><style>{STYLE}</style></head>
+<body id="top"><div class="layout"><aside><div class="brand">Java＋AI 项目学习计划</div><div class="sidebar-note">后端业务 → AI 功能 → 验证改进<br>阶段验收 / 连续阅读版</div><a class="site-return" href="{SITE}/learning/">返回博客学习板块 ↗</a><nav aria-label="章节目录"><ul>{navigation}</ul></nav><details><summary>按教材单元查找</summary><nav aria-label="教材单元目录"><ul>{weeks}</ul></nav></details><p class="sidebar-note">Ctrl+F 查找 · Ctrl+P 打印<br>保存这一份 HTML 即可离线阅读<br>正文无需加载外部资源</p></aside>
+<main><header class="hero"><div class="eyebrow">WISHBOTTLE / 学习板块</div><h1>Java＋AI 项目学习计划</h1><p>沿用设备运维工单项目，先完成最小后端与基础工程，再接入摘要和分类建议。按实际验收推进，原周号仅作材料索引。</p><div class="meta"><span>A / B / C 阶段</span><span>55 项技能清单</span><span>14 篇课程与参考资料</span><span>按实际进度验收</span></div><a class="download" href="{ZIP_URL}">下载完整自学包（HTML + Markdown）↗</a></header>
+<details class="mobile-nav"><summary>打开课程目录</summary><nav aria-label="手机章节目录"><ul>{navigation}</ul></nav><details><summary>按教材单元查找</summary><nav aria-label="手机教材单元目录"><ul>{weeks}</ul></nav></details></details>
+{''.join(sections)}<footer class="footer">初版：2026年10月12日；路线与技能清单更新：2026年10月26日。按阶段验收推进。<br>这是学习路线与局部参考示例，完整项目需随课程实现和验证。<br><a href="{SITE}/learning/">返回 WishBottle 学习板块 ↗</a> · <a href="#top">回到顶部</a></footer></main></div></body></html>'''
     assert_public(document, "reader.html")
     soup = BeautifulSoup(document, "html.parser")
     ids = [item["id"] for item in soup.find_all(id=True)]

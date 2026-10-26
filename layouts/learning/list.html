@@ -1,12 +1,13 @@
 {{ define "main" }}
 <div class="learning-page">
   <header class="page-heading learning-intro">
-    <p class="eyebrow">JAVA 后端 · 从练习到项目</p>
+    <p class="eyebrow">JAVA ＋ AI · 从业务到应用</p>
     <h1>{{ .Title }}</h1>
-    <p>{{ .Description | default "用设备运维工单平台串起 Java、数据库、Web、测试与部署，为暑期实习做准备。" }}</p>
+    <p>{{ .Description | default "用同一个设备运维工单项目学习后端业务、AI 应用与效果验证。" }}</p>
 
     <div class="learning-actions">
       <a class="learning-button learning-button-primary" href="#progress">查看学习进度 ↓</a>
+      <a class="learning-button" href="{{ "/learning/checklists/" | relURL }}">技能 To-do List ↗</a>
       <a class="learning-button" href="#learning-directory">浏览课程目录</a>
       <a class="learning-button" href="{{ "/learning/project-docs/" | relURL }}">项目文档 ↗</a>
     </div>
@@ -17,11 +18,11 @@
 
   <section class="learning-route-intro" id="learning-directory" aria-labelledby="route-heading"><p class="eyebrow">ROADMAP / 按自己的节奏继续</p><h2 id="route-heading">学习路线与课程</h2>
     <dl class="learning-facts">
-      <div><dt>20 周</dt><dd>按周设目标，保留弹性</dd></div>
-      <div><dt>15—18 小时</dt><dd>每周建议投入</dd></div>
+      <div><dt>A → B → C</dt><dd>后端业务、AI 功能、验证改进</dd></div>
+      <div><dt>55 项技能</dt><dd>按实际证据逐项验收</dd></div>
       <div><dt>一个项目</dt><dd>设备运维工单平台</dd></div>
     </dl>
-  <p>按周设目标，周内保留弹性。遇到考试可以顺延，把每一步真正做出来。</p><a class="route-schedule" href="/learning/schedule/">查看完整 20 周日程 →</a></section>
+  <p>先完成可靠的小业务版本，再加入 AI；旧周号只作材料索引，按实际验收继续。</p><a class="route-schedule" href="/learning/schedule/">查看阶段学习计划 →</a></section>
   {{ with .Content }}<details class="learning-context"><summary>学习计划说明与已归档进度</summary><div class="single-content learning-overview">{{ . }}</div></details>{{ end }}
 
   {{ $pages := .RegularPages.ByWeight }}
@@ -52,7 +53,7 @@
 
   <aside class="learning-download" aria-labelledby="learning-download-title">
     <h2 id="learning-download-title">保存一份，随时接着学</h2>
-    <p>完整课程、日程、自测答案和记录模板可保存到本地。离线阅读不依赖账号；开发工具和首次下载依赖仍需按阶段准备。</p>
+    <p>新版阶段计划、技能清单、课程、自测答案和记录模板可保存到本地。离线阅读不依赖账号；开发工具和首次下载依赖仍需按阶段准备。</p>
     <div class="learning-actions">
       <a class="learning-button" href="{{ "/learning/downloads/java-internship-self-study.zip" | relURL }}" download>下载完整自学包 ZIP ↓</a>
       <a class="learning-button" href="{{ "/learning/downloads/reader.html" | relURL }}">打开单页阅读版 ↗</a>

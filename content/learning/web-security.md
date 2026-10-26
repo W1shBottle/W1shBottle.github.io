@@ -1,27 +1,46 @@
 {
   "title": "第7至13周 Web接口与登录权限",
-  "description": "Spring MVC、MyBatis、工单闭环、页面、登录、CSRF与资源权限。",
+  "description": "以Spring Boot和MyBatis完成核心工单闭环，补充会话、权限与错误处理。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 50,
   "group": "course",
-  "draft": false
+  "draft": false,
+  "lastmod": "2026-10-26T00:00:00+08:00"
 }
-这七周把你已经会写的 Java 业务和 SQL 接到浏览器上，做出能保存数据、走完工单流程、区分三种用户的 Web 版本。按每周约18小时安排，任务块可以交换到不同日期；遇到考试就顺延，验收没有通过时先补当前周。
 
-先做题和实验，再打开[本阶段参考答案](/learning/answers-web-security/)。答案包含关键接线代码、请求示例和排错顺序，供你在没有 AI 陪读时继续推进；它不是一套已经替你写完的项目。
+2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和[数据接口约定](/learning/contracts/)决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，**不计入进入AI的前置验收**。先通过 SQL 与短 JDBC，再从一个请求开始，不一次生成后端。
+
+## 现行最小任务顺序
+
+所有路径相对 `项目根目录`。controller/dto/mapper/security/exception 是未来按任务增加的子包，现在不需要生成空类。
+
+| 任务 | 先理解与阅读 | 由学习者完成 | 怎样验收 |
+| --- | --- | --- | --- |
+| HTTP入门 | 现有TicketService与构造器注入；请求方法、JSON、状态码 | 在现有Maven项目逐步接Boot，未来 `controller/TicketController.java` 和CreateTicketRequest/TicketView | 解释字段如何进入Java，坏JSON/空标题返回400，未知id返回404；不把数据库实体直接当创建请求 |
+| MyBatis持久化 | 自己的 `sql/01_schema.sql`、JDBC参数绑定；未来 `mapper/TicketMapper.java` | 先按id查询，再创建回填真实id，再列表筛选 | 数据重启保留；Long null正确；独立加设备筛选；不沿用maxId+1，不为旧add签名填假编号 |
+| 最小状态流 | TicketStatus与assign；状态表、版本条件和事务 | assign/resolve/accept三个方法，新增ticket_action_log保存动作；resolve说明放note | OPEN→IN_PROGRESS→RESOLVED→CLOSED；旧版本409；记录失败时状态与版本一起回滚 |
+| 校验和错误 | DTO边界与Service业务规则；未来异常Advice | 必要参数校验、统一错误、requestId日志；列表稳定分页 | 非法字段400、未知对象404、业务冲突409；错误不返回假成功；日志无密码或密钥 |
+| 登录与授权 | 下方第12/13单元Session、CSRF、PasswordEncoder | 三角色登录；列表/详情/所有写操作检查角色与归属 | 未登录、他人工单、错误角色、停用工程师均拒绝；身份取会话；有效CSRF下仍能证明越权被拦 |
+| 交付门槛 | [A2验收](/learning/testing-delivery/) | 创建请求键去重、真实事务/重复请求验证、最小演示与部署 | 能独立加一个筛选或业务约束，解释调用链并排查一处映射/配置错误；通过后进AI |
+
+最小演示可先用HTTP客户端，再配同源简单页面。浏览器输入和显示要能读懂，但Vue/React、评论区、设备后台和视觉美化都不是门槛。A1本机临时身份只是过渡练习，不能带到最终A2验收或对外部署。
+
+以下保留原教学单元的概念说明与实验；每节的“现行范围”优先于旧扩展案例。参考答案同样是局部教材，不代表当前项目已实现。
 
 ## 本阶段共同约定
 
-- 主线使用 Java 21、Spring Boot 4.1 系列、MyBatis Starter 4.0 系列。2026年10月12日核对的版本为 Boot 4.1.1、MyBatis Starter 4.0.0；新建时选择兼容的正式补丁版本，记录在 `pom.xml` 和项目说明中。Java21在 Boot4.1.1 支持范围内；MyBatis Starter4.0 支持 Boot4.0及以上。[Boot系统要求](https://docs.spring.io/spring-boot/system-requirements.html)、[MyBatis兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)
-- 业务包名示例为 `com.example.opsticket`，启动类放在该包顶层。业务代码逐步分为 `controller`、`dto`、`service`、`mapper`、`model`、`security`、`exception`，不必第一天创建全部空目录。
-- 数据库为 `ops_ticket_dev`。用户1 `reporter_a`、2 `engineer_a`、3 `admin_a`、4 `reporter_b`；设备1 `PJ-001`投影仪、2 `AC-001`空调、3 `PR-001`打印机。初始工单101为用户1报修设备1的OPEN单，102为用户1报修设备2且指派用户2的IN_PROGRESS单，103为用户4报修设备1的OPEN单。每次验收注明是否已重置这份样本。
+- 沿用 Java 21 与现有 Maven；实际进入Web时核对Spring Boot、MyBatis Starter、驱动的正式兼容组合并记录版本，不把历史教材的固定补丁号当作当前已安装事实。[Boot系统要求](https://docs.spring.io/spring-boot/system-requirements.html)、[MyBatis兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)
+- 业务包名示例为 `cn.wishbottle.opsticket`，启动类放在该包顶层。业务代码逐步分为 `controller`、`dto`、`service`、`mapper`、`model`、`security`、`exception`，不必第一天创建全部空目录。
+- 数据库为 `ops_ticket_dev`。用户1 `reporter_a`、2 `engineer_a`、3 `admin_a`、4 `reporter_b`；设备1 `PJ-001`投影仪、2 `AC-001`空调、3 `PR-001`打印机。101/102/103是隔离教学样本，不是当前开发库数据；用实际SELECT核对现状，不覆盖开发库来匹配示例。
 - 第7至11周尚无真实登录，只在本机运行，配置 `server.address=127.0.0.1`。临时身份由服务器端本地配置选定，写请求也不接受 `reporterId`、`actorId`。第12周彻底替换为会话身份。临时身份不属于最终成品，不能算作权限已经完成。
 - 请求与响应统一使用 JSON；框架登录例外，它使用表单编码。创建成功201，查询与状态操作成功200，状态操作返回新状态与版本；登录、退出成功204且无响应体。参数错误400、未登录401、无权访问403、资源不存在404、状态或版本冲突409，意外故障500。字段与边界统一查[数据与接口约定](/learning/contracts/)。
 - 时间先统一使用 `LocalDateTime` 加数据库 `DATETIME`，明确解释为北京时间，响应示例 `2026-12-07T14:30:00`。数据库会话和应用部署时保持相同约定；该字符串没有时区，不能直接当全球通用时间。后续如改成UTC应一起调整存储、API和展示。
 
 ## 第7周 建立HTTP接口
 
-目标窗口：2026年11月23日至29日。
+> 现行范围：保留创建、列表、详情。临时身份仅本机过渡，正式权限在A2完成；未认证不能对外展示成完整版本。
+
+原材料日期（不作为截止时间）：2026年11月23日至29日。
 
 **前置能力：** 能用 JDBC 创建与查询工单，知道 JSON 是文本格式，能运行 Maven 工程。若 `java -version` 与 IDEA、Maven 的 Java 版本不一致，先完成前阶段的环境统一。
 
@@ -31,7 +50,7 @@
 
 **灵活任务块：**
 
-1. **环境与最小启动，约3小时。** 用 Spring Initializr 生成 Maven、Java21、Boot4.1正式版工程，只选 Spring Web 和 Validation；在新目录检查生成结构，再有选择地迁入已有项目，保留 Git 历史，不覆盖旧源码。先运行一个返回 `{"message":"ok"}` 的 `/api/ping`，观察启动日志中的端口。
+1. **环境与最小启动，约3小时。** 用 Spring Initializr 生成 Maven、Java21、经兼容核对的Boot正式版工程，只选 Spring Web 和 Validation；在新目录检查生成结构，再有选择地迁入已有项目，保留 Git 历史，不覆盖旧源码。先运行一个返回 `{"message":"ok"}` 的 `/api/ping`，观察启动日志中的端口。
 2. **请求和DTO，约3小时。** 设计 `CreateTicketRequest(title, description, deviceId)` 和 `TicketView`。读懂 `@RestController`、`@RequestMapping`、`@PostMapping`、`@RequestBody`、`@PathVariable`，不要一口气背完所有注解。
 3. **连接业务，约5小时。** Controller 通过构造器取得 Service，再接此前存储接口。创建时验证标题、设备存在且启用；服务器给出 OPEN、报修人1、版本0以及创建时间。GET详情不存在时返回404；暂时把列表限制在演示数据量内。
 4. **HTTP实验，约4小时。** 保存 `requests.http` 或 PowerShell 请求脚本；分别发送合法JSON、坏JSON、空标题、未知设备、未知编号。记录请求路径、方法、请求体、状态码和响应体。参数注解的完整整理留到第10周，此时先保证业务校验有效。
@@ -45,7 +64,9 @@
 
 ## 第8周 用MyBatis连接数据库
 
-目标窗口：2026年11月30日至12月6日。
+> 现行范围：保留工单创建/查询/筛选和启用设备读取。下文第4项设备新增/启停接口为延后扩展，当前可使用已有SQL维护演示设备；不作为本单元必做。
+
+原材料日期（不作为截止时间）：2026年11月30日至12月6日。
 
 **前置能力：** 第7周三条接口可用；能手写工单INSERT、按编号SELECT和设备关联查询。
 
@@ -55,7 +76,7 @@
 
 **灵活任务块：**
 
-1. **接入配置，约3小时。** 添加 `org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.0` 与 `com.mysql:mysql-connector-j`。先用 `dependency:tree`查看Boot实际管理的驱动版本，核对它与MySQL服务端兼容；仍用8.0练习时可延续前阶段明确支持8.0的Connector/J9.7.0，不无条件追最新版，也不替换原有数据库。其余Boot管理依赖不随意改版本。用环境变量设置URL、用户名和密码，不把密码提交到Git。[驱动9.7.0兼容说明](https://dev.mysql.com/doc/relnotes/connector-j/en/news-9-7-0.html)
+1. **接入配置，约3小时。** 添加经兼容核对的 `org.mybatis.spring.boot:mybatis-spring-boot-starter` 与 `com.mysql:mysql-connector-j`。先用 `dependency:tree`查看Boot实际管理的驱动版本，核对它与MySQL服务端兼容；仍用现有8.0练习时按驱动官方兼容说明选择，不无条件追最新版，也不替换原有数据库。其余Boot管理依赖不随意改版本。用环境变量设置URL、用户名和密码，不把密码提交到Git。[驱动兼容说明](https://dev.mysql.com/doc/connector-j/en/connector-j-versions.html)
 2. **最小Mapper，约3小时。** 给 `TicketMapper` 加 `@Mapper`，先实现 `findById`；用 `#{id}` 绑定值。字段使用明确列名，配置下划线转驼峰，验证 `reporter_id` 能进入 `reporterId`。复杂关联展示用单独DTO并起明确别名。
 3. **创建与查询，约5小时。** 实现INSERT与生成主键回填，再实现列表和按状态筛选；增加 `GET /api/devices`返回设备列表，可按启用状态筛选。若返回实体用可写 `id` 配合 `useGeneratedKeys`；本阶段不对不可变record硬套主键回填。运行已有HTTP请求，确认替换存储没有改变行为。
 4. **最小设备维护与排错，约4小时。** 实现 `POST /api/devices`新增设备，以及 `PATCH /api/devices/{id}/enabled`启用或停用；设备编码唯一，不删除历史引用。用API和SQL交叉查验，再制造并修复一次映射错误，记录排错步骤；管理权限第13周接入。
@@ -69,7 +90,9 @@
 
 ## 第9周 实现业务流转和事务
 
-目标窗口：2026年12月7日至13日。
+> 现行范围：只做assign/resolve/accept，三表基础上新增ticket_action_log；resolve处理说明写note，与工单更新同事务。下文reject、多轮处理和ticket_resolution独立表是延后扩展；首版只验收直接处理并关闭的一条路径。
+
+原材料日期（不作为截止时间）：2026年12月7日至13日。
 
 **前置能力：** MyBatis创建、查询已通过；能解释一次数据库提交与回滚。
 
@@ -93,7 +116,9 @@
 
 ## 第10周 校验参数和分页评论
 
-目标窗口：2026年12月14日至20日。
+> 现行范围：校验、统一错误、日志与最小分页筛选是必做。评论表/评论接口/相关验收均延后，不需要先完成才能进AI；创建请求去重另在A2验收，不把评论重复和创建重复混为一谈。
+
+原材料日期（不作为截止时间）：2026年12月14日至20日。
 
 **前置能力：** 四种状态操作和日志回滚已验收。
 
@@ -117,7 +142,9 @@
 
 ## 第11周 做一个能够演示的页面
 
-目标窗口：2026年12月21日至27日。
+> 现行范围：可先HTTP客户端展示闭环，再加最小同源列表、创建表单、详情和状态按钮；评论与设备管理表单延后，不要求专门前端框架。
+
+原材料日期（不作为截止时间）：2026年12月21日至27日。
 
 **前置能力：** HTTP客户端已能走完整流程，分页和错误可预测。先修接口，再做页面。
 
@@ -127,7 +154,7 @@
 
 **灵活任务块：**
 
-1. **静态页面，约2小时。** 在项目的 `src/main/resources/static` 中建立 `index.html` 和 `app.js`，从 `http://localhost:8080/`打开。先显示一个标题和按钮，确认浏览器能加载脚本；不通过双击HTML的 `file://`打开。[Boot静态资源说明](https://docs.spring.io/spring-boot/reference/web/servlet.html#web.servlet.spring-mvc.static-content)
+1. **静态页面，约2小时。** 在项目的 `src/main/resources/static` 中建立 `index.html` 和 `app.js`，从 `http://localhost:8080/`打开。先显示一个标题和按钮，确认浏览器能加载脚本；不通过双击HTML的 本地文件协议打开。[Boot静态资源说明](https://docs.spring.io/spring-boot/reference/web/servlet.html#web.servlet.spring-mvc.static-content)
 2. **列表和详情，约4小时。** 用fetch获取第一页；用 `document.createElement` 和 `textContent`显示编号、标题、状态。点击一条加载详情、评论和日志。标题与评论是用户输入，用文本方式显示，不直接塞进 `innerHTML`。
 3. **创建和流转，约5小时。** 表单提交时阻止默认刷新，把字段转换成JSON；成功后刷新列表，失败保留输入并显示提示。操作携带详情里的版本号；409提示刷新后重试，不自动覆盖。再用相同表单方法做设备新增及启停，页面保持简朴。演示角色此时仍是服务器临时身份，不设计能伪造身份的前端下拉框。
 4. **失败反馈，约4小时。** 统一请求函数，处理JSON响应和204空响应；请求过程中禁用相关按钮，结束恢复。测试后端关闭、参数错误和重复点击。登录将在下周加入，此时预留401跳登录的处理即可。
@@ -141,7 +168,9 @@
 
 ## 第12周 登录退出与会话
 
-目标窗口：2026年12月28日至2027年1月3日。
+> 现行范围：这是A2门槛，复用框架Session/CSRF/PasswordEncoder，不自行实现密码加密或默认引入JWT。
+
+原材料日期（不作为截止时间）：2026年12月28日至2027年1月3日。
 
 **前置能力：** 同源页面可用；能理解浏览器发送请求时会携带Cookie；能看懂Service构造器注入。
 
@@ -165,7 +194,9 @@
 
 ## 第13周 限制资源范围和业务操作
 
-目标窗口：2027年1月4日至10日。
+> 现行范围：首版创建、列表、详情、派单、解决、验收必须检查角色与归属。下文评论、退回、设备维护的权限案例仅在以后实现对应功能时使用，不为完成示例而扩大首版。
+
+原材料日期（不作为截止时间）：2027年1月4日至10日。
 
 **前置能力：** 登录退出已通过，包括两份独立会话；业务操作已经从会话获得actorId。
 
@@ -189,6 +220,6 @@
 
 ## 进入下一阶段的门槛
 
-你应能独立演示：报修人创建工单→管理员派单→工程师处理→报修人退回→工程师补充→报修人验收；能解释请求、SQL、事务、Session和权限在哪里生效。
+首版用三个账号完成报修→派单→解决→验收；不要求退回或评论。能沿具体代码解释Controller→Service→Mapper→MySQL、Session身份和授权检查，独立增加一个筛选并保持可见范围约束。保存可重复HTTP请求、角色/状态错误场景、事务回滚和一次排错记录。
 
-保存三份证据：一张请求链路图，一组可重复执行的HTTP请求，一份包含失败场景的验收记录。第14周开始验证真正并发并补自动测试；没有通过第12至13周权限验收前，不把项目发布到公网。
+随后完成[测试部署与AI验证](/learning/testing-delivery/)的A2必要检查即可接AI；不再等待全部旧第14—20周扩展。尚无真实权限或数据库事务验证时不要把项目写成已完成后端平台。

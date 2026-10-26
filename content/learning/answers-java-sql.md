@@ -1,11 +1,16 @@
 {
   "title": "第 1 至 6 周自测答案与关键示例",
-  "description": "第1—6周自测解释及Java、文件读写、建表和JDBC局部示例。",
+  "description": "Java、集合文件、SQL与JDBC局部参考；按当前阶段独立尝试后再核对。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 110,
   "group": "answers",
-  "draft": false
+  "draft": false,
+  "lastmod": "2026-10-26T00:00:00+08:00"
 }
+
+> 2026-10-26说明：这是原教材的局部参考答案，周号和固定样本仅作索引。当前路线以[阶段日程](/learning/schedule/)和[数据接口约定](/learning/contracts/)为准；评论、退回、独立处理记录表、缓存与性能专题均不作为接AI门槛。未来依赖版本到接入时再核对，不能把示例代码视为当前实现或本人已掌握。
+
+
 配合[第 1 至 6 周课程](/learning/java-sql/)使用。先保留自己的尝试、报错和预测结果，再读对应小节。Java 代码块多数是局部片段，不能直接作为独立文件运行；需要放进相应类，并由你补全 import、字段、getter、调用和边界处理。全部示例使用虚构数据。
 
 每周过关不以“复制后运行成功”为标准：合上答案，改变一个输入，先预测结果，再独立解释或修改代码。环境和第三方依赖首次下载通常需要网络；这套材料不要求订阅任何 AI 服务。
@@ -236,12 +241,12 @@ public class TicketService {
 </project>
 ```
 
-代码目录与包名对应：`src/main/java/com/example/opsticket/ConsoleApp.java` 的第一行是 `package com.example.opsticket;`。在项目根目录分别运行：
+代码目录与包名对应：`src/main/java/com/example/opsticket/ConsoleApp.java` 的第一行是 `package cn.wishbottle.opsticket;`。在项目根目录分别运行：
 
 ```powershell
 mvn -v
 mvn package
-java -cp target/ops-ticket-0.1.0.jar com.example.opsticket.ConsoleApp
+java -cp target/ops-ticket-0.1.0.jar cn.wishbottle.opsticket.ConsoleApp
 ```
 
 最后一条用于尚无外部运行依赖的第 3 周程序；第 6 周加 JDBC 后可先用 IDEA 带依赖运行，第 7 周用 Spring Boot 的打包方式。若项目有 Maven Wrapper，Windows 对应命令为 `./mvnw.cmd package`。首次构建会下载工具或插件，准备完整后 `mvn -o package` 才可能成功。[Maven 入门](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html)；[Compiler Plugin 版本与要求](https://maven.apache.org/plugins/maven-compiler-plugin/plugin-info.html)。
@@ -449,7 +454,7 @@ ORDER BY created_at DESC,id DESC LIMIT 20;
 
 在 IDEA 运行配置中设置 `OPS_DB_URL`、`OPS_DB_USERNAME`、`OPS_DB_PASSWORD`。URL 的基础形式为 `jdbc:mysql://localhost:3306/ops_ticket_dev`，主机、端口以你的实际环境为准。不要把真实密码写到源码或提交到 Git。连接设置不通时按具体认证与连接错误排查，不先复制一串关闭安全检查的参数。
 
-最小连接与查询示例可放入 `JdbcTicketDemo.main`，声明 `throws SQLException` 用于观察首个实验错误。实际交互入口再增加清晰错误处理。`requiredEnv` 帮助在缺配置时立即指出变量名。
+最小连接与查询示例可放入 `JdbcTicketQueryDemo.main`，声明 `throws SQLException` 用于观察首个实验错误。实际交互入口再增加清晰错误处理。`requiredEnv` 帮助在缺配置时立即指出变量名。
 
 ```java
 private static String requiredEnv(String key) {

@@ -28,7 +28,7 @@
           <p><strong>验证情况</strong>{{ .verification }}</p>
           <p><strong>{{ if eq .date site.Data.learning_progress.updated }}下一步{{ else }}当时的下一步{{ end }}</strong>{{ .next }}</p>
         </details>
-        {{ with .note }}<a class="progress-note-link" href="{{ . | relURL }}">阅读当天笔记 <span aria-hidden="true">↗</span></a>{{ else }}<span class="progress-note-pending">当天笔记待整理</span>{{ end }}
+        {{ with .note }}<a class="progress-note-link" href="{{ . | relURL }}">阅读当天笔记 <span aria-hidden="true">↗</span></a>{{ else }}{{ if eq .kind "plan-update" }}<a class="progress-note-link" href="{{ "/learning/schedule/" | relURL }}">查看新版方案 ↗</a> <a class="progress-note-link" href="{{ "/learning/checklists/" | relURL }}">技能清单 ↗</a>{{ else }}<span class="progress-note-pending">当天笔记待整理</span>{{ end }}{{ end }}
       </article>
     </li>
     {{ end }}

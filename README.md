@@ -58,9 +58,9 @@ chapter_title: "多张工单存取与 Demo 自测"
 
 学习首页增加[每日学习时间线](https://wishbottle.cn/learning/#progress)。每次检查阶段成果或发布每日笔记时维护公开进度，详见[时间线维护说明](scripts/learning-progress.md)。数据位于 data/learning_progress.json，日期、笔记链接和重复记录由部署前检查校验。
 
-`/learning/` 单独承载 Java 实习自学计划，顶部导航的“学习”进入。14 篇资料包括20周弹性日程、设备运维工单项目、第一课、三个阶段课程、春季投递安排、资料与排错、接口约定、验收模板和参考答案。课程属于学习材料，项目功能需学习者亲手实现与验收。
+`/learning/` 承载同一个 Java＋AI 工单项目的学习方案：A 后端业务与基础工程、B 一个 AI 功能、C 验证与改进。14 篇课程的 URL 保持不变；原周号仅作材料索引，`/learning/checklists/` 是55项技能清单，四份项目文档单独维护。当前为SQL条件查询，规划中的Web/AI功能不算已实现。网页清单是公开状态展示，个人勾选可在下载的Markdown中维护。
 
-课程源码在 `content/learning/`，使用 JSON front matter：`weight` 控制阅读顺序，`group` 为 `start`、`course`、`tools` 或 `answers`。修改正文时维护站内 `/learning/<slug>/` 链接，保持已有网址稳定。模板位于 `layouts/learning/`，样式位于 `assets/css/learning.css`；课程同时进入全站搜索，日常笔记仍放 `content/posts/`。
+课程源码在 `content/learning/`，使用 JSON front matter：`weight` 控制阅读顺序，`group` 为 `start`、`course`、`tools` 或 `answers`。修改正文时维护站内 `/learning/<slug>/` 链接，保持已有网址稳定。模板位于 `layouts/learning/`，样式位于 `assets/css/learning.css`；课程同时进入全站搜索，日常笔记仍放 `content/posts/`。仅同步方案时不创建日记，时间线可用 `kind: plan-update` 并保留学习中状态。
 
 更新课程后，从同一份公开正文重新生成离线下载，再构建博客：
 
