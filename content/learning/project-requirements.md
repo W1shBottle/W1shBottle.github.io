@@ -121,9 +121,9 @@ A1/A2 完成即可进入 B，不等 Redis/消息队列/微服务。C 不以固�
 
 | 顺序 | 先理解 / 阅读 | 亲手完成 | 验证与进入下一步的门槛 |
 | --- | --- | --- | --- |
-| 1 当前任务 | AND、LIKE、IS NULL；sql/02_seed.sql、03_queries.sql | 不复制完整答案，新增标题含打印机且 OPEN 且未分配处理人的查询；改一个条件再预测结果 | 执行后解释每个条件；无结果先检查真实数据；SELECT 不修改记录 |
+| 1 组合查询实操通过 | AND、LIKE、IS NULL；sql/02_seed.sql、03_queries.sql | 已提交SQL和正确结果：3／打印机卡纸／NULL／OPEN | 本条不重抄；解释和条件变体在关联查询任务中继续验证 |
 | 2 数据规则复盘 | sql/01_schema.sql、04_constraints.sql、05_updates.sql | 画三表关联；指出外键、CHECK、Java 状态方法分别能/不能拦住什么 | 能解释存在的 REPORTER 仍可能通过 assignee 外键，但业务必须拒绝；版本字段存在不等于并发保护 |
-| 3 多表查询 | INNER JOIN/LEFT JOIN；三表主外键 | 在 03_queries.sql 查询工单、设备名、报修人名和可空工程师名；app_user 使用两个别名 | 未派单工单仍显示；逐个解释 ON 条件；只允许读取当前练习数据 |
+| 3 多表查询（当前） | INNER/LEFT/RIGHT JOIN、别名已讲解；三表主外键 | 03_queries.sql完整语句已保存；下一步执行核对设备/报修人/可空工程师，再自己增加OPEN筛选 | 未派单工单仍显示；逐个解释ON与别名，预测并验证变体；尚无执行反馈 |
 | 4 事务与冲突 | START TRANSACTION/COMMIT/ROLLBACK；05_updates.sql | 在可回滚练习中条件更新指定工单，查看受影响行数并回滚；随后练两个请求竞争 | 证明回滚恢复；解释为何 status/version 条件比先查再无条件写可靠；不提交意外变更 |
 | 5 短 JDBC | 连接、PreparedStatement、ResultSet、资源关闭；未来测试目录 JdbcTicketQueryDemo.java | 用环境配置连接练习库，参数化按编号查询，处理查无结果；再做一个显式回滚更新 | 能解释 Java 值如何绑定到 SQL/结果如何映射；密码不入仓库；真正查库结果与客户端一致 |
 | 6 首条 Web 链路 | HTTP/JSON、Controller/Service/Mapper；现 TicketService 与未来 TicketController/TicketMapper | 配好一套兼容 Boot/MyBatis，先实现 GET /api/tickets/{id}，再独立补状态筛选 | HTTP→SQL 输出能对应真实记录，知道 400/404 含义；此时只本地运行，权限阶段完成前不得当公开服务 |

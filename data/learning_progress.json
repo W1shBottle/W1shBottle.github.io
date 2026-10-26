@@ -1,7 +1,7 @@
 {
   "version": 1,
   "updated": "2026-10-26",
-  "stage": "A0 · MySQL 条件查询；Java＋AI 路线已调整",
+  "stage": "A0 · MySQL 关联查询入门；完整 JOIN 待验收",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -130,12 +130,12 @@
     {
       "date": "2026-10-26",
       "project": "ops-ticket",
-      "kind": "plan-update",
-      "title": "调整 Java＋AI 路线，明确阶段与技能清单",
-      "summary": "保留控制台与 SQL 成果，将同一项目安排为后端业务、一个 AI 功能、效果验证三个阶段；同步技能清单，区分已练习、正在学和按需扩展。",
-      "verification": "当前已有 MySQL 三表与基础操作反馈；17 项现有 JUnit 在本次方案核对中通过。组合查询独立变体尚待验收，Java 尚未接库，Web 与 AI 均未实现；方案更新不等于技能完成。",
-      "next": "独立完成打印机＋OPEN＋IS NULL组合查询，解释各条件，再学习 JOIN/LEFT JOIN。",
-      "status": "in-progress"
+      "title": "从 MySQL 三表与条件查询，到 JOIN 关联入门",
+      "summary": "汇总上篇之后的SQL学习：建库、三表、CRUD、外键与CHECK、NULL和引号；打印机组合查询已有正确输出，学习JOIN及左右连接。同日同步Java＋AI阶段路线与技能清单。",
+      "verification": "学习者提交组合SQL及实际结果：3／打印机卡纸／NULL／OPEN；JOIN已讲解且完整语句已保存，尚无执行与独立变体反馈。Java仍未接库；本次日结未操作数据库，未新增或重跑Java测试。",
+      "next": "执行完整JOIN核对设备、报修人、可空处理人，解释三个ON，再自己增加只看OPEN的条件，预测并验证。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261026/"
     }
   ],
   "current_project": "ops-ticket"

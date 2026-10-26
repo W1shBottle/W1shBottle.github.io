@@ -67,8 +67,8 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </table></div>
 <p>项目目录：<code>JavaProject</code>（以下路径均相对项目根目录），包名 <code>cn.wishbottle.opsticket</code>。控制台和早期 Demo 保留为已完成成果；后续数据库版复用业务规则，必要时调整存储契约，不为了兼容文件编号生成方式写出错误数据库逻辑。</p>
 <h2 id="chapter-start-当前接续点">当前接续点</h2>
-<p>截至本次调整：控制台文件版已运行；学习记录显示 Java 21、Maven、17 项 JUnit 和仓库切换已验证。MySQL 8.0.44 的 <code>ops_ticket_dev</code> 已建立用户、设备、工单三表，练过 CRUD、外键和状态一致性检查。尚未把 MySQL 接入 Java。LIKE/AND 讲解后的独立查询待确认，JOIN、事务、JDBC 和 Web 尚未通过验收。</p>
-<p>因此不再从 <code>Ticket</code> 构造器重学。今天先独立完成 <code>sql/03_queries.sql</code> 的打印机+OPEN+IS NULL组合查询变体，然后继续 SQL；任何新阶段先解释概念再写代码。</p>
+<p>截至本次调整：控制台文件版已运行；学习记录显示 Java 21、Maven、17 项 JUnit 和仓库切换已验证。MySQL 8.0.44 的 <code>ops_ticket_dev</code> 已建立用户、设备、工单三表，练过 CRUD、外键和状态一致性检查。尚未把 MySQL 接入 Java。打印机＋OPEN＋IS NULL查询已返回编号3；JOIN已讲解并保存，执行结果与独立变体待验收，事务、JDBC和Web尚未学习验收。</p>
+<p>因此不再从 <code>Ticket</code> 构造器重学。下一次先运行 <code>sql/03_queries.sql</code> 的完整JOIN查询，核对可空处理人，并独立增加OPEN筛选；任何新阶段先解释概念再写代码。</p>
 <h2 id="chapter-start-第一版只做这些">第一版只做这些</h2>
 <p>报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；能查自己的列表和详情，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。最小同源页面或 HTTP 客户端足以演示。</p>
 <p>A2 补齐登录、校验、统一错误、事务、关键测试、可重复启动与一次排错后，即可进入 B。不先做评论、退回、附件、设备后台大全、缓存、消息队列、微服务或 Kubernetes。</p>
@@ -92,7 +92,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <h2 id="chapter-project-现有成果与实际起点">现有成果与实际起点</h2>
 <p>当前是 Java 21＋Maven 的本地控制台项目：Ticket、Service、Repository、两种仓库、UTF-8 文件保存与恢复、控制台菜单、17 项 JUnit 和可运行 JAR。MySQL 8.0.44 的独立练习库 ops_ticket_dev 已有设备、用户和工单三表，正在练习 SQL；Java 还没有数据库驱动/访问代码。HTTP、登录权限、完整处理验收、AI、RAG、Agent 均未实现。</p>
 <p>现有 Java 结构不算复杂，可继续用。需要改的是后续范围：旧计划把六表、评论、退回、看板及众多扩展排在 AI 前，现在将首版收敛为核心业务和必需工程能力，随即接入一个可评估的 AI 功能。</p>
-<p>已有源码/运行结果不等于学习者独立掌握。当前能根据学习记录确认对象引用、Map 覆盖、编号接续、路径和若干异常概念；接口接线有助手修复记录。SQL 中 IS NULL/LIKE/AND 已讲解并写入文件，独立执行及解释仍需核验。具体状态见 <a href="https://wishbottle.cn/learning/#progress" rel="noopener noreferrer">学习时间线</a>，不因本次改计划自动增加完成项。</p>
+<p>已有源码/运行结果不等于学习者独立掌握。当前能根据学习记录确认对象引用、Map 覆盖、编号接续、路径和若干异常概念；接口接线有助手修复记录。SQL 中打印机＋OPEN＋IS NULL组合已由学习者提交语句和正确结果；JOIN已讲解并保存，完整执行和独立变体仍待验收。具体状态见 <a href="https://wishbottle.cn/learning/#progress" rel="noopener noreferrer">学习时间线</a>，不因本次改计划自动增加完成项。</p>
 <h2 id="chapter-project-同一个项目的三个主阶段">同一个项目的三个主阶段</h2>
 <div class="table-scroll" tabindex="0"><table>
 <thead>
@@ -200,7 +200,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <tr>
 <td>MySQL</td>
 <td><code>sql/01_schema.sql</code> 至 <code>05_updates.sql</code>；三张表和基础操作</td>
-<td>CRUD、FK、CHECK、条件派单有用户反馈；LIKE/AND 待独立演示；不能推断 Java 已接库</td>
+<td>CRUD、FK、CHECK、条件派单有用户反馈；打印机组合查询已有用户正确输出；JOIN已写、待执行验收；不能推断 Java 已接库</td>
 </tr>
 <tr>
 <td>后端框架</td>
@@ -349,10 +349,10 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <h2 id="chapter-schedule-下一批可直接执行的小任务">下一批可直接执行的小任务</h2>
 <p>每项通常一次或几次学习即可完成，不强行塞入同一天。文件均相对 <code>项目根目录</code>，尚不存在的文件只在轮到该任务时创建。</p>
 <ol>
-<li><strong>组合查询变体</strong>：读 <code>sql/03_queries.sql</code>。合上答案独立写“标题含打印机、状态OPEN、assignee_id IS NULL”的查询，输出id/title/assignee_id/status，按id排序；先预测再运行并解释每个条件。空调LIKE/AND只作可选复盘；已有语句不等于独立掌握。</li>
+<li><strong>组合查询实操已通过</strong>：学习者提交打印机＋OPEN＋IS NULL查询和实际结果：3／打印机卡纸／NULL／OPEN。解释、预测和排错可在下面关联变体中继续验证，不重抄这条成功语句。</li>
 <li><strong>缺值与归属</strong>：查 <code>assignee_id IS NULL</code>；加报修人条件。先 SELECT 当前数据，不重复插入早前“打印机卡纸”样本；空结果可以合法。解释 NULL 和字符串 <code>'NULL'</code>。</li>
 <li><strong>列出业务规则</strong>：对照 <code>sql/01_schema.sql</code>，口述 FK保证存在、CHECK保证单行组合；说明“禁用工程师/错误角色不能派单”还需Java。保存一段自己的解释。</li>
-<li><strong>关联查询</strong>：在 <code>sql/03_queries.sql</code> 先 JOIN device，再关联 reporter，最后 LEFT JOIN assignee；用实际 ID核对，未派单仍保留。独立加设备名称输出后通过。</li>
+<li><strong>关联查询（当前接续）</strong>：完整语句已保存在 <code>sql/03_queries.sql</code>；先执行核对设备、报修人和可空处理人，解释三个ON及两个用户别名，再自己加只看OPEN的条件。先预测再验证，未派单工单不能因关联处理人而消失；尚无本条执行反馈。</li>
 <li><strong>事务实验</strong>：待建 <code>sql/06_transactions.sql</code>；先读保存原值，同一连接修改一条自己的练习数据并回滚，再提交；结束关闭事务。能解释“第二条报错不代表自动撤销第一条”后通过。</li>
 <li><strong>短 JDBC</strong>：完成上面 SQL 后才加驱动和 <code>JdbcTicketQueryDemo</code>，先由你绑定id参数、只读查询并映射NULL，再练回滚更新；之后创建课再读取生成主键；遇到映射或连接错误自己定位一处。通过再接 HTTP，暂不加 AI 依赖。</li>
 </ol>
@@ -467,7 +467,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </blockquote>
 <h2 id="chapter-java-sql-当前接续任务与代码位置">当前接续任务与代码位置</h2>
 <p>现有源码在 <code>src\main\java\cn\wishbottle\opsticket</code>，测试/Demo在对应 <code>src/test/java</code>。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 <code>sql/01_schema.sql</code> 至 <code>sql/05_updates.sql</code>，先继续修改这些文件，避免重复建一套脚本。</p>
-<p>三表、设备CRUD、外键与CHECK已经练过；<code>03_queries.sql</code> 已写LIKE/AND，但独立执行和解释仍待确认。先不看答案写变体：查标题含“打印机”、状态OPEN、处理人IS NULL，输出id/title/assignee_id/status，按id排序。先查询现有数据并预测，空结果也可能正确；不要为了符合预想重复插入种子数据。</p>
+<p>三表、设备CRUD、外键与CHECK已经练过；学习者提交的打印机＋OPEN＋IS NULL组合查询已返回编号3。<code>03_queries.sql</code> 已保存完整JOIN查询，但尚无执行反馈。当前先核对设备/报修人/可空处理人，解释ON与别名，再独立加OPEN筛选、预测并运行；不要为了符合预想重复插入种子数据。</p>
 <p>第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。</p>
 <p>以下101/102/103是教材隔离样本，不能当当前开发库数据。当前确认空调工单id=1且IN_PROGRESS，投影仪已停用；其余按实际SELECT核对。所有“返回3行/某固定编号”的验收只适用于已明确准备该样本的隔离环境。</p>
 <p>这六周把你已经接触过的对象、异常和文件读写，变成自己能够修改的工单程序，再把数据放入 MySQL。每周以一个能演示的成果为目标。表中的六个任务各约 3 小时，包含阅读、编码、排错和复盘，总计约 18 小时；可以自行选日期，考试周拆成两周。提前完成就复写和查漏，不必把时间填满。</p>
@@ -2098,7 +2098,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>先关闭工具入口并修权限，模型提示词不能代替鉴权</td>
 </tr>
 </tbody>
-</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-10-26。对应同一个设备运维工单项目；详细授课顺序见<a href="#chapter-schedule">阶段日程</a>。本页是技能勾选的统一入口，后半部分保留原有记录模板。当前在 <strong>A0：MySQL 条件查询</strong>，下一项是 S01。</p>
+</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-10-26。对应同一个设备运维工单项目；详细授课顺序见<a href="#chapter-schedule">阶段日程</a>。本页是技能勾选的统一入口，后半部分保留原有记录模板。当前在 <strong>A0：MySQL 关联查询入门</strong>，下一项是 S03 的执行与独立变体验收。</p>
 <h2 id="chapter-checklists-怎样看这份清单">怎样看这份清单</h2>
 <ul>
 <li><code>[x]</code>：这一条明确的小练习或解释已有通过记录，不代表整门技术已经熟练。</li>
@@ -2135,7 +2135,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>当前</td>
 <td>MySQL、SQL</td>
 <td>三表关系、条件/关联查询、事务、约束</td>
-<td>CRUD/FK/CHECK 已跟练；组合查询正在学</td>
+<td>CRUD/FK/CHECK 已跟练；组合查询实操通过，JOIN待验收</td>
 </tr>
 <tr>
 <td>A1</td>
@@ -2207,13 +2207,13 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <li>□ <strong>J09【已练习】异常和文件 IO</strong>：读 FileStore/文件仓库；能解释 throw/throws/catch、受检与运行时异常、cause、Reader/Writer、UTF-8、try-with-resources。自己定位一次字段错误，不能把写文件失败当事务已回滚。</li>
 <li>□ <strong>J10【已练习】构建、调试和测试</strong>：用 pom/现有测试解释 main 与 @Test、断言和 @TempDir、test/package 的区别；独立下断点看调用链，改坏一处规则后关键测试应失败，恢复后通过。无需追加同质 assertEquals。</li>
 </ul>
-<p>J07—J10作为沿途巩固项，不要求全部重新验收后才继续S01；只在新任务暴露具体缺口时补练。</p>
+<p>J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前SQL任务；只在新任务暴露具体缺口时补练。</p>
 <h2 id="chapter-checklists-s当前-sql-与数据库基础a0-a1-前半">S：当前 SQL 与数据库基础（A0 / A1 前半）</h2>
 <p>阅读项目 <code>sql/01_schema.sql</code>—<code>05_updates.sql</code>；SQL 文件已保存不等于每条都执行通过，真实记录以 SELECT 为准。</p>
 <ul>
-<li>□ <strong>S01【正在学】条件组合</strong>：独立查“标题含打印机、OPEN、处理人为空”；能解释 WHERE/AND/LIKE/IS NULL、引号和 ORDER BY，预测改一个条件后的结果。</li>
+<li>□ <strong>S01【实操通过，解释与变体继续复盘】条件组合</strong>：2026-10-26已提交“打印机＋OPEN＋处理人为空”的SQL与正确结果（id=3）。本项还包含解释WHERE/AND/LIKE/IS NULL、引号、ORDER BY及预测改条件后的结果，暂不把这些全部勾为已掌握；在下一项JOIN筛选中验收，不重抄成功语句。</li>
 <li>□ <strong>S02【已练习】表设计与约束</strong>：画 device/app_user/ticket 关系；解释主键、自增、外键、唯一、NOT NULL、CHECK 和 NULL。能指出外键不检查 ENGINEER 角色、CHECK 不代替合法状态迁移。</li>
-<li>□ <strong>S03【待学】多表查询</strong>：用 JOIN 关联设备和报修人，用 LEFT JOIN 保留未派单工单；同一用户表用两个别名，能解释每个 ON 条件。</li>
+<li>□ <strong>S03【正在学】多表查询</strong>：JOIN/LEFT/RIGHT与别名已讲解，完整查询已保存；下一次实际核对设备、报修人和可空处理人，解释每个ON，再独立增加OPEN筛选。没有执行反馈前不计为通过。</li>
 <li>□ <strong>S04【待学】统计和分页</strong>：按状态 GROUP BY/COUNT，区分 COUNT(*) 与 COUNT(可空列)；用 LIMIT/OFFSET 和稳定排序查列表，查询与总数使用一致筛选条件。</li>
 <li>□ <strong>S05【待学】事务与影响行数</strong>：在隔离练习数据上 BEGIN/COMMIT/ROLLBACK；条件 UPDATE 返回0行要能解释。故意让第二步失败，确认不能把“报错”直接当作“前面都回滚”。</li>
 <li>□ <strong>S06【待学】索引与 EXPLAIN 入门</strong>：围绕一个列表查询说明索引作用、代价与执行计划；保留样本量和结果，不能靠很少数据声称高性能。基础可沿途学，深度调优不挡 B。</li>
@@ -2285,9 +2285,9 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <p>当前不排必修任务：微服务拆分、Kubernetes、多Agent、MCP、模型微调/训练、本地大模型部署、独立Python服务。今后遇到明确岗位缺口或业务需求再选；不靠堆栈数量衡量项目水平。</p>
 <h2 id="chapter-checklists-今天只看这一小段">今天只看这一小段</h2>
 <ul>
-<li>S01：独立写打印机＋OPEN＋IS NULL组合查询，预测并核对结果。</li>
+<li>S01：打印机组合查询已返回编号3；条件解释在下一项中复盘，不重做已成功的实操。</li>
 <li>S02：能说出“外键保证存在，不能保证是启用的工程师”。</li>
-<li>下一项S03：学JOIN/LEFT JOIN，查询设备名、报修人名和可空处理人名。</li>
+<li>当前S03：执行已保存的完整JOIN，核对名称与NULL，再自己增加只看OPEN的条件。</li>
 </ul>
 <p>上面三个条目是任务提示，正式勾选维护在S区，避免两处状态不一致。每次学习按下方模板记录日期、实际证据和帮助；技能清单和学习时间线分别维护，只有实际完成后才更新验收状态。</p>
 <h2 id="chapter-checklists-每周记录">每周记录</h2>
@@ -2318,9 +2318,9 @@ Git提交编号或本地版本备份：
 <tbody>
 <tr>
 <td>A0 SQL收尾</td>
-<td>SQL脚本与实际查询输出</td>
-<td>关闭答案写组合查询并预测结果</td>
-<td>待填写</td>
+<td>三表/约束与组合查询已有实际反馈；JOIN已保存</td>
+<td>已提交打印机组合正确结果；JOIN解释和筛选变体待核对</td>
+<td>关联查询正在学，事务等仍待完成</td>
 </tr>
 <tr>
 <td>A1数据库/HTTP闭环</td>

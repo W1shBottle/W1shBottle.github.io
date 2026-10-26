@@ -250,6 +250,13 @@ java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' cn.wishbot
 - 本次只调整文档与课程；源码、pom、SQL、data、Git index 以核验哈希检查，核验记录保留在本地。
 - 当前 shell 默认仍可能指向 Java 8；本次构建仅在该进程显式选择 JDK 21，不修改系统环境或 IDEA 配置。
 
+### 同日SQL学习补充（日结证据）
+
+- 学习者提交组合查询SQL及实际结果：标题含打印机、状态OPEN、assignee_id IS NULL，返回编号3、打印机卡纸、NULL、OPEN。这一条实操通过，不据此宣称所有SQL条件与排错已掌握。
+- `sql/03_queries.sql` 已保存设备、报修人、处理人和完整关联查询；INNER/LEFT/RIGHT JOIN、表/列别名、结果集已讲解，尚未收到完整查询执行结果和独立OPEN筛选变体反馈。
+- 下次先核对完整JOIN和三个ON，再自己加WHERE状态条件。Java仍使用文件仓库，没有数据库接入或Web/AI。
+- 本次日结只核对文件与聊天证据，没有连接/写入MySQL，没有新增/重复运行Java测试；17项JUnit引用上面同日方案核对的既有结果。笔记见[MySQL三表关系、条件查询与JOIN入门](https://wishbottle.cn/posts/ops-ticket-20261026/)。
+
 ### A 后端的必要验收（全部仍待完成）
 
 | 场景 | 预期与证据 |

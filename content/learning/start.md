@@ -29,9 +29,9 @@
 
 ## 当前接续点
 
-截至本次调整：控制台文件版已运行；学习记录显示 Java 21、Maven、17 项 JUnit 和仓库切换已验证。MySQL 8.0.44 的 `ops_ticket_dev` 已建立用户、设备、工单三表，练过 CRUD、外键和状态一致性检查。尚未把 MySQL 接入 Java。LIKE/AND 讲解后的独立查询待确认，JOIN、事务、JDBC 和 Web 尚未通过验收。
+截至本次调整：控制台文件版已运行；学习记录显示 Java 21、Maven、17 项 JUnit 和仓库切换已验证。MySQL 8.0.44 的 `ops_ticket_dev` 已建立用户、设备、工单三表，练过 CRUD、外键和状态一致性检查。尚未把 MySQL 接入 Java。打印机＋OPEN＋IS NULL查询已返回编号3；JOIN已讲解并保存，执行结果与独立变体待验收，事务、JDBC和Web尚未学习验收。
 
-因此不再从 `Ticket` 构造器重学。今天先独立完成 `sql/03_queries.sql` 的打印机+OPEN+IS NULL组合查询变体，然后继续 SQL；任何新阶段先解释概念再写代码。
+因此不再从 `Ticket` 构造器重学。下一次先运行 `sql/03_queries.sql` 的完整JOIN查询，核对可空处理人，并独立增加OPEN筛选；任何新阶段先解释概念再写代码。
 
 ## 第一版只做这些
 
