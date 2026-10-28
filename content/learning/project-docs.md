@@ -2,7 +2,7 @@
   "title": "设备运维工单项目文档",
   "description": "当前控制台与 SQL 进度、Java＋AI 路线和运行入口。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-26T00:00:00+08:00",
+  "lastmod": "2026-10-28T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
@@ -10,9 +10,9 @@
 
 > 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。后续功能以各页的实现状态为准。
 
-围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**，沿用现有工单主题和代码。当前仍是 **v0.1 控制台实现**：内存/文件仓库、自动保存和启动恢复可运行；MySQL 三表及 SQL 练习已开始，但 Java 尚未接库。HTTP、处理/验收、登录权限、AI 和 Agent 均待实现。项目定位改变不代表功能已完成。
+围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**，沿用现有工单主题和代码。当前仍是 **v0.1 控制台实现**：内存/文件仓库、自动保存和启动恢复可运行；MySQL 三表和 SQL 练习已有成果，独立 JDBC Demo 已可查询真实数据库，正式控制台尚未改用数据库仓库。HTTP、处理/验收、登录权限、AI 和 Agent 均待实现。项目定位改变不代表功能已完成。
 
-文档核对日期：2026-10-26。路线改为 A 后端业务与基础工程 → B 一个真实 AI 功能 → C 验证与改进；受控 Agent 按需要扩展。历史笔记保留当时进度，课程材料原“周号”只作索引，不承诺固定周数掌握。
+文档核对日期：2026-10-28。路线改为 A 后端业务与基础工程 → B 一个真实 AI 功能 → C 验证与改进；受控 Agent 按需要扩展。历史笔记保留当时进度，课程材料原“周号”只作索引，不承诺固定周数掌握。
 
 ## 项目文档
 
@@ -50,11 +50,21 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 
 以上 `mvn` 命令要求终端能够找到 Maven；也可使用 IDEA 的 Maven 面板或其自带 Maven 可执行文件。项目没有 Maven Wrapper，首次构建需要下载依赖；依赖和插件已缓存后可尝试 `mvn -o package`。新终端中应重新确认 Java 与 Maven 的 JDK。
 
+### MySQL 与 JDBC 环境（2026-10-28）
+
+当前学习环境为 MySQL 8.4.13 LTS 与 Connector/J 26.10.0。在 IDEA 重新加载 Maven 依赖；数据库地址、账号和密码按自己的本机环境配置。升级前已有备份，助手完成恢复、数据一致性与真实 JDBC 验证；安装路径、账号材料和回退操作保留在本地，不公开。
+
+学习者随后完成独立 JDBC 查询 Demo；正式控制台仍使用文件仓库，Java 更新事务待亲手实现。详见[运行与验收](/learning/project-verification/)。
+
 ### 存档位置
 
 正式控制台使用 `data/tickets-app.properties`。这是相对于**运行时工作目录**的路径，并非相对于 JAR 所在目录；启动时会打印绝对路径。请在项目根目录运行，并确保 `data` 目录存在，保存方法不会自动创建父目录。
 
 关闭后重新启动会恢复已有工单。成功的新建、修改标题和派单会自动保存，不需要手动调用文件工具。
+
+### JDBC 查询练习
+
+测试源码中的 `JdbcTicketQueryDemo` 从 `OPS_TICKET_DB_PASSWORD` 读取数据库密码；在 IDEA 对应运行配置中填写，不写入源码或公开截图。同一个连接查询待派单和处理中工单，方法自行关闭 statement/resultSet，连接由 main 关闭。它是手动运行的 main Demo，不由 `mvn test` 自动执行。
 
 ## 验证方式
 
@@ -62,7 +72,7 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 mvn test
 ```
 
-2026-10-26 使用 JDK 21 重新执行离线 `package`，17 项测试通过、打包成功。现有 17 个 JUnit 测试：`TicketTest` 6 个、`TicketFileStoreTest` 2 个、`InMemoryTicketRepositoryTest` 7 个、`TicketServiceTest` 2 个。现有测试覆盖标题校验、文件往返、部分仓库契约和 Service 行为，不代表所有功能与故障场景均已自动覆盖。`update(null)` 的同类练习已跳过，不计入测试数量。
+2026-10-26 使用 JDK 21 执行离线 `package` 成功；2026-10-28 更新驱动后再次执行 `mvn test`，17 项测试全部通过。现有 17 个 JUnit 测试：`TicketTest` 6 个、`TicketFileStoreTest` 2 个、`InMemoryTicketRepositoryTest` 7 个、`TicketServiceTest` 2 个。现有测试覆盖标题校验、文件往返、部分仓库契约和 Service 行为，不代表所有功能与故障场景均已自动覆盖。`update(null)` 的同类练习已跳过，不计入测试数量。
 
 `mvn test` 不会自动运行带 `main` 的 Demo。两种仓库的共用业务流程与文件重新加载可以单独运行：
 
@@ -107,7 +117,7 @@ JavaProject/
 
 ## 已知限制
 
-- 当前为本地控制台程序；SQL 文件已有用户、设备、工单三表，Java 数据库访问、HTTP、登录权限和处理/验收状态流尚未实现。
+- 当前为本地控制台程序；SQL 文件已有用户、设备、工单三表，独立 JDBC 查询 Demo 已实现，正式数据库仓库、HTTP、登录权限和处理/验收状态流尚未实现。
 - 保存直接覆盖目标文件，尚无原子替换、备份或事务机制；写入中断可能损坏存档。
 - 保存失败时控制台提示并退出，不打印操作成功；此前发生的内存修改不会自动回滚。
 - 多个程序同时操作同一存档文件时没有并发保护。
@@ -115,7 +125,7 @@ JavaProject/
 
 ## 学习进度与下一步
 
-前三个原课程单元已完成相应练习；部分接线和修复有助手帮助，不能记成全独立实现。现已学习 MySQL 建库、三表、增删改查、外键、条件派单和 CHECK 失败；打印机＋OPEN＋IS NULL组合已由学习者提交SQL和正确结果（编号3）；JOIN、LEFT/RIGHT JOIN、别名已讲解，完整关联查询已写入文件，但执行结果与独立筛选变体待验收。数据库事务、JDBC、Web、权限或模型API尚未学习验收。
+前三个原课程单元已完成相应练习；部分接线与修复有助手帮助，不能记成全独立实现。JOIN 的 OPEN 筛选、COUNT/GROUP BY/HAVING、稳定分页与同条件总数已按指导练习并反馈结果；SQL 提交/回滚、条件更新和双连接版本竞争已有运行反馈。JdbcTicketQueryDemo 已使用同一 Connection 依次查询 OPEN/IN_PROGRESS，处理 SQL NULL 并提取 printTicketsByStatus，学习者反馈运行成功、助手读取源码核对。Java 更新事务尚待亲手练习，正式业务仍用文件仓库，Web/权限/AI 未接入。
 
 | 阶段 | 具体交付 | 进入下一阶段的条件 |
 | --- | --- | --- |
@@ -128,4 +138,4 @@ A1/A2 分别完成最小业务与基础工程；B/C 分别完成 AI 接入与效
 
 首版只保留工单闭环、必要查询和权限。设备和用户用演示种子数据；评论、退回、统计看板、全套管理界面、Redis、消息队列、微服务、Kubernetes 延后。AI 编程辅助与产品内 AI 功能分别验收，不以生成代码量计进度。
 
-**下一项亲手任务**：执行 `sql/03_queries.sql` 已保存的完整关联查询，核对设备名、报修人名和可空处理人名；解释三个ON及两个用户别名，再自己加只看OPEN的WHERE条件，先预测再验证。上一条打印机组合查询已通过，不重做；之后再学习统计/分页、事务、短JDBC及第一个HTTP接口。任务细分与门槛见需求第8节，学习复盘见[10月26日笔记](https://wishbottle.cn/posts/ops-ticket-20261026/)。
+**下一项亲手任务**：在单独的 JdbcTicketUpdateDemo 中学习 executeUpdate、setAutoCommit(false)、影响行数和显式 rollback：读取当前版本，修改指定标题后回滚，重新查询确认标题与版本恢复；先讲清事务边界，再由学习者亲手实现。 学习复盘见[10月28日笔记](https://wishbottle.cn/posts/ops-ticket-20261028/)。

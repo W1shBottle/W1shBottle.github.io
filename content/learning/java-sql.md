@@ -5,16 +5,16 @@
   "weight": 40,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-10-26T00:00:00+08:00"
+  "lastmod": "2026-10-28T00:00:00+08:00"
 }
 
 > 2026-10-26 路线说明：本页“第几周”为教材单元，不是固定工期。第1—3单元已有项目成果，不整章重做；当前接第4单元 SQL。各任务耗时只是拆分参考，能独立解释与修改才通过。后续顺序为必要SQL→短JDBC→Web/MyBatis→最小工程验收→AI，详见[阶段日程](/learning/schedule/)。
 
 ## 当前接续任务与代码位置
 
-现有源码在 `src\main\java\cn\wishbottle\opsticket`，测试/Demo在对应 `src/test/java`。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 `sql/01_schema.sql` 至 `sql/05_updates.sql`，先继续修改这些文件，避免重复建一套脚本。
+现有源码在 `src\main\java\cn\wishbottle\opsticket`，测试/Demo在对应 `src/test/java`。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 `sql/01_schema.sql` 至 `sql/06_transactions.sql`，先继续修改这些文件，避免重复建一套脚本。
 
-三表、设备CRUD、外键与CHECK已经练过；学习者提交的打印机＋OPEN＋IS NULL组合查询已返回编号3。`03_queries.sql` 已保存完整JOIN查询，但尚无执行反馈。当前先核对设备/报修人/可空处理人，解释ON与别名，再独立加OPEN筛选、预测并运行；不要为了符合预想重复插入种子数据。
+2026-10-28 接续：JOIN 的 OPEN 筛选、COUNT/GROUP BY/HAVING、稳定分页与同条件总数已按指导练习并反馈结果；SQL 提交/回滚、条件更新和双连接版本竞争已有运行反馈。JdbcTicketQueryDemo 已使用同一 Connection 依次查询 OPEN/IN_PROGRESS，处理 SQL NULL 并提取 printTicketsByStatus，学习者反馈运行成功、助手读取源码核对。Java 更新事务尚待亲手练习，正式业务仍用文件仓库，Web/权限/AI 未接入。 下一步：在单独的 JdbcTicketUpdateDemo 中学习 executeUpdate、setAutoCommit(false)、影响行数和显式 rollback：读取当前版本，修改指定标题后回滚，重新查询确认标题与版本恢复；先讲清事务边界，再由学习者亲手实现。
 
 第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。
 

@@ -5,7 +5,7 @@
   "weight": 15,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-10-26T00:00:00+08:00"
+  "lastmod": "2026-10-28T00:00:00+08:00"
 }
 
 > 本页说明项目路线；当前实现与验收请配合[项目文档](/learning/project-docs/)阅读。计划中的能力不代表已经实现或掌握。
@@ -14,11 +14,11 @@
 
 ## 现有成果与实际起点
 
-当前是 Java 21＋Maven 的本地控制台项目：Ticket、Service、Repository、两种仓库、UTF-8 文件保存与恢复、控制台菜单、17 项 JUnit 和可运行 JAR。MySQL 8.0.44 的独立练习库 ops_ticket_dev 已有设备、用户和工单三表，正在练习 SQL；Java 还没有数据库驱动/访问代码。HTTP、登录权限、完整处理验收、AI、RAG、Agent 均未实现。
+当前是 Java 21＋Maven 的本地控制台项目，保留内存/文件仓库、菜单、17项JUnit和可运行JAR。2026-10-28环境已升级为MySQL8.4.13、Connector/J26.10.0；独立JdbcTicketQueryDemo已查询真实工单，支持状态参数、SQL NULL和方法提取。正式业务仓库未接数据库，Java更新事务、HTTP、登录权限、完整处理验收及AI/Agent仍待实现。
 
 现有 Java 结构不算复杂，可继续用。需要改的是后续范围：旧计划把六表、评论、退回、看板及众多扩展排在 AI 前，现在将首版收敛为核心业务和必需工程能力，随即接入一个可评估的 AI 功能。
 
-已有源码/运行结果不等于学习者独立掌握。当前能根据学习记录确认对象引用、Map 覆盖、编号接续、路径和若干异常概念；接口接线有助手修复记录。SQL 中打印机＋OPEN＋IS NULL组合已由学习者提交语句和正确结果；JOIN已讲解并保存，完整执行和独立变体仍待验收。具体状态见 [学习时间线](/learning/#progress)，不因本次改计划自动增加完成项。
+已有源码/运行结果不等于学习者独立掌握。SQL关联筛选、统计/分页、提交回滚和双连接版本竞争已有反馈；JDBC查询与方法提取是跟写、经解释修改后运行成功。助手执行的环境迁移与临时验证不计作学习者独立能力；以学习时间线和项目验收为准。
 
 ## 同一个项目的三个主阶段
 
@@ -64,7 +64,7 @@ B 开始前再选择供应商、模型与费用上限，准备本地环境变量
 
 ## 技术与学习方式
 
-沿用 Java 21、Maven 和当前 MySQL 8.0.44 练习环境，不为了路线调整现在升级数据库或改依赖。先学 SQL/JOIN/事务，再写短 JDBC 查询，之后引入 Spring Boot＋MyBatis。到框架课才按[官方兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)固定支持的版本。认证优先 Spring Security＋Session Cookie，保留 CSRF，使用框架密码编码器；不额外堆 JWT/复杂鉴权体系。
+沿用 Java 21、Maven；当前MySQL8.4.13与Connector/J26.10.0已经过独立恢复和连接验证。先补短JDBC更新/回滚实验，再接Spring Boot＋MyBatis，不重复升级现有环境。框架版本到接入时按官方兼容表固定；认证仍优先Spring Security＋Session Cookie，保留CSRF并使用框架密码编码器。
 
 两种 AI 学习分开：AI 辅助编程可用于解释/评审/排错，但每个模块要自己读调用链、独立改需求并验证；产品内 AI 功能则必须自己接入、测试真实 API 和失败路径。安排少量高价值测试，避免重复抄同类断言；数据库事务必须用真实 MySQL 验证，不能只看 Mock。
 

@@ -2,7 +2,7 @@
   "title": "工单项目需求与开发计划",
   "description": "最小业务闭环、阶段验收与后续 AI、Agent 任务。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-26T00:00:00+08:00",
+  "lastmod": "2026-10-28T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-26。当前实现仍为 v0.1 控制台＋独立 SQL 练习；路线调整为同一项目的 A 后端、B AI、C 评估。下文明确区分“现有实现”和“计划”，未发布新的业务版本。
+核对日期：2026-10-28。当前实现仍为 v0.1 控制台＋SQL/JDBC 查询练习；路线调整为同一项目的 A 后端、B AI、C 评估。下文明确区分“现有实现”和“计划”，未发布新的业务版本。
 
 ## 1. 项目背景与目标用户
 
@@ -80,9 +80,9 @@ FileTicketRepository 查询复用内部内存仓库，新增/更新后保存文�
 | --- | --- | --- |
 | 对象、集合、异常、仓库接口、文件恢复、ConsoleApp | 8 个业务源码、22 个测试/Demo/练习源码，已有可执行 JAR | 全部保留；不再把完善文件系统事务当成后续前置 |
 | 测试 | 17 项 JUnit；主要是 rename、文件往返、内存仓库和 create/rename | 保留；后续只补真实行为风险，不机械重复同类 assertEquals |
-| MySQL | sql/01_schema.sql 三表；用户反馈建表、CRUD、FK 与 CHECK 验证通过 | 继续 SQL→JOIN/事务→短 JDBC→MyBatis，SQL 文件不是 Java 已接库 |
+| MySQL / JDBC | 三表、JOIN/统计/分页/事务和版本竞争已有反馈；JdbcTicketQueryDemo 查询、SQL NULL 和方法提取已跟写运行 | 下一步 Java 更新事务；Demo 查询不是正式数据库仓库接入 |
 | 主流程 | 当前只有创建、改名、派单；RESOLVED/CLOSED 只是枚举/恢复支持 | 补 resolve 与 accept；不因枚举存在而标完成 |
-| Web、认证、事务、并发 | pom 尚无相关依赖，version 仅数据库字段 | 纳入 A；一步实现一条请求链 |
+| Web、认证、事务、并发 | 正式业务尚无相关实现；version已做SQL竞争实验，未接入Service | 纳入 A；一步实现一条请求链 |
 | AI、RAG、Agent | 无实现、无已验证模型配置 | B 做真实摘要/分类建议；C 测效果；RAG/Agent 按缺口选做 |
 
 现有结构规模适合继续学习。复杂度主要来自旧计划范围，不需要把控制台重写成多个服务。项目具备功能与学习者掌握必须分别记录：助手曾修复 Service 接线，需独立修改确认；用户已解释引用、Map 覆盖、最大编号和路径等，不等于已掌握事务或后端框架。
@@ -123,9 +123,9 @@ A1/A2 完成即可进入 B，不等 Redis/消息队列/微服务。C 不以固�
 | --- | --- | --- | --- |
 | 1 组合查询实操通过 | AND、LIKE、IS NULL；sql/02_seed.sql、03_queries.sql | 已提交SQL和正确结果：3／打印机卡纸／NULL／OPEN | 本条不重抄；解释和条件变体在关联查询任务中继续验证 |
 | 2 数据规则复盘 | sql/01_schema.sql、04_constraints.sql、05_updates.sql | 画三表关联；指出外键、CHECK、Java 状态方法分别能/不能拦住什么 | 能解释存在的 REPORTER 仍可能通过 assignee 外键，但业务必须拒绝；版本字段存在不等于并发保护 |
-| 3 多表查询（当前） | INNER/LEFT/RIGHT JOIN、别名已讲解；三表主外键 | 03_queries.sql完整语句已保存；下一步执行核对设备/报修人/可空工程师，再自己增加OPEN筛选 | 未派单工单仍显示；逐个解释ON与别名，预测并验证变体；尚无执行反馈 |
-| 4 事务与冲突 | START TRANSACTION/COMMIT/ROLLBACK；05_updates.sql | 在可回滚练习中条件更新指定工单，查看受影响行数并回滚；随后练两个请求竞争 | 证明回滚恢复；解释为何 status/version 条件比先查再无条件写可靠；不提交意外变更 |
-| 5 短 JDBC | 连接、PreparedStatement、ResultSet、资源关闭；未来测试目录 JdbcTicketQueryDemo.java | 用环境配置连接练习库，参数化按编号查询，处理查无结果；再做一个显式回滚更新 | 能解释 Java 值如何绑定到 SQL/结果如何映射；密码不入仓库；真正查库结果与客户端一致 |
+| 3 多表与统计（已练习） | JOIN、COUNT、GROUP BY、HAVING、LIMIT/OFFSET；03_queries.sql | OPEN 筛选、2/1计数、无工单设备和分页/总数已有用户反馈 | 继续结合后续需求解释连接与NULL；不重做全部练习 |
+| 4 事务与冲突（SQL已练习） | 03_queries.sql、06_transactions.sql | 提交/回滚、CHECK失败后回滚、条件更新和双窗口版本竞争已有反馈 | A=1、B=0是SQL实验；正式Service尚无数据库事务与版本契约 |
+| 5 短 JDBC（当前） | 现有测试目录 JdbcTicketQueryDemo.java；executeUpdate 与事务边界 | 查询、wasNull和方法提取已跟写通过；接下来单独写回滚更新Demo | 确认影响行数、旧版本冲突和回滚恢复；密码不入源码；能解释关闭资源与回滚的区别 |
 | 6 首条 Web 链路 | HTTP/JSON、Controller/Service/Mapper；现 TicketService 与未来 TicketController/TicketMapper | 配好一套兼容 Boot/MyBatis，先实现 GET /api/tickets/{id}，再独立补状态筛选 | HTTP→SQL 输出能对应真实记录，知道 400/404 含义；此时只本地运行，权限阶段完成前不得当公开服务 |
 | 7 完成 A | 需求第 6 节与设计第 10 节 | 依次补创建ID契约、状态方法、操作日志事务、登录授权和重复请求 | 运行验收清单；独立解释并修改一处业务；完成一次故障复现、修复、回归，再接 AI |
 

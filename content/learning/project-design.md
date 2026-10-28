@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类与存档设计，以及待实施的数据库、Web 和 AI 边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-26T00:00:00+08:00",
+  "lastmod": "2026-10-28T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,9 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-26。第 1—9 节记录现有 Java 实现，第 10—12 节是尚未实施的数据库/Web/AI 迁移设计。
+核对日期：2026-10-28。第 1—9 节记录现有 Java 实现，第 10—12 节是尚未实施的数据库/Web/AI 迁移设计。
+
+2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；Java更新事务待学习。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
 ## 1. 当前结构
 
