@@ -1,4 +1,4 @@
-name: Deploy Hugo site and refresh jobs
+name: Deploy Hugo site and refresh feeds
 
 on:
   push:
@@ -37,7 +37,13 @@ jobs:
           path: static/data/hangzhou-jobs.json
           key: jobs-v1-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: jobs-v1-
-      - name: Check recruitment filtering and fallback
+      - name: Restore the last GitHub edition
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache/github-daily.json
+          key: github-daily-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: github-daily-v1-
+      - name: Check feed filtering and fallback
         run: |
           python -m unittest discover -s scripts -p 'test_*.py'
           node scripts/test_jobs_feed.cjs
@@ -50,6 +56,15 @@ jobs:
         with:
           path: static/data/hangzhou-jobs.json
           key: jobs-v1-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Refresh daily GitHub discovery
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/update_github_daily.py
+      - name: Keep the GitHub edition and recent history
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/github-daily.json
+          key: github-daily-v1-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: '0.156.0'

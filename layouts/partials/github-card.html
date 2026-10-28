@@ -1,0 +1,8 @@
+{{ $p := .project }}
+{{ $labels := dict "ai" "AI 与智能应用" "dev" "开发工具" "useful" "实用软件" }}
+<article class="discovery-card" data-category="{{ $p.category }}">
+  <div class="discovery-card-top"><span class="discovery-category">{{ index $labels $p.category }}</span><span class="discovery-number mono" aria-hidden="true">{{ printf "%02d" .number }}</span></div>
+  <h3><a href="{{ $p.url }}" target="_blank" rel="noopener noreferrer"><span class="discovery-owner">{{ index (split $p.name "/") 0 }} / </span>{{ index (split $p.name "/") 1 }}<span class="discovery-link-arrow" aria-hidden="true"> ↗</span></a></h3>
+  <p class="discovery-description">{{ $p.description }}</p>
+  <div class="discovery-meta"><span class="discovery-stars" title="{{ $p.stars }} Stars · {{ $.date }} 采集"><span aria-hidden="true">☆</span> {{ if ge $p.stars 10000 }}{{ printf "%.1fk" (div (float $p.stars) 1000) }}{{ else }}{{ $p.stars | lang.FormatNumber 0 }}{{ end }}</span>{{ with $p.language }}<span class="discovery-language">{{ . }}</span>{{ end }}<span class="discovery-source">仓库原始简介</span></div>
+</article>

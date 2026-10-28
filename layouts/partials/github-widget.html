@@ -1,0 +1,9 @@
+{{ with site.Data.github_daily }}
+<section class="discovery-widget" aria-labelledby="discovery-widget-heading">
+  <div class="section-title"><h2 id="discovery-widget-heading">开源发现<span class="section-label"> / DISCOVER</span></h2><a href="/discover/">看本期全部 10 个 <span aria-hidden="true">↗</span></a></div>
+  <div class="discovery-widget-caption"><p>每天逛一逛，发现能用上的新东西。</p><time class="mono" datetime="{{ .date }}">{{ .date }}</time></div>
+  <div class="discovery-grid discovery-preview">
+    {{ $day := .date }}{{ range $i, $p := first 3 .projects }}{{ partial "github-card.html" (dict "project" $p "number" (add $i 1) "date" $day) }}{{ end }}
+  </div>
+</section>
+{{ end }}

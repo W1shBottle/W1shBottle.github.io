@@ -1,0 +1,36 @@
+{{ define "main" }}
+<section class="discovery-page" aria-labelledby="discovery-heading">
+  <header class="discovery-header">
+    <p class="kicker">DISCOVER / 每日开源发现</p>
+    <h1 id="discovery-heading">看看别人，<br>在做什么有趣的东西。</h1>
+    <p class="discovery-intro">每天 10 个 GitHub 项目。偏 AI、开发工具和实用软件，<br class="discovery-desktop-break">从一个新点子，到下一个想亲手试试的工具。</p>
+    {{ with site.Data.github_daily }}<div class="discovery-edition"><span class="discovery-edition-dot" aria-hidden="true"></span><span>本期 <time class="mono" datetime="{{ .date }}">{{ .date }}</time></span><span>10 个项目</span><span>北京时间每天早间更新</span></div>{{ end }}
+  </header>
+  {{ with site.Data.github_daily }}
+  {{ $day := .date }}
+  {{/* 08:00 in China is 00:00 UTC: use UTC date for the edition boundary. */}}
+  {{ $target := now.UTC }}
+  {{ if lt .date ($target.Format "2006-01-02") }}<p class="discovery-notice" role="status">新一期尚未更新，当前保留 {{ .date }} 的推荐。</p>{{ end }}
+  <div class="discovery-toolbar" data-discovery-controls hidden>
+    <div class="discovery-filters" role="group" aria-label="按项目分类筛选">
+      <button type="button" data-discovery-filter="all" aria-pressed="true">全部 <span>10</span></button>
+      <button type="button" data-discovery-filter="ai" aria-pressed="false">AI <span>3</span></button>
+      <button type="button" data-discovery-filter="dev" aria-pressed="false">开发工具 <span>4</span></button>
+      <button type="button" data-discovery-filter="useful" aria-pressed="false">实用软件 <span>3</span></button>
+    </div>
+    <label class="discovery-search"><span class="sr-only">搜索本期项目</span><input type="search" placeholder="搜索本期项目…" maxlength="120" data-discovery-search></label>
+  </div>
+  <p class="discovery-result-count" aria-live="polite" data-discovery-count hidden></p>
+  <div class="discovery-grid discovery-full-grid">
+    {{ range $i, $p := .projects }}{{ partial "github-card.html" (dict "project" $p "number" (add $i 1) "date" $day) }}{{ end }}
+  </div>
+  <div class="discovery-empty" data-discovery-empty hidden><p>本期没有匹配的项目。</p><button type="button" data-discovery-reset>重置筛选，看看全部 10 个 →</button></div>
+  {{ else }}<p>推荐正在准备中，稍后再来看看。</p>{{ end }}
+  <aside class="discovery-about" aria-label="推荐说明">
+    <div><h2>保持好奇，也慢慢挑选。</h2><p>从 GitHub 公开仓库中自动筛选：至少 1,000 Stars、近 90 天有更新，尽量避开最近 7 天推荐过的项目。Stars 为采集时的总数，简介来自项目作者，分类参考仓库标签。</p></div>
+    <p>每天北京时间 08:17 左右尝试更新；若延迟或获取失败，会保留上一期和原日期。灵感来自我常逛的 <a href="https://github.com/521xueweihan/HelloGitHub" target="_blank" rel="noopener noreferrer">HelloGitHub ↗</a>，这里是一份自动发现清单。</p>
+  </aside>
+</section>
+{{ $script := resources.Get "js/discover.js" | minify | fingerprint }}
+<script defer src="{{ $script.RelPermalink }}"></script>
+{{ end }}

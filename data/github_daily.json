@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "date": "2026-10-28",
+  "generated_at": "2026-10-28T15:35:34+00:00",
+  "projects": [
+    {
+      "id": 826170402,
+      "name": "elizaOS/eliza",
+      "url": "https://github.com/elizaOS/eliza",
+      "description": "Open source agentic operating system",
+      "stars": 19692,
+      "language": "TypeScript",
+      "pushed_at": "2026-10-28T15:23:28+00:00",
+      "category": "ai"
+    },
+    {
+      "id": 1125856365,
+      "name": "can1357/oh-my-pi",
+      "url": "https://github.com/can1357/oh-my-pi",
+      "description": "⌥ Coding agent with the IDE wired in. Built by Stencil Labs.",
+      "stars": 36934,
+      "language": "TypeScript",
+      "pushed_at": "2026-10-28T15:27:35+00:00",
+      "category": "dev"
+    },
+    {
+      "id": 72495579,
+      "name": "go-gitea/gitea",
+      "url": "https://github.com/go-gitea/gitea",
+      "description": "Git with a cup of tea! Painless self-hosted all-in-one software development service, including Git hosting, code review, team collaboration, package registry and CI/CD",
+      "stars": 58744,
+      "language": "Go",
+      "pushed_at": "2026-10-28T12:38:45+00:00",
+      "category": "useful"
+    },
+    {
+      "id": 911303109,
+      "name": "iii-hq/iii",
+      "url": "https://github.com/iii-hq/iii",
+      "description": "Effortlessly compose, extend, and observe every service in real-time for the first time ever.",
+      "stars": 18871,
+      "language": "Rust",
+      "pushed_at": "2026-10-28T15:29:05+00:00",
+      "category": "dev"
+    },
+    {
+      "id": 798201435,
+      "name": "unclecode/crawl4ai",
+      "url": "https://github.com/unclecode/crawl4ai",
+      "description": "Open-source web crawler and scraper for LLMs and AI agents: any website into clean, LLM-ready Markdown. Run it yourself, or use Crawl4AI Cloud with one key. Join our Discord https://discord.gg/VuxzM8mtf",
+      "stars": 86455,
+      "language": "Python",
+      "pushed_at": "2026-10-28T13:26:20+00:00",
+      "category": "ai"
+    },
+    {
+      "id": 957012,
+      "name": "Bash-it/bash-it",
+      "url": "https://github.com/Bash-it/bash-it",
+      "description": "A community Bash framework.",
+      "stars": 15286,
+      "language": "Shell",
+      "pushed_at": "2026-10-27T06:58:58+00:00",
+      "category": "useful"
+    },
+    {
+      "id": 90793418,
+      "name": "sharkdp/fd",
+      "url": "https://github.com/sharkdp/fd",
+      "description": "A simple, fast and user-friendly alternative to 'find'",
+      "stars": 44883,
+      "language": "Rust",
+      "pushed_at": "2026-10-28T07:16:47+00:00",
+      "category": "dev"
+    },
+    {
+      "id": 1136666433,
+      "name": "blader/humanizer",
+      "url": "https://github.com/blader/humanizer",
+      "description": "Agent skill that removes signs of AI-generated writing from text",
+      "stars": 61821,
+      "language": "Python",
+      "pushed_at": "2026-10-28T07:17:33+00:00",
+      "category": "ai"
+    },
+    {
+      "id": 193833307,
+      "name": "knadh/listmonk",
+      "url": "https://github.com/knadh/listmonk",
+      "description": "High performance, self-hosted, newsletter and mailing list manager with a modern dashboard. Single binary app.",
+      "stars": 24019,
+      "language": "Go",
+      "pushed_at": "2026-10-28T02:15:58+00:00",
+      "category": "useful"
+    },
+    {
+      "id": 1126473386,
+      "name": "jarrodwatts/claude-hud",
+      "url": "https://github.com/jarrodwatts/claude-hud",
+      "description": "A Claude Code plugin that shows what's happening - context usage, active tools, running agents, and todo progress",
+      "stars": 28976,
+      "language": "JavaScript",
+      "pushed_at": "2026-10-26T07:15:19+00:00",
+      "category": "dev"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-10-28",
+      "ids": [
+        826170402,
+        1125856365,
+        72495579,
+        911303109,
+        798201435,
+        957012,
+        90793418,
+        1136666433,
+        193833307,
+        1126473386
+      ]
+    }
+  ]
+}

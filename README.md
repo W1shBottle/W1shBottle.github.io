@@ -100,6 +100,30 @@ python scripts/update_jobs.py
 hugo --minify
 ```
 
+## 每日开源发现
+
+独立页面 `/discover/` 每天推荐 10 个 GitHub 项目；导航中的「发现」可直达，首页展示 3 个预览。页面支持 AI、开发工具、实用软件分类和本期搜索；关闭 JavaScript 时仍可阅读全部项目。排版沿用暖灰靛蓝样式，提供手机布局、深浅色和减少动态效果支持。
+
+- `scripts/update_github_daily.py`：查询 GitHub REST Search API，过滤低于 1,000 Stars、超过 90 天未更新、已归档、Fork、私有或教程合集仓库。以仓库标签作为分类依据，按照 3 个 AI / 4 个开发工具 / 3 个实用软件选择；根据日期确定轮换顺序，尽量避开最近 7 天的项目、避免同一作者扎堆。候选不足时先放宽作者限制，再放宽历史去重；当期绝不重复，不足 10 个则不发布新一期。
+- `data/github_daily.json`：已验证的首期快照，同时是本地预览与缓存失效时的回退数据。含实际日期、原始项目简介、Stars 总数及最近 14 期 ID 历史。简介按纯文本转义输出，不生成未经验证的功能介绍，也不冒充 GitHub 官方 Trending 或日增星数。
+- `layouts/_default/discover.html`、`layouts/partials/github-card.html` 和 `layouts/partials/github-widget.html`：独立页面、共用项目卡片和首页预览；`assets/css/discover.css`、`assets/js/discover.js` 负责样式与筛选。
+
+自动刷新复用 `.github/workflows/hugo.yml` 的每小时第 17 分钟任务，按北京时间 08:00 切日，通常在 **08:17 左右**生成新一期。同一天后续构建沿用本期，正常只发送 6 次搜索请求；失败后在后续任务重试。GitHub 的定时任务可能延迟或因仓库长期不活动暂停，**不保证准点**，必要时在 Actions 手动运行工作流。
+
+工作流从 Actions Cache 恢复 `.cache/github-daily.json`，比较缓存和源码快照，保留较新的有效数据，再生成页面。生成成功才替换整期；限流、超时、响应不完整或无足够候选时保留上一期和原日期，页面提示尚未更新。缓存可能被 GitHub 清理，此时回退源码快照，最近 7 天去重记录也可能不完整；页面内容不会清空。抓取阶段使用 Actions 自动提供的 `GITHUB_TOKEN`，不需要新增付费服务、个人密钥或本机常驻任务；令牌不会进入网页。
+
+手动刷新与检查（Python 标准库，无新增 pip 依赖）：
+
+```bash
+python -m unittest discover -s scripts -p 'test_*.py'
+python scripts/update_github_daily.py
+hugo --minify
+```
+
+只有明确想替换当天推荐时才用 `python scripts/update_github_daily.py --force`。本机未设置 `GITHUB_TOKEN` 时使用匿名 API，限流时仍保留已有快照。历史只用于避免重复，目前不提供往期全文归档。
+
+阅读组织方式参考 [HelloGitHub](https://github.com/521xueweihan/HelloGitHub)，未转载其月刊内容。数据规则参见 [GitHub 搜索仓库文档](https://docs.github.com/en/search-github/searching-on-github/searching-for-repositories)和[定时工作流文档](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。
+
 ## 外观
 
 定制样式按用途划分，加载顺序由 `layouts/partials/head/css.html` 统一管理：

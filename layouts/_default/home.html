@@ -35,6 +35,7 @@
     </div>
   </div>
 </section>
+{{ partial "github-widget.html" . }}
 <aside class="small-insight"><span class="insight-label">边做边记</span><p>外键保证关联记录存在；用户角色是否合适，还需要业务规则来判断。</p><a href="/learning/" aria-label="到学习栏目继续阅读">继续学习 <span aria-hidden="true">↗</span></a></aside>
 <section class="series-section"><div class="section-title"><h2>沿着一个主题读<span class="section-label"> / SERIES</span></h2><a href="/series/">所有系列 ↗</a></div><div class="series-grid">
 {{ range first 3 site.Data.wish.collections }}

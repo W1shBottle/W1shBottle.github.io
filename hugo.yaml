@@ -14,6 +14,7 @@ params:
     - { name: "首页", url: "/" }
     - { name: "学习", url: "/learning/" }
     - { name: "文章", url: "/posts/" }
+    - { name: "发现", url: "/discover/" }
     - { name: "系列", url: "/series/" }
     - { name: "归档", url: "/archives/" }
     - { name: "搜索", url: "/search/" }

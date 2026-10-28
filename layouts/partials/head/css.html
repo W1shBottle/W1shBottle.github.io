@@ -15,9 +15,15 @@
 {{ if eq .Section "learning" }}
     {{ $styles = $styles | append (resources.Get "css/learning.css") }}
 {{ end }}
-{{ $styles = $styles | append (resources.Get "css/appearance.css") (resources.Get "css/accessibility.css") }}
+{{ $styles = $styles | append (resources.Get "css/appearance.css") }}
+{{ if or .IsHome (eq .Layout "discover") }}
+    {{ $styles = $styles | append (resources.Get "css/discover.css") }}
+{{ end }}
+{{ $styles = $styles | append (resources.Get "css/accessibility.css") }}
 {{ $bundlePath := "assets/site.css" }}
 {{ if eq .Layout "jobs" }}{{ $bundlePath = "assets/site-jobs.css" }}{{ end }}
 {{ if eq .Section "learning" }}{{ $bundlePath = "assets/site-learning.css" }}{{ end }}
+{{ if .IsHome }}{{ $bundlePath = "assets/site-home.css" }}{{ end }}
+{{ if eq .Layout "discover" }}{{ $bundlePath = "assets/site-discover.css" }}{{ end }}
 {{ $combined := $styles | resources.Concat $bundlePath | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $combined.RelPermalink }}" media="all">
