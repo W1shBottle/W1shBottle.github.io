@@ -1,0 +1,72 @@
+/* One Dark palette adapted from the JetBrains One Dark plugin.
+ * Reference: https://github.com/one-dark/jetbrains-one-dark-theme
+ * The original keyword/string/type colors are retained. Muted text and comments
+ * and red tokens are a little brighter for comfortable article reading.
+ */
+:root {
+  --od-background: #21252b;
+  --od-surface: #282c34;
+  --od-raised: #2c313a;
+  --od-foreground: #abb2bf;
+  --od-heading: #d7dae0;
+  --od-muted: #98a2b3;
+  --od-comment: #8f98a8;
+  --od-border: #3e4451;
+  --od-blue: #61afef;
+  --od-purple: #c678dd;
+  --od-green: #98c379;
+  --od-yellow: #e5c07b;
+  --od-red: #e57882;
+  --od-orange: #d19a66;
+  --od-cyan: #56b6c2;
+}
+/* Honor the root theme before deferred JS updates the legacy body class. */
+[data-theme] body { color-scheme: inherit; }
+.theme-button .theme-label { white-space: nowrap; }
+[data-theme=dark] {
+  --glass-edge: var(--od-border);
+  --glass-solid: var(--od-surface);
+  --surface: var(--od-surface);
+  --glass-shadow: 0 8px 28px rgba(0,0,0,.16), inset 0 1px rgba(255,255,255,.04);
+  --content-primary: var(--od-foreground);
+  --content-secondary: var(--od-muted);
+  --background: var(--od-background);
+  --code-background: var(--od-surface);
+  --code-border: var(--od-border);
+  --accent-soft: var(--od-raised);
+  accent-color: var(--od-blue);
+  scrollbar-color: var(--od-border) var(--od-background);
+}
+[data-theme=dark] :is(h1,h2,h3,h4,h5,h6) { color: var(--od-heading); }
+[data-theme=dark] ::selection { background: #3e4451; color: var(--od-heading); }
+[data-theme=dark] .site-head { background: rgba(33,37,43,.92); border-color: var(--od-border); box-shadow: 0 8px 24px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.04); }
+[data-theme=dark] .brand { color: var(--od-heading); }
+[data-theme=dark] .theme-track { background: #34465a; border-color: #526b86; }
+[data-theme=dark] .theme-thumb { background: var(--od-blue); }
+[data-theme=dark] .motion-capsule { border-color: rgba(97,175,239,.22); background: rgba(97,175,239,.09); box-shadow: inset 0 1px rgba(97,175,239,.07),0 3px 8px rgba(0,0,0,.12); }
+[data-theme=dark] :is(.project-panel,.series-item,.post-series-summary)::after { background: radial-gradient(260px circle at var(--shine-x,70%) var(--shine-y,10%),rgba(97,175,239,.045),transparent 70%); }
+[data-theme=dark] :is(input,textarea,select) { caret-color: var(--od-blue); }
+[data-theme=dark] :is(input,textarea)::placeholder { color: var(--od-muted); opacity: 1; }
+[data-theme=dark] .copy-code-button { color: var(--od-foreground); border-color: var(--od-border); background: var(--od-raised); }
+[data-theme=dark] .copy-code-button:hover { color: var(--od-blue); }
+[data-theme=dark] :is(pre,.chroma) { color: var(--od-foreground); background-color: var(--od-surface); border-color: var(--od-border); }
+[data-theme=dark] pre code { color: inherit; background: transparent; }
+/* Chroma token classes: Java, SQL, shell and other fenced code share one palette. */
+[data-theme=dark] .chroma :is(.k,.kc,.kd,.kn,.kp,.kr) { color: var(--od-purple); font-weight: 400; }
+[data-theme=dark] .chroma :is(.kt,.nc,.nn,.ne) { color: var(--od-yellow); font-weight: 400; }
+[data-theme=dark] .chroma :is(.nf,.fm,.nb,.nd) { color: var(--od-blue); font-weight: 400; }
+[data-theme=dark] .chroma :is(.s,.sa,.sb,.sc,.dl,.sd,.s2,.sh,.si,.sx,.sr,.s1,.ss) { color: var(--od-green); font-style: normal; font-weight: 400; }
+[data-theme=dark] .chroma .se { color: var(--od-cyan); font-style: normal; font-weight: 400; }
+[data-theme=dark] .chroma :is(.m,.mb,.mf,.mh,.mi,.il,.mo,.no) { color: var(--od-orange); font-weight: 400; }
+[data-theme=dark] .chroma :is(.nt,.na,.nv,.vc,.vg,.vi,.vm) { color: var(--od-red); }
+[data-theme=dark] .chroma :is(.o,.ow) { color: var(--od-cyan); font-weight: 400; }
+[data-theme=dark] .chroma :is(.c,.ch,.cm,.c1,.cs,.cp,.cpf) { color: var(--od-comment); font-style: italic; font-weight: 400; }
+[data-theme=dark] .chroma :is(.ln,.lnt) { color: var(--od-comment); }
+[data-theme=dark] .chroma .hl { background: var(--od-raised); }
+[data-theme=dark] .chroma .err { color: var(--od-red); background: transparent; }
+[data-theme=dark] .chroma .gd { color: var(--od-red); background: rgba(224,108,117,.08); }
+[data-theme=dark] .chroma .gi { color: var(--od-green); background: rgba(152,195,121,.08); }
+[data-theme=dark] .chroma :is(.gh,.gu,.gp) { color: var(--od-blue); }
+
+/* Chroma labels Java member access (including method calls) as NameAttribute. */
+[data-theme=dark] .chroma .language-java .na { color: var(--od-blue); }

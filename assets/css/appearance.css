@@ -21,17 +21,17 @@
 
 [data-theme=dark] {
   color-scheme: dark;
-  --bg: #17191e;
-  --paper: #22252b;
-  --ink: #eae8e2;
-  --muted: #b0ada7;
-  --accent: #b0b8e0;
-  --soft: #2b2e3e;
-  --line: #383a42;
-  --green: #a0b9a9;
-  --glass: rgba(34,37,43,.82);
-  --edge: rgba(255,255,255,.12);
-  --shadow: 0 10px 28px rgba(0,0,0,.13);
+  --bg: var(--od-background);
+  --paper: var(--od-surface);
+  --ink: var(--od-foreground);
+  --muted: var(--od-muted);
+  --accent: var(--od-blue);
+  --soft: var(--od-raised);
+  --line: var(--od-border);
+  --green: var(--od-green);
+  --glass: rgba(40,44,52,.92);
+  --edge: rgba(255,255,255,.06);
+  --shadow: 0 10px 28px rgba(0,0,0,.16);
 }
 
 * {

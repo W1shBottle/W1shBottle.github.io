@@ -1,6 +1,6 @@
 # WishBottle's Blog
 
-这是我的个人博客源码仓库，使用 **Hugo** + [Typo](https://github.com/tomfran/typo) 主题搭建，定制暖灰靛蓝配色、圆角卡片和半透明导航。
+这是我的个人博客源码仓库，使用 **Hugo** + [Typo](https://github.com/tomfran/typo) 主题搭建，提供 One Dark 深色主题与暖灰靛蓝浅色主题，搭配圆角卡片和半透明导航。
 
 - 站点地址：<https://wishbottle.cn/>
 - GitHub Pages：<https://w1shbottle.github.io/>
@@ -126,6 +126,11 @@ hugo --minify
 
 ## 外观
 
+默认主题为 **One Dark**，配色参考 [JetBrains One Dark 插件](https://github.com/one-dark/jetbrains-one-dark-theme)：蓝灰背景、冷灰正文、蓝色链接，以及紫色关键字、绿色字符串和黄色类型名。页面仍使用现有阅读布局与轻微动效；小字、代码注释比编辑器原版更亮，以保证网页阅读对比度。
+
+`assets/css/one-dark.css` 集中定义 One Dark 色板和 Chroma 语法色。新访客默认深色；已保存的 `wish-typo-theme=light/dark` 偏好继续生效，右上角可以切换。主题在页面正文绘制前确定，本地存储不可用时采用默认值，关闭 JavaScript 也有服务端默认配色。浅色仍保留原有外观。
+
+
 定制样式按用途划分，加载顺序由 `layouts/partials/head/css.html` 统一管理：
 
 - `assets/css/tokens.css`：暖灰靛蓝配色、字体、内容宽度等公共变量。强调色使用 `--accent`，浅色背景使用 `--accent-soft`。
@@ -133,6 +138,7 @@ hugo --minify
 - `assets/css/jobs.css`：独立招聘页面的样式，仅 `/jobs/` 加载。
 - `assets/css/appearance.css`：暖白灰紫视觉、响应式首页、系列卡片、学习页信息顺序和文章侧边目录。
 - `assets/js/appearance.js`：导航滑动、系列展开、主题切换、章节高亮、阅读进度和返回顶部；兼容减少动态效果偏好。
+- `assets/css/one-dark.css`：One Dark 色板、深色组件细节，以及 Java、SQL 等代码块的语法颜色。
 - `assets/css/accessibility.css`：玻璃效果回退、减少动态效果与透明度等偏好，最后加载。
 
 首页的文章和系列条目从内容与集合数据生成；学习页优先展示已归档的时间线，课程与日程放在后面。电脑端文章目录跟随阅读位置高亮，手机端默认折叠；关闭 JavaScript 时文章和原生折叠目录仍可阅读。深浅色偏好继续保存到原有的 `wish-typo-theme` 键。

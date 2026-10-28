@@ -6,5 +6,6 @@
 <a href="{{ .url | relURL }}"{{ if or (eq $current .url) (and (ne .url "/") (hasPrefix $current .url)) }} aria-current="page"{{ end }}>{{ .name }}</a>
 {{ end }}
 </nav>
-<button id="theme" class="theme-button" type="button" aria-label="切换深色主题" aria-pressed="false"><span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span><span class="theme-label">浅色</span></button>
+{{ $dark := eq (site.Params.theme | default "light") "dark" }}
+<button id="theme" class="theme-button" type="button" aria-label="{{ if $dark }}切换浅色主题{{ else }}切换 One Dark 主题{{ end }}" aria-pressed="{{ $dark }}"><span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span><span class="theme-label">{{ if $dark }}One Dark{{ else }}浅色{{ end }}</span></button>
 </div>

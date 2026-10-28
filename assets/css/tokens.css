@@ -13,18 +13,18 @@
   --background-light: #f6f3ee;
   --code-background-light: #efebe5;
   --code-border-light: #e5e0d9;
-  --content-primary-dark: #eae8e2;
-  --content-secondary-dark: #b0ada7;
-  --background-dark: #17191e;
-  --code-background-dark: #202228;
-  --code-border-dark: #383a42;
-  --accent: light-dark(#5a6590, #b0b8e0);
-  --accent-soft: light-dark(#eeedf3, #2b2e3e);
-  --line: light-dark(#e5e0d9, #383a42);
-  --glass: light-dark(rgba(255,253,250,.82), rgba(34,37,43,.88));
-  --glass-edge: light-dark(#e5e0d9, #383a42);
-  --glass-solid: light-dark(#fffdfa, #22252b);
-  --surface: light-dark(#fffdfa, #22252b);
+  --content-primary-dark: var(--od-foreground);
+  --content-secondary-dark: var(--od-muted);
+  --background-dark: var(--od-background);
+  --code-background-dark: var(--od-surface);
+  --code-border-dark: var(--od-border);
+  --accent: light-dark(#5a6590, var(--od-blue));
+  --accent-soft: light-dark(#eeedf3, var(--od-raised));
+  --line: light-dark(#e5e0d9, var(--od-border));
+  --glass: light-dark(rgba(255,253,250,.82), rgba(40,44,52,.92));
+  --glass-edge: light-dark(#e5e0d9, var(--od-border));
+  --glass-solid: light-dark(#fffdfa, var(--od-surface));
+  --surface: light-dark(#fffdfa, var(--od-surface));
   --glass-shadow: 0 8px 32px light-dark(rgba(64,52,42,.035),rgba(0,0,0,.16)), inset 0 1px 0 light-dark(rgba(255,255,255,.95),rgba(255,255,255,.1));
 }
 

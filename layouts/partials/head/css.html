@@ -19,7 +19,7 @@
 {{ if or .IsHome (eq .Layout "discover") }}
     {{ $styles = $styles | append (resources.Get "css/discover.css") }}
 {{ end }}
-{{ $styles = $styles | append (resources.Get "css/accessibility.css") }}
+{{ $styles = $styles | append (resources.Get "css/one-dark.css") (resources.Get "css/accessibility.css") }}
 {{ $bundlePath := "assets/site.css" }}
 {{ if eq .Layout "jobs" }}{{ $bundlePath = "assets/site-jobs.css" }}{{ end }}
 {{ if eq .Section "learning" }}{{ $bundlePath = "assets/site-learning.css" }}{{ end }}

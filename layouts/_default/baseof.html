@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ or site.Language.LanguageCode site.Language.Lang }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
+<html data-theme="{{ site.Params.theme | default "light" }}" data-default-theme="{{ site.Params.theme | default "light" }}" lang="{{ or site.Language.LanguageCode site.Language.Lang }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
 <head>{{ partial "head.html" . }}</head>
 <body class="{{ .Param "theme" | default "light" }}">
   <a class="skip-content" href="#main-content">跳转到正文</a>

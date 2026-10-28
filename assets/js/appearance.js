@@ -118,11 +118,11 @@
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(dark ? 'dark' : 'light');
     themeButton.setAttribute('aria-pressed', String(dark));
-    themeButton.setAttribute('aria-label', dark ? '切换浅色主题' : '切换深色主题');
-    themeButton.querySelector('.theme-label').textContent = dark ? '深色' : '浅色';
+    themeButton.setAttribute('aria-label', dark ? '切换浅色主题' : '切换 One Dark 主题');
+    themeButton.querySelector('.theme-label').textContent = dark ? 'One Dark' : '浅色';
     if (save) { try { localStorage.setItem('wish-typo-theme', dark ? 'dark' : 'light'); } catch {} }
   }
-  try { setTheme(localStorage.getItem('wish-typo-theme') === 'dark', false); } catch { setTheme(false, false); }
+  setTheme(document.documentElement.dataset.theme === 'dark', false);
   themeButton.addEventListener('click', () => setTheme(document.documentElement.dataset.theme !== 'dark'));
 
   if (matchMedia('(min-width: 1100px)').matches) document.querySelectorAll('.article-toc').forEach(toc => { toc.open = true; });
