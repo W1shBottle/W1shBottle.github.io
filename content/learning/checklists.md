@@ -5,10 +5,10 @@
   "weight": 90,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-10-28T00:00:00+08:00"
+  "lastmod": "2026-10-29T00:00:00+08:00"
 }
 
-更新：2026-10-28。对应同一个设备运维工单项目；详细授课顺序见[阶段日程](/learning/schedule/)。本页是技能勾选的统一入口，后半部分保留原有记录模板。当前在 **A1 前半：JDBC 查询已跟练**，下一项是 W01 的 Java 更新事务；SQL 统计/分页/事务已有练习反馈。
+更新：2026-10-29。对应同一个设备运维工单项目；详细授课顺序见[阶段日程](/learning/schedule/)。当前在 **A1：JDBC查询与更新事务已跟练 → HTTP入门**。下一项是W03的Network观察，尚未进入Spring Boot/MyBatis。跟练不等于能独立重写。
 
 ## 怎样看这份清单
 
@@ -26,8 +26,8 @@
 | 已有基础 | Java 21、IDEA | 对象/接口/集合/异常/IO，能调试自己的业务 | 已练习，具体证据见 J 项 |
 | 已有工具 | Git、Maven、JUnit Jupiter | 管理变更、依赖、构建和有意义的测试 | 已练习；17 项现有测试不等于覆盖全业务 |
 | 当前 | MySQL、SQL | 三表关系、条件/关联查询、事务、约束 | JOIN筛选、统计/分页、事务与双连接版本竞争已有跟练反馈 |
-| A1 | JDBC → MyBatis | 先懂连接/参数/结果，再用 Mapper 执行自己写的 SQL | JDBC查询已跟练，Java更新事务正在学；MyBatis待学 |
-| A1 | HTTP/JSON、Spring Boot、Spring MVC、依赖注入 | 从请求到数据库的一条完整调用链 | 待学；框架版本在接入时核对 |
+| A1 | JDBC → MyBatis | 先懂连接/参数/结果，再用 Mapper 执行自己写的 SQL | JDBC查询与更新事务已跟练；MyBatis待学 |
+| A1 | HTTP/JSON、Spring Boot、Spring MVC、依赖注入 | 从请求到数据库的一条完整调用链 | HTTP/JSON已讲解，实操待反馈；框架版本在接入时核对 |
 | A2 | Bean Validation、统一异常、Spring Security＋Session | 参数合法、身份可信、角色和资源归属正确 | 待学 |
 | A2 | Spring 事务、条件更新、操作日志、SLF4J/日志实现 | 数据一致、冲突可解释、错误能定位 | 待学 |
 | A2 | JUnit、Spring 测试工具、真实 MySQL 测试库 | 用少量关键测试验证权限、回滚、并发与重试 | 待学；不能只用 Mock 证明数据库事务 |
@@ -61,16 +61,16 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前SQ
 - [ ] **S02【已练习】表设计与约束**：画 device/app_user/ticket 关系；解释主键、自增、外键、唯一、NOT NULL、CHECK 和 NULL。能指出外键不检查 ENGINEER 角色、CHECK 不代替合法状态迁移。
 - [ ] **S03【已练习，独立解释待巩固】多表查询**：JOIN/LEFT/RIGHT和别名已讲解；OPEN筛选得到打印机且处理人NULL，用户已反馈通过。继续在后续功能解释每个ON及NULL保留，不重抄整套查询。
 - [ ] **S04【已练习】统计和分页**：COUNT为2/1，LEFT JOIN用COUNT(t.id)统计工单，HAVING=0筛出无工单设备；稳定分页、同筛选总数及偏移后空页已有反馈。下一业务变体验证独立解释，暂不标成全部熟练。
-- [ ] **S05【已练习】事务与影响行数**：已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java事务尚待亲手实现，不能将SQL实验等同于整个业务具备并发保护。
+- [ ] **S05【已练习】事务与影响行数**：已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；正式业务尚无数据库并发保护。
 - [ ] **S06【待学】索引与 EXPLAIN 入门**：围绕一个列表查询说明索引作用、代价与执行计划；保留样本量和结果，不能靠很少数据声称高性能。基础可沿途学，深度调优不挡 B。
 
 ## W：把 SQL 接成后端业务（A1）
 
 先一个请求，再逐步完成闭环；以下未来文件只在轮到任务时创建。
 
-- [ ] **W01【正在学：查询已跟练】JDBC**：现有JdbcTicketQueryDemo完成Connection、PreparedStatement、ResultSet、状态参数、getLong/wasNull、资源关闭及方法提取，statu拼写已修正并反馈成功。接下来独立写executeUpdate、setAutoCommit(false)、影响行数与显式rollback；正式仓库仍未接库。
+- [ ] **W01【查询与更新事务已跟练】JDBC**：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。
 - [ ] **W02【待学】数据库生成 ID 与映射**：创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。
-- [ ] **W03【待学】HTTP 和 JSON**：能读方法、路径、query/body/header、状态码和请求响应；用一个 HTTP 工具调用详情接口并说明 400/404 的区别。
+- [ ] **W03【已讲解，实操待反馈】HTTP 和 JSON**：先用Network观察主文档的URL、Method、Status；尚未返回课堂结果。后续能读方法、路径、query/body/header、状态码和请求响应；用一个 HTTP 工具调用详情接口并说明 400/404 的区别。
 - [ ] **W04【待学】Spring Boot/MVC 和依赖注入**：自己配置并启动第一个接口；理解 Bean、构造器注入、常用映射注解、DTO 与配置文件，不把 Controller 写成所有业务逻辑的堆放处。
 - [ ] **W05【待学】MyBatis**：在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。
 - [ ] **W06【待学】分层与核心状态流**：串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。
@@ -139,9 +139,9 @@ Java完成首版模型调用即可；Spring AI、流式输出或Python服务不�
 
 ## 今天只看这一小段
 
-- W01：解释当前查询方法的连接、参数、结果集和关闭顺序。
-- W01：亲手新增更新Demo，学习executeUpdate与显式回滚；查询前核对当前version。
-- S05：说明SQL错误、影响0行和整个事务回滚分别代表什么。
+- W03：在Network找到博客主文档请求，读取URL、Method、Status，解释请求与响应。
+- W01：结合现有updateTitle解释为什么方法不自行commit，事务由main统一管理；本轮更新Demo已完成。
+- S05：复习SQL错误、影响0行与事务回滚的区别，保留已有反馈，不重复执行提交练习。
 
 本段只列当前接续任务；正式状态维护在上面的S/W区，不重复勾选。
 

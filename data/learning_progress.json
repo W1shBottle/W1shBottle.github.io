@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-28",
-  "stage": "A0 SQL 已跟练 → A1 JDBC 查询；下一步 Java 更新事务",
+  "updated": "2026-10-29",
+  "stage": "A1 JDBC 更新事务已跟练 → HTTP 入门与请求观察",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -146,6 +146,16 @@
       "next": "在单独的 JdbcTicketUpdateDemo 中学习 executeUpdate、setAutoCommit(false)、影响行数和显式 rollback：读取当前版本，修改指定标题后回滚，重新查询确认标题与版本恢复；先讲清事务边界，再由学习者亲手实现。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261028/"
+    },
+    {
+      "date": "2026-10-29",
+      "project": "ops-ticket",
+      "title": "JDBC 更新、版本检查与事务边界",
+      "summary": "完成参数化更新、查询未提交修改、版本读取与1/0检查、成功提交、模拟失败回滚，以及更新方法提取；开始认识HTTP/JSON。",
+      "verification": "学习者反馈提交后MySQL终端可见、旧版本拒绝和故障回滚通过；助手只读核对最新源码及main已调用updateTitle。未重跑数据库、未新增JUnit；HTTP的Network观察尚待反馈。",
+      "next": "打开博客的浏览器 Network 面板，刷新并找到主文档请求，报告 Request URL、Request Method、Status Code；先理解请求与响应，再逐步接入 Spring Boot 和首条 GET /api/tickets/{id} 真实查询。不要重复执行已完成的提交练习来凑结果。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261029/"
     }
   ],
   "current_project": "ops-ticket"

@@ -5,7 +5,7 @@
   "weight": 40,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-10-28T00:00:00+08:00"
+  "lastmod": "2026-10-29T00:00:00+08:00"
 }
 
 > 2026-10-26 路线说明：本页“第几周”为教材单元，不是固定工期。第1—3单元已有项目成果，不整章重做；当前接第4单元 SQL。各任务耗时只是拆分参考，能独立解释与修改才通过。后续顺序为必要SQL→短JDBC→Web/MyBatis→最小工程验收→AI，详见[阶段日程](/learning/schedule/)。
@@ -14,7 +14,7 @@
 
 现有源码在 `src\main\java\cn\wishbottle\opsticket`，测试/Demo在对应 `src/test/java`。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 `sql/01_schema.sql` 至 `sql/06_transactions.sql`，先继续修改这些文件，避免重复建一套脚本。
 
-2026-10-28 接续：JOIN 的 OPEN 筛选、COUNT/GROUP BY/HAVING、稳定分页与同条件总数已按指导练习并反馈结果；SQL 提交/回滚、条件更新和双连接版本竞争已有运行反馈。JdbcTicketQueryDemo 已使用同一 Connection 依次查询 OPEN/IN_PROGRESS，处理 SQL NULL 并提取 printTicketsByStatus，学习者反馈运行成功、助手读取源码核对。Java 更新事务尚待亲手练习，正式业务仍用文件仓库，Web/权限/AI 未接入。 下一步：在单独的 JdbcTicketUpdateDemo 中学习 executeUpdate、setAutoCommit(false)、影响行数和显式 rollback：读取当前版本，修改指定标题后回滚，重新查询确认标题与版本恢复；先讲清事务边界，再由学习者亲手实现。
+2026-10-29 接续：JDBC 查询已有跟练基础；JdbcTicketUpdateDemo 已完成参数化更新、自动读取版本、影响行数判断、提交与回滚、模拟后续失败，以及 printTicket/findTicketVersion/updateTitle 方法拆分。学习者反馈旧版本更新为1/0、成功提交可由MySQL终端查到、模拟失败回滚恢复；助手只读核对最新源码。正式业务仍用文件仓库。HTTP/JSON已初步讲解，Network面板观察待反馈；Spring Boot/MyBatis、权限和AI尚未接入。 下一步：打开博客的浏览器 Network 面板，刷新并找到主文档请求，报告 Request URL、Request Method、Status Code；先理解请求与响应，再逐步接入 Spring Boot 和首条 GET /api/tickets/{id} 真实查询。不要重复执行已完成的提交练习来凑结果。
 
 第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。
 

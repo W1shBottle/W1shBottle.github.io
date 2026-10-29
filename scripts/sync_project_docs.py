@@ -65,7 +65,7 @@ def public_body(raw, source):
             "升级前已有备份，助手完成恢复、数据一致性与真实 JDBC 验证；"
             "安装路径、账号材料和回退操作保留在本地，不公开。\n\n"
             "学习者随后完成独立 JDBC 查询 Demo；正式控制台仍使用文件仓库，"
-            "Java 更新事务待亲手实现。详见[运行与验收](/learning/project-verification/)。\n\n",
+            "10月29日已跟练独立更新事务与故障回滚，正式数据库业务仍待接入。详见[运行与验收](/learning/project-verification/)。\n\n",
             body,
         )
     if source == "docs/verification.md":

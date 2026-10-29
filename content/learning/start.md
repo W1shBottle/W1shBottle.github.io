@@ -5,7 +5,7 @@
   "weight": 10,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-10-28T00:00:00+08:00"
+  "lastmod": "2026-10-29T00:00:00+08:00"
 }
 
 2026-10-26 调整。用同一个设备运维工单平台，按 **A 后端业务 → B 一个 AI 功能 → C 验证改进** 推进。A 包含“最小业务闭环”和“必要工程能力”两个检查点；RAG、Agent 是之后按证据选择的升级，不是默认必做清单。
@@ -17,7 +17,7 @@
 | 文件 | 用途 |
 | --- | --- |
 | [阶段日程](/learning/schedule/) | 当前证据、保留/调整/延后项、阶段门槛、下一批小任务 |
-| [Java与数据库](/learning/java-sql/) | 已练 Java 的复习入口、正在学的 SQL、后续短 JDBC |
+| [Java与数据库](/learning/java-sql/) | 已练 Java/SQL 的复习入口，以及 JDBC 查询与事务 |
 | [Web与权限](/learning/web-security/) | 最小接口、MyBatis、状态流、Session 权限、错误处理 |
 | [测试部署与AI验证](/learning/testing-delivery/) | A2 工程验收、B 真实 API、C 评估、可选 RAG/Agent |
 | [投递与面试](/learning/spring-applications/) | 目标岗位核对和能力证据表达 |
@@ -29,9 +29,9 @@
 
 ## 当前接续点
 
-2026-10-28：SQL关联、统计、分页、提交/回滚及双连接版本竞争已有练习反馈；MySQL已由助手升级至8.4.13。学习者已跟写JdbcTicketQueryDemo的状态参数查询、NULL读取和方法提取，并报告运行成功。正式业务仓库尚未接库，Java更新事务、HTTP与AI仍待后续实现。
+2026-10-29：SQL关联、统计、分页和事务已有跟练反馈；Java侧已完成独立查询与更新Demo，练习参数绑定、版本检查、提交、模拟故障回滚及方法提取。学习者反馈运行通过，助手核对源码；正式控制台仍用文件仓库。HTTP/JSON已初步讲解，Network观察尚待反馈，Spring Boot/MyBatis、权限与AI尚未接入。
 
-下一次从executeUpdate与Java事务边界开始：单独写更新Demo，带当前版本修改一条练习工单，检查影响行数并显式回滚，再查询确认原标题与版本恢复。任何新阶段先解释概念再写代码。
+下一次先打开博客的浏览器Network面板，刷新后找到主文档请求，报告Request URL、Request Method、Status Code。理解请求与响应后，再逐步接入Spring Boot和第一条真实查询接口。任何新阶段先解释概念再写代码。
 
 ## 第一版只做这些
 

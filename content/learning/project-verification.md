@@ -2,7 +2,7 @@
   "title": "工单项目运行与验收",
   "description": "实际运行证据、后端验收与模型效果评估标准。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-28T00:00:00+08:00",
+  "lastmod": "2026-10-29T00:00:00+08:00",
   "weight": 190,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
 
-核对日期：2026-10-28。本页区分正式 JUnit、main Demo、用户自报、助手复核与未来门槛；第 9 节保留路线验收，第 10 节记录本次 MySQL 环境升级。
+核对日期：2026-10-29。本页区分正式 JUnit、main Demo、用户自报、助手复核与未来门槛；第 9 节保留路线验收，第 10 节记录 10 月 28 日 MySQL 环境升级，第 11—12 节分别记录 JDBC 查询与更新事务的学习证据。
 
 ## 1. 环境与构建
 
@@ -298,10 +298,28 @@ RAG 追加资料导入/更新、已知答案召回、引用真实性、无匹配
 
 ## 11. 2026-10-28 SQL 与 JDBC 学习日结
 
-SQL文件：03_queries.sql包含JOIN、统计、HAVING、分页及版本实验；06_transactions.sql记录提交、回滚、CHECK失败与条件派单。两文件有重复事务片段，属于学习记录，不是可盲目整文件重跑的迁移脚本。当前工单3的version为1，旧version=0示例需先核对前置条件。
+SQL文件：03_queries.sql包含JOIN、统计、HAVING、分页及版本实验；06_transactions.sql记录提交、回滚、CHECK失败与条件派单。两文件有重复事务片段，属于学习记录，不是可盲目整文件重跑的迁移脚本。当日记录工单3的version为1，旧version=0示例需先核对前置条件。
 
 学习者反馈：JOIN筛选剩打印机；COUNT为2/1；HAVING=0剩投影仪；分页偏移后空结果但总数仍1；COMMIT/ROLLBACK结果符合预期；双连接A影响1行、B影响0行，保留A标题和version=1。独立修改与完整解释继续在后续任务验证。
 
 JdbcTicketQueryDemo先后跟写连接、按编号/状态查询、修正statu列名、getLong+wasNull读取可空处理人、提取printTicketsByStatus。最新源码确认在同一Connection内依次查询OPEN/IN_PROGRESS，statement/resultSet由方法关闭，连接由main关闭；学习者报告运行成功。该Demo不是JUnit；本次日结只读核对，不重复查询或修改真实数据，不新增测试通过数量。
 
 第10节中的17项JUnit及临时JDBC事务验证属于此前助手环境维护，不等于学习者已经完成Java更新事务。下一步由学习者亲手使用executeUpdate和显式rollback验证标题/版本恢复，再进入后续数据库接入。
+
+
+## 12. 2026-10-29 JDBC 更新事务学习日结
+
+本节运行证据来自学习者课堂反馈，助手核对最新源码；日结未重新运行Java程序或读写数据库。没有新增JUnit，17项原有测试保留10月28日的验收日期。
+
+| 场景 | 学习者反馈与源码核对 |
+| --- | --- |
+| 更新后回滚、三阶段查询 | 影响1行；同一连接查到暂时修改；回滚后标题与版本恢复 |
+| 旧版本重复更新 | 第一次1、第二次0；原演示已随后重构，不声称最新main仍运行两次更新 |
+| 自动读取版本 | findTicketVersion已接入，反馈1/0与恢复正常 |
+| 成功提交 | Java显示已提交，另一个MySQL终端查到新标题与增加后的版本 |
+| 模拟后续失败 | 更新后、提交前主动抛异常，反馈catch回滚恢复；未实际写日志表 |
+| 提取更新方法 | 经检查修正只定义未调用的问题；最新main已调用updateTitle，反馈回滚正常，simulateFailure已改回false |
+
+当前false分支会提交练习标题并增加版本，不能为了日结重复运行；精确版本以实际查询为准，不再沿用旧快照的1。本次只整理笔记/文档，源码、SQL、data、pom和Git暂存区均保留。
+
+HTTP请求/响应、GET、URL、JSON和200/404已经初步讲解；Network主文档的Request URL/Request Method/Status Code尚无反馈。下一次从这项观察继续，再接Spring Boot/MyBatis；不把计划中的接口当作已部署功能。

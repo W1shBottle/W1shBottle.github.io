@@ -2,7 +2,7 @@
   "title": "工单项目需求与开发计划",
   "description": "最小业务闭环、阶段验收与后续 AI、Agent 任务。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-28T00:00:00+08:00",
+  "lastmod": "2026-10-29T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-28。当前实现仍为 v0.1 控制台＋SQL/JDBC 查询练习；路线调整为同一项目的 A 后端、B AI、C 评估。下文明确区分“现有实现”和“计划”，未发布新的业务版本。
+核对日期：2026-10-29。当前实现仍为 v0.1 控制台＋SQL/JDBC 查询及更新事务练习；路线调整为同一项目的 A 后端、B AI、C 评估。下文明确区分“现有实现”和“计划”，未发布新的业务版本。
 
 ## 1. 项目背景与目标用户
 
@@ -80,7 +80,7 @@ FileTicketRepository 查询复用内部内存仓库，新增/更新后保存文�
 | --- | --- | --- |
 | 对象、集合、异常、仓库接口、文件恢复、ConsoleApp | 8 个业务源码、22 个测试/Demo/练习源码，已有可执行 JAR | 全部保留；不再把完善文件系统事务当成后续前置 |
 | 测试 | 17 项 JUnit；主要是 rename、文件往返、内存仓库和 create/rename | 保留；后续只补真实行为风险，不机械重复同类 assertEquals |
-| MySQL / JDBC | 三表、JOIN/统计/分页/事务和版本竞争已有反馈；JdbcTicketQueryDemo 查询、SQL NULL 和方法提取已跟写运行 | 下一步 Java 更新事务；Demo 查询不是正式数据库仓库接入 |
+| MySQL / JDBC | 三表、SQL查询/事务、独立JDBC查询与更新事务已有跟练反馈；条件更新、提交、模拟失败回滚与方法拆分已核对 | 正式Service/Repository尚未接库；HTTP刚讲解，Network观察待反馈 |
 | 主流程 | 当前只有创建、改名、派单；RESOLVED/CLOSED 只是枚举/恢复支持 | 补 resolve 与 accept；不因枚举存在而标完成 |
 | Web、认证、事务、并发 | 正式业务尚无相关实现；version已做SQL竞争实验，未接入Service | 纳入 A；一步实现一条请求链 |
 | AI、RAG、Agent | 无实现、无已验证模型配置 | B 做真实摘要/分类建议；C 测效果；RAG/Agent 按缺口选做 |
@@ -125,8 +125,8 @@ A1/A2 完成即可进入 B，不等 Redis/消息队列/微服务。C 不以固�
 | 2 数据规则复盘 | sql/01_schema.sql、04_constraints.sql、05_updates.sql | 画三表关联；指出外键、CHECK、Java 状态方法分别能/不能拦住什么 | 能解释存在的 REPORTER 仍可能通过 assignee 外键，但业务必须拒绝；版本字段存在不等于并发保护 |
 | 3 多表与统计（已练习） | JOIN、COUNT、GROUP BY、HAVING、LIMIT/OFFSET；03_queries.sql | OPEN 筛选、2/1计数、无工单设备和分页/总数已有用户反馈 | 继续结合后续需求解释连接与NULL；不重做全部练习 |
 | 4 事务与冲突（SQL已练习） | 03_queries.sql、06_transactions.sql | 提交/回滚、CHECK失败后回滚、条件更新和双窗口版本竞争已有反馈 | A=1、B=0是SQL实验；正式Service尚无数据库事务与版本契约 |
-| 5 短 JDBC（当前） | 现有测试目录 JdbcTicketQueryDemo.java；executeUpdate 与事务边界 | 查询、wasNull和方法提取已跟写通过；接下来单独写回滚更新Demo | 确认影响行数、旧版本冲突和回滚恢复；密码不入源码；能解释关闭资源与回滚的区别 |
-| 6 首条 Web 链路 | HTTP/JSON、Controller/Service/Mapper；现 TicketService 与未来 TicketController/TicketMapper | 配好一套兼容 Boot/MyBatis，先实现 GET /api/tickets/{id}，再独立补状态筛选 | HTTP→SQL 输出能对应真实记录，知道 400/404 含义；此时只本地运行，权限阶段完成前不得当公开服务 |
+| 5 短 JDBC（本轮已跟练） | JdbcTicketQueryDemo、JdbcTicketUpdateDemo；参数绑定、结果读取、影响行数和事务范围 | 已跟写版本查询、1/0检查、成功提交和中途失败回滚；更新方法由main调用，当前simulateFailure=false | 用户运行反馈＋助手源码检查；无新增JDBC自动测试，独立迁移业务继续验收 |
+| 6 首条 Web 链路（下一步） | HTTP/JSON已讲解，先反馈Network面板三个字段，再理解Controller/Service/Mapper；现 TicketService 与未来 TicketController/TicketMapper | 配好一套兼容 Boot/MyBatis，先实现 GET /api/tickets/{id}，再独立补状态筛选 | HTTP→SQL 输出能对应真实记录，知道 400/404 含义；此时只本地运行，权限阶段完成前不得当公开服务 |
 | 7 完成 A | 需求第 6 节与设计第 10 节 | 依次补创建ID契约、状态方法、操作日志事务、登录授权和重复请求 | 运行验收清单；独立解释并修改一处业务；完成一次故障复现、修复、回归，再接 AI |
 
 ## 9. AI 与可选 Agent 路线（计划）

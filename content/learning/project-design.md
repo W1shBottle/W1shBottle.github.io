@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类与存档设计，以及待实施的数据库、Web 和 AI 边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-28T00:00:00+08:00",
+  "lastmod": "2026-10-29T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,9 +10,9 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-28。第 1—9 节记录现有 Java 实现，第 10—12 节是尚未实施的数据库/Web/AI 迁移设计。
+核对日期：2026-10-29。第 1—9 节记录现有 Java 实现，第 10—12 节是尚未实施的数据库/Web/AI 迁移设计；第 13 节记录独立 JDBC 练习，不表示正式业务迁移完成。
 
-2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；Java更新事务待学习。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
+2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
 ## 1. 当前结构
 
@@ -242,3 +242,16 @@ Java contains 与 MySQL 排序规则的大小写行为、String.length 与 CHAR_
 只读 Agent 先复用现有 Service 公开两个有界工具：按状态查询当前用户可见工单、按编号读取授权详情；程序决定允许的工具、参数 schema、分页/字段上限，不能暴露任意 SQL。每次执行检查身份，模型提供的 userId 不作为身份来源。
 
 多步骤时设置总步数、总调用次数/时间/费用限制，保留工具结果和失败，控制上下文长度、过期数据与重试；无权限/无结果有明确停止条件。写工具必须把具体动作和版本交给用户确认，再次鉴权和校验后走原事务接口；不得把一句宽泛同意当永久写权限。首个只读能力稳定前不做多 Agent。
+
+
+## 13. 2026-10-29 独立 JDBC 更新事务练习
+
+`src/test/java/cn/wishbottle/opsticket/JdbcTicketUpdateDemo.java` 是手动运行的 main Demo，与正式 ConsoleApp→Service→Repository 链路分开。
+
+- `printTicket(Connection,long)` 查询并打印 id/title/version；`findTicketVersion(Connection,long)` 返回 long，记录不存在时抛 IllegalArgumentException。调用方传入同一个连接，两个方法只关闭各自的 statement/resultSet。
+- `updateTitle(Connection,long,String,long)` 执行 `UPDATE ticket SET title=?, version=version+1 WHERE id=? AND version=?`。预期影响一行，不符合则抛 IllegalStateException；不新建连接、不提交、不关闭调用方连接。
+- `main` 关闭自动提交，先读版本再更新，成功后 commit；SQLException 或 RuntimeException 时 rollback。`simulateFailure=true` 会在更新之后、提交之前抛异常；当前源码为false，运行会尝试真实提交。
+- 查询与更新通过同一连接进行，所以同一事务可以读到自己未提交的修改。不同方法的局部sql/statement互不冲突；传入Connection引用不会创建新连接。
+- 提取期间曾只有方法定义、main仍执行旧块，经反馈后已改为调用updateTitle并删除重复SQL。提交/回滚的决定保留在调用方。
+
+范围：此Demo没有接入Ticket的完整标题/状态/归属校验，也没有操作日志、请求幂等或生产异常处理。`version`是业务列而非MySQL软件版本，不保存旧标题。旧版本失败不能无条件刷新版本强行重试。HTTP/JSON仅开始讲解，`GET /api/tickets/{id}`仍为计划接口。

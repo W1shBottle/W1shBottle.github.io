@@ -2,7 +2,7 @@
   "title": "设备运维工单项目文档",
   "description": "当前控制台与 SQL 进度、Java＋AI 路线和运行入口。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-28T00:00:00+08:00",
+  "lastmod": "2026-10-29T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
@@ -10,9 +10,9 @@
 
 > 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。后续功能以各页的实现状态为准。
 
-围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**，沿用现有工单主题和代码。当前仍是 **v0.1 控制台实现**：内存/文件仓库、自动保存和启动恢复可运行；MySQL 三表和 SQL 练习已有成果，独立 JDBC Demo 已可查询真实数据库，正式控制台尚未改用数据库仓库。HTTP、处理/验收、登录权限、AI 和 Agent 均待实现。项目定位改变不代表功能已完成。
+围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**，沿用现有工单主题和代码。当前仍是 **v0.1 控制台实现**：内存/文件仓库、自动保存和启动恢复可运行；MySQL 三表和 SQL 练习已有成果，独立 JDBC Demo 已可查询真实数据库，并按版本更新、提交或回滚，正式控制台尚未改用数据库仓库。HTTP、处理/验收、登录权限、AI 和 Agent 均待实现。项目定位改变不代表功能已完成。
 
-文档核对日期：2026-10-28。路线改为 A 后端业务与基础工程 → B 一个真实 AI 功能 → C 验证与改进；受控 Agent 按需要扩展。历史笔记保留当时进度，课程材料原“周号”只作索引，不承诺固定周数掌握。
+文档核对日期：2026-10-29。路线改为 A 后端业务与基础工程 → B 一个真实 AI 功能 → C 验证与改进；受控 Agent 按需要扩展。历史笔记保留当时进度，课程材料原“周号”只作索引，不承诺固定周数掌握。
 
 ## 项目文档
 
@@ -54,7 +54,7 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 
 当前学习环境为 MySQL 8.4.13 LTS 与 Connector/J 26.10.0。在 IDEA 重新加载 Maven 依赖；数据库地址、账号和密码按自己的本机环境配置。升级前已有备份，助手完成恢复、数据一致性与真实 JDBC 验证；安装路径、账号材料和回退操作保留在本地，不公开。
 
-学习者随后完成独立 JDBC 查询 Demo；正式控制台仍使用文件仓库，Java 更新事务待亲手实现。详见[运行与验收](/learning/project-verification/)。
+学习者随后完成独立 JDBC 查询 Demo；正式控制台仍使用文件仓库，10月29日已跟练独立更新事务与故障回滚，正式数据库业务仍待接入。详见[运行与验收](/learning/project-verification/)。
 
 ### 存档位置
 
@@ -62,9 +62,11 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 
 关闭后重新启动会恢复已有工单。成功的新建、修改标题和派单会自动保存，不需要手动调用文件工具。
 
-### JDBC 查询练习
+### JDBC 查询与更新练习
 
 测试源码中的 `JdbcTicketQueryDemo` 从 `OPS_TICKET_DB_PASSWORD` 读取数据库密码；在 IDEA 对应运行配置中填写，不写入源码或公开截图。同一个连接查询待派单和处理中工单，方法自行关闭 statement/resultSet，连接由 main 关闭。它是手动运行的 main Demo，不由 `mvn test` 自动执行。
+
+`JdbcTicketUpdateDemo` 同样是手动 main Demo：`findTicketVersion` 返回当前版本，`updateTitle(Connection,long,String,long)` 只执行条件更新与影响行数检查；`main` 负责关闭自动提交、提交/回滚和连接生命周期。`simulateFailure=true` 在更新后、提交前抛出运行时异常，验证整次回滚；当前已改回 `false`，再次运行会尝试提交并使版本加一。运行前查询实际数据，不照抄旧版本。学习者已反馈提交、MySQL终端可见及故障回滚通过，本次日结只读核对，不重复操作数据库。
 
 ## 验证方式
 
@@ -117,7 +119,7 @@ JavaProject/
 
 ## 已知限制
 
-- 当前为本地控制台程序；SQL 文件已有用户、设备、工单三表，独立 JDBC 查询 Demo 已实现，正式数据库仓库、HTTP、登录权限和处理/验收状态流尚未实现。
+- 当前为本地控制台程序；SQL 文件已有用户、设备、工单三表，独立 JDBC 查询与更新事务 Demo 已实现，正式数据库仓库、HTTP、登录权限和处理/验收状态流尚未实现。
 - 保存直接覆盖目标文件，尚无原子替换、备份或事务机制；写入中断可能损坏存档。
 - 保存失败时控制台提示并退出，不打印操作成功；此前发生的内存修改不会自动回滚。
 - 多个程序同时操作同一存档文件时没有并发保护。
@@ -125,7 +127,7 @@ JavaProject/
 
 ## 学习进度与下一步
 
-前三个原课程单元已完成相应练习；部分接线与修复有助手帮助，不能记成全独立实现。JOIN 的 OPEN 筛选、COUNT/GROUP BY/HAVING、稳定分页与同条件总数已按指导练习并反馈结果；SQL 提交/回滚、条件更新和双连接版本竞争已有运行反馈。JdbcTicketQueryDemo 已使用同一 Connection 依次查询 OPEN/IN_PROGRESS，处理 SQL NULL 并提取 printTicketsByStatus，学习者反馈运行成功、助手读取源码核对。Java 更新事务尚待亲手练习，正式业务仍用文件仓库，Web/权限/AI 未接入。
+JDBC 查询已有跟练基础；JdbcTicketUpdateDemo 已完成参数化更新、自动读取版本、影响行数判断、提交与回滚、模拟后续失败，以及 printTicket/findTicketVersion/updateTitle 方法拆分。学习者反馈旧版本更新为1/0、成功提交可由MySQL终端查到、模拟失败回滚恢复；助手只读核对最新源码。正式业务仍用文件仓库。HTTP/JSON已初步讲解，Network面板观察待反馈；Spring Boot/MyBatis、权限和AI尚未接入。
 
 | 阶段 | 具体交付 | 进入下一阶段的条件 |
 | --- | --- | --- |
@@ -138,4 +140,4 @@ A1/A2 分别完成最小业务与基础工程；B/C 分别完成 AI 接入与效
 
 首版只保留工单闭环、必要查询和权限。设备和用户用演示种子数据；评论、退回、统计看板、全套管理界面、Redis、消息队列、微服务、Kubernetes 延后。AI 编程辅助与产品内 AI 功能分别验收，不以生成代码量计进度。
 
-**下一项亲手任务**：在单独的 JdbcTicketUpdateDemo 中学习 executeUpdate、setAutoCommit(false)、影响行数和显式 rollback：读取当前版本，修改指定标题后回滚，重新查询确认标题与版本恢复；先讲清事务边界，再由学习者亲手实现。 学习复盘见[10月28日笔记](https://wishbottle.cn/posts/ops-ticket-20261028/)。
+**下一项亲手任务**：打开博客的浏览器 Network 面板，刷新并找到主文档请求，报告 Request URL、Request Method、Status Code；先理解请求与响应，再逐步接入 Spring Boot 和首条 GET /api/tickets/{id} 真实查询。不要重复执行已完成的提交练习来凑结果。 学习复盘见[10月29日笔记](https://wishbottle.cn/posts/ops-ticket-20261029/)。
