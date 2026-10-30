@@ -11,9 +11,9 @@ import re
 from urllib.parse import urlsplit
 
 PAGES = [
-    ("README.md", "project-docs", "设备运维工单项目文档", "当前控制台与 SQL 进度、Java＋AI 路线和运行入口。", 160),
+    ("README.md", "project-docs", "设备运维工单项目文档", "当前控制台、JDBC与Web练习进度，Java＋AI路线和运行入口。", 160),
     ("docs/requirements.md", "project-requirements", "工单项目需求与开发计划", "最小业务闭环、阶段验收与后续 AI、Agent 任务。", 170),
-    ("docs/design.md", "project-design", "工单项目设计与数据约定", "现有类与存档设计，以及待实施的数据库、Web 和 AI 边界。", 180),
+    ("docs/design.md", "project-design", "工单项目设计与数据约定", "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。", 180),
     ("docs/verification.md", "project-verification", "工单项目运行与验收", "实际运行证据、后端验收与模型效果评估标准。", 190),
 ]
 LINKS = {

@@ -67,8 +67,8 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </table></div>
 <p>项目目录：<code>JavaProject</code>（以下路径均相对项目根目录），包名 <code>cn.wishbottle.opsticket</code>。控制台和早期 Demo 保留为已完成成果；后续数据库版复用业务规则，必要时调整存储契约，不为了兼容文件编号生成方式写出错误数据库逻辑。</p>
 <h2 id="chapter-start-当前接续点">当前接续点</h2>
-<p>2026-10-29：SQL关联、统计、分页和事务已有跟练反馈；Java侧已完成独立查询与更新Demo，练习参数绑定、版本检查、提交、模拟故障回滚及方法提取。学习者反馈运行通过，助手核对源码；正式控制台仍用文件仓库。HTTP/JSON已初步讲解，Network观察尚待反馈，Spring Boot/MyBatis、权限与AI尚未接入。</p>
-<p>下一次先打开博客的浏览器Network面板，刷新后找到主文档请求，报告Request URL、Request Method、Status Code。理解请求与响应后，再逐步接入Spring Boot和第一条真实查询接口。任何新阶段先解释概念再写代码。</p>
+<p>2026-10-30：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。</p>
+<p>下一次：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。</p>
 <h2 id="chapter-start-第一版只做这些">第一版只做这些</h2>
 <p>报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；能查自己的列表和详情，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。最小同源页面或 HTTP 客户端足以演示。</p>
 <p>A2 补齐登录、校验、统一错误、事务、关键测试、可重复启动与一次排错后，即可进入 B。不先做评论、退回、附件、设备后台大全、缓存、消息队列、微服务或 Kubernetes。</p>
@@ -175,10 +175,10 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <h2 id="chapter-project-求职匹配与信息边界">求职匹配与信息边界</h2>
 <p>后端能力仍是 AI 应用的基础，不能从技术热度判断“纯后端已落后”。2026-10-26 核查的<a href="https://talent.hikvision.com/home/socity/position?postId=3DBC4346A3391150639BCB4895723F64" rel="noopener noreferrer">海康 Java 实习岗位</a>仍覆盖 Java、Spring、MyBatis、SQL、测试与部署；<a href="https://talent.hikvision.com/home/socity/position?postId=80E877130AFCA23529A8391F624FA447" rel="noopener noreferrer">质量管理软件实习</a>也要求后端框架和 SQL，并提 AI 辅助开发。<a href="https://dahua1.zhiye.com/campus/detail?jobAdId=cc425147-ec13-45d8-b704-f4c6632f0f89" rel="noopener noreferrer">大华 AI 应用开发岗位</a>可作 Java/AI 工程能力参照，但该岗位明确限定 2027 届，申请时须核对自己的毕业届别；详情信息来自官网搜索索引。</p>
 <p>上述不是 2027 暑期岗位保证。每次投递核对本科门槛、毕业届别、杭州地点、每周出勤与连续实习时长。简历分别写已实现业务、真实 AI 验证、个人独立贡献和限制；没有测出的性能/成本不能编造。第二个项目等第一项目完成及岗位缺口明确后再决定。</p>
-<p>官方技术参考：<a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">结构化输出仍需校验</a> · <a href="https://docs.spring.io/spring-ai/reference/api/tools.html" rel="noopener noreferrer">工具调用由应用控制执行</a>。引用用于设计判断，不表示本项目已使用 Spring AI。</p></section><section id="chapter-schedule" class="chapter"><div class="chapter-meta"><span>03 / 14</span><a href="#top">回到目录</a></div><h1>阶段式弹性学习日程</h1><p>更新：2026-10-29。沿用文件名便于旧笔记和博客链接查找，<strong>原“20周”是材料编号，不再作为固定工期</strong>。每天约 3 小时，周内自由安排；每周选一个能够运行、解释并独立修改的小成果，是否进入下一步由验收决定。</p>
+<p>官方技术参考：<a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">结构化输出仍需校验</a> · <a href="https://docs.spring.io/spring-ai/reference/api/tools.html" rel="noopener noreferrer">工具调用由应用控制执行</a>。引用用于设计判断，不表示本项目已使用 Spring AI。</p></section><section id="chapter-schedule" class="chapter"><div class="chapter-meta"><span>03 / 14</span><a href="#top">回到目录</a></div><h1>阶段式弹性学习日程</h1><p>更新：2026-10-30。沿用文件名便于旧笔记和博客链接查找，<strong>原“20周”是材料编号，不再作为固定工期</strong>。每天约 3 小时，周内自由安排；每周选一个能够运行、解释并独立修改的小成果，是否进入下一步由验收决定。</p>
 <p>日常逐项查看：<a href="#chapter-checklists">技能 To-do List</a>。本页负责阶段顺序，清单负责技能勾选；完成状态以实际证据为准。</p>
 <blockquote>
-<p>2026-10-29：SQL关联、统计、分页和事务已有跟练反馈；Java侧已完成独立查询与更新Demo，练习参数绑定、版本检查、提交、模拟故障回滚及方法提取。学习者反馈运行通过，助手核对源码；正式控制台仍用文件仓库。HTTP/JSON已初步讲解，Network观察尚待反馈，Spring Boot/MyBatis、权限与AI尚未接入。 下一次先打开博客的浏览器Network面板，刷新后找到主文档请求，报告Request URL、Request Method、Status Code。理解请求与响应后，再逐步接入Spring Boot和第一条真实查询接口。任何新阶段先解释概念再写代码。</p>
+<p>2026-10-30：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。 下一步：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。</p>
 </blockquote>
 <h2 id="chapter-schedule-现状与证据">现状与证据</h2>
 <div class="table-scroll" tabindex="0"><table>
@@ -207,8 +207,8 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </tr>
 <tr>
 <td>后端框架</td>
-<td>无 HTTP、Mapper、登录和数据库业务事务</td>
-<td>尚未学习验收，按 A 阶段实现</td>
+<td>Boot4.1.2启动类和两个Controller已写；Hello查询参数已有反馈</td>
+<td>路径3/10/abc待验证；未接Service/数据库、Mapper、权限和完整事务</td>
 </tr>
 <tr>
 <td>AI / Agent</td>
@@ -281,7 +281,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </tr>
 <tr>
 <td>A1.3 HTTP + MyBatis</td>
-<td>现有 <code>TicketService</code>；未来 <code>controller/TicketController.java</code>、<code>mapper/TicketMapper.java</code> 和 DTO</td>
+<td>现有 <code>TicketService</code> 与 <code>controller/TicketController.java</code>（仅回显）；未来 <code>mapper/TicketMapper.java</code> 和 DTO</td>
 <td>Spring Boot 创建/列表/详情，MyBatis 执行自己写的 SQL</td>
 <td>讲清请求→DTO→Service→Mapper→MySQL→响应；独立加筛选，返回真实主键</td>
 </tr>
@@ -357,7 +357,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <li><strong>列出业务规则</strong>：对照 <code>sql/01_schema.sql</code>，口述 FK保证存在、CHECK保证单行组合；说明“禁用工程师/错误角色不能派单”还需Java。保存一段自己的解释。</li>
 <li><strong>关联查询已跟练</strong>：完整JOIN与OPEN变体已反馈成功，处理人为NULL的打印机工单保留；统计、HAVING和分页也已有结果。解释与独立变体沿后续任务巩固，不重抄全部语句。</li>
 <li><strong>SQL事务已练习</strong>：现有03_queries.sql/06_transactions.sql记录实验；用户已反馈提交/回滚及双连接A=1/B=0。旧version=0片段不是当前库的可重复初始化脚本。</li>
-<li><strong>短 JDBC 已跟练，接续 HTTP</strong>：查询、NULL处理、参数化更新、版本与影响行数、成功提交、失败回滚已有反馈，方法职责已拆分。下一项观察浏览器Network的URL/Method/Status，再接入首条查询接口；生成主键与数据库映射随创建接口逐步学习，不提前加AI依赖。</li>
+<li><strong>Web入门已开始，先验路径绑定</strong>：Network、HTTP/JSON、Maven/POM、Boot/Tomcat、文本/Map响应和查询参数已跟练。TicketController只回显编号；先验3/10/abc，再接真实查询与数据映射，生成主键随创建接口学习。</li>
 </ol>
 <h2 id="chapter-schedule-学习节奏与展示">学习节奏与展示</h2>
 <p>每周约 15—18 小时可拆为项目实现/排错、基础算法、简短复盘；忙时减少范围而非伪造完成。AI 可辅助找错和审阅，但每单元至少一次关闭答案的变体修改和一次调用链解释。测试围绕业务风险，不以断言数量衡量掌握。</p>
@@ -470,7 +470,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </blockquote>
 <h2 id="chapter-java-sql-当前接续任务与代码位置">当前接续任务与代码位置</h2>
 <p>现有源码在 <code>src\main\java\cn\wishbottle\opsticket</code>，测试/Demo在对应 <code>src/test/java</code>。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 <code>sql/01_schema.sql</code> 至 <code>sql/06_transactions.sql</code>，先继续修改这些文件，避免重复建一套脚本。</p>
-<p>2026-10-29 接续：JDBC 查询已有跟练基础；JdbcTicketUpdateDemo 已完成参数化更新、自动读取版本、影响行数判断、提交与回滚、模拟后续失败，以及 printTicket/findTicketVersion/updateTitle 方法拆分。学习者反馈旧版本更新为1/0、成功提交可由MySQL终端查到、模拟失败回滚恢复；助手只读核对最新源码。正式业务仍用文件仓库。HTTP/JSON已初步讲解，Network面板观察待反馈；Spring Boot/MyBatis、权限和AI尚未接入。 下一步：打开博客的浏览器 Network 面板，刷新并找到主文档请求，报告 Request URL、Request Method、Status Code；先理解请求与响应，再逐步接入 Spring Boot 和首条 GET /api/tickets/{id} 真实查询。不要重复执行已完成的提交练习来凑结果。</p>
+<p>2026-10-30 接续：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。 下一步：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。</p>
 <p>第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。</p>
 <p>以下101/102/103是教材隔离样本，不能当当前开发库数据。当前确认空调工单id=1且IN_PROGRESS，投影仪已停用；其余按实际SELECT核对。所有“返回3行/某固定编号”的验收只适用于已明确准备该样本的隔离环境。</p>
 <p>这六周把你已经接触过的对象、异常和文件读写，变成自己能够修改的工单程序，再把数据放入 MySQL。每周以一个能演示的成果为目标。表中的六个任务各约 3 小时，包含阅读、编码、排错和复盘，总计约 18 小时；可以自行选日期，考试周拆成两周。提前完成就复写和查漏，不必把时间填满。</p>
@@ -841,8 +841,9 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <p>卡住提示：连接不通时先用同一主机、端口和账号在数据库客户端连接；能连接后再查驱动与依赖。<code>No suitable driver</code> 与 <code>Access denied</code> 原因不同。这里的 JDBC 是理解数据访问的桥梁，不继续扩成另一套正式持久层。参考<a href="https://dev.mysql.com/doc/connector-j/en/connector-j-installing-maven.html" rel="noopener noreferrer">驱动接入</a>与<a href="https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-connect-drivermanager.html" rel="noopener noreferrer">DriverManager 连接说明</a>。</p>
 <h2 id="chapter-java-sql-进入第-7-周的门槛">进入第 7 周的门槛</h2>
 <p>你能脱离答案完成：一个带校验的对象、一个集合筛选、一次文件往返、一条关联统计 SQL、一次 JDBC 插入与查询，并解释构造器、接口、事务、参数绑定分别解决什么问题。未通过的项最多选两项补练，先完成它们再开始 Web；不用为了赶日期把不会的内容全部积压到 Spring 阶段。</p></section><section id="chapter-web-security" class="chapter"><div class="chapter-meta"><span>06 / 14</span><a href="#top">回到目录</a></div><h1>第7至13周 Web接口与登录权限</h1><p>2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和<a href="#chapter-contracts">数据接口约定</a>决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，<strong>不计入进入AI的前置验收</strong>。先通过 SQL 与短 JDBC，再从一个请求开始，不一次生成后端。</p>
+<p>2026-10-30 当前接续：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。 下一步：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。</p>
 <h2 id="chapter-web-security-现行最小任务顺序">现行最小任务顺序</h2>
-<p>所有路径相对 <code>项目根目录</code>。controller/dto/mapper/security/exception 是未来按任务增加的子包，现在不需要生成空类。</p>
+<p>所有路径相对 <code>项目根目录</code>。controller已有HelloController与TicketController；dto/mapper/security/exception按后续任务增加，不提前生成空类。</p>
 <div class="table-scroll" tabindex="0"><table>
 <thead>
 <tr>
@@ -854,10 +855,10 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </thead>
 <tbody>
 <tr>
-<td>HTTP入门</td>
-<td>现有TicketService与构造器注入；请求方法、JSON、状态码</td>
-<td>在现有Maven项目逐步接Boot，未来 <code>controller/TicketController.java</code> 和CreateTicketRequest/TicketView</td>
-<td>解释字段如何进入Java，坏JSON/空标题返回400，未知id返回404；不把数据库实体直接当创建请求</td>
+<td>HTTP入门（正在学）</td>
+<td>已有OpsTicketApplication、HelloController、TicketController；请求/响应、JSON、参数注解</td>
+<td>先验路径编号回显3/10/abc，再接业务查询与未来DTO；已有类不重建</td>
+<td>解释类型转换400与对象不存在404，回显成功不能算查询成功；真实接口必须对应业务数据</td>
 </tr>
 <tr>
 <td>MyBatis持久化</td>
@@ -2101,7 +2102,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>先关闭工具入口并修权限，模型提示词不能代替鉴权</td>
 </tr>
 </tbody>
-</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-10-29。对应同一个设备运维工单项目；详细授课顺序见<a href="#chapter-schedule">阶段日程</a>。当前在 <strong>A1：JDBC查询与更新事务已跟练 → HTTP入门</strong>。下一项是W03的Network观察，尚未进入Spring Boot/MyBatis。跟练不等于能独立重写。</p>
+</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-10-30。同一个设备运维工单项目，当前在 <strong>A1：Spring Boot Web入门 → 路径参数验证</strong>。HTTP、Maven/POM、启动与查询参数已跟练；工单编号回显已写，尚未查库。学习状态按下方证据维护，跟练不等于独立掌握。</p>
 <h2 id="chapter-checklists-怎样看这份清单">怎样看这份清单</h2>
 <ul>
 <li><code>[x]</code>：这一条明确的小练习或解释已有通过记录，不代表整门技术已经熟练。</li>
@@ -2150,7 +2151,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>A1</td>
 <td>HTTP/JSON、Spring Boot、Spring MVC、依赖注入</td>
 <td>从请求到数据库的一条完整调用链</td>
-<td>HTTP/JSON已讲解，实操待反馈；框架版本在接入时核对</td>
+<td>Boot4.1.2已启动，文本/JSON/查询参数已跟练；路径待验，DI与数据库接线待学</td>
 </tr>
 <tr>
 <td>A2</td>
@@ -2226,8 +2227,8 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <ul>
 <li>□ <strong>W01【查询与更新事务已跟练】JDBC</strong>：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。</li>
 <li>□ <strong>W02【待学】数据库生成 ID 与映射</strong>：创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。</li>
-<li>□ <strong>W03【已讲解，实操待反馈】HTTP 和 JSON</strong>：先用Network观察主文档的URL、Method、Status；尚未返回课堂结果。后续能读方法、路径、query/body/header、状态码和请求响应；用一个 HTTP 工具调用详情接口并说明 400/404 的区别。</li>
-<li>□ <strong>W04【待学】Spring Boot/MVC 和依赖注入</strong>：自己配置并启动第一个接口；理解 Bean、构造器注入、常用映射注解、DTO 与配置文件，不把 Controller 写成所有业务逻辑的堆放处。</li>
+<li>□ <strong>W03【已跟练，继续验收】HTTP 和 JSON</strong>：已观察GET/304与HTML，理解状态/头/体、API、JSON类型和Map序列化；文本与固定JSON有实际200证据。查询参数反馈通过，路径3/10/abc待验。请求body/header、真实业务400/404与独立修改继续学习。</li>
+<li>□ <strong>W04【正在学】Spring Boot/MVC 与依赖注入</strong>：Boot4.1.2父POM/Web Starter、OpsTicketApplication、Controller、Bean基本概念、GetMapping/RequestParam已跟练。TicketController仅回显编号、运行待反馈；构造器注入到Web、DTO、配置与真实查询仍待验收。</li>
 <li>□ <strong>W05【待学】MyBatis</strong>：在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。</li>
 <li>□ <strong>W06【待学】分层与核心状态流</strong>：串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。</li>
 </ul>
@@ -2288,8 +2289,8 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <p>当前不排必修任务：微服务拆分、Kubernetes、多Agent、MCP、模型微调/训练、本地大模型部署、独立Python服务。今后遇到明确岗位缺口或业务需求再选；不靠堆栈数量衡量项目水平。</p>
 <h2 id="chapter-checklists-今天只看这一小段">今天只看这一小段</h2>
 <ul>
-<li>W03：在Network找到博客主文档请求，读取URL、Method、Status，解释请求与响应。</li>
-<li>W01：结合现有updateTitle解释为什么方法不自行commit，事务由main统一管理；本轮更新Demo已完成。</li>
+<li>W03：启动现有应用，验证路径3/10/abc的响应体与状态码；不要把回显当作数据库查询。</li>
+<li>W04：解释请求如何经过Tomcat、Spring MVC和Controller，再进入后续真实业务；先复用已写的类。</li>
 <li>S05：复习SQL错误、影响0行与事务回滚的区别，保留已有反馈，不重复执行提交练习。</li>
 </ul>
 <p>本段只列当前接续任务；正式状态维护在上面的S/W区，不重复勾选。</p>

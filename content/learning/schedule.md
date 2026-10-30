@@ -5,14 +5,14 @@
   "weight": 20,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-10-29T00:00:00+08:00"
+  "lastmod": "2026-10-30T00:00:00+08:00"
 }
 
-更新：2026-10-29。沿用文件名便于旧笔记和博客链接查找，**原“20周”是材料编号，不再作为固定工期**。每天约 3 小时，周内自由安排；每周选一个能够运行、解释并独立修改的小成果，是否进入下一步由验收决定。
+更新：2026-10-30。沿用文件名便于旧笔记和博客链接查找，**原“20周”是材料编号，不再作为固定工期**。每天约 3 小时，周内自由安排；每周选一个能够运行、解释并独立修改的小成果，是否进入下一步由验收决定。
 
 日常逐项查看：[技能 To-do List](/learning/checklists/)。本页负责阶段顺序，清单负责技能勾选；完成状态以实际证据为准。
 
-> 2026-10-29：SQL关联、统计、分页和事务已有跟练反馈；Java侧已完成独立查询与更新Demo，练习参数绑定、版本检查、提交、模拟故障回滚及方法提取。学习者反馈运行通过，助手核对源码；正式控制台仍用文件仓库。HTTP/JSON已初步讲解，Network观察尚待反馈，Spring Boot/MyBatis、权限与AI尚未接入。 下一次先打开博客的浏览器Network面板，刷新后找到主文档请求，报告Request URL、Request Method、Status Code。理解请求与响应后，再逐步接入Spring Boot和第一条真实查询接口。任何新阶段先解释概念再写代码。
+> 2026-10-30：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。 下一步：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。
 
 ## 现状与证据
 
@@ -21,7 +21,7 @@
 | Java 对象、校验、异常、集合 | `Ticket`、`TicketService`、内存/文件仓库已实现 | 学习记录有逐步解释、修改与自测记录；可复用，不等于所有类都能独立重写 |
 | Maven、JUnit、控制台 | 可运行 JAR，17 项 JUnit；早期 main Demo 不由 mvn test 自动执行 | 已实际练过；只补关键缺口，不重复写同质 assertEquals |
 | MySQL / JDBC | 三表、SQL统计/分页/事务及两个JDBC Demo | 查询与条件更新、提交/回滚已跟练；正式仓库未接库 |
-| 后端框架 | 无 HTTP、Mapper、登录和数据库业务事务 | 尚未学习验收，按 A 阶段实现 |
+| 后端框架 | Boot4.1.2启动类和两个Controller已写；Hello查询参数已有反馈 | 路径3/10/abc待验证；未接Service/数据库、Mapper、权限和完整事务 |
 | AI / Agent | 无模型依赖、API 配置或模型功能 | 尚未开始；模拟输出不能算真实模型能力 |
 
 项目规模与掌握程度分开记录。辅助生成、讲解过、跟着写、独立完成、测试通过五种证据不能互相替代。
@@ -45,7 +45,7 @@ A1 先形成最小闭环，A2 将它变成有权限、有故障边界且可交�
 | A0 SQL 收尾 | 现有 `sql/01_schema.sql`、`02_seed.sql`、`03_queries.sql`，复习列/值/NULL/LIKE/AND | 独立查询状态、报修人和关键词；预测命中与空结果 | 能说明 SELECT 不改状态、FK 不保证角色、CHECK 不代替授权 |
 | A1.1 关联与事务 | 教材第5单元；查询 JOIN/LEFT JOIN、GROUP BY、固定排序；新建事务练习脚本时再落盘 | 列表显示设备/报修人/可空处理人；同连接 UPDATE 后 ROLLBACK/COMMIT | 未派单不丢失；知道 COUNT(t.id) 与 COUNT(*) 区别；实际确认回滚 |
 | A1.2 短 JDBC | `pom.xml`、`Ticket.java`、`TicketRepository.java`；待建 `src/test/java/cn/wishbottle/opsticket/JdbcTicketQueryDemo.java` | PreparedStatement 先按id只读查询和SQL NULL映射，再在练习库做回滚更新；之后学习创建与生成ID | 单引号当普通数据、资源关闭、重启可读；不沿用 maxId+1 或假编号 |
-| A1.3 HTTP + MyBatis | 现有 `TicketService`；未来 `controller/TicketController.java`、`mapper/TicketMapper.java` 和 DTO | Spring Boot 创建/列表/详情，MyBatis 执行自己写的 SQL | 讲清请求→DTO→Service→Mapper→MySQL→响应；独立加筛选，返回真实主键 |
+| A1.3 HTTP + MyBatis | 现有 `TicketService` 与 `controller/TicketController.java`（仅回显）；未来 `mapper/TicketMapper.java` 和 DTO | Spring Boot 创建/列表/详情，MyBatis 执行自己写的 SQL | 讲清请求→DTO→Service→Mapper→MySQL→响应；独立加筛选，返回真实主键 |
 | A1.4 核心状态流 | `TicketStatus`、当前 assign 规则；未来状态方法和操作日志表 | OPEN→IN_PROGRESS→RESOLVED→CLOSED，处理说明与动作日志 | 非法跳转被拒绝，日志与工单同事务；一次故障注入后均回滚 |
 | A2.1 身份与错误 | Spring Security Session、PasswordEncoder、DTO/Advice | 三角色登录、归属授权、参数校验、统一错误、requestId 日志 | 未登录401、越权403、坏参数400、缺资源404、旧版本409；客户端不能伪造操作者 |
 | A2.2 重复与交付 | 未来关键集成测试、`docs/verification.md`、配置说明 | 状态/版本条件更新；定义创建重复请求行为；测试/打包/新环境启动/排错 | 重复请求不悄悄覆盖，事务测试用真实隔离库；能独立修改一项完整功能并解释影响范围 |
@@ -87,7 +87,7 @@ A2 通过后开始 B，不等待性能调优、线程池专题、Docker、所有
 3. **列出业务规则**：对照 `sql/01_schema.sql`，口述 FK保证存在、CHECK保证单行组合；说明“禁用工程师/错误角色不能派单”还需Java。保存一段自己的解释。
 4. **关联查询已跟练**：完整JOIN与OPEN变体已反馈成功，处理人为NULL的打印机工单保留；统计、HAVING和分页也已有结果。解释与独立变体沿后续任务巩固，不重抄全部语句。
 5. **SQL事务已练习**：现有03_queries.sql/06_transactions.sql记录实验；用户已反馈提交/回滚及双连接A=1/B=0。旧version=0片段不是当前库的可重复初始化脚本。
-6. **短 JDBC 已跟练，接续 HTTP**：查询、NULL处理、参数化更新、版本与影响行数、成功提交、失败回滚已有反馈，方法职责已拆分。下一项观察浏览器Network的URL/Method/Status，再接入首条查询接口；生成主键与数据库映射随创建接口逐步学习，不提前加AI依赖。
+6. **Web入门已开始，先验路径绑定**：Network、HTTP/JSON、Maven/POM、Boot/Tomcat、文本/Map响应和查询参数已跟练。TicketController只回显编号；先验3/10/abc，再接真实查询与数据映射，生成主键随创建接口学习。
 
 ## 学习节奏与展示
 

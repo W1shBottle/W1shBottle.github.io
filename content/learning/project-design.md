@@ -1,8 +1,8 @@
 {
   "title": "工单项目设计与数据约定",
-  "description": "现有类与存档设计，以及待实施的数据库、Web 和 AI 边界。",
+  "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-29T00:00:00+08:00",
+  "lastmod": "2026-10-30T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-29。第 1—9 节记录现有 Java 实现，第 10—12 节是尚未实施的数据库/Web/AI 迁移设计；第 13 节记录独立 JDBC 练习，不表示正式业务迁移完成。
+核对日期：2026-10-30。第1—9节记录原控制台设计；第10—12节为完整数据库/Web/AI目标；第13节为独立JDBC事务，第14节记录本次Web入门的实际边界。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -166,11 +166,11 @@ TicketStartupDemo 在 try 外创建空服务，加载成功后逐张 add。NoSuc
 
 ## 9. 构建、保存限制与后续拆分
 
-pom.xml 使用 release 21、UTF-8、JUnit Jupiter 5.14.4（test 作用域）、maven-compiler-plugin 3.13.0、maven-surefire-plugin 3.5.5。业务与测试编译产物分别为 target/classes、target/test-classes，Surefire 报告位于 target/surefire-reports。maven-jar-plugin 3.4.1 在 Manifest 中配置 Main-Class 为 cn.wishbottle.opsticket.ConsoleApp。clean package 编译、测试、打包后可用 java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar 启动；Maven 不自动执行 main Demo。当前生产代码没有第三方运行时依赖，该 JAR 不包含 JUnit 测试依赖。
+pom.xml 使用 release 21、UTF-8、JUnit Jupiter 5.14.4（test 作用域）、maven-compiler-plugin 3.13.0、maven-surefire-plugin 3.5.5。业务与测试编译产物分别为 target/classes、target/test-classes，Surefire 报告位于 target/surefire-reports。maven-jar-plugin 3.4.1 在 Manifest 中配置 Main-Class 为 cn.wishbottle.opsticket.ConsoleApp。clean package 编译、测试、打包后可用 java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar 启动；Maven 不自动执行 main Demo。现已加入Boot父POM与Web MVC依赖，但原JAR仍以ConsoleApp为入口，不自动包含所有运行依赖，也不包含JUnit测试依赖；Web通过IDEA运行OpsTicketApplication，尚未配置Boot重打包。
 
 save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前被拒绝；打开后直接截断或覆盖目标文件，写入中途失败仍可能破坏存档。save 不检查传入列表的重复编号，正常 Service/Repository 新增会拒绝重复，loadAll 另行防重。
 
-内存仓库的主要边界和列表结构隔离已有测试，Service 已接入接口。文件仓库先改内存再保存，失败不回滚内存；直接覆盖也可能损坏旧文件，多进程同时写入没有保护。当前 SQL 三表已经建立，下一阶段补 JOIN/事务并逐步接入 Java；原子替换、备份和并发控制仍属未实现能力。
+内存仓库的主要边界和列表结构隔离已有测试，Service 已接入接口。文件仓库先改内存再保存，失败不回滚内存；直接覆盖也可能损坏旧文件，多进程同时写入没有保护。当前SQL三表、JOIN和SQL/JDBC事务已有跟练，下一阶段将查询逐步接到Web；原子替换、备份和并发控制仍属未实现能力。
 
 ## 10. 计划中的数据库与 Web 迁移
 
@@ -184,7 +184,7 @@ save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前
  → MyBatis Mapper（绑定参数、条件SQL） → MySQL
 ```
 
-沿用 Java 21、Maven、现有业务规则，先短 JDBC 再用 MyBatis。进入 Web 时按官方兼容表选择并锁定受支持 Boot/MyBatis 补丁版本，不在当前 pom 中盲目升级。当前生成的是 ConsoleApp JAR；未来 Web 启动类和 Boot 打包插件要另行教学、验证，不能声称已能运行 HTTP。
+沿用Java21与Maven，已接Boot4.1.2/Web MVC；MyBatis尚未添加，接入时核对与Boot4的兼容版本。普通JAR仍启动ConsoleApp，Web启动类已成功运行，Boot可执行Web包尚未配置。完整业务调用链仍是目标，编号回显不是数据库查询。
 
 **创建与 ID。** 当前 `TicketService.create` 的 maxId+1 和 `add(Ticket)` 预先携带 ID 只适合内存/文件课。数据库创建输入不带自选 ID；Mapper 插入后返回自增 ID，再构建/读取合法 Ticket。使用专门的插入数据对象接 generated key，不为了框架把当前 final id 粗暴改成任意可写。到这一课一起调整 Service/持久化契约和测试；旧实现可保留练习用途，不强求所有实现永远共用旧四方法接口。
 
@@ -194,7 +194,7 @@ save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前
 
 **重复请求。** CREATE 由客户端生成 requestKey；服务按规范化输入计算 requestHash。已有相同操作者/动作/key 且 hash 相同，返回原 ticketId；hash 不同返回 409。新工单与 CREATE 日志共同提交；并发唯一键冲突时先回滚，再在新的查询中读已有结果。其余状态操作重复请求返回明确冲突，不重复产生状态或日志；暂不引入通用幂等组件/Redis 锁。网络错误后先按 key 或详情核对结果，不盲目重发不同 key。
 
-### 最小 HTTP 契约（全部待实现）
+### 最小 HTTP 业务契约（待实现；编号回显不算真实查询）
 
 | 请求 | 服务端约束 |
 | --- | --- |
@@ -255,3 +255,17 @@ Java contains 与 MySQL 排序规则的大小写行为、String.length 与 CHAR_
 - 提取期间曾只有方法定义、main仍执行旧块，经反馈后已改为调用updateTitle并删除重复SQL。提交/回滚的决定保留在调用方。
 
 范围：此Demo没有接入Ticket的完整标题/状态/归属校验，也没有操作日志、请求幂等或生产异常处理。`version`是业务列而非MySQL软件版本，不保存旧标题。旧版本失败不能无条件刷新版本强行重试。HTTP/JSON仅开始讲解，`GET /api/tickets/{id}`仍为计划接口。
+
+
+## 14. 2026-10-30 Spring Boot Web 入门
+
+OpsTicketApplication位于根包cn.wishbottle.opsticket，使用@SpringBootApplication和SpringApplication.run启动，扫描子包controller。Web Starter带入内嵌Tomcat与Spring MVC。当前链路为浏览器→Tomcat→Spring MVC→Controller→Map序列化响应，没有经过TicketService或数据库。
+
+| 类/方法 | 当前职责与契约 |
+| --- | --- |
+| HelloController.hello(String name) | GET /api/hello；@RequestParam(name="name", defaultValue="访客")获取查询参数；返回`Map<String,String>`，含message与project。缺失/空字符串使用默认值，未做trim或长度校验 |
+| TicketController.readTicketId(long ticketId) | GET /api/tickets/{id}；@PathVariable(name="id")将路径段转成long；返回`Map<String,Long>`仅包含id。正负及数据库存在性均未检查；类型无法转换默认预期400，实操待反馈 |
+
+@RestController使组件被识别并将返回值写入响应体；@GetMapping中的路径决定匹配，不由Java方法名决定。Map是Java内存对象，JSON是序列化后的数据格式；当前不手动拼JSON。所有Controller均为跟练实现，无Web自动测试。
+
+POM保留JUnit5.14.4属性、驱动26.10.0和既有编译/测试/JAR插件。spring-boot-maven-plugin尚未配置，不能用当前ConsoleApp清单声称Web JAR已交付。下一步先验证路径参数，再设计真实查询返回对象和不存在的404处理。

@@ -5,10 +5,10 @@
   "weight": 90,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-10-29T00:00:00+08:00"
+  "lastmod": "2026-10-30T00:00:00+08:00"
 }
 
-更新：2026-10-29。对应同一个设备运维工单项目；详细授课顺序见[阶段日程](/learning/schedule/)。当前在 **A1：JDBC查询与更新事务已跟练 → HTTP入门**。下一项是W03的Network观察，尚未进入Spring Boot/MyBatis。跟练不等于能独立重写。
+更新：2026-10-30。同一个设备运维工单项目，当前在 **A1：Spring Boot Web入门 → 路径参数验证**。HTTP、Maven/POM、启动与查询参数已跟练；工单编号回显已写，尚未查库。学习状态按下方证据维护，跟练不等于独立掌握。
 
 ## 怎样看这份清单
 
@@ -27,7 +27,7 @@
 | 已有工具 | Git、Maven、JUnit Jupiter | 管理变更、依赖、构建和有意义的测试 | 已练习；17 项现有测试不等于覆盖全业务 |
 | 当前 | MySQL、SQL | 三表关系、条件/关联查询、事务、约束 | JOIN筛选、统计/分页、事务与双连接版本竞争已有跟练反馈 |
 | A1 | JDBC → MyBatis | 先懂连接/参数/结果，再用 Mapper 执行自己写的 SQL | JDBC查询与更新事务已跟练；MyBatis待学 |
-| A1 | HTTP/JSON、Spring Boot、Spring MVC、依赖注入 | 从请求到数据库的一条完整调用链 | HTTP/JSON已讲解，实操待反馈；框架版本在接入时核对 |
+| A1 | HTTP/JSON、Spring Boot、Spring MVC、依赖注入 | 从请求到数据库的一条完整调用链 | Boot4.1.2已启动，文本/JSON/查询参数已跟练；路径待验，DI与数据库接线待学 |
 | A2 | Bean Validation、统一异常、Spring Security＋Session | 参数合法、身份可信、角色和资源归属正确 | 待学 |
 | A2 | Spring 事务、条件更新、操作日志、SLF4J/日志实现 | 数据一致、冲突可解释、错误能定位 | 待学 |
 | A2 | JUnit、Spring 测试工具、真实 MySQL 测试库 | 用少量关键测试验证权限、回滚、并发与重试 | 待学；不能只用 Mock 证明数据库事务 |
@@ -70,8 +70,8 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前SQ
 
 - [ ] **W01【查询与更新事务已跟练】JDBC**：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。
 - [ ] **W02【待学】数据库生成 ID 与映射**：创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。
-- [ ] **W03【已讲解，实操待反馈】HTTP 和 JSON**：先用Network观察主文档的URL、Method、Status；尚未返回课堂结果。后续能读方法、路径、query/body/header、状态码和请求响应；用一个 HTTP 工具调用详情接口并说明 400/404 的区别。
-- [ ] **W04【待学】Spring Boot/MVC 和依赖注入**：自己配置并启动第一个接口；理解 Bean、构造器注入、常用映射注解、DTO 与配置文件，不把 Controller 写成所有业务逻辑的堆放处。
+- [ ] **W03【已跟练，继续验收】HTTP 和 JSON**：已观察GET/304与HTML，理解状态/头/体、API、JSON类型和Map序列化；文本与固定JSON有实际200证据。查询参数反馈通过，路径3/10/abc待验。请求body/header、真实业务400/404与独立修改继续学习。
+- [ ] **W04【正在学】Spring Boot/MVC 与依赖注入**：Boot4.1.2父POM/Web Starter、OpsTicketApplication、Controller、Bean基本概念、GetMapping/RequestParam已跟练。TicketController仅回显编号、运行待反馈；构造器注入到Web、DTO、配置与真实查询仍待验收。
 - [ ] **W05【待学】MyBatis**：在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。
 - [ ] **W06【待学】分层与核心状态流**：串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。
 
@@ -139,8 +139,8 @@ Java完成首版模型调用即可；Spring AI、流式输出或Python服务不�
 
 ## 今天只看这一小段
 
-- W03：在Network找到博客主文档请求，读取URL、Method、Status，解释请求与响应。
-- W01：结合现有updateTitle解释为什么方法不自行commit，事务由main统一管理；本轮更新Demo已完成。
+- W03：启动现有应用，验证路径3/10/abc的响应体与状态码；不要把回显当作数据库查询。
+- W04：解释请求如何经过Tomcat、Spring MVC和Controller，再进入后续真实业务；先复用已写的类。
 - S05：复习SQL错误、影响0行与事务回滚的区别，保留已有反馈，不重复执行提交练习。
 
 本段只列当前接续任务；正式状态维护在上面的S/W区，不重复勾选。

@@ -2,7 +2,7 @@
   "title": "工单项目运行与验收",
   "description": "实际运行证据、后端验收与模型效果评估标准。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-29T00:00:00+08:00",
+  "lastmod": "2026-10-30T00:00:00+08:00",
   "weight": 190,
   "group": "project-docs",
   "draft": false
@@ -10,11 +10,11 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
 
-核对日期：2026-10-29。本页区分正式 JUnit、main Demo、用户自报、助手复核与未来门槛；第 9 节保留路线验收，第 10 节记录 10 月 28 日 MySQL 环境升级，第 11—12 节分别记录 JDBC 查询与更新事务的学习证据。
+核对日期：2026-10-30。本页区分历史测试、学习者反馈、助手请求验证与待验收内容；第10节记录10月28日环境升级，第11—12节为JDBC，第13节为Web入门。
 
 ## 1. 环境与构建
 
-编译目标为 Java 21。pom.xml 使用 JUnit Jupiter 5.14.4、maven-compiler-plugin 3.13.0、maven-surefire-plugin 3.5.5、maven-jar-plugin 3.4.1。所有源码已迁至 cn.wishbottle.opsticket 包，业务源码根为 src/main/java，测试、Demo 与练习源码根为 src/test/java。
+编译目标为 Java 21。现已加入Spring Boot 4.1.2父POM与Web MVC Starter，JUnit版本通过属性保留为5.14.4。pom.xml 使用 JUnit Jupiter 5.14.4、maven-compiler-plugin 3.13.0、maven-surefire-plugin 3.5.5、maven-jar-plugin 3.4.1。所有源码已迁至 cn.wishbottle.opsticket 包，业务源码根为 src/main/java，测试、Demo 与练习源码根为 src/test/java。
 
 命令行使用前配置 JDK 21 和 Maven，在项目根目录核对：
 
@@ -323,3 +323,20 @@ JdbcTicketQueryDemo先后跟写连接、按编号/状态查询、修正statu列�
 当前false分支会提交练习标题并增加版本，不能为了日结重复运行；精确版本以实际查询为准，不再沿用旧快照的1。本次只整理笔记/文档，源码、SQL、data、pom和Git暂存区均保留。
 
 HTTP请求/响应、GET、URL、JSON和200/404已经初步讲解；Network主文档的Request URL/Request Method/Status Code尚无反馈。下一次从这项观察继续，再接Spring Boot/MyBatis；不把计划中的接口当作已部署功能。
+
+
+## 13. 2026-10-30 HTTP、Maven 与 Web 入门验收
+
+| 场景 | 学习者证据 | 助手核对/边界 |
+| --- | --- | --- |
+| 浏览器Network | 发现页GET/304截图；首页HTML响应截图 | 首页截图未展示状态码，不补造200证据 |
+| Maven配置 | 反馈添加父POM/Web Starter后测试通过 | 源码已核对；既有JUnit17项未增加，日结不重跑 |
+| Boot启动与首页 | 日志截图显示Java21.0.8、Boot4.1.2、Tomcat8080，反馈根路径404 | 启动类与扫描范围正确；尚无首页处理方法 |
+| Hello普通文本 | 反馈浏览器显示Hello, Ops Ticket! | 课堂实际GET：200、text/plain;charset=UTF-8、正文一致 |
+| Hello固定Map | 进入JSON学习 | 课堂实际GET：200、application/json、message/project两字段一致 |
+| Hello查询参数 | 反馈带name和不带name正常 | 最新源码正确；最后一次请求8080连接被拒绝，不能记为助手复跑通过 |
+| 工单路径编号 | 未反馈3/10/abc运行结果 | 日结确认TicketController已写；预计数字回显、abc默认400，未实际请求验收 |
+
+日结只读代码，不启动应用、不重跑Java/数据库实验，不修改源码、SQL、data、pom或Git暂存区。临时HTTP请求不构成Web自动测试；普通JAR仍为ConsoleApp入口，Web打包未完成。没有工单存在性、正数编号、权限或HTTP→数据库业务验证。
+
+下一项：启动OpsTicketApplication，GET /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和状态码。解释路径类型转换与业务校验的区别，再连接真实查询及不存在的404行为。无需重建已有类。

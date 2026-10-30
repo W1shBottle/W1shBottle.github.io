@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-29",
-  "stage": "A1 JDBC 更新事务已跟练 → HTTP 入门与请求观察",
+  "updated": "2026-10-30",
+  "stage": "A1 Spring Boot Web 入门 → 路径参数验证与真实查询",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -156,6 +156,16 @@
       "next": "打开博客的浏览器 Network 面板，刷新并找到主文档请求，报告 Request URL、Request Method、Status Code；先理解请求与响应，再逐步接入 Spring Boot 和首条 GET /api/tickets/{id} 真实查询。不要重复执行已完成的提交练习来凑结果。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261029/"
+    },
+    {
+      "date": "2026-10-30",
+      "project": "ops-ticket",
+      "title": "HTTP、Maven 与第一个 Spring Boot 接口",
+      "summary": "观察HTTP/HTML，梳理Maven/POM，启动Boot与Tomcat，完成文本、Map转JSON和查询参数；路径编号回显源码已写。",
+      "verification": "学习者反馈测试、启动、404及name场景通过；课堂助手GET验证文本/固定JSON均200。最新参数版请求被拒绝；路径3/10/abc尚无运行反馈。未新增Web自动测试或接入数据库业务。",
+      "next": "启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261030/"
     }
   ],
   "current_project": "ops-ticket"

@@ -5,7 +5,7 @@
   "weight": 10,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-10-29T00:00:00+08:00"
+  "lastmod": "2026-10-30T00:00:00+08:00"
 }
 
 2026-10-26 调整。用同一个设备运维工单平台，按 **A 后端业务 → B 一个 AI 功能 → C 验证改进** 推进。A 包含“最小业务闭环”和“必要工程能力”两个检查点；RAG、Agent 是之后按证据选择的升级，不是默认必做清单。
@@ -29,9 +29,9 @@
 
 ## 当前接续点
 
-2026-10-29：SQL关联、统计、分页和事务已有跟练反馈；Java侧已完成独立查询与更新Demo，练习参数绑定、版本检查、提交、模拟故障回滚及方法提取。学习者反馈运行通过，助手核对源码；正式控制台仍用文件仓库。HTTP/JSON已初步讲解，Network观察尚待反馈，Spring Boot/MyBatis、权限与AI尚未接入。
+2026-10-30：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。
 
-下一次先打开博客的浏览器Network面板，刷新后找到主文档请求，报告Request URL、Request Method、Status Code。理解请求与响应后，再逐步接入Spring Boot和第一条真实查询接口。任何新阶段先解释概念再写代码。
+下一次：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。
 
 ## 第一版只做这些
 

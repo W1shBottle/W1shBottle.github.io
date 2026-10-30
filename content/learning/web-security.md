@@ -5,18 +5,20 @@
   "weight": 50,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-10-26T00:00:00+08:00"
+  "lastmod": "2026-10-30T00:00:00+08:00"
 }
 
 2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和[数据接口约定](/learning/contracts/)决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，**不计入进入AI的前置验收**。先通过 SQL 与短 JDBC，再从一个请求开始，不一次生成后端。
 
+2026-10-30 当前接续：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。 下一步：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。
+
 ## 现行最小任务顺序
 
-所有路径相对 `项目根目录`。controller/dto/mapper/security/exception 是未来按任务增加的子包，现在不需要生成空类。
+所有路径相对 `项目根目录`。controller已有HelloController与TicketController；dto/mapper/security/exception按后续任务增加，不提前生成空类。
 
 | 任务 | 先理解与阅读 | 由学习者完成 | 怎样验收 |
 | --- | --- | --- | --- |
-| HTTP入门 | 现有TicketService与构造器注入；请求方法、JSON、状态码 | 在现有Maven项目逐步接Boot，未来 `controller/TicketController.java` 和CreateTicketRequest/TicketView | 解释字段如何进入Java，坏JSON/空标题返回400，未知id返回404；不把数据库实体直接当创建请求 |
+| HTTP入门（正在学） | 已有OpsTicketApplication、HelloController、TicketController；请求/响应、JSON、参数注解 | 先验路径编号回显3/10/abc，再接业务查询与未来DTO；已有类不重建 | 解释类型转换400与对象不存在404，回显成功不能算查询成功；真实接口必须对应业务数据 |
 | MyBatis持久化 | 自己的 `sql/01_schema.sql`、JDBC参数绑定；未来 `mapper/TicketMapper.java` | 先按id查询，再创建回填真实id，再列表筛选 | 数据重启保留；Long null正确；独立加设备筛选；不沿用maxId+1，不为旧add签名填假编号 |
 | 最小状态流 | TicketStatus与assign；状态表、版本条件和事务 | assign/resolve/accept三个方法，新增ticket_action_log保存动作；resolve说明放note | OPEN→IN_PROGRESS→RESOLVED→CLOSED；旧版本409；记录失败时状态与版本一起回滚 |
 | 校验和错误 | DTO边界与Service业务规则；未来异常Advice | 必要参数校验、统一错误、requestId日志；列表稳定分页 | 非法字段400、未知对象404、业务冲突409；错误不返回假成功；日志无密码或密钥 |
