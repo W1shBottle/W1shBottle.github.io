@@ -5,7 +5,7 @@
   "weight": 40,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-10-30T00:00:00+08:00"
+  "lastmod": "2026-10-31T00:00:00+08:00"
 }
 
 > 2026-10-26 路线说明：本页“第几周”为教材单元，不是固定工期。第1—3单元已有项目成果，不整章重做；当前接第4单元 SQL。各任务耗时只是拆分参考，能独立解释与修改才通过。后续顺序为必要SQL→短JDBC→Web/MyBatis→最小工程验收→AI，详见[阶段日程](/learning/schedule/)。
@@ -14,7 +14,7 @@
 
 现有源码在 `src\main\java\cn\wishbottle\opsticket`，测试/Demo在对应 `src/test/java`。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 `sql/01_schema.sql` 至 `sql/06_transactions.sql`，先继续修改这些文件，避免重复建一套脚本。
 
-2026-10-30 接续：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。 下一步：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。
+2026-10-30 接续：已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。 下一步：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。
 
 第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。
 

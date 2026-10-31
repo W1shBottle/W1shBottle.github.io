@@ -5,7 +5,7 @@
   "weight": 10,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-10-30T00:00:00+08:00"
+  "lastmod": "2026-10-31T00:00:00+08:00"
 }
 
 2026-10-26 调整。用同一个设备运维工单平台，按 **A 后端业务 → B 一个 AI 功能 → C 验证改进** 推进。A 包含“最小业务闭环”和“必要工程能力”两个检查点；RAG、Agent 是之后按证据选择的升级，不是默认必做清单。
@@ -29,9 +29,9 @@
 
 ## 当前接续点
 
-2026-10-30：已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。
+2026-10-31：已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。
 
-下一次：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。
+下一次：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。
 
 ## 第一版只做这些
 

@@ -2,7 +2,7 @@
   "title": "设备运维工单项目文档",
   "description": "当前控制台、JDBC与Web练习进度，Java＋AI路线和运行入口。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-30T00:00:00+08:00",
+  "lastmod": "2026-10-31T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
@@ -10,9 +10,9 @@
 
 > 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。后续功能以各页的实现状态为准。
 
-围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**。现有v0.1控制台包含内存/文件仓库、自动保存和恢复；SQL与独立JDBC已有跟练成果。现已加入 **Spring Boot Web入门接口**，能够返回问候JSON、接收查询参数；工单路径目前只回显编号，尚未接入业务或数据库。处理/验收、登录权限、AI与Agent仍待实现。
+围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**。现有v0.1控制台包含内存/文件仓库、自动保存和恢复；SQL与独立JDBC已有跟练成果。现已加入 **Spring Boot 工单查询与创建接口**，通过 Bean 配置和构造器注入复用原有 Service/文件仓库；尚未接入数据库业务。处理/验收、登录权限、AI与Agent仍待实现。
 
-文档核对日期：2026-10-30。路线改为 A 后端业务与基础工程 → B 一个真实 AI 功能 → C 验证与改进；受控 Agent 按需要扩展。历史笔记保留当时进度，课程材料原“周号”只作索引，不承诺固定周数掌握。
+文档核对日期：2026-10-31（含11月1日凌晨课堂）。路线改为 A 后端业务与基础工程 → B 一个真实 AI 功能 → C 验证与改进；受控 Agent 按需要扩展。历史笔记保留当时进度，课程材料原“周号”只作索引，不承诺固定周数掌握。
 
 ## 项目文档
 
@@ -34,7 +34,7 @@
 - `FileTicketRepository` 内部复用内存仓库：启动时从文件恢复，查询时访问内存，新增或更新时先修改内存，再保存全部工单。缺少存档文件时按空仓库启动；其他读取错误或坏存档会使控制台提示并停止启动。
 - `TicketFileStore` 以 UTF-8 和 Properties 格式读写列表，用 `count` 记录数量；加载时检查缺字段、数字和状态格式、负数量、重复编号，以及状态与处理人的一致性。加载失败不返回部分结果，包装异常时保留原始原因。
 
-- `OpsTicketApplication` 启动Spring Boot 4.1.2；`controller/HelloController` 提供问候JSON与name默认值，`controller/TicketController` 仅回显编号，不查询工单。
+- `OpsTicketApplication` 启动 Spring Boot；`config/TicketConfig` 注册文件仓库与 Service；`TicketController` 构造器注入 Service，支持详情、列表、关键词和创建。`dto/CreateTicketRequest` 接收创建标题，`tickets.http` 保存手动验收请求。
 
 ## 快速构建与运行
 
@@ -52,18 +52,22 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 
 以上 `mvn` 命令要求终端能够找到 Maven；也可使用 IDEA 的 Maven 面板或其自带 Maven 可执行文件。项目没有 Maven Wrapper，首次构建需要下载依赖；依赖和插件已缓存后可尝试 `mvn -o package`。新终端中应重新确认 Java 与 Maven 的 JDK。
 
-### Web 入门运行（2026-10-30）
+### Web 运行与接口（2026-10-31）
 
-POM加入Spring Boot 4.1.2父项目与spring-boot-starter-webmvc；保留Java21、JUnit5.14.4和MySQL驱动26.10.0。IDEA重新加载Maven后，使用JDK21运行 `cn.wishbottle.opsticket.OpsTicketApplication.main`，日志显示Tomcat启动在8080。修改代码后保存、停止旧实例并重新运行。
+在 IDEA 重新加载 Maven，使用 JDK21 运行 `cn.wishbottle.opsticket.OpsTicketApplication.main`，工作目录为项目根目录，默认端口8080。`TicketConfig` 创建仓库时读取 `data/tickets-app.properties`；文件缺失可空仓库启动，其他IO错误或坏存档使启动失败。修改代码后重启。
 
-| 请求 | 当前实现 | 验证状态 |
+| 请求 | 当前行为 | 证据 |
 | --- | --- | --- |
-| GET / | 未配置首页，默认404 | 学习者反馈 |
-| GET /api/hello?name=小明 | 返回message=你好，小明、project=ops-ticket的JSON | 最新参数版由学习者反馈通过，源码核对通过 |
-| GET /api/hello | name缺失或空字符串时使用访客 | 学习者反馈缺省场景通过；空白字符串无trim校验 |
-| GET /api/tickets/{id} | 转为long并返回仅含id的JSON，不判断工单是否存在 | 源码已写，3/10/abc运行待反馈；abc默认预期400 |
+| GET /api/hello[?name=...] | 问候 JSON，缺参使用访客 | 上课用户反馈 |
+| GET /api/tickets/{id} | 文件仓库中真实工单；未知编号404，非数字路径400 | 课堂助手GET验证1/999；早期abc由用户反馈 |
+| GET /api/tickets[?keyword=...] | 不传查全部；有效关键词筛选；无匹配返回[]；空值或空白400 | 课堂助手实际GET五个场景 |
+| POST /api/tickets | JSON标题→DTO→Service创建并自动保存，返回Ticket与201；非法标题400 | 用户201截图，源码/存档核对；空白标题及数量不变由用户反馈 |
 
-普通文本和固定Map响应在课堂由助手实际GET验证200与Content-Type。参数版最后一次助手请求被拒绝，不能记为助手已验证。正式控制台与Web入口并存；原 `java -jar` 命令仍启动ConsoleApp，尚未配置Spring Boot可执行Web包。当前Web练习仅用于本机学习。
+列表和创建均显式支持末尾斜杠；详情路径没有额外配置尾斜杠。GET与POST同路径按请求方法区分；不要保留两个相同GET映射。错误原因可能不显示在默认响应体，尚未统一错误JSON。
+
+在 IDEA 打开 `tickets.http`，逐条运行请求。成功 POST 每次都会新增并写文件；目前不是幂等接口。创建截图中编号2，具体编号以当时数据为准。先查列表、提交空白标题、再查列表，验证失败没有新增。重启后再 GET 编号2的实验已安排，尚无单独结果反馈。
+
+普通 `java -jar` 仍启动 ConsoleApp，尚未配置 Spring Boot 可执行 Web 包。本机学习时使用一个进程访问存档；不要同时运行控制台和 Web 写同一文件，两者不共享运行中的 Map，也无并发保护。Web 数据源仍是文件，独立 JDBC Demo 的数据库记录不是这些接口的数据源。
 
 ### MySQL 与 JDBC 环境（2026-10-28）
 
@@ -73,7 +77,7 @@ POM加入Spring Boot 4.1.2父项目与spring-boot-starter-webmvc；保留Java21�
 
 ### 存档位置
 
-正式控制台使用 `data/tickets-app.properties`。这是相对于**运行时工作目录**的路径，并非相对于 JAR 所在目录；启动时会打印绝对路径。请在项目根目录运行，并确保 `data` 目录存在，保存方法不会自动创建父目录。
+控制台与当前 Web 配置均使用 `data/tickets-app.properties`。这是相对于**运行时工作目录**的路径，并非相对于 JAR 所在目录；启动时会打印绝对路径。请在项目根目录运行，并确保 `data` 目录存在，保存方法不会自动创建父目录。
 
 关闭后重新启动会恢复已有工单。成功的新建、修改标题和派单会自动保存，不需要手动调用文件工具。
 
@@ -89,7 +93,7 @@ POM加入Spring Boot 4.1.2父项目与spring-boot-starter-webmvc；保留Java21�
 mvn test
 ```
 
-2026-10-26 使用 JDK 21 执行离线 `package` 成功；2026-10-28 更新驱动后再次执行 `mvn test`，17 项测试全部通过。10月30日学习者反馈加入Boot配置后测试通过；日结未重跑，未新增Web自动测试。现有 17 个 JUnit 测试：`TicketTest` 6 个、`TicketFileStoreTest` 2 个、`InMemoryTicketRepositoryTest` 7 个、`TicketServiceTest` 2 个。现有测试覆盖标题校验、文件往返、部分仓库契约和 Service 行为，不代表所有功能与故障场景均已自动覆盖。`update(null)` 的同类练习已跳过，不计入测试数量。
+2026-10-26 使用 JDK 21 执行离线 `package` 成功；2026-10-28 更新驱动后再次执行 `mvn test`，17 项测试全部通过。10月30日学习者反馈加入Boot配置后测试通过；日结未重跑，未新增Web自动测试。10月31日的HTTP Client练习是手动验收，没有增加JUnit数量。现有 17 个 JUnit 测试：`TicketTest` 6 个、`TicketFileStoreTest` 2 个、`InMemoryTicketRepositoryTest` 7 个、`TicketServiceTest` 2 个。现有测试覆盖标题校验、文件往返、部分仓库契约和 Service 行为，不代表所有功能与故障场景均已自动覆盖。`update(null)` 的同类练习已跳过，不计入测试数量。
 
 `mvn test` 不会自动运行带 `main` 的 Demo。两种仓库的共用业务流程与文件重新加载可以单独运行：
 
@@ -108,6 +112,7 @@ JUnit 文件往返测试使用 `@TempDir`，不操作项目存档。早期 Demo 
 
 ```text
 JavaProject/
+├── tickets.http                           # 手动 HTTP 请求
 ├── pom.xml
 ├── README.md
 ├── docs/                                  # 需求、设计和验收说明
@@ -117,7 +122,9 @@ JavaProject/
 │   │   ├── OpsTicketApplication.java       # Web启动入口
 │   │   ├── controller/
 │   │   │   ├── HelloController.java
-│   │   │   └── TicketController.java        # 目前仅编号回显
+│   │   │   └── TicketController.java        # 查询、关键词和创建
+│   │   ├── config/TicketConfig.java        # Bean 配置
+│   │   ├── dto/CreateTicketRequest.java     # 创建请求输入
 │   │   ├── ConsoleApp.java
 │   │   ├── Ticket.java
 │   │   ├── TicketStatus.java
@@ -138,7 +145,7 @@ JavaProject/
 
 ## 已知限制
 
-- 当前为本地控制台加独立Web入门练习；SQL/JDBC已有成果，正式数据库仓库、工单HTTP查询与写操作、登录权限及处理/验收状态流尚未接入。参数类型转换成功不代表编号合法或对象存在。
+- 当前 Web 已有文件仓库查询与创建；数据库仓库、HTTP改名/派单、登录权限及处理/验收状态流尚未接入。当前新编号来自最大编号加一，没有并发或重复请求保护；未知数字编号按查无结果404处理，尚无统一正数参数校验。
 - 保存直接覆盖目标文件，尚无原子替换、备份或事务机制；写入中断可能损坏存档。
 - 保存失败时控制台提示并退出，不打印操作成功；此前发生的内存修改不会自动回滚。
 - 多个程序同时操作同一存档文件时没有并发保护。
@@ -146,7 +153,7 @@ JavaProject/
 
 ## 学习进度与下一步
 
-已跟练HTTP/JSON与Maven/POM，接入Spring Boot 4.1.2和Web MVC，OpsTicketApplication可在8080启动；HelloController经历文本、Map转JSON和查询参数三个步骤。文本/固定JSON有助手实际GET证据，name默认值与传参由学习者反馈通过。TicketController已写路径编号回显，3/10/abc运行尚待反馈。正式控制台仍用文件仓库，Web未接Service或数据库，MyBatis、权限和AI待学。
+已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。
 
 | 阶段 | 具体交付 | 进入下一阶段的条件 |
 | --- | --- | --- |
@@ -159,4 +166,4 @@ A1/A2 分别完成最小业务与基础工程；B/C 分别完成 AI 接入与效
 
 首版只保留工单闭环、必要查询和权限。设备和用户用演示种子数据；评论、退回、统计看板、全套管理界面、Redis、消息队列、微服务、Kubernetes 延后。AI 编程辅助与产品内 AI 功能分别验收，不以生成代码量计进度。
 
-**下一项亲手任务**：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。 详见[10月30日笔记](https://wishbottle.cn/posts/ops-ticket-20261030/)。
+**下一项亲手任务**：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。 详见[10月31日笔记](https://wishbottle.cn/posts/ops-ticket-20261031/)。

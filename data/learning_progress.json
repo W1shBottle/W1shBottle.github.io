@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-30",
-  "stage": "A1 Spring Boot Web 入门 → 路径参数验证与真实查询",
+  "updated": "2026-10-31",
+  "stage": "A1 文件仓库 Web 查询与创建 → 调用链巩固",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -166,6 +166,16 @@
       "next": "启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261030/"
+    },
+    {
+      "date": "2026-10-31",
+      "project": "ops-ticket",
+      "title": "Spring 依赖注入与工单查询创建接口",
+      "summary": "从Bean配置、构造器注入接通真实文件工单查询，完成列表/关键词、DTO和POST；修正重复映射，解释请求和JSON转换。含次日凌晨学习。",
+      "verification": "课堂助手GET验证200/400/404；学习者创建201截图及存档核对、空白标题失败且数量不变反馈。重启结果待单独确认；没有新增Web自动测试或接入MySQL业务。",
+      "next": "先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261031/"
     }
   ],
   "current_project": "ops-ticket"

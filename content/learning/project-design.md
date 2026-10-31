@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-30T00:00:00+08:00",
+  "lastmod": "2026-10-31T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-30。第1—9节记录原控制台设计；第10—12节为完整数据库/Web/AI目标；第13节为独立JDBC事务，第14节记录本次Web入门的实际边界。
+核对日期：2026-10-31。第1—9节记录原控制台设计；第10—12节为完整数据库/Web/AI目标；第13节为独立JDBC事务，第14节保留10月30日入门阶段，第15节是当前文件版Web实现。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -170,7 +170,7 @@ pom.xml 使用 release 21、UTF-8、JUnit Jupiter 5.14.4（test 作用域）、m
 
 save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前被拒绝；打开后直接截断或覆盖目标文件，写入中途失败仍可能破坏存档。save 不检查传入列表的重复编号，正常 Service/Repository 新增会拒绝重复，loadAll 另行防重。
 
-内存仓库的主要边界和列表结构隔离已有测试，Service 已接入接口。文件仓库先改内存再保存，失败不回滚内存；直接覆盖也可能损坏旧文件，多进程同时写入没有保护。当前SQL三表、JOIN和SQL/JDBC事务已有跟练，下一阶段将查询逐步接到Web；原子替换、备份和并发控制仍属未实现能力。
+内存仓库的主要边界和列表结构隔离已有测试，Service 已接入接口。文件仓库先改内存再保存，失败不回滚内存；直接覆盖也可能损坏旧文件，多进程同时写入没有保护。当前SQL三表、JOIN和SQL/JDBC事务已有跟练，当前Web已接文件版查询和创建，下一阶段再接数据库；原子替换、备份和并发控制仍属未实现能力。
 
 ## 10. 计划中的数据库与 Web 迁移
 
@@ -184,7 +184,7 @@ save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前
  → MyBatis Mapper（绑定参数、条件SQL） → MySQL
 ```
 
-沿用Java21与Maven，已接Boot4.1.2/Web MVC；MyBatis尚未添加，接入时核对与Boot4的兼容版本。普通JAR仍启动ConsoleApp，Web启动类已成功运行，Boot可执行Web包尚未配置。完整业务调用链仍是目标，编号回显不是数据库查询。
+沿用Java21与Maven，已接Boot4.1.2/Web MVC；MyBatis尚未添加，接入时核对与Boot4的兼容版本。普通JAR仍启动ConsoleApp，Web启动类已成功运行，Boot可执行Web包尚未配置。数据库调用链仍是目标，当前文件版HTTP查询和创建不等于数据库迁移已完成。
 
 **创建与 ID。** 当前 `TicketService.create` 的 maxId+1 和 `add(Ticket)` 预先携带 ID 只适合内存/文件课。数据库创建输入不带自选 ID；Mapper 插入后返回自增 ID，再构建/读取合法 Ticket。使用专门的插入数据对象接 generated key，不为了框架把当前 final id 粗暴改成任意可写。到这一课一起调整 Service/持久化契约和测试；旧实现可保留练习用途，不强求所有实现永远共用旧四方法接口。
 
@@ -194,7 +194,7 @@ save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前
 
 **重复请求。** CREATE 由客户端生成 requestKey；服务按规范化输入计算 requestHash。已有相同操作者/动作/key 且 hash 相同，返回原 ticketId；hash 不同返回 409。新工单与 CREATE 日志共同提交；并发唯一键冲突时先回滚，再在新的查询中读已有结果。其余状态操作重复请求返回明确冲突，不重复产生状态或日志；暂不引入通用幂等组件/Redis 锁。网络错误后先按 key 或详情核对结果，不盲目重发不同 key。
 
-### 最小 HTTP 业务契约（待实现；编号回显不算真实查询）
+### 最小数据库版 HTTP 业务契约（目标；当前文件版子集见第15节）
 
 | 请求 | 服务端约束 |
 | --- | --- |
@@ -269,3 +269,25 @@ OpsTicketApplication位于根包cn.wishbottle.opsticket，使用@SpringBootAppli
 @RestController使组件被识别并将返回值写入响应体；@GetMapping中的路径决定匹配，不由Java方法名决定。Map是Java内存对象，JSON是序列化后的数据格式；当前不手动拼JSON。所有Controller均为跟练实现，无Web自动测试。
 
 POM保留JUnit5.14.4属性、驱动26.10.0和既有编译/测试/JAR插件。spring-boot-maven-plugin尚未配置，不能用当前ConsoleApp清单声称Web JAR已交付。下一步先验证路径参数，再设计真实查询返回对象和不存在的404处理。
+
+
+## 15. 2026-10-31 文件仓库 Web 接线与请求 DTO
+
+TicketConfig 使用 @Configuration 和两个 @Bean 方法创建 FileTicketRepository 与 TicketService。Controller 通过唯一构造器接收 Service；默认单例在当前容器内共享，控制台是独立入口，不与 Web 进程共享 Map。
+
+调用链：HTTP Client → Tomcat → Spring MVC → Controller → TicketService → FileTicketRepository → 内存仓库/Properties文件。查询走恢复后的内存，成功创建走自动保存，没有 MyBatis 或数据库访问。
+
+| 请求 | 当前行为 | 证据 |
+| --- | --- | --- |
+| GET /api/hello[?name=...] | 问候 JSON，缺参使用访客 | 上课用户反馈 |
+| GET /api/tickets/{id} | 文件仓库中真实工单；未知编号404，非数字路径400 | 课堂助手GET验证1/999；早期abc由用户反馈 |
+| GET /api/tickets[?keyword=...] | 不传查全部；有效关键词筛选；无匹配返回[]；空值或空白400 | 课堂助手实际GET五个场景 |
+| POST /api/tickets | JSON标题→DTO→Service创建并自动保存，返回Ticket与201；非法标题400 | 用户201截图，源码/存档核对；空白标题及数量不变由用户反馈 |
+
+列表和创建均显式支持末尾斜杠；详情路径没有额外配置尾斜杠。GET与POST同路径按请求方法区分；不要保留两个相同GET映射。错误原因可能不显示在默认响应体，尚未统一错误JSON。
+
+CreateTicketRequest 只有 title/getTitle/setTitle。@RequestBody 通过消息转换组件/Jackson 将 JSON 转成 DTO；参数名不是 JSON 匹配依据，setTitle 对应 title 属性。DTO只携带输入，Title业务校验保留在Ticket中。Controller返回Ticket/List，@RestController让返回值写入响应体；JSON序列化发生在方法返回之后。
+
+create中IllegalArgumentException被包装成ResponseStatusException(400, message, cause)；默认错误响应不保证显示业务说明。Spring的参数转换异常可能在进入方法前发生，尚未增加统一异常处理。当前直接返回Ticket便于入门，后续按字段暴露需要拆响应DTO。
+
+保存失败不会撤销已改的内存；单例Map、最大编号加一、文件覆盖写入均未做并发保护；反复POST会创建多张。HTTP改名/派单、登录权限、数据库事务、处理验收和AI仍是后续任务。仅本机单人学习，不作为生产部署版本。
