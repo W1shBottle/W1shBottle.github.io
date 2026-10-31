@@ -1,6 +1,6 @@
 # 学习时间线维护
 
-学习首页的 #progress 展示公开的每日进度。数据源为 data/learning_progress.json，模板为 layouts/partials/learning-progress.html，交互为 assets/js/learning-progress.js。
+学习首页的 #dashboard 展示任务验收面板，#progress 保留公开的每日时间线。数据源为 data/learning_progress.json，模板为 layouts/partials/learning-progress.html，交互为 assets/js/learning-progress.js。
 
 ## 何时更新
 
@@ -23,6 +23,7 @@
 完成当天笔记后，在同一次博客提交中补上 note 并更新状态。先验证再发布：
 
 ~~~text
+python scripts/build_learning_dashboard.py
 python scripts/validate_learning_progress.py
 hugo --minify
 ~~~
@@ -47,3 +48,19 @@ hugo --minify
 ## 2026-10-26 SQL日结接续
 
 同日继续学习后，按用户要求将10月21日后未归档的SQL内容合并为工单第7篇。当天原方案记录更新为普通learning日结、reviewed并链接新文章，删除plan-update标记，不新增重复日期；前12条历史记录保持原样。组合查询有学习者实际输出（编号3），JOIN已讲解/保存但执行与独立变体待验收。当前接续完整JOIN核对与OPEN筛选；未连接数据库、未新增或重跑Java测试，引用同日既有17项测试证据。
+
+
+## 可视化任务验收面板（2026-11-01 起）
+
+学习者已选择“按任务验收计算，跟练单独显示”。不按天数推算完成率，也不把学习代码存在当作能力掌握。
+
+- 单一状态来源：`content/learning/checklists.md` 的稳定任务编号和勾选状态。`[x]` 为该项已验收；已练习/已跟练/实操通过但解释待巩固/正在学/持续为 practicing；待学为 planned。保留文字证据，未知标签会阻止生成，不能默默按完成处理。
+- 阶段范围：`data/learning_dashboard_plan.json` 分组 J、S/W、E、B、C、P；P05 及 O01—O05 按需，不计分母。贯穿基础任务计入全计划，但不因此变成进入 AI 的额外门槛。当前阶段与 focus_tasks 在发生实际阶段迁移时更新。
+- 派生结果：`scripts/build_learning_dashboard.py` 从清单、分组和时间线生成 `data/learning_dashboard.json`。首页和学习页面都读同一结果。不要手工填写百分比或手改派生 JSON。
+- 分子只含已验收任务；整体按所有必修任务加总，不平均阶段百分比。整数四舍五入，同时展示精确数量。任务粒度/难度不同，不用于估算时间或评价熟练度。修改范围会改变分母，需说明原因。
+- 初始快照：55 项，6 项按需、49 项计入；6 项已验收、14 项跟练待巩固、29 项待学，整体 12%。A1 有 8 项跟练、0/12 项完整验收。这个数字只描述清单要求，不能否定已有运行成果，也不要求倒回去重抄旧课。
+- 更新顺序：核对实际学习与验收证据 → 更新清单状态/必要时分组焦点 → 同步时间线 → 运行生成脚本 → 运行时间线校验。既有 CI 校验会检查派生数据是否过期，避免发布两个不一致的百分比。
+- 若修改了公开课程正文，同步重建既有离线阅读版和 ZIP；面板实现本身不产生学习打卡或新文章。不要只为面板造一个“今天已完成”的时间线条目。
+- 本次仅按已有勾选记录建面板，没有扩大已掌握范围；下一任务沿用最新时间线。之后按用户主动要求的日结更新，不安排定时发文。
+
+展示检查：桌面/手机、深浅主题、键盘展开、任务锚点、无 JS 阅读、减少动画设置；保留时间线的筛选与较早记录展开。

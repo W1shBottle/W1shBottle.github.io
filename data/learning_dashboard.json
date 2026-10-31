@@ -1,0 +1,546 @@
+{
+  "version": 1,
+  "source_sha256": "e6058e3feb40a498c32852c0f0fe4f40e6dd79f0cac69a15e5e85193ae950041",
+  "updated": "2026-10-31",
+  "project": "设备运维工单",
+  "stage": "A1 文件仓库 Web 查询与创建 → 调用链巩固",
+  "current_group": "backend",
+  "focus_tasks": [
+    {
+      "id": "W03",
+      "title": "HTTP 和 JSON",
+      "status": "practicing",
+      "optional": false,
+      "description": "GET详情/列表/关键词200/400/404有课堂实测；POST创建201截图与空白标题失败反馈。已解释路径、方法、DTO、请求体/响应体和序列化，独立断点追踪与缺字段/坏JSON继续验证。"
+    },
+    {
+      "id": "W04",
+      "title": "Spring Boot/MVC 与依赖注入",
+      "status": "practicing",
+      "optional": false,
+      "description": "TicketConfig通过Bean配置仓库/Service，Controller构造器注入，CreateTicketRequest接收JSON；文件版创建查询已接通。通过独立说明对象创建和方法调用确认理解，未视为数据库/权限完成。"
+    }
+  ],
+  "next": "先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。",
+  "note": "/posts/ops-ticket-20261031/",
+  "stats": {
+    "accepted": 6,
+    "practicing": 14,
+    "planned": 29,
+    "total": 49,
+    "percent": 12,
+    "accepted_width": 12.2449,
+    "practicing_width": 28.5714
+  },
+  "groups": [
+    {
+      "id": "foundation",
+      "code": "起步",
+      "title": "Java 与开发工具",
+      "prefixes": [
+        "J"
+      ],
+      "description": "把对象、集合、文件和工具用在同一个项目里。",
+      "tasks": [
+        {
+          "id": "J01",
+          "title": "引用与对象",
+          "status": "accepted",
+          "optional": false,
+          "description": "能解释 `Ticket alias = first` 是共享对象引用；重新 `new` 后引用可以指向另一对象。证据：已口述判断。"
+        },
+        {
+          "id": "J02",
+          "title": "static",
+          "status": "accepted",
+          "optional": false,
+          "description": "能解释静态字段由同一个类的对象共享，为什么会出现第二张工单的数据覆盖第一张的观察结果。证据：已口述判断。"
+        },
+        {
+          "id": "J03",
+          "title": "Map 的键",
+          "status": "accepted",
+          "optional": false,
+          "description": "知道相同 key 的 put 会覆盖，能解释新增前检查重复编号的原因。证据：已口述判断。"
+        },
+        {
+          "id": "J04",
+          "title": "编号算法",
+          "status": "accepted",
+          "optional": false,
+          "description": "能解释已有 1/2/5 时下一个编号应为 6，而不是 size()+1。证据：已口述；仅适用于当前内存练习，数据库不能照搬。"
+        },
+        {
+          "id": "J05",
+          "title": "相对路径",
+          "status": "accepted",
+          "optional": false,
+          "description": "知道相同字符串可能因工作目录不同指向不同文件，并会检查工作目录。证据：已口述排查思路。"
+        },
+        {
+          "id": "J06",
+          "title": "Git 本地提交",
+          "status": "accepted",
+          "optional": false,
+          "description": "已执行 status/add/commit/log，产生可见提交。后续仍需学习分支和冲突；不代表 Git 全部掌握。"
+        },
+        {
+          "id": "J07",
+          "title": "对象规则与接口",
+          "status": "practicing",
+          "optional": false,
+          "description": "读 Ticket、TicketRepository、两种实现和 Service；独立讲清 private/构造器/this/enum、long 与 Long、implements/Override、接口多态和构造器注入。完成一个业务规则的小改即可，不重写整套类。"
+        },
+        {
+          "id": "J08",
+          "title": "集合、泛型与空结果",
+          "status": "practicing",
+          "optional": false,
+          "description": "读 Service/内存仓库；能区分 List/Map/Set、集合新对象与元素共享引用、Optional 与 null；独立增加一种筛选并解释顺序与空结果。"
+        },
+        {
+          "id": "J09",
+          "title": "异常和文件 IO",
+          "status": "practicing",
+          "optional": false,
+          "description": "读 FileStore/文件仓库；能解释 throw/throws/catch、受检与运行时异常、cause、Reader/Writer、UTF-8、try-with-resources。自己定位一次字段错误，不能把写文件失败当事务已回滚。"
+        },
+        {
+          "id": "J10",
+          "title": "构建、调试和测试",
+          "status": "practicing",
+          "optional": false,
+          "description": "用 pom/现有测试解释 main 与 @Test、断言和 @TempDir、test/package 的区别；独立下断点看调用链，改坏一处规则后关键测试应失败，恢复后通过。无需追加同质 assertEquals。"
+        }
+      ],
+      "stats": {
+        "accepted": 6,
+        "practicing": 4,
+        "planned": 0,
+        "total": 10,
+        "percent": 60,
+        "accepted_width": 60.0,
+        "practicing_width": 40.0
+      }
+    },
+    {
+      "id": "backend",
+      "code": "A1",
+      "title": "后端业务闭环",
+      "prefixes": [
+        "S",
+        "W"
+      ],
+      "description": "从 SQL 与 JDBC，走到真实数据库支撑的 HTTP 业务。",
+      "tasks": [
+        {
+          "id": "S01",
+          "title": "条件组合",
+          "status": "practicing",
+          "optional": false,
+          "description": "2026-10-28已提交“打印机＋OPEN＋处理人为空”的SQL与正确结果（id=3）。本项还包含解释WHERE/AND/LIKE/IS NULL、引号、ORDER BY及预测改条件后的结果，暂不把这些全部勾为已掌握；在下一项JOIN筛选中验收，不重抄成功语句。"
+        },
+        {
+          "id": "S02",
+          "title": "表设计与约束",
+          "status": "practicing",
+          "optional": false,
+          "description": "画 device/app_user/ticket 关系；解释主键、自增、外键、唯一、NOT NULL、CHECK 和 NULL。能指出外键不检查 ENGINEER 角色、CHECK 不代替合法状态迁移。"
+        },
+        {
+          "id": "S03",
+          "title": "多表查询",
+          "status": "practicing",
+          "optional": false,
+          "description": "JOIN/LEFT/RIGHT和别名已讲解；OPEN筛选得到打印机且处理人NULL，用户已反馈通过。继续在后续功能解释每个ON及NULL保留，不重抄整套查询。"
+        },
+        {
+          "id": "S04",
+          "title": "统计和分页",
+          "status": "practicing",
+          "optional": false,
+          "description": "COUNT为2/1，LEFT JOIN用COUNT(t.id)统计工单，HAVING=0筛出无工单设备；稳定分页、同筛选总数及偏移后空页已有反馈。下一业务变体验证独立解释，暂不标成全部熟练。"
+        },
+        {
+          "id": "S05",
+          "title": "事务与影响行数",
+          "status": "practicing",
+          "optional": false,
+          "description": "已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；正式业务尚无数据库并发保护。"
+        },
+        {
+          "id": "S06",
+          "title": "索引与 EXPLAIN 入门",
+          "status": "planned",
+          "optional": false,
+          "description": "围绕一个列表查询说明索引作用、代价与执行计划；保留样本量和结果，不能靠很少数据声称高性能。基础可沿途学，深度调优不挡 B。"
+        },
+        {
+          "id": "W01",
+          "title": "JDBC",
+          "status": "practicing",
+          "optional": false,
+          "description": "Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。"
+        },
+        {
+          "id": "W02",
+          "title": "数据库生成 ID 与映射",
+          "status": "planned",
+          "optional": false,
+          "description": "创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。"
+        },
+        {
+          "id": "W03",
+          "title": "HTTP 和 JSON",
+          "status": "practicing",
+          "optional": false,
+          "description": "GET详情/列表/关键词200/400/404有课堂实测；POST创建201截图与空白标题失败反馈。已解释路径、方法、DTO、请求体/响应体和序列化，独立断点追踪与缺字段/坏JSON继续验证。"
+        },
+        {
+          "id": "W04",
+          "title": "Spring Boot/MVC 与依赖注入",
+          "status": "practicing",
+          "optional": false,
+          "description": "TicketConfig通过Bean配置仓库/Service，Controller构造器注入，CreateTicketRequest接收JSON；文件版创建查询已接通。通过独立说明对象创建和方法调用确认理解，未视为数据库/权限完成。"
+        },
+        {
+          "id": "W05",
+          "title": "MyBatis",
+          "status": "planned",
+          "optional": false,
+          "description": "在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。"
+        },
+        {
+          "id": "W06",
+          "title": "分层与核心状态流",
+          "status": "planned",
+          "optional": false,
+          "description": "串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 8,
+        "planned": 4,
+        "total": 12,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 66.6667
+      }
+    },
+    {
+      "id": "engineering",
+      "code": "A2",
+      "title": "工程与交付",
+      "prefixes": [
+        "E"
+      ],
+      "description": "补齐权限、事务、测试与 Linux 部署，交付可靠的小版本。",
+      "tasks": [
+        {
+          "id": "E01",
+          "title": "参数校验与异常响应",
+          "status": "planned",
+          "optional": false,
+          "description": "用 DTO/Bean Validation 和统一异常处理；空标题、非法编号、资源不存在、状态冲突有一致响应，不能把所有错误返回200或暴露堆栈。"
+        },
+        {
+          "id": "E02",
+          "title": "认证",
+          "status": "planned",
+          "optional": false,
+          "description": "使用 Spring Security＋Session Cookie 和框架 PasswordEncoder；理解登录、注销、CSRF。SQL里的 NOT_A_LOGIN_HASH 不是已配置的真实登录密码。"
+        },
+        {
+          "id": "E03",
+          "title": "角色与资源归属授权",
+          "status": "planned",
+          "optional": false,
+          "description": "用户A不能读用户B的工单；管理员派单、指定工程师处理、原报修人验收。身份从认证上下文取，客户端或模型传来的 actorId 不能充当授权。"
+        },
+        {
+          "id": "E04",
+          "title": "业务事务",
+          "status": "planned",
+          "optional": false,
+          "description": "Service 划定状态变更＋ticket_action_log 的事务；在真实测试库令日志写失败，核对状态/版本也回滚，解释事务生效与异常传播。"
+        },
+        {
+          "id": "E05",
+          "title": "重复请求和并发冲突",
+          "status": "planned",
+          "optional": false,
+          "description": "创建用 requestKey/hash＋唯一约束，同键同输入返回原 ticketId，不同输入409；状态操作用前置状态/expectedVersion，两个竞争请求只能一个成功，不能静默覆盖。"
+        },
+        {
+          "id": "E06",
+          "title": "有意义的测试",
+          "status": "planned",
+          "optional": false,
+          "description": "保留现有JUnit；补少量关键规则、接口权限和真实MySQL集成测试。能区分单元/集成测试、Mock/真实依赖，隔离测试库，不以断言数量衡量质量。"
+        },
+        {
+          "id": "E07",
+          "title": "日志与排错",
+          "status": "planned",
+          "optional": false,
+          "description": "用日志框架记录 requestId、业务结果和错误原因；能从异常链追到错误SQL/配置，不记录密码、Cookie和密钥；保存一次复现→根因→修复→回归记录。"
+        },
+        {
+          "id": "E08",
+          "title": "配置、Linux与运行环境",
+          "status": "planned",
+          "optional": false,
+          "description": "用环境变量区分开发/测试配置；掌握目录、进程、端口、文件权限、日志查看、启动/停止；在另一环境运行JAR、重启读回数据并排查一次连接/端口错误。"
+        },
+        {
+          "id": "E09",
+          "title": "数据与交付文档",
+          "status": "planned",
+          "optional": false,
+          "description": "区分建表/迁移/种子/故意失败SQL；用新库做备份恢复核对，不覆盖开发库。README写清实际版本、配置、启动、测试、演示和限制。"
+        },
+        {
+          "id": "E10",
+          "title": "Git协作基本流程",
+          "status": "planned",
+          "optional": false,
+          "description": "在练习分支完成一项修改，检查diff，处理一次受控合并冲突；会区分工作区/暂存区/提交并保留有意义记录，不盲目回退未提交成果。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 0,
+        "planned": 10,
+        "total": 10,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 0.0
+      }
+    },
+    {
+      "id": "ai",
+      "code": "B",
+      "title": "一个实用 AI 功能",
+      "prefixes": [
+        "B"
+      ],
+      "description": "用 Java 接模型，为已有工单提供摘要和分类建议。",
+      "tasks": [
+        {
+          "id": "B01",
+          "title": "模型 API 基础",
+          "status": "planned",
+          "optional": false,
+          "description": "理解模型、提示词、上下文、token、输入/输出用量；知道API调用、RAG、Agent和模型训练是不同工作。能够解释本功能为何需要模型及其限制。"
+        },
+        {
+          "id": "B02",
+          "title": "Java模型客户端",
+          "status": "planned",
+          "optional": false,
+          "description": "写 ModelClient，用 Java HttpClient 调一个真实提供方；端点/模型/key从配置取，设置连接和请求超时。未配置时明确标记真实调用未验证。"
+        },
+        {
+          "id": "B03",
+          "title": "结构化输出",
+          "status": "planned",
+          "optional": false,
+          "description": "约定 summary/category/missingInformation，校验JSON类型、必填、枚举、长度和数量；分类只允许DISPLAY/PRINTING/HVAC/OTHER/UNKNOWN。能解释合法JSON不保证内容正确。"
+        },
+        {
+          "id": "B04",
+          "title": "提示与上下文设计",
+          "status": "planned",
+          "optional": false,
+          "description": "只给有权读取且必要的工单内容，明确任务与输出格式；信息少则UNKNOWN/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。"
+        },
+        {
+          "id": "B05",
+          "title": "超时、错误与降级",
+          "status": "planned",
+          "optional": false,
+          "description": "处理超时、拒答、429/5xx、错误JSON和缺字段；有上限的总耗时/重试/调用次数。关闭AI后创建、派单、处理和验收仍能运行；网络调用放在写事务外。"
+        },
+        {
+          "id": "B06",
+          "title": "调用记录与费用",
+          "status": "planned",
+          "optional": false,
+          "description": "记录模型/提示版本、耗时、错误类别、tokens和重试；区分真实账单与估算，价格/用量未知就写未知；设置个人实验预算，不能默认无限调用。"
+        },
+        {
+          "id": "B07",
+          "title": "业务接入与验证",
+          "status": "planned",
+          "optional": false,
+          "description": "AiAssistanceService复用详情授权；无权工单不发模型请求。至少保存一组真实调用和一组模拟故障证据，二者不能混写为模型效果。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 0,
+        "planned": 7,
+        "total": 7,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 0.0
+      }
+    },
+    {
+      "id": "evaluation",
+      "code": "C",
+      "title": "验证与改进",
+      "prefixes": [
+        "C"
+      ],
+      "description": "用固定案例评估效果、延迟、成本，记录失败并改进。",
+      "tasks": [
+        {
+          "id": "C01",
+          "title": "固定案例与基线",
+          "status": "planned",
+          "optional": false,
+          "description": "准备约12—20个虚构案例，包含明确、模糊、无依据、长输入、诱导越权；开发集和留出集分开，先记录人工阅读整理摘要的基线。"
+        },
+        {
+          "id": "C02",
+          "title": "效果评估",
+          "status": "planned",
+          "optional": false,
+          "description": "记录真实样本数、结构合法率、事实忠实度、建议可用性/修改次数；保留失败例和人工判定理由，不只挑成功截图。"
+        },
+        {
+          "id": "C03",
+          "title": "延迟、用量与成本",
+          "status": "planned",
+          "optional": false,
+          "description": "记录端到端耗时、失败/重试、输入输出token及计价依据；说明小样本限制，没有实测不写提升比例或并发规模。"
+        },
+        {
+          "id": "C04",
+          "title": "失败分析与回归",
+          "status": "planned",
+          "optional": false,
+          "description": "选一个真实问题，只改提示、上下文或解析中的一项；重跑固定集和留出集，解释改善与退化，并证明AI失败仍不影响业务。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 0,
+        "planned": 4,
+        "total": 4,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 0.0
+      }
+    },
+    {
+      "id": "practice",
+      "code": "贯穿",
+      "title": "基础与项目表达",
+      "prefixes": [
+        "P"
+      ],
+      "description": "算法、运行原理与独立修改穿插进行，不阻挡进入 AI。",
+      "tasks": [
+        {
+          "id": "P01",
+          "title": "数据结构与算法",
+          "status": "practicing",
+          "optional": false,
+          "description": "已有数组/次数统计/两数之和；补复杂度解释、字符串、哈希、栈队列、二分的常见场景，能独立写一个变体而不只背答案。"
+        },
+        {
+          "id": "P02",
+          "title": "Java基础查漏",
+          "status": "planned",
+          "optional": false,
+          "description": "equals/hashCode、不可变性、继承与组合、常用泛型/注解；对应集合键、DTO和业务对象解释使用原因，不为背设计模式增加层数。"
+        },
+        {
+          "id": "P03",
+          "title": "并发与运行时入门",
+          "status": "planned",
+          "optional": false,
+          "description": "理解线程/进程、共享状态、竞态、锁和有界线程池；区分Java锁与数据库条件更新；会看基本JVM内存/GC现象。先支撑当前排错，深入JMM/JVM调优后置。"
+        },
+        {
+          "id": "P04",
+          "title": "网络与操作系统基础",
+          "status": "planned",
+          "optional": false,
+          "description": "用一次请求解释DNS、TCP、HTTP/HTTPS、Cookie、端口、超时；理解文件路径/权限、进程资源，不背脱离项目的大段术语。"
+        },
+        {
+          "id": "P06",
+          "title": "AI辅助编程能力",
+          "status": "practicing",
+          "optional": false,
+          "description": "每次记录助手给了什么；自己读调用链、改一处需求并验证、定位一个错误；能脱离答案解释。使用AI写代码不等于开发了产品AI功能。"
+        },
+        {
+          "id": "P07",
+          "title": "项目表达与岗位匹配",
+          "status": "planned",
+          "optional": false,
+          "description": "用5—8分钟讲清业务、自己的贡献、事务/权限、AI效果与限制；整理一个故障案例。投递核对杭州、本科、毕业届别/实习资格、出勤与连续月数。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 2,
+        "planned": 4,
+        "total": 6,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 33.3333
+      }
+    }
+  ],
+  "optional_tasks": [
+    {
+      "id": "P05",
+      "title": "最小页面能力",
+      "status": "planned",
+      "optional": true,
+      "description": "学够HTML/CSS/JavaScript/fetch，展示登录、列表/详情、操作与AI建议，能看浏览器网络请求和错误；使用页面骨架可注明来源，不要求现在转全栈框架。"
+    },
+    {
+      "id": "O01",
+      "title": "RAG知识检索",
+      "status": "planned",
+      "optional": true,
+      "description": "真的需要手册依据时，做来源/版本/访问权限、资料导入、切片、检索、可定位引用及无依据处理；需要语义召回时再学习Embedding和向量检索，并分别评估检索与生成。"
+    },
+    {
+      "id": "O02",
+      "title": "只读工具调用",
+      "status": "planned",
+      "optional": true,
+      "description": "开放查可见工单/读详情两个受控工具；Java逐次校验权限、参数、范围和返回数量，不暴露任意SQL/命令；验证无结果、越权、工具失败。"
+    },
+    {
+      "id": "O03",
+      "title": "多步骤Agent",
+      "status": "planned",
+      "optional": true,
+      "description": "单次工具调用稳定且确需多步后，加入上下文管理、步数/时间/费用上限和明确终止；检查重复调用、过期数据、工具异常与跨用户隔离。"
+    },
+    {
+      "id": "O04",
+      "title": "写工具与用户确认",
+      "status": "planned",
+      "optional": true,
+      "description": "展示具体动作/参数/版本，确认后重新验证权限与状态、防重复；不能把模型建议或一句宽泛同意当成永久写权限。"
+    },
+    {
+      "id": "O05",
+      "title": "部署和性能扩展",
+      "status": "planned",
+      "optional": true,
+      "description": "需要可复现容器环境再学Docker/Compose；有查询瓶颈再考虑Redis与失效策略；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。"
+    }
+  ],
+  "total_items": 55
+}

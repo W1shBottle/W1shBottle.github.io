@@ -1,0 +1,4 @@
+<div class="journey-meter" role="progressbar" aria-label="{{ .label }}：任务验收" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ .stats.percent }}" aria-valuetext="{{ .stats.accepted }} 项验收通过，共 {{ .stats.total }} 项；另有 {{ .stats.practicing }} 项跟练中">
+  <span class="journey-meter-accepted" style="{{ printf "width:%.4f%%" (float .stats.accepted_width) | safeCSS }}"></span>
+  <span class="journey-meter-practicing" style="{{ printf "width:%.4f%%" (float .stats.practicing_width) | safeCSS }}"></span>
+</div>

@@ -15,6 +15,9 @@
 {{ if eq .Section "learning" }}
     {{ $styles = $styles | append (resources.Get "css/learning.css") }}
 {{ end }}
+{{ if or .IsHome (eq .Section "learning") }}
+    {{ $styles = $styles | append (resources.Get "css/learning-dashboard.css") }}
+{{ end }}
 {{ $styles = $styles | append (resources.Get "css/appearance.css") }}
 {{ if or .IsHome (eq .Layout "discover") }}
     {{ $styles = $styles | append (resources.Get "css/discover.css") }}

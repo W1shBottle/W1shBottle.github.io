@@ -1,0 +1,6 @@
+<li class="journey-task" id="task-{{ .id }}" data-task-state="{{ .status }}">
+  <details>
+    <summary><span class="journey-task-id">{{ .id }}</span><span class="journey-task-name">{{ .title }}</span><span class="journey-task-state state-{{ .status }}">{{ if eq .status "accepted" }}已验收{{ else if eq .status "practicing" }}待巩固{{ else if .optional }}按需{{ else }}待学{{ end }}</span></summary>
+    <div class="journey-task-evidence"><p class="journey-task-caption">验收要求与当前记录</p><p>{{ .description | markdownify }}</p></div>
+  </details>
+</li>

@@ -6,13 +6,15 @@
     <p>{{ .Description | default "用同一个设备运维工单项目学习后端业务、AI 应用与效果验证。" }}</p>
 
     <div class="learning-actions">
-      <a class="learning-button learning-button-primary" href="#progress">查看学习进度 ↓</a>
+      <a class="learning-button learning-button-primary" href="#dashboard">查看学习进度 ↓</a>
       <a class="learning-button" href="{{ "/learning/checklists/" | relURL }}">技能 To-do List ↗</a>
       <a class="learning-button" href="#learning-directory">浏览课程目录</a>
       <a class="learning-button" href="{{ "/learning/project-docs/" | relURL }}">项目文档 ↗</a>
     </div>
 
   </header>
+
+  {{ partial "learning-dashboard.html" . }}
 
   {{ partial "learning-progress.html" . }}
 

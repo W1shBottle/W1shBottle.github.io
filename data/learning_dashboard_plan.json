@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "current_group": "backend",
+  "focus_tasks": [
+    "W03",
+    "W04"
+  ],
+  "optional_ids": [
+    "P05",
+    "O01",
+    "O02",
+    "O03",
+    "O04",
+    "O05"
+  ],
+  "groups": [
+    {
+      "id": "foundation",
+      "code": "起步",
+      "title": "Java 与开发工具",
+      "prefixes": [
+        "J"
+      ],
+      "description": "把对象、集合、文件和工具用在同一个项目里。"
+    },
+    {
+      "id": "backend",
+      "code": "A1",
+      "title": "后端业务闭环",
+      "prefixes": [
+        "S",
+        "W"
+      ],
+      "description": "从 SQL 与 JDBC，走到真实数据库支撑的 HTTP 业务。"
+    },
+    {
+      "id": "engineering",
+      "code": "A2",
+      "title": "工程与交付",
+      "prefixes": [
+        "E"
+      ],
+      "description": "补齐权限、事务、测试与 Linux 部署，交付可靠的小版本。"
+    },
+    {
+      "id": "ai",
+      "code": "B",
+      "title": "一个实用 AI 功能",
+      "prefixes": [
+        "B"
+      ],
+      "description": "用 Java 接模型，为已有工单提供摘要和分类建议。"
+    },
+    {
+      "id": "evaluation",
+      "code": "C",
+      "title": "验证与改进",
+      "prefixes": [
+        "C"
+      ],
+      "description": "用固定案例评估效果、延迟、成本，记录失败并改进。"
+    },
+    {
+      "id": "practice",
+      "code": "贯穿",
+      "title": "基础与项目表达",
+      "prefixes": [
+        "P"
+      ],
+      "description": "算法、运行原理与独立修改穿插进行，不阻挡进入 AI。"
+    }
+  ]
+}

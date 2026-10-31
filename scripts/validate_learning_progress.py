@@ -5,6 +5,8 @@ from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 import re
 
+from build_learning_dashboard import validate_snapshot
+
 ROOT = Path(__file__).resolve().parents[1]
 
 def validate(as_of=None):
@@ -49,3 +51,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--as-of", help="Confirmed publication date YYYY-MM-DD; defaults to UTC+08:00 today")
     validate(parser.parse_args().as_of)
+    validate_snapshot()

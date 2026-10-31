@@ -13,6 +13,13 @@
     <p>沿用一个工单项目，先完成后端业务，再加入 AI 功能并验证效果。</p>
     <p class="stack mono">Java 21 / Maven / MySQL</p>
     <ol class="steps"><li class="done"><span class="dot"></span>对象建模与文件存档</li><li class="done"><span class="dot"></span>仓库接口与控制台交付</li><li class="current"><span class="dot"></span>工单查询与创建接口<small>文件仓库已接通 · DTO 与 POST 已跟练</small></li></ol>
+    {{ with site.Data.learning_dashboard }}
+    <a class="home-learning-progress" href="/learning/#dashboard" aria-label="查看学习进度：{{ .stats.percent }}% 任务已验收">
+      <span>学习计划 · 任务验收<strong>{{ .stats.percent }}%</strong></span>
+      {{ partial "learning-meter.html" (dict "stats" .stats "label" "整体学习计划") }}
+      <small>{{ .stats.accepted }}/{{ .stats.total }} 项已验收 · {{ .stats.practicing }} 项跟练待巩固 · 查看面板 ↗</small>
+    </a>
+    {{ end }}
     <div class="project-links"><a href="/learning/project-docs/">项目文档 ↗</a><a href="/learning/#progress">学习时间线 →</a></div>
   </aside>
 </section>
