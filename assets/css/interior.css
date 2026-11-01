@@ -28,8 +28,6 @@ body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:n
 /* Collections remain closed by default, with the existing reversible disclosure. */
 .interior-main .post-series { border:1px solid var(--folio-line); border-radius:13px; background:var(--folio-paper); margin-bottom:20px; }
 .interior-main .post-series-summary { display:flex; align-items:center; gap:22px; padding:25px 26px; }
-.post-series-mark { display:grid; place-items:center; flex:0 0 48px; width:48px; height:62px; border:1px solid var(--folio-line); border-radius:6px 10px 10px 6px; color:var(--folio-accent); background:linear-gradient(90deg,var(--folio-wash) 4px,transparent 4px),var(--folio-paper); box-shadow:3px 3px 0 var(--folio-wash); }
-.post-series-mark svg { width:24px; height:28px; }
 .interior-main .post-series-overview { flex:1; min-width:0; }
 .interior-main .post-series-meta { font-size:10px; letter-spacing:.04em; color:var(--folio-muted); }
 .interior-main .post-series-count { background:var(--folio-wash); color:var(--folio-accent); border-radius:5px; padding:2px 6px; }
@@ -174,8 +172,6 @@ body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:n
 @media(hover:hover) and (prefers-reduced-motion:no-preference) {
  .interior-main .post-series { transition:border-color 240ms ease,box-shadow 240ms ease; }
  .interior-main .post-series:hover { border-color:color-mix(in srgb,var(--folio-accent) 48%,var(--folio-line)); box-shadow:0 7px 22px rgba(0,0,0,.035); }
- .interior-main .post-series-mark { transition:transform 260ms ease; }
- .interior-main .post-series-summary:hover .post-series-mark { transform:translateY(-2px); }
 }
 @media(max-width:1099px) {
  .interior-main .article-layout { display:flex; flex-direction:column; align-items:stretch; gap:18px; }
@@ -193,8 +189,6 @@ body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:n
  .folio-tools { font-size:10px; margin:0 0 20px; gap:13px; }
  .folio-tools nav { gap:14px; }
  .interior-main .post-series-summary { padding:19px 18px; gap:14px; align-items:flex-start; }
- .post-series-mark { flex-basis:34px; width:34px; height:46px; margin-top:3px; }
- .post-series-mark svg { width:19px; height:24px; }
  .interior-main .post-series-name { font-size:17px; margin:7px 0; }
  .interior-main .post-series-latest { font-size:11px; }
  .interior-main .post-series-toggle { font-size:10px; }
@@ -250,7 +244,6 @@ body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:n
 @media(max-width:380px) {
  .interior-main .folio-heading h1 { font-size:29px; }
  .interior-main .folio-post-heading h1,.interior-main .folio-lesson-heading h1 { font-size:23px; }
- .post-series-mark { display:none; }
  .search-suggestions > span { width:100%; }
  .search-field-icon { display:none; }
 }
