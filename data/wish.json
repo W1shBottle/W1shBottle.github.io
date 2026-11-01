@@ -47,6 +47,19 @@
       ],
       "label": "AI / EXPLORATION",
       "class": "ai"
+    },
+    {
+      "id": "cumt-algorithms-final",
+      "number": "05",
+      "title": "cumt算法设计与分析期末考速通笔记",
+      "subtitle": "为期末考试单独复习算法，按真题梳理思路、伪代码与复杂度。",
+      "tags": [
+        "CUMT",
+        "期末复习"
+      ],
+      "series": "cumt-algorithms-final",
+      "label": "EXAM / ALGORITHMS",
+      "class": "systems"
     }
   ]
 }
