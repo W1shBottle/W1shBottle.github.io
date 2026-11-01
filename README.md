@@ -28,4 +28,4 @@ hugo server -D
 
 ## 第三方素材
 
-[Typo](themes/typo-blue/LICENSE) · [JetBrains Mono](static/licenses/jetbrains-mono.txt) · [Lens](static/licenses/lens.txt) · [图标来源](static/licenses/konata-favicon.txt)
+[Typo](themes/typo-blue/LICENSE) · [JetBrains Mono](static/licenses/jetbrains-mono.txt) · [Lens](static/licenses/lens.txt)
