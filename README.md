@@ -126,6 +126,8 @@ hugo --minify
 
 ## 外观
 
+浏览器标签图标使用用户选定的泉此方复古像素头像：[素材来源](https://tenor.com/view/konata-gif-12080177389799601593)。保留眨眼静态帧与原有像素色彩；`static/icons/konata-pixel-v1-source.png` 保存原尺寸，16/32/48 像素 PNG 和多尺寸 ICO 由 `layouts/partials/hooks/head_end.html` 统一引用。新文件名避开旧蓝色 W 图标的缓存，根目录 `favicon.ico` 和旧 `favicon.svg` 地址也提供同款图标。素材来源、哈希与转换说明记录在 `static/licenses/konata-favicon.txt`；素材不属于本站原创。
+
 默认夜间主题采用参考站启发的**中性炭灰、柔和灰白正文与亮橙色点缀**，日间按用户最新选择改为亮粉色点缀，夜间继续使用橙色；UI不使用原先的蓝灰底色。`assets/css/night.css` 统一覆盖导航、卡片、学习看板和内页颜色；代码高亮的关键字、字符串和类型名继续采用 One Dark 语义配色，以保持代码可读。
 
 新访客默认夜间模式；已保存的 `wish-typo-theme=light/dark` 偏好继续生效。主题在正文绘制前确定，本地存储不可用或关闭JavaScript时有服务端默认值。

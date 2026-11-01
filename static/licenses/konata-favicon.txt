@@ -1,0 +1,20 @@
+Konata Izumi pixel favicon - source record
+
+Character: Konata Izumi from Lucky Star
+Source listing: https://tenor.com/view/konata-gif-12080177389799601593
+Source media: https://media.tenor.com/p6VpVR619bkAAAAj/konata.gif
+Listing uploader: knoth (not verified as the original artist)
+Original pixel artist: not identified in the source listing
+Retrieved: 2026-11-01
+Source GIF SHA-256: a82c5a7fa526734d3ee047636f14ce3adfad09d2c076e4b02f6c586b02d1a720
+Native frame PNG SHA-256: bc98972cded36044c6dc56783f301a24967c1983d2cc7e13969e67c9ee6a212e
+
+User-selected artwork for this personal blog. No ownership of the artwork
+or general-purpose reuse license is claimed by this repository.
+
+Conversion: static frame 4 (zero-based) at its native 50x50 resolution;
+nearest-neighbor 16x16, 32x32 and 48x48 PNG sizes; PNG-backed multi-size ICO.
+Colors, transparency and the full composition are preserved. The source
+GIF animation is not used as a browser favicon. The native PNG is kept at
+/icons/konata-pixel-v1-source.png. /favicon.svg embeds this same PNG for
+older bookmarks; current pages reference the versioned PNG/ICO files.
