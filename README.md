@@ -22,6 +22,8 @@ hugo server -D
 - `data/`、`scripts/`：站点数据、生成与校验脚本。
 - `hugo.yaml`：站点配置；`static/`：图标、字体等静态文件。
 
+写作约定：公开文章不出现任课老师姓名，引用教学资料时使用“课程课件”等通用表述。
+
 ## 发布
 
 推送到 `main` 后，GitHub Actions 自动检查、构建并发布到 GitHub Pages。流程见 [hugo.yml](.github/workflows/hugo.yml)；脚本检查环境为 Python 3.12、Node.js 24。
