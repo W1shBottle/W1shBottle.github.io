@@ -1,7 +1,7 @@
 {{ define "main" }}
 <section class="discovery-page" aria-labelledby="discovery-heading">
-  <header class="discovery-header">
-    <p class="kicker">DISCOVER / 每日开源发现</p>
+  <header class="discovery-header folio-heading">
+    <p class="folio-kicker"><span aria-hidden="true">03</span> DISCOVER / 每日开源发现</p>
     <h1 id="discovery-heading">看看别人，<br>在做什么有趣的东西。</h1>
     <p class="discovery-intro">每天 10 个 GitHub 项目。偏 AI、开发工具和实用软件，<br class="discovery-desktop-break">从一个新点子，到下一个想亲手试试的工具。</p>
     {{ with site.Data.github_daily }}<div class="discovery-edition"><span class="discovery-edition-dot" aria-hidden="true"></span><span>本期 <time class="mono" datetime="{{ .date }}">{{ .date }}</time></span><span>10 个项目</span><span>北京时间每天早间更新</span></div>{{ end }}

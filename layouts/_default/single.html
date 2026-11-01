@@ -1,8 +1,10 @@
 {{ define "main" }}
 {{ $isPost := eq .Section "posts" }}
-<article>
-  <div class="page-heading article-intro">
+{{ $isAbout := eq .RelPermalink "/about/" }}
+<article{{ if $isAbout }} class="about-article"{{ end }}>
+  <div class="page-heading article-intro folio-heading{{ if $isPost }} folio-post-heading{{ end }}">
     {{ if $isPost }}<a href="{{ "/posts/" | relURL }}">← 返回文章</a>{{ end }}
+    <p class="folio-kicker"><span aria-hidden="true">{{ if $isPost }}NOTE{{ else if $isAbout }}07{{ else }}PAGE{{ end }}</span>{{ if $isPost }}FIELD NOTES / 学习手记{{ else if $isAbout }}ABOUT / 关于我{{ else }}READING / 阅读{{ end }}</p>
     {{ if .Params.learning_series }}
     <h1 class="article-title">{{ partial "post-title.html" . }}</h1>
     {{ else }}
@@ -15,6 +17,9 @@
   {{ if and $isPost .Fragments.Headings }}<aside class="article-rail"><details class="toc article-toc"><summary>本篇目录</summary>{{ .TableOfContents }}</details><a class="rail-top" href="#top">回到开头 ↑</a></aside>{{ end }}
   <div class="single-content"{{ if $isPost }} id="article-body"{{ end }}>{{ .Content }}</div>
   {{ if $isPost }}</div>{{ end }}
+{{ if $isAbout }}{{ with site.Data.learning_dashboard }}
+  <aside class="about-current"><div><p class="folio-kicker"><span aria-hidden="true">NOW</span> 当前在做</p><h2>{{ .project }}</h2><p>{{ .stage }}</p></div><nav aria-label="了解当前项目"><a href="/learning/#dashboard">查看学习进度 ↗</a><a href="/learning/project-docs/">阅读项目文档 ↗</a></nav></aside>
+  {{ end }}{{ end }}
 </article>
 {{ if and $isPost .Params.learning_series }}
 {{ $series := .Params.learning_series }}{{ $current := .RelPermalink }}

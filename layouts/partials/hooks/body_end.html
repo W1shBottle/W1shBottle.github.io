@@ -2,3 +2,6 @@
 <script defer src="{{ $themeScript.RelPermalink }}"></script>
 {{ $script := resources.Get "js/appearance.js" | minify | fingerprint }}
 <script defer src="{{ $script.RelPermalink }}"></script>
+{{ if not .IsHome }}
+{{ $interiorScript := resources.Get "js/interior.js" | minify | fingerprint }}<script defer src="{{ $interiorScript.RelPermalink }}"></script>
+{{ end }}

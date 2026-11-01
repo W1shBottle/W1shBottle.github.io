@@ -1,0 +1,6 @@
+<header class="page-heading folio-heading">
+  <p class="folio-kicker"><span aria-hidden="true">{{ .number }}</span>{{ .eyebrow }}</p>
+  <h1>{{ .title }}</h1>
+  {{ with .description }}<p class="folio-description">{{ . }}</p>{{ end }}
+  {{ with .meta }}<div class="folio-meta">{{ . }}</div>{{ end }}
+</header>

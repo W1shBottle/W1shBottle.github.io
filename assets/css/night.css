@@ -1,0 +1,82 @@
+/* Neutral charcoal and paper surfaces; orange is reserved for accents. */
+[data-theme=dark] {
+  --od-background:#1b1b1b;
+  --od-surface:#242424;
+  --od-raised:#2c2c2a;
+  --od-foreground:#d0d0cc;
+  --od-heading:#e5e5e0;
+  --od-muted:#aaa9a4;
+  --od-comment:#aaa9a3;
+  --od-border:#3d3d3a;
+  --accent:#f6a064;
+  --accent-soft:#2c2c2a;
+  --green:#a6b49c;
+  --line:#3d3d3a;
+  --glass:rgba(36,36,36,.94);
+  --glass-edge:#3d3d3a;
+  --glass-solid:#242424;
+  --surface:#242424;
+  --glass-shadow:0 8px 28px rgba(0,0,0,.12),inset 0 1px rgba(230,230,225,.025);
+  --editorial-accent:#f6a064;
+  --editorial-grid:rgba(182,182,177,.06);
+  --editorial-rule:#3d3d3a;
+  --editorial-paper:#242424;
+  --folio-grid:rgba(182,182,177,.06);
+  --folio-paper:#242424;
+  --folio-wash:#2d2d2a;
+  --folio-line:#3d3d3a;
+  --folio-accent:#f6a064;
+  --folio-muted:#b0b0a9;
+  accent-color:#f6a064;
+}
+[data-theme=dark] .site-shell .site-head { background:rgba(27,27,27,.94); border-color:var(--line); box-shadow:0 8px 24px rgba(0,0,0,.12),inset 0 1px rgba(230,230,225,.02); }
+[data-theme=dark] .motion-capsule { background:rgba(246,160,100,.085); border-color:rgba(246,160,100,.20); box-shadow:inset 0 1px rgba(230,230,225,.025),0 3px 8px rgba(0,0,0,.08); }
+[data-theme=dark] .home-main .editorial-hero .hero-project { background:linear-gradient(140deg,rgba(215,215,208,.025),transparent 60%),var(--surface); }
+[data-theme=dark] .editorial-hero .inline-links a:first-child { background:#303030; color:#e2d8cd; border-color:#514234; }
+[data-theme=dark] .home-main :is(.discovery-card,.series-item) { background:var(--surface); }
+[data-theme=dark] :is(.project-panel,.series-item,.post-series-summary)::after { background:radial-gradient(260px circle at var(--shine-x,70%) var(--shine-y,10%),rgba(246,160,100,.025),transparent 70%); }
+[data-theme=dark] ::selection { background:#514234; color:#f1e4d8; }
+[data-theme=dark] :is(.learning-dashboard,.home-learning-progress) {
+  --jd-bg:#202020;
+  --jd-card:#282828;
+  --jd-inset:#30302e;
+  --jd-text:#dfdfd9;
+  --jd-muted:#b0b0a8;
+  --jd-border:rgba(209,209,200,.12);
+  --jd-hover:rgba(209,209,200,.22);
+  --jd-accent:#f6a064;
+  --jd-fill:#dc8d52;
+  --jd-soft:rgba(246,160,100,.07);
+  --jd-green:#a6b49c;
+  --jd-green-soft:rgba(166,180,156,.075);
+  --jd-track:#3b3b36;
+}
+[data-theme=dark] .journey-meter-accepted { background:linear-gradient(90deg,var(--jd-fill),#f4b07a); }
+[data-theme=dark] .journey-total { background:radial-gradient(ellipse at 0 0,rgba(246,160,100,.02),transparent 65%),var(--jd-card); }
+[data-theme=dark] .journey-current { background:linear-gradient(155deg,rgba(246,160,100,.02),transparent 65%),var(--jd-card); }
+[data-theme=dark] .journey-stage.is-current { border-color:rgba(246,160,100,.28); }
+[data-theme=dark] .journey-current-link,[data-theme=dark] .badge-active,[data-theme=dark] .journey-task-icon.state-practicing { border-color:rgba(246,160,100,.20); }
+[data-theme=dark] .journey-task-icon.state-accepted { border-color:rgba(166,180,156,.24); }
+/* Old chip styles must follow the neutral palette as well. */
+[data-theme=dark] .theme-track { background:#303030; border-color:#514234; }
+[data-theme=dark] .theme-thumb { background:#f6a064; }
+
+/* Day mode uses a neutral paper base; darker orange keeps small labels readable. */
+[data-theme=light] {
+  --bg:#f5f5f3; --background:#f5f5f3; --background-light:#f5f5f3;
+  --paper:#fcfcfa; --surface:#fcfcfa; --glass-solid:#fcfcfa; --glass:rgba(252,252,250,.9);
+  --accent:#a14e1e; --accent-soft:#f4e9df; --soft:#f4e9df; --line:#dededb;
+  --editorial-accent:#a14e1e; --editorial-paper:#fcfcfa; --editorial-rule:#dededb;
+  --folio-grid:rgba(105,105,100,.075); --folio-paper:#fcfcfa; --folio-wash:#f0efeb; --folio-line:#dededb; --folio-accent:#a14e1e;
+}
+[data-theme=light] .motion-capsule { background:rgba(183,94,38,.055); border-color:rgba(183,94,38,.15); }
+[data-theme=light] .editorial-hero .inline-links a:first-child { background:#f4e9df; color:#9d531f; border-color:#dec3ae; }
+[data-theme=light] :is(.learning-dashboard,.home-learning-progress) {
+  --jd-bg:#f2f2ef; --jd-card:#fcfcfa; --jd-inset:#f1f1ed; --jd-text:#3b3c3e; --jd-muted:#666963;
+  --jd-accent:#a14e1e; --jd-fill:#cb7e44; --jd-soft:#f7ece1; --jd-track:#e7e7e2; --jd-border:#dddeda; --jd-hover:#cacac4;
+}
+[data-theme=light] .journey-meter-accepted { background:linear-gradient(90deg,var(--jd-fill),#e29b64); }
+[data-theme=light] .journey-total { background:radial-gradient(ellipse at 0 0,rgba(203,126,68,.02),transparent 65%),var(--jd-card); }
+[data-theme=light] .journey-current { background:linear-gradient(155deg,rgba(203,126,68,.02),transparent 65%),var(--jd-card); }
+[data-theme=light] .journey-stage.is-current { border-color:#dfc4ad; }
+[data-theme=light] .journey-current-link,[data-theme=light] .badge-active,[data-theme=light] .journey-task-icon.state-practicing { border-color:rgba(183,94,38,.18); }

@@ -1,6 +1,6 @@
 # WishBottle's Blog
 
-这是我的个人博客源码仓库，使用 **Hugo** + [Typo](https://github.com/tomfran/typo) 主题搭建，提供 One Dark 深色主题与暖灰靛蓝浅色主题，搭配圆角卡片和半透明导航。
+这是我的个人博客源码仓库，使用 **Hugo** + [Typo](https://github.com/tomfran/typo) 主题搭建，提供中性炭灰夜间主题与灰白纸色日间主题，搭配圆角卡片和半透明导航。
 
 - 站点地址：<https://wishbottle.cn/>
 - GitHub Pages：<https://w1shbottle.github.io/>
@@ -126,12 +126,13 @@ hugo --minify
 
 ## 外观
 
-默认主题为 **One Dark**，配色参考 [JetBrains One Dark 插件](https://github.com/one-dark/jetbrains-one-dark-theme)：蓝灰背景、冷灰正文、蓝色链接，以及紫色关键字、绿色字符串和黄色类型名。页面仍使用现有阅读布局与轻微动效；小字、代码注释比编辑器原版更亮，以保证网页阅读对比度。
+默认夜间主题采用参考站启发的**中性炭灰、柔和灰白正文与亮橙色点缀**，UI不再使用原先的蓝灰底色。`assets/css/night.css` 统一覆盖导航、卡片、学习看板和内页颜色；代码高亮的关键字、字符串和类型名继续采用 One Dark 语义配色，以保持代码可读。
 
-`assets/css/one-dark.css` 集中定义 One Dark 色板和 Chroma 语法色。新访客默认深色；已保存的 `wish-typo-theme=light/dark` 偏好继续生效，右上角可以切换。主题在页面正文绘制前确定，本地存储不可用时采用默认值，关闭 JavaScript 也有服务端默认配色。浅色仍保留原有外观。
+新访客默认夜间模式；已保存的 `wish-typo-theme=light/dark` 偏好继续生效。主题在正文绘制前确定，本地存储不可用或关闭JavaScript时有服务端默认值。
 
+2026-11-01 的首页优化参考 [NeriPlayer 官网](https://neri.kano.kim/) 的编辑式排版：大标题与留白、淡网格、编号分区，以及随滚动高亮的页内目录。具体样式与脚本由本博客实现，最新配色按用户反馈改为中性炭灰与少量亮橙色；没有引入参考站的插画、字体文件或运行依赖。首页和内页短标题使用本机衬线字体，正文保持易读的无衬线字体；装饰下划线为简单SVG。
 
-2026-11-01 的首页优化参考 [NeriPlayer 官网](https://neri.kano.kim/) 的编辑式排版：大标题与留白、淡网格、编号分区，以及随滚动高亮的页内目录。具体样式与脚本由本博客实现，沿用低饱和灰蓝和 One Dark，正文、代码字体与学习验收数据保持原有约定；没有引入参考站的插画、字体文件或运行依赖。首页标题使用本机衬线字体，装饰下划线为简单 SVG。
+内页已统一文章列表/正文、课程、系列、归档、搜索、发现与关于页。网格位于页面内容后方，中间可见、向左右淡出；背景不使用大面积黄色，橙色集中在导航、编号、进度和少量图标；阅读正文、代码、表格和卡片有干净底色。归档按年月分组，搜索支持快捷词与清空，课程/系列导航随滚动高亮。关于页按用户要求采用纯文字简介，页面与RSS摘要均不展示头像。
 
 主题开关采用与相邻导航文字居中对齐的圆形太阳／月亮图标，按用户最新偏好不带拉绳。支持的浏览器使用 View Transition，让新主题从按钮中心以约680ms的圆形向外展开，图标同步旋转、缩放；快速点击以最后一次选择为准，过渡结束释放遮罩。旧浏览器及减少动画偏好直接切换。内容按小幅位移逐项入场，页内导航仅在滚动、尺寸或内容改变时更新，没有常驻动画循环。桌面首页目录与手机原导航互补，原学习面板的320ms折叠仍单独维护。
 
@@ -142,8 +143,11 @@ hugo --minify
 - `assets/css/jobs.css`：独立招聘页面的样式，仅 `/jobs/` 加载。
 - `assets/css/appearance.css`：暖白灰紫视觉、响应式首页、系列卡片、学习页信息顺序和文章侧边目录。
 - `assets/js/appearance.js`：导航滑动、系列展开、章节高亮、阅读进度和返回顶部；兼容减少动态效果偏好。
-- `assets/css/one-dark.css`：One Dark 色板、深色组件细节，以及 Java、SQL 等代码块的语法颜色。
-- `assets/css/editorial.css`：首页标题、淡网格、编号分区、项目卡片和页内导航，在One Dark之后、无障碍回退之前加载。
+- `assets/css/one-dark.css`：基础变量与 Java、SQL 等代码语义色；夜间UI最终配色由night.css覆盖。
+- `assets/css/editorial.css`：首页标题、编号分区、项目卡片和页内导航。
+- `assets/css/interior.css`：全站渐隐网格、内页页头、阅读区、目录、列表、搜索与纯文字简介。
+- `assets/css/night.css`：最终中性夜间配色与日夜橙色强调色；在组件样式之后、无障碍回退之前加载。
+- `assets/js/interior.js`：课程与系列页分组导航的当前位置反馈。
 - `assets/js/homepage.js`：只在首页加载的分区定位与当前位置高亮；无JS时保留普通锚点链接。
 - `assets/css/theme-toggle.css` 与 `assets/js/theme-toggle.js`：独立维护太阳／月亮按钮、圆形主题过渡、主题持久化、快速切换及回退。
 - `assets/css/accessibility.css`：玻璃效果回退、减少动态效果与透明度等偏好，最后加载。
@@ -152,9 +156,9 @@ hugo --minify
 
 导航胶囊使用 [Lens / design-systems](https://github.com/ruiqichenbiec/design-systems) 的 Spring 计算器，按博客阅读场景降低运动幅度。原始 MIT 许可保存在 `static/licenses/lens.txt`，站点在页头提供许可链接。
 
-支持深浅色切换和手机布局。字体优先使用本机苹方，未安装时使用系统字体；没有分发苹方字体文件。修改简介外观时编辑 `site.css` 中的 `.about-profile`、`.about-avatar`、`.about-bio`，无需在正文中写 CSS。
+支持深浅色切换和手机布局。字体优先使用本机苹方，未安装时使用系统字体；没有分发苹方字体文件。简介版式由interior.css中的about-profile、about-bio维护，正文只保留真实简介与联系方式。
 
-简介页的 `summary` 单独保留既有 RSS 摘要及其内联样式，让不加载站点 CSS 的订阅阅读器仍按原样显示。正文中的布局使用上述 CSS 类；以后修改简介首段时，也应检查这份摘要是否需要同步。
+简介页的summary使用不含头像的纯文字RSS摘要；修改简介事实时，同步核对摘要。
 
 主题保存在 `themes/typo-blue`，保留 MIT 许可证；站点模板覆盖位于 `layouts/`。文章原有地址和图片保持兼容。
 

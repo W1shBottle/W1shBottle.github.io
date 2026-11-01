@@ -1,18 +1,28 @@
 {{ define "main" }}
-<div class="page-heading"><h1>搜索</h1><p>查找文章与课程里的概念、代码和问题。</p></div>
-<label class="sr-only" for="search-input">搜索文章与课程</label><input class="search-box" id="search-input" type="search" placeholder="输入关键词，例如 Java、工单、内存" autocomplete="off">
-<p id="search-status" role="status">输入关键词开始搜索。</p><div id="search-results"></div>
+{{ partial "interior-heading.html" (dict "number" "06" "eyebrow" "SEARCH / 搜索" "title" "找一篇需要的笔记。" "description" "搜索文章、课程与项目文档。多个关键词可以用空格分开。") }}
+<section class="search-workbench" aria-label="搜索文章与课程">
+  <label for="search-input" class="search-field-label">你想找什么？</label>
+  <div class="search-field"><span class="search-field-icon" aria-hidden="true"></span><input class="search-box" id="search-input" type="search" placeholder="例如：Java、工单、内存" autocomplete="off"><button type="button" id="search-clear" hidden>清空</button></div>
+  <div class="search-suggestions" aria-label="快捷搜索" hidden><span>试着搜搜</span>{{ range slice "Java" "工单" "JDBC" "事务" "内存" }}<button type="button" data-search-query="{{ . }}">{{ . }}</button>{{ end }}</div>
+  <noscript><p>搜索需要启用 JavaScript，也可以<a href="/posts/">浏览文章</a>或<a href="/archives/">按时间查找</a>。</p></noscript>
+</section>
+<div class="search-results-heading"><h2>搜索结果</h2><p id="search-status" role="status">输入关键词开始搜索。</p></div><div id="search-results"></div>
 <script>
 (() => {
   const input = document.getElementById('search-input'), results = document.getElementById('search-results'), status = document.getElementById('search-status');
-  let index;
+  let index, generation = 0;
+  const clear = document.getElementById("search-clear");
+  document.querySelector(".search-suggestions").hidden = false;
+  document.querySelectorAll("[data-search-query]").forEach(button => button.addEventListener("click", () => { input.value = button.dataset.searchQuery; input.dispatchEvent(new Event("input")); input.focus(); }));
+  clear.addEventListener("click", () => { input.value = ""; input.dispatchEvent(new Event("input")); input.focus(); });
   const load = () => index || (index = fetch('{{ "/index.json" | relURL }}').then(response => { if (!response.ok) throw new Error(); return response.json(); }).catch(error => { index = null; throw error; }));
   input.addEventListener('input', async () => {
-    const query = input.value.trim().toLocaleLowerCase(); results.replaceChildren();
+    const token = ++generation;
+    const query = input.value.trim().toLocaleLowerCase(); results.replaceChildren(); clear.hidden = !input.value;
     if (!query) { status.textContent = '输入关键词开始搜索。'; return; }
     status.textContent = '正在搜索…';
     try {
-      const posts = await load(); if (input.value.trim().toLocaleLowerCase() !== query) return;
+      const posts = await load(); if (token !== generation) return;
       const words = query.split(/\s+/);
       const matches = posts.filter(post => words.every(word => [post.title,post.content,...(post.tags || [])].join(' ').toLocaleLowerCase().includes(word)));
       status.textContent = matches.length ? `找到 ${matches.length} 项文章与课程` : '没有找到相关内容，试试其他关键词。';
@@ -36,7 +46,7 @@
         text.textContent = post.description;
         title.append(link); body.append(title,text); row.append(date,body); results.append(row);
       }
-    } catch { if (input.value.trim().toLocaleLowerCase() === query) status.textContent = '搜索暂时无法加载，请重新输入或刷新页面。'; }
+    } catch { if (token === generation) status.textContent = '搜索暂时无法加载，请重新输入或刷新页面。'; }
   });
 })();
 </script>

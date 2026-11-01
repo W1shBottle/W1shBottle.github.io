@@ -1,6 +1,16 @@
 {{ define "main" }}
-<div class="page-heading"><h1>归档</h1><p>按时间回看每一步。</p></div>
-{{ range (where site.RegularPages "Section" "posts").GroupByDate "2006" }}
-<h2 class="archive-year">{{ .Key }}</h2>{{ range .Pages }}<div class="archive-item"><time>{{ .Date.Format "01.02" }}</time><a href="{{ .RelPermalink }}">{{ partial "post-title.html" . }}</a></div>{{ end }}
+{{ $posts := (where site.RegularPages "Section" "posts").ByDate.Reverse }}
+{{ partial "interior-heading.html" (dict "number" "05" "eyebrow" "ARCHIVE / 归档" "title" "按时间，回看每一步。" "description" "把零散的学习串起来，留下走过的痕迹。" "meta" (printf "%d 篇记录 · 由近到远" (len $posts))) }}
+<div class="archive-timeline">
+{{ range $posts.GroupByDate "2006" }}
+<section class="archive-year-group" aria-labelledby="archive-{{ .Key }}">
+  <header class="archive-year-heading"><h2 id="archive-{{ .Key }}">{{ .Key }}</h2><span>{{ len .Pages }} 篇记录</span></header>
+  {{ range .Pages.GroupByDate "01" }}
+  <section class="archive-month"><h3>{{ .Key }}<span>月</span></h3><div class="archive-rows">
+    {{ range .Pages }}<article class="archive-item"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02" }}<span>日</span></time><a href="{{ .RelPermalink }}">{{ partial "post-title.html" . }}</a><span class="archive-row-arrow" aria-hidden="true">↗</span></article>{{ end }}
+  </div></section>
+  {{ end }}
+</section>
 {{ end }}
+</div>
 {{ end }}

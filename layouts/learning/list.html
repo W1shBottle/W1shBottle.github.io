@@ -1,8 +1,8 @@
 {{ define "main" }}
 <div class="learning-page">
-  <header class="page-heading learning-intro">
-    <p class="eyebrow">JAVA ＋ AI · 从业务到应用</p>
-    <h1>{{ .Title }}</h1>
+  <header class="page-heading learning-intro folio-heading">
+    <p class="folio-kicker"><span aria-hidden="true">01</span> LEARNING / 学习</p>
+    <h1>在项目里，一步步学。</h1>
     <p>{{ .Description | default "用同一个设备运维工单项目学习后端业务、AI 应用与效果验证。" }}</p>
 
     <div class="learning-actions">
@@ -35,13 +35,12 @@
     (dict "id" "tools" "title" "工具与求职" "description" "查约定、解决卡点，留下验收证据并准备投递。")
     (dict "id" "answers" "title" "自测答案" "description" "先独立尝试并保留自己的答案，再核对实现思路。")
   }}
-  <nav class="learning-group-links" aria-label="学习目录分组">
+  <nav class="learning-group-links" data-section-nav aria-label="学习目录分组">
     {{ range $groups }}<a href="#{{ .id }}">{{ .title }}</a>{{ end }}
   </nav>
-  {{ range $groups }}
-    {{ $group := . }}
+  {{ range $index, $group := $groups }}
     <section class="learning-group" id="{{ .id }}" aria-labelledby="{{ .id }}-title">
-      <div class="learning-group-heading"><h2 id="{{ .id }}-title">{{ .title }}</h2><p>{{ .description }}</p></div>
+      <div class="learning-group-heading"><p class="folio-kicker"><span aria-hidden="true">{{ printf "%02d" (add $index 1) }}</span> COURSE / 课程目录</p><h2 id="{{ .id }}-title">{{ .title }}</h2><p>{{ .description }}</p></div>
       <div class="learning-grid">
         {{ range where $pages "Params.group" $group.id }}
         <article class="learning-card">

@@ -7,8 +7,9 @@
 {{ $position := 0 }}
 {{ range $index, $chapter := $chapters }}{{ if eq $chapter.RelPermalink $current }}{{ $position = $index }}{{ end }}{{ end }}
 <article class="learning-article">
-  <header class="page-heading article-intro">
+  <header class="page-heading article-intro folio-heading folio-lesson-heading">
     <a href="{{ "/learning/" | relURL }}">← 返回学习板块</a>
+    <p class="folio-kicker"><span aria-hidden="true">{{ if $isProjectDoc }}DOC{{ else }}LESSON{{ end }}</span>{{ if $isProjectDoc }}项目文档{{ else }}项目课程{{ end }}</p>
     <div class="article-series">{{ if $isProjectDoc }}项目文档 · 设备运维工单平台{{ else }}Java＋AI 项目学习 · 设备运维工单平台{{ end }}</div>
     <h1>{{ .Title }}</h1>
     {{ with .Description }}<p>{{ . }}</p>{{ end }}

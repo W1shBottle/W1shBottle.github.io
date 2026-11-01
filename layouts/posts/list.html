@@ -1,7 +1,6 @@
 {{ define "main" }}
-<div class="page-heading"><h1>文章</h1><p>共 {{ len .RegularPages }} 篇记录。系列文章收在一起，点击展开阅读。</p></div>
+{{ partial "interior-heading.html" (dict "number" "02" "eyebrow" "NOTES / 文章" "title" "把理解，留在这里。" "description" "写过的代码、遇到的问题，以及一点点弄明白的过程。系列文章收在一起，展开后顺着读。") }}
+<div class="folio-tools"><span>{{ len .RegularPages }} 篇记录</span><nav aria-label="文章阅读方式"><a href="/series/">系列目录 ↗</a><a href="/archives/">按时间回看 ↗</a><a href="/search/">搜索文章 ↗</a></nav></div>
 {{ .Content }}
-<div class="posts-list">
-  {{ partial "post-series-list.html" .RegularPages }}
-</div>
+<div class="posts-list">{{ partial "post-series-list.html" .RegularPages }}</div>
 {{ end }}

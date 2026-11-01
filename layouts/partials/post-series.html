@@ -1,6 +1,7 @@
 {{ $latest := index .pages 0 }}
 <details class="post-series">
   <summary class="post-series-summary">
+    <span class="post-series-mark" aria-hidden="true"><svg viewBox="0 0 28 32" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3h16v25H6a3 3 0 0 1 0-6h16M6 3a3 3 0 0 0-3 3v19M9 8h9M9 12h6"/></svg></span>
     <span class="post-series-overview">
       <span class="post-series-meta">学习系列 <span class="post-series-count">{{ len .pages }} 篇</span></span>
       <span class="post-series-name">{{ .title }}</span>
