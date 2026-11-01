@@ -131,6 +131,10 @@ hugo --minify
 `assets/css/one-dark.css` 集中定义 One Dark 色板和 Chroma 语法色。新访客默认深色；已保存的 `wish-typo-theme=light/dark` 偏好继续生效，右上角可以切换。主题在页面正文绘制前确定，本地存储不可用时采用默认值，关闭 JavaScript 也有服务端默认配色。浅色仍保留原有外观。
 
 
+2026-11-01 的首页优化参考 [NeriPlayer 官网](https://neri.kano.kim/) 的编辑式排版：大标题与留白、淡网格、编号分区，以及随滚动高亮的页内目录。具体样式与脚本由本博客实现，沿用低饱和灰蓝和 One Dark，正文、代码字体与学习验收数据保持原有约定；没有引入参考站的插画、字体文件或运行依赖。首页标题使用本机衬线字体，装饰下划线为简单 SVG。
+
+支持的浏览器使用 View Transition 为主题切换增加约260ms的交叉淡化，快速点击以最后一次选择为准；旧浏览器及减少动画偏好直接切换。内容按小幅位移逐项入场，页内导航仅在滚动、尺寸或内容改变时更新，没有常驻动画循环。桌面首页目录与手机原导航互补，原学习面板的320ms折叠仍单独维护。
+
 定制样式按用途划分，加载顺序由 `layouts/partials/head/css.html` 统一管理：
 
 - `assets/css/tokens.css`：暖灰靛蓝配色、字体、内容宽度等公共变量。强调色使用 `--accent`，浅色背景使用 `--accent-soft`。
@@ -139,9 +143,11 @@ hugo --minify
 - `assets/css/appearance.css`：暖白灰紫视觉、响应式首页、系列卡片、学习页信息顺序和文章侧边目录。
 - `assets/js/appearance.js`：导航滑动、系列展开、主题切换、章节高亮、阅读进度和返回顶部；兼容减少动态效果偏好。
 - `assets/css/one-dark.css`：One Dark 色板、深色组件细节，以及 Java、SQL 等代码块的语法颜色。
+- `assets/css/editorial.css`：首页标题、淡网格、编号分区、项目卡片和页内导航，以及全站主题切换过渡；在One Dark之后、无障碍回退之前加载。
+- `assets/js/homepage.js`：只在首页加载的分区定位与当前位置高亮；无JS时保留普通锚点链接。
 - `assets/css/accessibility.css`：玻璃效果回退、减少动态效果与透明度等偏好，最后加载。
 
-首页的文章和系列条目从内容与集合数据生成；学习页优先展示已归档的时间线，课程与日程放在后面。电脑端文章目录跟随阅读位置高亮，手机端默认折叠；关闭 JavaScript 时文章和原生折叠目录仍可阅读。深浅色偏好继续保存到原有的 `wish-typo-theme` 键。
+首页的文章和系列条目从内容与集合数据生成；学习页先展示任务验收面板，再展示已归档时间线，课程与日程放在后面。电脑端文章目录跟随阅读位置高亮，手机端默认折叠；关闭 JavaScript 时文章和原生折叠目录仍可阅读。深浅色偏好继续保存到原有的 `wish-typo-theme` 键。
 
 导航胶囊使用 [Lens / design-systems](https://github.com/ruiqichenbiec/design-systems) 的 Spring 计算器，按博客阅读场景降低运动幅度。原始 MIT 许可保存在 `static/licenses/lens.txt`，站点在页头提供许可链接。
 

@@ -123,7 +123,30 @@
     if (save) { try { localStorage.setItem('wish-typo-theme', dark ? 'dark' : 'light'); } catch {} }
   }
   setTheme(document.documentElement.dataset.theme === 'dark', false);
-  themeButton.addEventListener('click', () => setTheme(document.documentElement.dataset.theme !== 'dark'));
+  let intendedDark = document.documentElement.dataset.theme === 'dark';
+  let themeTransition = null, themeGeneration = 0;
+  themeButton.addEventListener('click', () => {
+    intendedDark = !intendedDark;
+    const nextDark = intendedDark, generation = ++themeGeneration;
+    themeTransition?.skipTransition();
+    if (motionPreference.matches || typeof document.startViewTransition !== 'function') {
+      setTheme(nextDark);
+      return;
+    }
+    const transition = document.startViewTransition(() => {
+      // Rapid clicks may supersede a snapshot whose callback has not run yet.
+      if (generation === themeGeneration) setTheme(nextDark);
+    });
+    themeTransition = transition;
+    transition.ready.catch(() => {});
+    transition.finished.then(() => {
+      if (themeTransition === transition) themeTransition = null;
+    }, () => {});
+  });
+  motionPreference.addEventListener('change', () => {
+    if (motionPreference.matches) themeTransition?.skipTransition();
+  });
+  addEventListener('pagehide', () => themeTransition?.skipTransition());
 
   if (matchMedia('(min-width: 1100px)').matches) document.querySelectorAll('.article-toc').forEach(toc => { toc.open = true; });
 
@@ -185,14 +208,14 @@
     return {finish};
   });
 
-  const revealElements = document.querySelectorAll('.hero>div, .featured, .compact-post, .project-panel, .series-item, .page-heading, .post-series, .note-entry, .learning-card, .progress-card');
+  const revealElements = document.querySelectorAll('.hero-copy > *, .featured, .compact-post, .project-panel, .series-item, .page-heading, .post-series, .note-entry, .learning-card, .progress-card, .home-section-caption, .home-main .discovery-card');
   if ('IntersectionObserver' in window && !motionPreference.matches) {
     const observer = new IntersectionObserver(entries => {
       entries.filter(entry => entry.isIntersecting).forEach((entry, i) => {
         observer.unobserve(entry.target);
         animateOnce(entry.target, [
           {opacity: 0, transform: 'translateY(9px)'}, {opacity: 1, transform: 'translateY(0)'}
-        ], {duration: 520, delay: Math.min(i * 45, 135), easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'backwards'});
+        ], {duration: 620, delay: Math.min(i * 55, 220), easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards'});
       });
     }, {threshold: .08});
     revealElements.forEach(element => observer.observe(element));
