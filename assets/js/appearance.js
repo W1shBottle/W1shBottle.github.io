@@ -111,43 +111,6 @@
   filterContainer?.addEventListener('click', () => filterMotion.select());
   const capsules = [navMotion, filterMotion];
 
-  const themeButton = document.getElementById('theme');
-  function setTheme(dark, save = true) {
-    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(dark ? 'dark' : 'light');
-    themeButton.setAttribute('aria-pressed', String(dark));
-    themeButton.setAttribute('aria-label', dark ? '切换浅色主题' : '切换 One Dark 主题');
-    themeButton.querySelector('.theme-label').textContent = dark ? 'One Dark' : '浅色';
-    if (save) { try { localStorage.setItem('wish-typo-theme', dark ? 'dark' : 'light'); } catch {} }
-  }
-  setTheme(document.documentElement.dataset.theme === 'dark', false);
-  let intendedDark = document.documentElement.dataset.theme === 'dark';
-  let themeTransition = null, themeGeneration = 0;
-  themeButton.addEventListener('click', () => {
-    intendedDark = !intendedDark;
-    const nextDark = intendedDark, generation = ++themeGeneration;
-    themeTransition?.skipTransition();
-    if (motionPreference.matches || typeof document.startViewTransition !== 'function') {
-      setTheme(nextDark);
-      return;
-    }
-    const transition = document.startViewTransition(() => {
-      // Rapid clicks may supersede a snapshot whose callback has not run yet.
-      if (generation === themeGeneration) setTheme(nextDark);
-    });
-    themeTransition = transition;
-    transition.ready.catch(() => {});
-    transition.finished.then(() => {
-      if (themeTransition === transition) themeTransition = null;
-    }, () => {});
-  });
-  motionPreference.addEventListener('change', () => {
-    if (motionPreference.matches) themeTransition?.skipTransition();
-  });
-  addEventListener('pagehide', () => themeTransition?.skipTransition());
-
   if (matchMedia('(min-width: 1100px)').matches) document.querySelectorAll('.article-toc').forEach(toc => { toc.open = true; });
 
   const disclosureControllers = [...document.querySelectorAll('.series-item, .post-series, .toc, .progress-evidence, .learning-context')].map(details => {

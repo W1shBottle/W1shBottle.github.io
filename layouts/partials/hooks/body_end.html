@@ -1,2 +1,4 @@
+{{ $themeScript := resources.Get "js/theme-toggle.js" | minify | fingerprint }}
+<script defer src="{{ $themeScript.RelPermalink }}"></script>
 {{ $script := resources.Get "js/appearance.js" | minify | fingerprint }}
 <script defer src="{{ $script.RelPermalink }}"></script>
