@@ -1,4 +1,4 @@
-/* Neutral charcoal and paper surfaces; orange is reserved for accents. */
+/* Neutral surfaces: orange night accents and pink day accents. */
 [data-theme=dark] {
   --od-background:#1b1b1b;
   --od-surface:#242424;
@@ -61,22 +61,24 @@
 [data-theme=dark] .theme-track { background:#303030; border-color:#514234; }
 [data-theme=dark] .theme-thumb { background:#f6a064; }
 
-/* Day mode uses a neutral paper base; darker orange keeps small labels readable. */
+/* Day mode uses a neutral paper base; rose-pink accents keep the night palette separate. */
 [data-theme=light] {
   --bg:#f5f5f3; --background:#f5f5f3; --background-light:#f5f5f3;
   --paper:#fcfcfa; --surface:#fcfcfa; --glass-solid:#fcfcfa; --glass:rgba(252,252,250,.9);
-  --accent:#a14e1e; --accent-soft:#f4e9df; --soft:#f4e9df; --line:#dededb;
-  --editorial-accent:#a14e1e; --editorial-paper:#fcfcfa; --editorial-rule:#dededb;
-  --folio-grid:rgba(105,105,100,.075); --folio-paper:#fcfcfa; --folio-wash:#f0efeb; --folio-line:#dededb; --folio-accent:#a14e1e;
+  --accent:#bd3473; --accent-soft:#fbeaf2; --soft:#fbeaf2; --line:#dededb;
+  --editorial-accent:#bd3473; --editorial-paper:#fcfcfa; --editorial-rule:#dededb;
+  --folio-grid:rgba(105,105,100,.075); --folio-paper:#fcfcfa; --folio-wash:#f0eff2; --folio-line:#dededb; --folio-accent:#bd3473;
 }
-[data-theme=light] .motion-capsule { background:rgba(183,94,38,.055); border-color:rgba(183,94,38,.15); }
-[data-theme=light] .editorial-hero .inline-links a:first-child { background:#f4e9df; color:#9d531f; border-color:#dec3ae; }
+[data-theme=light] .motion-capsule { background:rgba(189,52,115,.065); border-color:rgba(189,52,115,.18); }
+[data-theme=light] .editorial-hero .inline-links a:first-child { background:#fbeaf2; color:#9d2d60; border-color:#e6b4ca; }
 [data-theme=light] :is(.learning-dashboard,.home-learning-progress) {
   --jd-bg:#f2f2ef; --jd-card:#fcfcfa; --jd-inset:#f1f1ed; --jd-text:#3b3c3e; --jd-muted:#666963;
-  --jd-accent:#a14e1e; --jd-fill:#cb7e44; --jd-soft:#f7ece1; --jd-track:#e7e7e2; --jd-border:#dddeda; --jd-hover:#cacac4;
+  --jd-accent:#bd3473; --jd-fill:#e279ab; --jd-soft:#fbeaf2; --jd-track:#e7e7e2; --jd-border:#dddeda; --jd-hover:#cacac4;
 }
-[data-theme=light] .journey-meter-accepted { background:linear-gradient(90deg,var(--jd-fill),#e29b64); }
-[data-theme=light] .journey-total { background:radial-gradient(ellipse at 0 0,rgba(203,126,68,.02),transparent 65%),var(--jd-card); }
-[data-theme=light] .journey-current { background:linear-gradient(155deg,rgba(203,126,68,.02),transparent 65%),var(--jd-card); }
-[data-theme=light] .journey-stage.is-current { border-color:#dfc4ad; }
-[data-theme=light] .journey-current-link,[data-theme=light] .badge-active,[data-theme=light] .journey-task-icon.state-practicing { border-color:rgba(183,94,38,.18); }
+[data-theme=light] .journey-meter-accepted { background:linear-gradient(90deg,var(--jd-fill),#f1a0c6); }
+[data-theme=light] .journey-total { background:radial-gradient(ellipse at 0 0,rgba(226,121,171,.025),transparent 65%),var(--jd-card); }
+[data-theme=light] .journey-current { background:linear-gradient(155deg,rgba(226,121,171,.025),transparent 65%),var(--jd-card); }
+[data-theme=light] .journey-stage.is-current { border-color:#e6b4ca; }
+[data-theme=light] .journey-current-link,[data-theme=light] .badge-active,[data-theme=light] .journey-task-icon.state-practicing { border-color:rgba(189,52,115,.20); }
+
+[data-theme=light] ::selection { background:#f6d3e4; color:#6d2949; }

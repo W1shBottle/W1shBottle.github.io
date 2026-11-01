@@ -15,7 +15,7 @@
   --jd-track: light-dark(#e5e8ed, #3a3e47);
   --jd-ease: cubic-bezier(.22,.61,.36,1);
   color: var(--jd-text);
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-family: var(--font-body);
   font-variant-numeric: tabular-nums;
 }
 .learning-dashboard {

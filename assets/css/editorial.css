@@ -22,9 +22,9 @@
 .editorial-hero .hero-copy .kicker::before { display:none; }
 .hero-section-number { display:inline-flex; align-items:center; gap:13px; color:var(--accent); font:11px var(--font-mono); letter-spacing:.1em; }
 .hero-section-number::after { content:""; width:28px; height:1px; background:var(--editorial-rule); }
-.home-main .editorial-hero h1 { font-family:"Iowan Old Style","Noto Serif SC","Songti SC","STSong","SimSun",serif; font-size:clamp(48px,4.8vw,68px); line-height:1.23; font-weight:400; letter-spacing:-.055em; margin:0 0 28px; }
+.home-main .editorial-hero h1 { font-family:"JetBrains Mono","Iowan Old Style","Noto Serif SC","Songti SC","STSong","SimSun",serif; font-size:clamp(48px,4.8vw,68px); line-height:1.23; font-weight:400; letter-spacing:-.055em; margin:0 0 28px; }
 .hero-greeting-line { display:block; }
-.hero-name { position:relative; display:inline-block; font-family:"Iowan Old Style","Noto Serif SC","Songti SC","STSong","SimSun",serif; font-weight:400; letter-spacing:-.065em; }
+.hero-name { position:relative; display:inline-block; font-family:"JetBrains Mono","Iowan Old Style","Noto Serif SC","Songti SC","STSong","SimSun",serif; font-weight:400; letter-spacing:-.065em; }
 .hero-pencil-line { position:absolute; left:0; bottom:-9px; width:100%; height:14px; overflow:visible; pointer-events:none; }
 .hero-pencil-line path { fill:none; stroke:var(--editorial-accent); stroke-width:2.2; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:0; opacity:.75; }
 .home-main .editorial-hero .greeting-dot { color:inherit; }

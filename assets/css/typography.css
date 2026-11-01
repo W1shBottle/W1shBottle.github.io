@@ -1,0 +1,15 @@
+/* JetBrains Mono v2.304, self-hosted; the Unicode range preserves CJK fallbacks. */
+@font-face {
+  font-family:"JetBrains Mono";
+  src:url("/fonts/jetbrains-mono/jetbrains-mono-v2.304-normal.woff2") format("woff2");
+  font-style:normal; font-weight:100 800; font-display:swap;
+  unicode-range:U+0000-024F,U+1E00-1EFF;
+}
+@font-face {
+  font-family:"JetBrains Mono";
+  src:url("/fonts/jetbrains-mono/jetbrains-mono-v2.304-italic.woff2") format("woff2");
+  font-style:italic; font-weight:100 800; font-display:swap;
+  unicode-range:U+0000-024F,U+1E00-1EFF;
+}
+/* Keep literal code operators distinct for the learning notes. */
+pre,code,kbd,samp { font-variant-ligatures:none; }
