@@ -27,12 +27,12 @@
     {
       "id": "systems",
       "number": "03",
-      "title": "操作系统",
-      "subtitle": "进程、内存，以及计算机背后的秩序。",
+      "title": "操作系统期末复习",
+      "subtitle": "为校内期末考试整理，复习进程、内存管理与相关考点。",
       "tags": [
         "操作系统"
       ],
-      "label": "COMPUTER SYSTEMS",
+      "label": "EXAM / OPERATING SYSTEMS",
       "class": "systems",
       "group_posts": true
     },
