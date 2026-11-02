@@ -5,3 +5,5 @@
 {{ if not .IsHome }}
 {{ $interiorScript := resources.Get "js/interior.js" | minify | fingerprint }}<script defer src="{{ $interiorScript.RelPermalink }}"></script>
 {{ end }}
+{{ $cursorScript := resources.Get "js/cursor-glow.js" | minify | fingerprint }}
+<script defer src="{{ $cursorScript.RelPermalink }}"></script>
