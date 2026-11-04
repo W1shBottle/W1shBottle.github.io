@@ -28,6 +28,12 @@ LINKS = {
     "../Java学习/实习训练/离线自学包/01_20周弹性日程.md": "/learning/schedule/",
     "../Java学习/实习训练/学习进度.md": "/learning/#progress",
 }
+# Local project links after the workspace was grouped into projects/learning.
+LINKS.update({
+    "../../learning/java/实习训练/README.md": "/learning/start/",
+    "../../learning/java/实习训练/离线自学包/01_20周弹性日程.md": "/learning/schedule/",
+    "../../learning/java/实习训练/学习进度.md": "/learning/#progress",
+})
 PRIVATE_PATH = re.compile(r"(?<![A-Za-z0-9_])[A-Za-z]:[/\\]|file://")
 MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 
@@ -91,6 +97,7 @@ def public_body(raw, source):
     body = body.replace("用 `D:/JDK` 的 Java 21 和 IDEA 自带 Maven", "使用已配置的 Java 21 和 IDEA 自带 Maven")
     body = body.replace("显式选 D:/JDK", "显式选择 JDK 21")
     body = body.replace("（例如当前机器的 D:\\work\\JavaProject）", "（即包含 src 的 JavaProject 目录）")
+    body = body.replace("（例如当前机器的 D:\\work\\projects\\JavaProject）", "（即包含 src 的 JavaProject 目录）")
     body = re.sub(r"，报告在本地忽略目录 `\.qa/[^`]+`", "，核验记录保留在本地", body)
     body = body.replace("本次路线文档修订尚未提交。", "此次路线调整仅更新文档与课程，业务实现未提前推进。")
 

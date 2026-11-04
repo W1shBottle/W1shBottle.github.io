@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-31T00:00:00+08:00",
+  "lastmod": "2026-11-04T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-31。第1—9节记录原控制台设计；第10—12节为完整数据库/Web/AI目标；第13节为独立JDBC事务，第14节保留10月30日入门阶段，第15节是当前文件版Web实现。
+核对日期：2026-11-04。第1—9节记录原控制台；第10—12节为数据库/Web/AI目标；第13—15节保留JDBC与Web接线阶段，第16节记录当前基础统一错误响应。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -291,3 +291,19 @@ CreateTicketRequest 只有 title/getTitle/setTitle。@RequestBody 通过消息�
 create中IllegalArgumentException被包装成ResponseStatusException(400, message, cause)；默认错误响应不保证显示业务说明。Spring的参数转换异常可能在进入方法前发生，尚未增加统一异常处理。当前直接返回Ticket便于入门，后续按字段暴露需要拆响应DTO。
 
 保存失败不会撤销已改的内存；单例Map、最大编号加一、文件覆盖写入均未做并发保护；反复POST会创建多张。HTTP改名/派单、登录权限、数据库事务、处理验收和AI仍是后续任务。仅本机单人学习，不作为生产部署版本。
+
+
+## 16. 2026-11-04 请求转换与基础统一错误响应
+
+当前Web继续使用文件仓库。文件仓库构造时恢复存档，正常GET查询内存；重启读取编号2已有学习者运行反馈。
+
+- `dto/CreateTicketRequest`承载输入，JSON存在title时按当前默认映射调用setter；缺字段的{}跳过setter、字段保持null。显式null与缺字段不同，不能理解成Java方法调用少传参数。
+- `dto/ErrorResponse`只保存final message，通过构造器赋值和getter供JSON输出；本类没有决定HTTP状态码。
+- `exception/GlobalExceptionHandler`由RestControllerAdvice注册，方法由Spring按异常类型调用。当前有两个方法，不是全部异常的兜底。
+- `handleUnreadableBody`处理HttpMessageNotReadableException，用ResponseStatus固定400，响应message为“请求体缺失或格式不正确”。涵盖请求体无法读取或转换；不能把此类型只解释成JSON语法错误。
+- `handleStatusException`处理ResponseStatusException；从getReason取说明，null时使用“请求处理失败”，通过ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(message))保留状态码并返回统一响应体。
+- 现有Controller对IllegalArgumentException的包装仍在；查不到工单时原有ResponseStatusException(404, reason)直接交给处理器。没有笼统把所有异常改成400。
+
+有效空白标题在创建Ticket时失败，未执行Service后面的add；格式错误JSON在准备RequestBody参数时失败，未进入Controller方法。异常处理器可接管后一条路径。ResponseEntity携带状态、响应头和响应体，ErrorResponse只是本次body的数据类型；JSON序列化由Spring在返回处理阶段完成。
+
+当前未统一覆盖路径参数类型错误、存储错误或其他内部异常；未引入Bean Validation、requestId日志、权限、数据库事务、幂等或并发保护。Service编号仍为maxId+1，成功POST仍会新增，不代表数据库主键或重复请求契约已经实现。

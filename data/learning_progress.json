@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-10-31",
-  "stage": "A1 文件仓库 Web 查询与创建 → 调用链巩固",
+  "updated": "2026-11-04",
+  "stage": "A1 文件版 Web 与基础统一异常响应 → 独立参数变体验收",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -176,6 +176,16 @@
       "next": "先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261031/"
+    },
+    {
+      "date": "2026-11-04",
+      "project": "ops-ticket",
+      "title": "断点追踪请求转换与统一异常响应",
+      "summary": "重启读回工单，用断点观察JSON、setter/getter和Controller调用；新增ErrorResponse与两类统一异常处理，理解响应体、getReason、链式调用和泛型。",
+      "verification": "学习者反馈重启后编号2可查、错误JSON不进入Controller；最后验证错误JSON400、空白标题400、未知编号404和各自message均符合预期。助手读取源码并离线compile通过；未新增Web自动测试或重跑17项JUnit，MySQL业务未接入。",
+      "next": "先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。",
+      "status": "reviewed",
+      "note": "/posts/ops-ticket-20261104/"
     }
   ],
   "current_project": "ops-ticket"

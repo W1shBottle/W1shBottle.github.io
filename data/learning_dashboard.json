@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "e6058e3feb40a498c32852c0f0fe4f40e6dd79f0cac69a15e5e85193ae950041",
-  "updated": "2026-10-31",
+  "source_sha256": "1ffc095e0038ce14cf17d06767d71f0dfec1c929ea02f7135513595cf748bb45",
+  "updated": "2026-11-04",
   "project": "设备运维工单",
-  "stage": "A1 文件仓库 Web 查询与创建 → 调用链巩固",
+  "stage": "A1 文件版 Web 与基础统一异常响应 → 独立参数变体验收",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -11,26 +11,26 @@
       "title": "HTTP 和 JSON",
       "status": "practicing",
       "optional": false,
-      "description": "GET详情/列表/关键词200/400/404有课堂实测；POST创建201截图与空白标题失败反馈。已解释路径、方法、DTO、请求体/响应体和序列化，独立断点追踪与缺字段/坏JSON继续验证。"
+      "description": "文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。"
     },
     {
       "id": "W04",
       "title": "Spring Boot/MVC 与依赖注入",
       "status": "practicing",
       "optional": false,
-      "description": "TicketConfig通过Bean配置仓库/Service，Controller构造器注入，CreateTicketRequest接收JSON；文件版创建查询已接通。通过独立说明对象创建和方法调用确认理解，未视为数据库/权限完成。"
+      "description": "已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。"
     }
   ],
-  "next": "先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。",
-  "note": "/posts/ops-ticket-20261031/",
+  "next": "先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。",
+  "note": "/posts/ops-ticket-20261104/",
   "stats": {
     "accepted": 6,
-    "practicing": 14,
-    "planned": 29,
+    "practicing": 15,
+    "planned": 28,
     "total": 49,
     "percent": 12,
     "accepted_width": 12.2449,
-    "practicing_width": 28.5714
+    "practicing_width": 30.6122
   },
   "groups": [
     {
@@ -96,7 +96,7 @@
           "title": "集合、泛型与空结果",
           "status": "practicing",
           "optional": false,
-          "description": "读 Service/内存仓库；能区分 List/Map/Set、集合新对象与元素共享引用、Optional 与 null；独立增加一种筛选并解释顺序与空结果。"
+          "description": "已练List/Map/Set、引用与Optional；ResponseEntity<ErrorResponse>已结合数组类比讲解。继续独立说明响应体类型，并完成一种筛选、解释顺序与空结果。"
         },
         {
           "id": "J09",
@@ -194,14 +194,14 @@
           "title": "HTTP 和 JSON",
           "status": "practicing",
           "optional": false,
-          "description": "GET详情/列表/关键词200/400/404有课堂实测；POST创建201截图与空白标题失败反馈。已解释路径、方法、DTO、请求体/响应体和序列化，独立断点追踪与缺字段/坏JSON继续验证。"
+          "description": "文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。"
         },
         {
           "id": "W04",
           "title": "Spring Boot/MVC 与依赖注入",
           "status": "practicing",
           "optional": false,
-          "description": "TicketConfig通过Bean配置仓库/Service，Controller构造器注入，CreateTicketRequest接收JSON；文件版创建查询已接通。通过独立说明对象创建和方法调用确认理解，未视为数据库/权限完成。"
+          "description": "已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。"
         },
         {
           "id": "W05",
@@ -240,9 +240,9 @@
         {
           "id": "E01",
           "title": "参数校验与异常响应",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "用 DTO/Bean Validation 和统一异常处理；空标题、非法编号、资源不存在、状态冲突有一致响应，不能把所有错误返回200或暴露堆栈。"
+          "description": "ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误、Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。"
         },
         {
           "id": "E02",
@@ -310,12 +310,12 @@
       ],
       "stats": {
         "accepted": 0,
-        "practicing": 0,
-        "planned": 10,
+        "practicing": 1,
+        "planned": 9,
         "total": 10,
         "percent": 0,
         "accepted_width": 0.0,
-        "practicing_width": 0.0
+        "practicing_width": 10.0
       }
     },
     {

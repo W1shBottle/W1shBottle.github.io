@@ -67,7 +67,8 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </table></div>
 <p>项目目录：<code>JavaProject</code>（以下路径均相对项目根目录），包名 <code>cn.wishbottle.opsticket</code>。控制台和早期 Demo 保留为已完成成果；后续数据库版复用业务规则，必要时调整存储契约，不为了兼容文件编号生成方式写出错误数据库逻辑。</p>
 <h2 id="chapter-start-当前接续点">当前接续点</h2>
-<p>2026-10-31：已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。</p>
+<p>2026-11-04：已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。</p>
+<p>下一步：先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。</p>
 <p>下一次：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。</p>
 <h2 id="chapter-start-第一版只做这些">第一版只做这些</h2>
 <p>报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；能查自己的列表和详情，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。最小同源页面或 HTTP 客户端足以演示。</p>
@@ -90,7 +91,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </blockquote>
 <p>更新：2026-10-26。沿用既有 ops-ticket / JavaProject，在同一个设备运维工单主题中学习Java后端与AI应用开发。项目使用虚构设备资料，不依赖硬件接入；以开发、测试与交付能力为重点。</p>
 <h2 id="chapter-project-现有成果与实际起点">现有成果与实际起点</h2>
-<p>当前是 Java 21＋Maven 的本地控制台项目，保留内存/文件仓库、菜单、17项JUnit和可运行JAR。2026-10-28环境已升级为MySQL8.4.13、Connector/J26.10.0；独立JdbcTicketQueryDemo已查询真实工单，支持状态参数、SQL NULL和方法提取。正式业务仓库未接数据库，Java更新事务、HTTP、登录权限、完整处理验收及AI/Agent仍待实现。</p>
+<p>当前实现以Java21/Maven保留控制台、内存/文件仓库、17项JUnit和普通可执行JAR。SQL与独立JDBC查询/更新事务已有跟练成果；Web现已接通文件版查询、创建与两类统一错误响应。已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。</p>
 <p>现有 Java 结构不算复杂，可继续用。需要改的是后续范围：旧计划把六表、评论、退回、看板及众多扩展排在 AI 前，现在将首版收敛为核心业务和必需工程能力，随即接入一个可评估的 AI 功能。</p>
 <p>已有源码/运行结果不等于学习者独立掌握。SQL关联筛选、统计/分页、提交回滚和双连接版本竞争已有反馈；JDBC查询与方法提取是跟写、经解释修改后运行成功。助手执行的环境迁移与临时验证不计作学习者独立能力；以学习时间线和项目验收为准。</p>
 <h2 id="chapter-project-同一个项目的三个主阶段">同一个项目的三个主阶段</h2>
@@ -175,10 +176,10 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <h2 id="chapter-project-求职匹配与信息边界">求职匹配与信息边界</h2>
 <p>后端能力仍是 AI 应用的基础，不能从技术热度判断“纯后端已落后”。2026-10-26 核查的<a href="https://talent.hikvision.com/home/socity/position?postId=3DBC4346A3391150639BCB4895723F64" rel="noopener noreferrer">海康 Java 实习岗位</a>仍覆盖 Java、Spring、MyBatis、SQL、测试与部署；<a href="https://talent.hikvision.com/home/socity/position?postId=80E877130AFCA23529A8391F624FA447" rel="noopener noreferrer">质量管理软件实习</a>也要求后端框架和 SQL，并提 AI 辅助开发。<a href="https://dahua1.zhiye.com/campus/detail?jobAdId=cc425147-ec13-45d8-b704-f4c6632f0f89" rel="noopener noreferrer">大华 AI 应用开发岗位</a>可作 Java/AI 工程能力参照，但该岗位明确限定 2027 届，申请时须核对自己的毕业届别；详情信息来自官网搜索索引。</p>
 <p>上述不是 2027 暑期岗位保证。每次投递核对本科门槛、毕业届别、杭州地点、每周出勤与连续实习时长。简历分别写已实现业务、真实 AI 验证、个人独立贡献和限制；没有测出的性能/成本不能编造。第二个项目等第一项目完成及岗位缺口明确后再决定。</p>
-<p>官方技术参考：<a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">结构化输出仍需校验</a> · <a href="https://docs.spring.io/spring-ai/reference/api/tools.html" rel="noopener noreferrer">工具调用由应用控制执行</a>。引用用于设计判断，不表示本项目已使用 Spring AI。</p></section><section id="chapter-schedule" class="chapter"><div class="chapter-meta"><span>03 / 14</span><a href="#top">回到目录</a></div><h1>阶段式弹性学习日程</h1><p>更新：2026-10-31。沿用文件名便于旧笔记和博客链接查找，<strong>原“20周”是材料编号，不再作为固定工期</strong>。每天约 3 小时，周内自由安排；每周选一个能够运行、解释并独立修改的小成果，是否进入下一步由验收决定。</p>
+<p>官方技术参考：<a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">结构化输出仍需校验</a> · <a href="https://docs.spring.io/spring-ai/reference/api/tools.html" rel="noopener noreferrer">工具调用由应用控制执行</a>。引用用于设计判断，不表示本项目已使用 Spring AI。</p></section><section id="chapter-schedule" class="chapter"><div class="chapter-meta"><span>03 / 14</span><a href="#top">回到目录</a></div><h1>阶段式弹性学习日程</h1><p>更新：2026-11-04。沿用文件名便于旧笔记和博客链接查找，<strong>原“20周”是材料编号，不再作为固定工期</strong>。每天约 3 小时，周内自由安排；每周选一个能够运行、解释并独立修改的小成果，是否进入下一步由验收决定。</p>
 <p>日常逐项查看：<a href="#chapter-checklists">技能 To-do List</a>；用<a href="https://wishbottle.cn/learning/#dashboard" rel="noopener noreferrer">进度面板</a>查看整体和各环节的任务验收比例，跟练状态单独呈现。本页负责阶段顺序，清单负责技能勾选；完成状态以实际证据为准。</p>
 <blockquote>
-<p>2026-10-31：已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。 下一步：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。</p>
+<p>2026-11-04：已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。 下一步：先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。</p>
 </blockquote>
 <h2 id="chapter-schedule-现状与证据">现状与证据</h2>
 <div class="table-scroll" tabindex="0"><table>
@@ -207,8 +208,8 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </tr>
 <tr>
 <td>后端框架</td>
-<td>Bean、构造器注入、文件版查询/创建与DTO已有跟练结果</td>
-<td>待断点巩固与重启确认；数据库、Mapper、权限和完整事务仍待学</td>
+<td>Bean、文件版HTTP读写、DTO与两类统一错误响应已跟练</td>
+<td>重启、断点及三种400/404有反馈；独立变体、数据库、Mapper、权限和完整事务仍待验收</td>
 </tr>
 <tr>
 <td>AI / Agent</td>
@@ -357,7 +358,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <li><strong>列出业务规则</strong>：对照 <code>sql/01_schema.sql</code>，口述 FK保证存在、CHECK保证单行组合；说明“禁用工程师/错误角色不能派单”还需Java。保存一段自己的解释。</li>
 <li><strong>关联查询已跟练</strong>：完整JOIN与OPEN变体已反馈成功，处理人为NULL的打印机工单保留；统计、HAVING和分页也已有结果。解释与独立变体沿后续任务巩固，不重抄全部语句。</li>
 <li><strong>SQL事务已练习</strong>：现有03_queries.sql/06_transactions.sql记录实验；用户已反馈提交/回滚及双连接A=1/B=0。旧version=0片段不是当前库的可重复初始化脚本。</li>
-<li><strong>文件版 Web 链路已跟练</strong>：查询、关键词、DTO、POST创建、参数失败已验证；先确认重启与断点追踪，再按业务契约接MyBatis/数据库生成主键。</li>
+<li><strong>文件版Web与基础错误响应已跟练</strong>：重启恢复、断点与两类异常处理已验证；先独立观察abc路径转换错误，再按业务契约接MyBatis和数据库生成主键。</li>
 </ol>
 <h2 id="chapter-schedule-学习节奏与展示">学习节奏与展示</h2>
 <p>每周约 15—18 小时可拆为项目实现/排错、基础算法、简短复盘；忙时减少范围而非伪造完成。AI 可辅助找错和审阅，但每单元至少一次关闭答案的变体修改和一次调用链解释。测试围绕业务风险，不以断言数量衡量掌握。</p>
@@ -470,7 +471,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </blockquote>
 <h2 id="chapter-java-sql-当前接续任务与代码位置">当前接续任务与代码位置</h2>
 <p>现有源码在 <code>src\main\java\cn\wishbottle\opsticket</code>，测试/Demo在对应 <code>src/test/java</code>。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 <code>sql/01_schema.sql</code> 至 <code>sql/06_transactions.sql</code>，先继续修改这些文件，避免重复建一套脚本。</p>
-<p>2026-10-30 接续：已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。 下一步：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。</p>
+<p>2026-11-04 当前接续：已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。 下一步：先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。</p>
 <p>第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。</p>
 <p>以下101/102/103是教材隔离样本，不能当当前开发库数据。当前确认空调工单id=1且IN_PROGRESS，投影仪已停用；其余按实际SELECT核对。所有“返回3行/某固定编号”的验收只适用于已明确准备该样本的隔离环境。</p>
 <p>这六周把你已经接触过的对象、异常和文件读写，变成自己能够修改的工单程序，再把数据放入 MySQL。每周以一个能演示的成果为目标。表中的六个任务各约 3 小时，包含阅读、编码、排错和复盘，总计约 18 小时；可以自行选日期，考试周拆成两周。提前完成就复写和查漏，不必把时间填满。</p>
@@ -841,7 +842,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <p>卡住提示：连接不通时先用同一主机、端口和账号在数据库客户端连接；能连接后再查驱动与依赖。<code>No suitable driver</code> 与 <code>Access denied</code> 原因不同。这里的 JDBC 是理解数据访问的桥梁，不继续扩成另一套正式持久层。参考<a href="https://dev.mysql.com/doc/connector-j/en/connector-j-installing-maven.html" rel="noopener noreferrer">驱动接入</a>与<a href="https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-connect-drivermanager.html" rel="noopener noreferrer">DriverManager 连接说明</a>。</p>
 <h2 id="chapter-java-sql-进入第-7-周的门槛">进入第 7 周的门槛</h2>
 <p>你能脱离答案完成：一个带校验的对象、一个集合筛选、一次文件往返、一条关联统计 SQL、一次 JDBC 插入与查询，并解释构造器、接口、事务、参数绑定分别解决什么问题。未通过的项最多选两项补练，先完成它们再开始 Web；不用为了赶日期把不会的内容全部积压到 Spring 阶段。</p></section><section id="chapter-web-security" class="chapter"><div class="chapter-meta"><span>06 / 14</span><a href="#top">回到目录</a></div><h1>第7至13周 Web接口与登录权限</h1><p>2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和<a href="#chapter-contracts">数据接口约定</a>决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，<strong>不计入进入AI的前置验收</strong>。先通过 SQL 与短 JDBC，再从一个请求开始，不一次生成后端。</p>
-<p>2026-10-31 当前接续：已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。 下一步：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。</p>
+<p>2026-11-04 当前接续：已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。 下一步：先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。</p>
 <h2 id="chapter-web-security-现行最小任务顺序">现行最小任务顺序</h2>
 <p>所有路径相对 <code>项目根目录</code>。controller已有HelloController与TicketController，config/TicketConfig及dto/CreateTicketRequest也已写；mapper/security/exception按后续任务增加，不提前生成空类。</p>
 <div class="table-scroll" tabindex="0"><table>
@@ -874,7 +875,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </tr>
 <tr>
 <td>校验和错误</td>
-<td>DTO边界与Service业务规则；未来异常Advice</td>
+<td>DTO边界与Service业务规则；已有基础Advice，继续补参数分支</td>
 <td>必要参数校验、统一错误、requestId日志；列表稳定分页</td>
 <td>非法字段400、未知对象404、业务冲突409；错误不返回假成功；日志无密码或密钥</td>
 </tr>
@@ -2102,7 +2103,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>先关闭工具入口并修权限，模型提示词不能代替鉴权</td>
 </tr>
 </tbody>
-</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-10-31（含11月1日凌晨）。当前在 <strong>A1：文件仓库 Web 查询与创建</strong>。已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。</p>
+</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-11-04。当前在 <strong>A1：文件版 Web 与基础统一错误响应</strong>。已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。</p>
 <p><a href="https://wishbottle.cn/learning/#dashboard" rel="noopener noreferrer">查看可视化进度面板</a>：百分比直接由本清单计算，验收通过才计入；跟练单独显示。P05 与 O01—O05 为按需扩展，不计入整体分母。这里只表示任务验收比例，不表示学习时长、项目代码完成率或熟练度。</p>
 <h2 id="chapter-checklists-怎样看这份清单">怎样看这份清单</h2>
 <ul>
@@ -2158,7 +2159,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>A2</td>
 <td>Bean Validation、统一异常、Spring Security＋Session</td>
 <td>参数合法、身份可信、角色和资源归属正确</td>
-<td>待学</td>
+<td>两类统一异常已跟练；Bean Validation、认证与授权待学</td>
 </tr>
 <tr>
 <td>A2</td>
@@ -2208,7 +2209,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <li>☑ <strong>J05 相对路径</strong>：知道相同字符串可能因工作目录不同指向不同文件，并会检查工作目录。证据：已口述排查思路。</li>
 <li>☑ <strong>J06 Git 本地提交</strong>：已执行 status/add/commit/log，产生可见提交。后续仍需学习分支和冲突；不代表 Git 全部掌握。</li>
 <li>□ <strong>J07【已练习】对象规则与接口</strong>：读 Ticket、TicketRepository、两种实现和 Service；独立讲清 private/构造器/this/enum、long 与 Long、implements/Override、接口多态和构造器注入。完成一个业务规则的小改即可，不重写整套类。</li>
-<li>□ <strong>J08【已练习】集合、泛型与空结果</strong>：读 Service/内存仓库；能区分 List/Map/Set、集合新对象与元素共享引用、Optional 与 null；独立增加一种筛选并解释顺序与空结果。</li>
+<li>□ <strong>J08【已练习】集合、泛型与空结果</strong>：已练List/Map/Set、引用与Optional；ResponseEntity<errorresponse>已结合数组类比讲解。继续独立说明响应体类型，并完成一种筛选、解释顺序与空结果。</errorresponse></li>
 <li>□ <strong>J09【已练习】异常和文件 IO</strong>：读 FileStore/文件仓库；能解释 throw/throws/catch、受检与运行时异常、cause、Reader/Writer、UTF-8、try-with-resources。自己定位一次字段错误，不能把写文件失败当事务已回滚。</li>
 <li>□ <strong>J10【已练习】构建、调试和测试</strong>：用 pom/现有测试解释 main 与 @Test、断言和 @TempDir、test/package 的区别；独立下断点看调用链，改坏一处规则后关键测试应失败，恢复后通过。无需追加同质 assertEquals。</li>
 </ul>
@@ -2228,15 +2229,15 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <ul>
 <li>□ <strong>W01【查询与更新事务已跟练】JDBC</strong>：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。</li>
 <li>□ <strong>W02【待学】数据库生成 ID 与映射</strong>：创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。</li>
-<li>□ <strong>W03【已跟练，继续验收】HTTP 和 JSON</strong>：GET详情/列表/关键词200/400/404有课堂实测；POST创建201截图与空白标题失败反馈。已解释路径、方法、DTO、请求体/响应体和序列化，独立断点追踪与缺字段/坏JSON继续验证。</li>
-<li>□ <strong>W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入</strong>：TicketConfig通过Bean配置仓库/Service，Controller构造器注入，CreateTicketRequest接收JSON；文件版创建查询已接通。通过独立说明对象创建和方法调用确认理解，未视为数据库/权限完成。</li>
+<li>□ <strong>W03【已跟练，继续验收】HTTP 和 JSON</strong>：文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。</li>
+<li>□ <strong>W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入</strong>：已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。</li>
 <li>□ <strong>W05【待学】MyBatis</strong>：在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。</li>
 <li>□ <strong>W06【待学】分层与核心状态流</strong>：串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。</li>
 </ul>
 <h2 id="chapter-checklists-e能运行能交付的工程能力a2">E：能运行、能交付的工程能力（A2）</h2>
 <p>A2通过后开始B，性能专题、完整管理后台和容器编排不作为额外门槛。</p>
 <ul>
-<li>□ <strong>E01【待学】参数校验与异常响应</strong>：用 DTO/Bean Validation 和统一异常处理；空标题、非法编号、资源不存在、状态冲突有一致响应，不能把所有错误返回200或暴露堆栈。</li>
+<li>□ <strong>E01【已跟练，继续验收】参数校验与异常响应</strong>：ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误、Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。</li>
 <li>□ <strong>E02【待学】认证</strong>：使用 Spring Security＋Session Cookie 和框架 PasswordEncoder；理解登录、注销、CSRF。SQL里的 NOT_A_LOGIN_HASH 不是已配置的真实登录密码。</li>
 <li>□ <strong>E03【待学】角色与资源归属授权</strong>：用户A不能读用户B的工单；管理员派单、指定工程师处理、原报修人验收。身份从认证上下文取，客户端或模型传来的 actorId 不能充当授权。</li>
 <li>□ <strong>E04【待学】业务事务</strong>：Service 划定状态变更＋ticket_action_log 的事务；在真实测试库令日志写失败，核对状态/版本也回滚，解释事务生效与异常传播。</li>

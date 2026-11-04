@@ -5,10 +5,10 @@
   "weight": 90,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-01T00:00:00+08:00"
+  "lastmod": "2026-11-04T00:00:00+08:00"
 }
 
-更新：2026-10-31（含11月1日凌晨）。当前在 **A1：文件仓库 Web 查询与创建**。已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。
+更新：2026-11-04。当前在 **A1：文件版 Web 与基础统一错误响应**。已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。
 
 [查看可视化进度面板](/learning/#dashboard)：百分比直接由本清单计算，验收通过才计入；跟练单独显示。P05 与 O01—O05 为按需扩展，不计入整体分母。这里只表示任务验收比例，不表示学习时长、项目代码完成率或熟练度。
 
@@ -30,7 +30,7 @@
 | 当前 | MySQL、SQL | 三表关系、条件/关联查询、事务、约束 | JOIN筛选、统计/分页、事务与双连接版本竞争已有跟练反馈 |
 | A1 | JDBC → MyBatis | 先懂连接/参数/结果，再用 Mapper 执行自己写的 SQL | JDBC查询与更新事务已跟练；MyBatis待学 |
 | A1 | HTTP/JSON、Spring Boot、Spring MVC、依赖注入 | 从请求到数据库的一条完整调用链 | Bean配置、构造器注入、DTO与文件版HTTP读写已跟练；数据库接线待学 |
-| A2 | Bean Validation、统一异常、Spring Security＋Session | 参数合法、身份可信、角色和资源归属正确 | 待学 |
+| A2 | Bean Validation、统一异常、Spring Security＋Session | 参数合法、身份可信、角色和资源归属正确 | 两类统一异常已跟练；Bean Validation、认证与授权待学 |
 | A2 | Spring 事务、条件更新、操作日志、SLF4J/日志实现 | 数据一致、冲突可解释、错误能定位 | 待学 |
 | A2 | JUnit、Spring 测试工具、真实 MySQL 测试库 | 用少量关键测试验证权限、回滚、并发与重试 | 待学；不能只用 Mock 证明数据库事务 |
 | A2 | Linux 基础、JAR、环境变量、HTTP 调试工具 | 在另一环境启动、看日志、排错和恢复数据 | IDEA HTTP Client 已跟练；Linux、部署和其余排错仍待学 |
@@ -49,7 +49,7 @@
 - [x] **J05 相对路径**：知道相同字符串可能因工作目录不同指向不同文件，并会检查工作目录。证据：已口述排查思路。
 - [x] **J06 Git 本地提交**：已执行 status/add/commit/log，产生可见提交。后续仍需学习分支和冲突；不代表 Git 全部掌握。
 - [ ] **J07【已练习】对象规则与接口**：读 Ticket、TicketRepository、两种实现和 Service；独立讲清 private/构造器/this/enum、long 与 Long、implements/Override、接口多态和构造器注入。完成一个业务规则的小改即可，不重写整套类。
-- [ ] **J08【已练习】集合、泛型与空结果**：读 Service/内存仓库；能区分 List/Map/Set、集合新对象与元素共享引用、Optional 与 null；独立增加一种筛选并解释顺序与空结果。
+- [ ] **J08【已练习】集合、泛型与空结果**：已练List/Map/Set、引用与Optional；ResponseEntity<ErrorResponse>已结合数组类比讲解。继续独立说明响应体类型，并完成一种筛选、解释顺序与空结果。
 - [ ] **J09【已练习】异常和文件 IO**：读 FileStore/文件仓库；能解释 throw/throws/catch、受检与运行时异常、cause、Reader/Writer、UTF-8、try-with-resources。自己定位一次字段错误，不能把写文件失败当事务已回滚。
 - [ ] **J10【已练习】构建、调试和测试**：用 pom/现有测试解释 main 与 @Test、断言和 @TempDir、test/package 的区别；独立下断点看调用链，改坏一处规则后关键测试应失败，恢复后通过。无需追加同质 assertEquals。
 
@@ -72,8 +72,8 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前SQ
 
 - [ ] **W01【查询与更新事务已跟练】JDBC**：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。
 - [ ] **W02【待学】数据库生成 ID 与映射**：创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。
-- [ ] **W03【已跟练，继续验收】HTTP 和 JSON**：GET详情/列表/关键词200/400/404有课堂实测；POST创建201截图与空白标题失败反馈。已解释路径、方法、DTO、请求体/响应体和序列化，独立断点追踪与缺字段/坏JSON继续验证。
-- [ ] **W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入**：TicketConfig通过Bean配置仓库/Service，Controller构造器注入，CreateTicketRequest接收JSON；文件版创建查询已接通。通过独立说明对象创建和方法调用确认理解，未视为数据库/权限完成。
+- [ ] **W03【已跟练，继续验收】HTTP 和 JSON**：文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。
+- [ ] **W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入**：已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。
 - [ ] **W05【待学】MyBatis**：在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。
 - [ ] **W06【待学】分层与核心状态流**：串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。
 
@@ -81,7 +81,7 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前SQ
 
 A2通过后开始B，性能专题、完整管理后台和容器编排不作为额外门槛。
 
-- [ ] **E01【待学】参数校验与异常响应**：用 DTO/Bean Validation 和统一异常处理；空标题、非法编号、资源不存在、状态冲突有一致响应，不能把所有错误返回200或暴露堆栈。
+- [ ] **E01【已跟练，继续验收】参数校验与异常响应**：ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误、Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。
 - [ ] **E02【待学】认证**：使用 Spring Security＋Session Cookie 和框架 PasswordEncoder；理解登录、注销、CSRF。SQL里的 NOT_A_LOGIN_HASH 不是已配置的真实登录密码。
 - [ ] **E03【待学】角色与资源归属授权**：用户A不能读用户B的工单；管理员派单、指定工程师处理、原报修人验收。身份从认证上下文取，客户端或模型传来的 actorId 不能充当授权。
 - [ ] **E04【待学】业务事务**：Service 划定状态变更＋ticket_action_log 的事务；在真实测试库令日志写失败，核对状态/版本也回滚，解释事务生效与异常传播。

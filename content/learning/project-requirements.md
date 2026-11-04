@@ -2,7 +2,7 @@
   "title": "工单项目需求与开发计划",
   "description": "最小业务闭环、阶段验收与后续 AI、Agent 任务。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-10-31T00:00:00+08:00",
+  "lastmod": "2026-11-04T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-10-31（含次日凌晨）。已跟练 Spring Bean 配置与构造器注入，Web 复用 TicketService 和文件仓库，完成详情、列表、关键词查询与 POST 创建。课堂助手 GET 验证 200/400/404；学习者提供创建 201 截图，并反馈空白标题失败且数量不变。DTO、RequestBody、JSON 转换和异常 cause 经讲解；独立追踪仍需巩固。MyBatis/MySQL 业务、权限及 AI 尚未接入。
+核对日期：2026-11-04。已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。
 
 ## 1. 项目背景与目标用户
 
@@ -49,6 +49,7 @@ Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表�
 | R19 | Web问候与查询参数 | Boot4.1.2启动；HelloController返回JSON，name缺失使用访客；学习者反馈参数场景通过 |
 | R20 | HTTP工单查询 | Web已接文件仓库；详情200/未知404、列表与可选关键词筛选；非法关键词400，课堂GET已验 |
 | R21 | HTTP创建工单 | DTO接JSON标题，Service校验与文件自动保存，成功201；空白标题400且数量不变由学习者反馈 |
+| R22 | 基础统一错误响应 | ErrorResponse与GlobalExceptionHandler已实现；请求体转换错误400，空白标题400，未知工单404，均带message；学习者反馈三项符合预期。Bean Validation、路径参数类型错误和其他异常分支仍待完善 |
 
 标题长度按 Java `String.length()` 的 UTF-16 代码单元计数，不按用户感知字符数计数。自动编号当前面向单线程内存练习，不提供数据库自增或并发编号分配。
 
@@ -129,7 +130,7 @@ A1/A2 完成即可进入 B，不等 Redis/消息队列/微服务。C 不以固�
 | 3 多表与统计（已练习） | JOIN、COUNT、GROUP BY、HAVING、LIMIT/OFFSET；03_queries.sql | OPEN 筛选、2/1计数、无工单设备和分页/总数已有用户反馈 | 继续结合后续需求解释连接与NULL；不重做全部练习 |
 | 4 事务与冲突（SQL已练习） | 03_queries.sql、06_transactions.sql | 提交/回滚、CHECK失败后回滚、条件更新和双窗口版本竞争已有反馈 | A=1、B=0是SQL实验；正式Service尚无数据库事务与版本契约 |
 | 5 短 JDBC（本轮已跟练） | JdbcTicketQueryDemo、JdbcTicketUpdateDemo；参数绑定、结果读取、影响行数和事务范围 | 已跟写版本查询、1/0检查、成功提交和中途失败回滚；更新方法由main调用，当前simulateFailure=false | 用户运行反馈＋助手源码检查；无新增JDBC自动测试，独立迁移业务继续验收 |
-| 6 文件版 Web 链路（已跟练） | TicketConfig、TicketController、CreateTicketRequest、tickets.http | 查询/创建与失败输入已练；接续重启确认、断点追踪和缺字段/坏JSON；MyBatis后续按任务引入 | 区分200/201/400/404及对象/JSON转换；未接数据库，不以文件版宣称A1全闭环完成 |
+| 6 文件版 Web 与基础错误响应（已跟练） | TicketConfig、TicketController、DTO、GlobalExceptionHandler、tickets.http | 查询/创建、重启恢复和断点追踪已练；三种400/404响应有用户反馈；下一步观察abc路径转换错误 | 区分JSON转换与业务校验，保留状态码；独立变体和MyBatis/数据库业务仍继续验收 |
 | 7 完成 A | 需求第 6 节与设计第 10 节 | 依次补创建ID契约、状态方法、操作日志事务、登录授权和重复请求 | 运行验收清单；独立解释并修改一处业务；完成一次故障复现、修复、回归，再接 AI |
 
 ## 9. AI 与可选 Agent 路线（计划）
