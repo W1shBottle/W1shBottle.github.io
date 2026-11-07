@@ -27,6 +27,14 @@ class DashboardEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_tasks('- [ ] **O01【按需】检索**：按需。', [])
 
+    def test_deferred_extension_stays_optional_and_planned(self):
+        row = '- [ ] **O06【后置】MCP**：主线完成后再做。'
+        tasks = parse_tasks(row, ['O06'])
+        self.assertEqual(tasks[0]['status'], 'planned')
+        self.assertTrue(tasks[0]['optional'])
+        with self.assertRaises(ValueError):
+            parse_tasks(row, [])
+
     def test_total_uses_task_counts_not_average_stage_percentages(self):
         source = '- [x] **J01 引用**：已有证据。\n' + '\n'.join(
             f'- [ ] **W0{i}【待学】任务{i}**：待验收。' for i in range(1,4))

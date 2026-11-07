@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-04T00:00:00+08:00",
+  "lastmod": "2026-11-07T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-04。第1—9节记录原控制台；第10—12节为数据库/Web/AI目标；第13—15节保留JDBC与Web接线阶段，第16节记录当前基础统一错误响应。
+核对日期：2026-11-07。本次更新目标设计，不新增代码或测试。第1—9节记录原控制台及当前可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—15节保留历史接线快照，第16节是11月4日基础错误响应记录。当前Web已连接Service与文件仓库，数据库业务未接入。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -38,7 +38,7 @@ ConsoleApp → TicketService → TicketRepository（接口）
 | TicketRepositorySwitchDemo | 共用业务流程运行两种实现，再新建文件仓库验证恢复 |
 | 四个 JUnit 测试类 | 标题 6、文件往返 2、内存仓库 7、Service 2，共 17 项 |
 
-原有启动、两阶段重启和坏数据 Demo 保留；它们与正式 ConsoleApp 的运行入口和数据路径不同。当前 Java 尚无数据库访问和网络层；sql 目录已有独立练习三表，不能与 Java 运行能力混为一谈。
+原有启动、两阶段重启和坏数据 Demo 保留；它们与正式 ConsoleApp 的运行入口和数据路径不同。正式业务仍用文件仓库；独立JDBC已有查询/更新实验，当前Web已有工单查询/创建和Service接线。SQL三表和JDBC Demo不等于正式业务已接库。
 
 ## 2. 领域对象与状态
 
@@ -235,16 +235,19 @@ Java contains 与 MySQL 排序规则的大小写行为、String.length 与 CHAR_
 
 日志记录 requestId、内部用户标识、模型/提示版本、耗时、状态、token 使用量与错误类别；避免默认记录完整敏感正文，异常也不打印密钥。成本按实际供应商价格和真实用量计算；缺价格/usage 时记未知或有说明的估算，不填 0 冒充免费。
 
-## 12. 可选 RAG / Agent 的准入
+## 12. G只读Agent与C知识检索目标（2026-11-07）
 
-先运行需求与验收中的 B/C 案例，有明确缺口才升级。RAG 适用于需要手册证据的问答：授权资料导入、来源版本、检索、引用定位、无依据拒答分别可检查。资料原文作为不可信输入，不能发出权限命令。
+B完成真实模型调用/结构校验/失败降级后进入G；G和C列为明确里程碑，以下均尚未实现。
 
-只读 Agent 先复用现有 Service 公开两个有界工具：按状态查询当前用户可见工单、按编号读取授权详情；程序决定允许的工具、参数 schema、分页/字段上限，不能暴露任意 SQL。每次执行检查身份，模型提供的 userId 不作为身份来源。
+工具层在完成A2授权的Service外封装findVisibleTickets/getTicketDetail，schema限定参数、结果字段和数量。身份从会话取，每次执行检查权限，不提供任意SQL/URL/命令。Agent负责选择工具，Java负责执行和结果回传。
 
-多步骤时设置总步数、总调用次数/时间/费用限制，保留工具结果和失败，控制上下文长度、过期数据与重试；无权限/无结果有明确停止条件。写工具必须把具体动作和版本交给用户确认，再次鉴权和校验后走原事务接口；不得把一句宽泛同意当永久写权限。首个只读能力稳定前不做多 Agent。
+任务先串行查询→详情→追问/整合，控制总步数、调用数、耗时、上下文和预算。任务持久化taskId/owner/status/model/promptVersion/时间，步骤保存toolName及参数/结果摘要、耗时、错误；不记录密钥或不必要全文。状态PENDING/RUNNING/WAITING_INPUT/SUCCEEDED/FAILED；补充输入可继续，重启后恢复或明确标记中断，先不做分布式调度。远端调用放在数据库写事务外。
 
+C准备少量自编虚构运维资料，明确来源说明/版本/设备范围；searchMaintenanceDocs返回可定位出处，检索遵守权限。先关键词基线，需要时再比较向量召回/重排；无依据不编造结论。B/G开始收集案例，C扩展固定任务集并分开检索、工具与生成错误，报告真实延迟/用量/成本。
 
-## 13. 2026-10-29 独立 JDBC 更新事务练习
+写工具、MCP、SubAgent与模型路由在G/C稳定后按需求扩展。写操作确认绑定具体动作/参数/版本，执行时仍重新鉴权和校验状态/幂等；模型不取得额外权限。
+
+## 13. 2026-10-29 独立 JDBC 更新事务练习（历史快照，以第16节及页首为当前状态）
 
 `src/test/java/cn/wishbottle/opsticket/JdbcTicketUpdateDemo.java` 是手动运行的 main Demo，与正式 ConsoleApp→Service→Repository 链路分开。
 
@@ -257,7 +260,7 @@ Java contains 与 MySQL 排序规则的大小写行为、String.length 与 CHAR_
 范围：此Demo没有接入Ticket的完整标题/状态/归属校验，也没有操作日志、请求幂等或生产异常处理。`version`是业务列而非MySQL软件版本，不保存旧标题。旧版本失败不能无条件刷新版本强行重试。HTTP/JSON仅开始讲解，`GET /api/tickets/{id}`仍为计划接口。
 
 
-## 14. 2026-10-30 Spring Boot Web 入门
+## 14. 2026-10-30 Spring Boot Web 入门（历史快照，以第16节及页首为当前状态）
 
 OpsTicketApplication位于根包cn.wishbottle.opsticket，使用@SpringBootApplication和SpringApplication.run启动，扫描子包controller。Web Starter带入内嵌Tomcat与Spring MVC。当前链路为浏览器→Tomcat→Spring MVC→Controller→Map序列化响应，没有经过TicketService或数据库。
 
@@ -271,7 +274,7 @@ OpsTicketApplication位于根包cn.wishbottle.opsticket，使用@SpringBootAppli
 POM保留JUnit5.14.4属性、驱动26.10.0和既有编译/测试/JAR插件。spring-boot-maven-plugin尚未配置，不能用当前ConsoleApp清单声称Web JAR已交付。下一步先验证路径参数，再设计真实查询返回对象和不存在的404处理。
 
 
-## 15. 2026-10-31 文件仓库 Web 接线与请求 DTO
+## 15. 2026-10-31 文件仓库 Web 接线与请求 DTO（历史快照，以第16节及页首为当前状态）
 
 TicketConfig 使用 @Configuration 和两个 @Bean 方法创建 FileTicketRepository 与 TicketService。Controller 通过唯一构造器接收 Service；默认单例在当前容器内共享，控制台是独立入口，不与 Web 进程共享 Map。
 

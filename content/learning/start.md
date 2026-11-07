@@ -5,10 +5,10 @@
   "weight": 10,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-11-04T00:00:00+08:00"
+  "lastmod": "2026-11-07T00:00:00+08:00"
 }
 
-2026-10-26 调整。用同一个设备运维工单平台，按 **A 后端业务 → B 一个 AI 功能 → C 验证改进** 推进。A 包含“最小业务闭环”和“必要工程能力”两个检查点；RAG、Agent 是之后按证据选择的升级，不是默认必做清单。
+2026-11-07调整。用同一个设备运维工单平台，按 **A 后端业务与基础工程 → B 模型调用入门 → G 只读运维 Agent → C 知识检索与评测改进** 推进。A包含最小业务与必要工程；G只读Agent是主线里程碑，C加入小型运维知识检索。保留原C评测编号，评测从B开始。
 
 每周以成果为目标，周内有弹性，每天约 3 小时；不承诺 20 周掌握全部内容。文件名中的“第几周”保留为旧教材索引，时间与实施顺序以新版[阶段日程](/learning/schedule/)为准。课后答案是局部参考，不能把生成的代码视为已学会。
 
@@ -19,7 +19,7 @@
 | [阶段日程](/learning/schedule/) | 当前证据、保留/调整/延后项、阶段门槛、下一批小任务 |
 | [Java与数据库](/learning/java-sql/) | 已练 Java/SQL 的复习入口，以及 JDBC 查询与事务 |
 | [Web与权限](/learning/web-security/) | 最小接口、MyBatis、状态流、Session 权限、错误处理 |
-| [测试部署与AI验证](/learning/testing-delivery/) | A2 工程验收、B 真实 API、C 评估、可选 RAG/Agent |
+| [测试部署与AI验证](/learning/testing-delivery/) | A2工程验收、B真实API、G只读Agent、C知识检索与评测 |
 | [投递与面试](/learning/spring-applications/) | 目标岗位核对和能力证据表达 |
 | [资料与排错](/learning/resources/) | 按当前步骤查官方文档与故障原因 |
 | [技能 To-do List 与验收模板](/learning/checklists/) | 分阶段技术栈、可勾选技能、已有证据与独立验收 |
@@ -29,11 +29,9 @@
 
 ## 当前接续点
 
-2026-11-04：已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。
+截至2026-11-07源码与文档核对，最近一次学习反馈仍为2026-11-04。文件版Web已通过Bean配置和构造器注入接入TicketService，支持详情、列表、关键词查询和POST创建；ErrorResponse及两类统一异常处理已实现。重启恢复、错误JSON400、空白标题400、未知编号404及message来自学习者此前反馈。SQL关联/统计/分页/事务与独立JDBC查询、更新回滚已有跟练；正式Web仍用文件仓库。MyBatis/MySQL业务、认证授权、完整状态流、模型调用和Agent均未接入。现有17个JUnit测试方法；本次仅调整文档，没有新增业务实现、运行测试或提高技能勾选状态。 下一步：先独立请求 `GET /api/tickets/abc`，记录状态码、响应正文与Controller断点是否进入，补路径参数类型转换错误处理；随后接MyBatis，先数据库查询、再创建及真实自增主键，独立增加状态筛选，最后继续派单/处理/验收、权限和事务。
 
-下一步：先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。
-
-下一次：先确认重启后编号 2 仍可查询，再用断点追踪 setTitle → Controller → Service；比较缺标题的 {} 与语法错误 JSON 的失败位置，区分参数转换和业务校验。
+下一次：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。
 
 ## 第一版只做这些
 

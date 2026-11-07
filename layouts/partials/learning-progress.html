@@ -20,7 +20,7 @@
     <li class="progress-entry" data-project="{{ .project }}" data-date="{{ .date }}">
       <div class="progress-date"><time datetime="{{ .date }}">{{ time.Format "01.02" .date }}</time><span>{{ time.Format "2006" .date }}</span></div>
       <article class="progress-card">
-        <div class="progress-card-meta"><span>{{ index site.Data.learning_progress.projects .project }}</span><span class="progress-state{{ if eq .status "in-progress" }} progress-state-current{{ end }}">{{ if eq .status "in-progress" }}{{ if eq .date site.Data.learning_progress.updated }}学习中{{ else }}当日记录{{ end }}{{ else }}当日已复盘{{ end }}</span></div>
+        <div class="progress-card-meta"><span>{{ index site.Data.learning_progress.projects .project }}</span><span class="progress-state{{ if eq .status "in-progress" }} progress-state-current{{ end }}">{{ if eq .kind "plan-update" }}方案更新{{ else if eq .status "in-progress" }}{{ if eq .date site.Data.learning_progress.updated }}学习中{{ else }}当日记录{{ end }}{{ else }}当日已复盘{{ end }}</span></div>
         <h3>{{ .title }}</h3>
         <p>{{ .summary }}</p>
         <details class="progress-evidence"{{ if and (eq .status "in-progress") (eq .date site.Data.learning_progress.updated) }} open{{ end }}>

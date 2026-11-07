@@ -22,13 +22,13 @@ def parse_tasks(markdown, optional_ids):
         optional = task_id in optional_ids
         if checked == 'x':
             status = 'accepted'
-        elif label in ('按需', '更后置', '待学'):
+        elif label in ('按需', '更后置', '后置', '待学'):
             status = 'planned'
         elif any(word in label for word in ('已练习', '已跟练', '实操通过', '正在学', '持续')):
             status = 'practicing'
         else:
             raise ValueError('Unrecognized learning state: ' + task_id + ' / ' + label)
-        if label in ('按需', '更后置') and not optional:
+        if label in ('按需', '更后置', '后置') and not optional:
             raise ValueError('Optional task must be excluded from denominator: ' + task_id)
         tasks.append(dict(id=task_id, title=title.strip(), status=status,
                           optional=optional, description=description.strip()))

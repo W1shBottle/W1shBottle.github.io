@@ -101,6 +101,9 @@ def public_body(raw, source):
     body = re.sub(r"，报告在本地忽略目录 `\.qa/[^`]+`", "，核验记录保留在本地", body)
     body = body.replace("本次路线文档修订尚未提交。", "此次路线调整仅更新文档与课程，业务实现未提前推进。")
 
+    body = body.replace("本次为本地计划修订，未新增实现或运行测试，博客尚未同步。", "本次同步学习路线，未新增业务实现或运行验收。")
+    body = body.replace("更新本地计划与项目说明", "更新学习计划与项目说明")
+    body = body.replace("新路线与技能编号详见本地阶段计划", "新路线与技能编号详见学习阶段计划")
     if PRIVATE_PATH.search(body):
         raise ValueError("Remove machine-specific paths before publication: " + source)
     if "本次未发布" in body or ".qa/plan-refresh" in body:

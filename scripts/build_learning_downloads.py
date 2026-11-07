@@ -191,11 +191,11 @@ def build() -> dict:
     if not week_nav:
         raise ValueError("Missing teaching-unit navigation")
     document = f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="同一个Java＋AI工单项目的阶段计划、55项技能清单、课程与参考答案，支持离线阅读。"><title>Java＋AI 项目学习计划 · WishBottle</title><style>{STYLE}</style></head>
-<body id="top"><div class="layout"><aside><div class="brand">Java＋AI 项目学习计划</div><div class="sidebar-note">后端业务 → AI 功能 → 验证改进<br>阶段验收 / 连续阅读版</div><a class="site-return" href="{SITE}/learning/">返回博客学习板块 ↗</a><nav aria-label="章节目录"><ul>{navigation}</ul></nav><details><summary>按教材单元查找</summary><nav aria-label="教材单元目录"><ul>{weeks}</ul></nav></details><p class="sidebar-note">Ctrl+F 查找 · Ctrl+P 打印<br>保存这一份 HTML 即可离线阅读<br>正文无需加载外部资源</p></aside>
-<main><header class="hero"><div class="eyebrow">WISHBOTTLE / 学习板块</div><h1>Java＋AI 项目学习计划</h1><p>沿用设备运维工单项目，先完成最小后端与基础工程，再接入摘要和分类建议。按实际验收推进，原周号仅作材料索引。</p><div class="meta"><span>A / B / C 阶段</span><span>55 项技能清单</span><span>14 篇课程与参考资料</span><span>按实际进度验收</span></div><a class="download" href="{ZIP_URL}">下载完整自学包（HTML + Markdown）↗</a></header>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="同一个Java＋AI工单项目的阶段计划、技能清单、课程与参考答案，支持离线阅读。"><title>Java＋AI 项目学习计划 · WishBottle</title><style>{STYLE}</style></head>
+<body id="top"><div class="layout"><aside><div class="brand">Java＋AI 项目学习计划</div><div class="sidebar-note">后端业务 → 模型调用 → 只读Agent → 检索评测<br>阶段验收 / 连续阅读版</div><a class="site-return" href="{SITE}/learning/">返回博客学习板块 ↗</a><nav aria-label="章节目录"><ul>{navigation}</ul></nav><details><summary>按教材单元查找</summary><nav aria-label="教材单元目录"><ul>{weeks}</ul></nav></details><p class="sidebar-note">Ctrl+F 查找 · Ctrl+P 打印<br>保存这一份 HTML 即可离线阅读<br>正文无需加载外部资源</p></aside>
+<main><header class="hero"><div class="eyebrow">WISHBOTTLE / 学习板块</div><h1>Java＋AI 项目学习计划</h1><p>沿用设备运维工单项目，完成后端与模型调用后，交付只读运维Agent，再加入资料检索和效果评测。原周号仅作教材索引，计划调整不代表新增验收。</p><div class="meta"><span>A → B → G → C 阶段</span><span>63 项技能清单</span><span>14 篇课程与参考资料</span><span>按实际进度验收</span></div><a class="download" href="{ZIP_URL}">下载完整自学包（HTML + Markdown）↗</a></header>
 <details class="mobile-nav"><summary>打开课程目录</summary><nav aria-label="手机章节目录"><ul>{navigation}</ul></nav><details><summary>按教材单元查找</summary><nav aria-label="手机教材单元目录"><ul>{weeks}</ul></nav></details></details>
-{''.join(sections)}<footer class="footer">初版：2026年10月12日；路线与技能清单更新：2026年10月26日。按阶段验收推进。<br>这是学习路线与局部参考示例，完整项目需随课程实现和验证。<br><a href="{SITE}/learning/">返回 WishBottle 学习板块 ↗</a> · <a href="#top">回到顶部</a></footer></main></div></body></html>'''
+{''.join(sections)}<footer class="footer">初版：2026年10月12日；路线与技能清单更新：2026年11月7日。按阶段验收推进。<br>这是学习路线与局部参考示例，完整项目需随课程实现和验证。<br><a href="{SITE}/learning/">返回 WishBottle 学习板块 ↗</a> · <a href="#top">回到顶部</a></footer></main></div></body></html>'''
     assert_public(document, "reader.html")
     soup = BeautifulSoup(document, "html.parser")
     ids = [item["id"] for item in soup.find_all(id=True)]

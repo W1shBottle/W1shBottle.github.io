@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "1ffc095e0038ce14cf17d06767d71f0dfec1c929ea02f7135513595cf748bb45",
-  "updated": "2026-11-04",
+  "source_sha256": "55fea701f32e86421902e43fc9351085eed5b398b3fa0ff63a4ce3a37815399e",
+  "updated": "2026-11-07",
   "project": "设备运维工单",
-  "stage": "A1 文件版 Web 与基础统一异常响应 → 独立参数变体验收",
+  "stage": "A1 文件版Web已接Service → 错误响应收尾与MyBatis数据库接线",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -14,23 +14,23 @@
       "description": "文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。"
     },
     {
-      "id": "W04",
-      "title": "Spring Boot/MVC 与依赖注入",
-      "status": "practicing",
+      "id": "W05",
+      "title": "MyBatis",
+      "status": "planned",
       "optional": false,
-      "description": "已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。"
+      "description": "在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。"
     }
   ],
-  "next": "先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。",
-  "note": "/posts/ops-ticket-20261104/",
+  "next": "独立验证GET /api/tickets/abc的状态码、正文与Controller断点，补路径参数错误处理；随后接MyBatis查询、创建及数据库主键，再独立增加状态筛选。",
+  "note": null,
   "stats": {
     "accepted": 6,
     "practicing": 15,
-    "planned": 28,
-    "total": 49,
-    "percent": 12,
-    "accepted_width": 12.2449,
-    "practicing_width": 30.6122
+    "planned": 37,
+    "total": 58,
+    "percent": 10,
+    "accepted_width": 10.3448,
+    "practicing_width": 25.8621
   },
   "groups": [
     {
@@ -321,11 +321,11 @@
     {
       "id": "ai",
       "code": "B",
-      "title": "一个实用 AI 功能",
+      "title": "模型调用入门",
       "prefixes": [
         "B"
       ],
-      "description": "用 Java 接模型，为已有工单提供摘要和分类建议。",
+      "description": "用Java接入真实模型，处理结构校验、超时和失败回退。",
       "tasks": [
         {
           "id": "B01",
@@ -388,13 +388,82 @@
       }
     },
     {
+      "id": "agent",
+      "code": "G",
+      "title": "只读运维Agent",
+      "prefixes": [
+        "G"
+      ],
+      "description": "从真实工具调用到追问、上下文、任务持久化与执行追踪。",
+      "tasks": [
+        {
+          "id": "G01",
+          "title": "工具契约与授权",
+          "status": "planned",
+          "optional": false,
+          "description": "封装findVisibleTickets/getTicketDetail；定义参数类型、范围、返回上限和错误。身份从会话取，每次复用A2授权，拒绝任意SQL/命令和伪造userId。"
+        },
+        {
+          "id": "G02",
+          "title": "真实工具调用",
+          "status": "planned",
+          "optional": false,
+          "description": "保存模型请求工具、Java校验执行、结果回传和最终回答；区别文本建议与真实执行，错误参数不执行，模拟结果不计模型成功。"
+        },
+        {
+          "id": "G03",
+          "title": "有限任务编排",
+          "status": "planned",
+          "optional": false,
+          "description": "查询→详情→追问/整合，明确终止、步数/调用数/总耗时，处理重复调用、无结果、工具超时和失败。"
+        },
+        {
+          "id": "G04",
+          "title": "上下文管理",
+          "status": "planned",
+          "optional": false,
+          "description": "历史和工具结果按会话隔离，控制长度/摘要，旧状态重查；区分用户指令与检索内容；解释每次实际送入模型的信息。"
+        },
+        {
+          "id": "G05",
+          "title": "任务状态与持久化",
+          "status": "planned",
+          "optional": false,
+          "description": "保存taskId、PENDING/RUNNING/WAITING_INPUT/SUCCEEDED/FAILED与步骤；等待输入后继续，重启后恢复或明确中断，不能永远RUNNING。"
+        },
+        {
+          "id": "G06",
+          "title": "追踪与诊断",
+          "status": "planned",
+          "optional": false,
+          "description": "记录Prompt/模型版本、工具参数和结果摘要、耗时/用量/错误；复现并定位一次失败，日志不泄露密钥和无关内容。"
+        },
+        {
+          "id": "G07",
+          "title": "独立修改与验证",
+          "status": "planned",
+          "optional": false,
+          "description": "自己增加一个有界查询条件，从工具Schema、Service到SQL验证；覆盖成功、空结果、无权和工具故障，口述模型和程序的职责边界。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 0,
+        "planned": 7,
+        "total": 7,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 0.0
+      }
+    },
+    {
       "id": "evaluation",
       "code": "C",
-      "title": "验证与改进",
+      "title": "知识检索与评测",
       "prefixes": [
         "C"
       ],
-      "description": "用固定案例评估效果、延迟、成本，记录失败并改进。",
+      "description": "加入运维资料引用，比较检索、工具和任务完成情况，记录失败与改进。",
       "tasks": [
         {
           "id": "C01",
@@ -423,13 +492,27 @@
           "status": "planned",
           "optional": false,
           "description": "选一个真实问题，只改提示、上下文或解析中的一项；重跑固定集和留出集，解释改善与退化，并证明AI失败仍不影响业务。"
+        },
+        {
+          "id": "C05",
+          "title": "运维知识检索与引用",
+          "status": "planned",
+          "optional": false,
+          "description": "准备10—20条有来源说明/版本/适用设备的虚构资料，接searchMaintenanceDocs；从关键词基线开始，需要时比较Embedding/向量检索。回答引用定位原段落，无依据明确不足；检索仍执行权限过滤。"
+        },
+        {
+          "id": "C06",
+          "title": "端到端Agent评测",
+          "status": "planned",
+          "optional": false,
+          "description": "B的摘要集扩展到约30条任务，覆盖追问、无结果、越权、工具失败/重复调用、上下文与重启中断；开发/留出分开，分别判定检索、工具选择/参数、任务完成和引用，记录实际分母、延迟与成本。"
         }
       ],
       "stats": {
         "accepted": 0,
         "practicing": 0,
-        "planned": 4,
-        "total": 4,
+        "planned": 6,
+        "total": 6,
         "percent": 0,
         "accepted_width": 0.0,
         "practicing_width": 0.0
@@ -507,27 +590,6 @@
       "description": "学够HTML/CSS/JavaScript/fetch，展示登录、列表/详情、操作与AI建议，能看浏览器网络请求和错误；使用页面骨架可注明来源，不要求现在转全栈框架。"
     },
     {
-      "id": "O01",
-      "title": "RAG知识检索",
-      "status": "planned",
-      "optional": true,
-      "description": "真的需要手册依据时，做来源/版本/访问权限、资料导入、切片、检索、可定位引用及无依据处理；需要语义召回时再学习Embedding和向量检索，并分别评估检索与生成。"
-    },
-    {
-      "id": "O02",
-      "title": "只读工具调用",
-      "status": "planned",
-      "optional": true,
-      "description": "开放查可见工单/读详情两个受控工具；Java逐次校验权限、参数、范围和返回数量，不暴露任意SQL/命令；验证无结果、越权、工具失败。"
-    },
-    {
-      "id": "O03",
-      "title": "多步骤Agent",
-      "status": "planned",
-      "optional": true,
-      "description": "单次工具调用稳定且确需多步后，加入上下文管理、步数/时间/费用上限和明确终止；检查重复调用、过期数据、工具异常与跨用户隔离。"
-    },
-    {
       "id": "O04",
       "title": "写工具与用户确认",
       "status": "planned",
@@ -540,7 +602,21 @@
       "status": "planned",
       "optional": true,
       "description": "需要可复现容器环境再学Docker/Compose；有查询瓶颈再考虑Redis与失效策略；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。"
+    },
+    {
+      "id": "O06",
+      "title": "MCP",
+      "status": "planned",
+      "optional": true,
+      "description": "把一个已有受控工具通过MCP暴露，验证发现/调用和错误；理解MCP是接入协议，鉴权仍由应用执行。"
+    },
+    {
+      "id": "O07",
+      "title": "SubAgent与模型路由",
+      "status": "planned",
+      "optional": true,
+      "description": "在单Agent基线上定义一项独立子任务或按任务选模型/备用模型，比较完成率、交接错误、延迟和成本，保留无收益结果。"
     }
   ],
-  "total_items": 55
+  "total_items": 63
 }

@@ -3,15 +3,14 @@
   "current_group": "backend",
   "focus_tasks": [
     "W03",
-    "W04"
+    "W05"
   ],
   "optional_ids": [
     "P05",
-    "O01",
-    "O02",
-    "O03",
     "O04",
-    "O05"
+    "O05",
+    "O06",
+    "O07"
   ],
   "groups": [
     {
@@ -45,20 +44,29 @@
     {
       "id": "ai",
       "code": "B",
-      "title": "一个实用 AI 功能",
+      "title": "模型调用入门",
       "prefixes": [
         "B"
       ],
-      "description": "用 Java 接模型，为已有工单提供摘要和分类建议。"
+      "description": "用Java接入真实模型，处理结构校验、超时和失败回退。"
+    },
+    {
+      "id": "agent",
+      "code": "G",
+      "title": "只读运维Agent",
+      "prefixes": [
+        "G"
+      ],
+      "description": "从真实工具调用到追问、上下文、任务持久化与执行追踪。"
     },
     {
       "id": "evaluation",
       "code": "C",
-      "title": "验证与改进",
+      "title": "知识检索与评测",
       "prefixes": [
         "C"
       ],
-      "description": "用固定案例评估效果、延迟、成本，记录失败并改进。"
+      "description": "加入运维资料引用，比较检索、工具和任务完成情况，记录失败与改进。"
     },
     {
       "id": "practice",

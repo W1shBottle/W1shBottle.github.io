@@ -5,23 +5,23 @@
   "weight": 50,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-11-04T00:00:00+08:00"
+  "lastmod": "2026-11-07T00:00:00+08:00"
 }
 
 2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和[数据接口约定](/learning/contracts/)决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，**不计入进入AI的前置验收**。先通过 SQL 与短 JDBC，再从一个请求开始，不一次生成后端。
 
-2026-11-04 当前接续：已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。 下一步：先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。
+截至2026-11-07源码与文档核对，最近一次学习反馈仍为2026-11-04。文件版Web已通过Bean配置和构造器注入接入TicketService，支持详情、列表、关键词查询和POST创建；ErrorResponse及两类统一异常处理已实现。重启恢复、错误JSON400、空白标题400、未知编号404及message来自学习者此前反馈。SQL关联/统计/分页/事务与独立JDBC查询、更新回滚已有跟练；正式Web仍用文件仓库。MyBatis/MySQL业务、认证授权、完整状态流、模型调用和Agent均未接入。现有17个JUnit测试方法；本次仅调整文档，没有新增业务实现、运行测试或提高技能勾选状态。 下一步：先独立请求 `GET /api/tickets/abc`，记录状态码、响应正文与Controller断点是否进入，补路径参数类型转换错误处理；随后接MyBatis，先数据库查询、再创建及真实自增主键，独立增加状态筛选，最后继续派单/处理/验收、权限和事务。
 
 ## 现行最小任务顺序
 
-所有路径相对 `项目根目录`。controller已有HelloController与TicketController，config/TicketConfig及dto/CreateTicketRequest也已写；mapper/security/exception按后续任务增加，不提前生成空类。
+所有路径相对 `项目根目录`。controller已有HelloController与TicketController；dto/mapper/security/exception按后续任务增加，不提前生成空类。
 
 | 任务 | 先理解与阅读 | 由学习者完成 | 怎样验收 |
 | --- | --- | --- | --- |
-| 文件版HTTP（已跟练） | TicketConfig、TicketController、CreateTicketRequest、tickets.http；Bean/DTO/JSON | 真实文件工单查询和创建、输入400已验；接续重启确认和断点，不重建已有类 | 独立讲清请求→DTO→Service→文件；下一步数据库迁移另行验证 |
+| HTTP入门（正在学） | 已有OpsTicketApplication、HelloController、TicketController；请求/响应、JSON、参数注解 | 先验路径编号回显3/10/abc，再接业务查询与未来DTO；已有类不重建 | 解释类型转换400与对象不存在404，回显成功不能算查询成功；真实接口必须对应业务数据 |
 | MyBatis持久化 | 自己的 `sql/01_schema.sql`、JDBC参数绑定；未来 `mapper/TicketMapper.java` | 先按id查询，再创建回填真实id，再列表筛选 | 数据重启保留；Long null正确；独立加设备筛选；不沿用maxId+1，不为旧add签名填假编号 |
 | 最小状态流 | TicketStatus与assign；状态表、版本条件和事务 | assign/resolve/accept三个方法，新增ticket_action_log保存动作；resolve说明放note | OPEN→IN_PROGRESS→RESOLVED→CLOSED；旧版本409；记录失败时状态与版本一起回滚 |
-| 校验和错误 | DTO边界与Service业务规则；已有基础Advice，继续补参数分支 | 必要参数校验、统一错误、requestId日志；列表稳定分页 | 非法字段400、未知对象404、业务冲突409；错误不返回假成功；日志无密码或密钥 |
+| 校验和错误 | DTO边界与Service业务规则；未来异常Advice | 必要参数校验、统一错误、requestId日志；列表稳定分页 | 非法字段400、未知对象404、业务冲突409；错误不返回假成功；日志无密码或密钥 |
 | 登录与授权 | 下方第12/13单元Session、CSRF、PasswordEncoder | 三角色登录；列表/详情/所有写操作检查角色与归属 | 未登录、他人工单、错误角色、停用工程师均拒绝；身份取会话；有效CSRF下仍能证明越权被拦 |
 | 交付门槛 | [A2验收](/learning/testing-delivery/) | 创建请求键去重、真实事务/重复请求验证、最小演示与部署 | 能独立加一个筛选或业务约束，解释调用链并排查一处映射/配置错误；通过后进AI |
 

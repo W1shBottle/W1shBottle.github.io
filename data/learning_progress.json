@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-04",
-  "stage": "A1 文件版 Web 与基础统一异常响应 → 独立参数变体验收",
+  "updated": "2026-11-07",
+  "stage": "A1 文件版Web已接Service → 错误响应收尾与MyBatis数据库接线",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -186,6 +186,16 @@
       "next": "先独立请求 GET /api/tickets/abc，记录响应状态、正文和 Controller 是否执行，再处理路径参数类型转换错误；随后继续 MyBatis/数据库业务。",
       "status": "reviewed",
       "note": "/posts/ops-ticket-20261104/"
+    },
+    {
+      "date": "2026-11-07",
+      "project": "ops-ticket",
+      "kind": "plan-update",
+      "status": "in-progress",
+      "title": "将只读运维Agent纳入学习主线",
+      "summary": "继续同一工单项目，路线调整为后端基础→模型调用→只读运维Agent→知识检索与评测；同步技能清单和过时进度说明。",
+      "verification": "核对源码与已有学习记录，Web已接Service和文件仓库；MyBatis业务、权限、完整状态流及AI/Agent未实现。原6项验收不变，新增任务均待学；本次未运行Java测试或数据库验收，最近学习反馈仍为11月4日。",
+      "next": "独立验证GET /api/tickets/abc的状态码、正文与Controller断点，补路径参数错误处理；随后接MyBatis查询、创建及数据库主键，再独立增加状态筛选。"
     }
   ],
   "current_project": "ops-ticket"

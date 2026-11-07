@@ -5,10 +5,10 @@
   "weight": 80,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-10-26T00:00:00+08:00"
+  "lastmod": "2026-11-07T00:00:00+08:00"
 }
 
-这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年10月26日调整；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
+这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年11月7日调整为A→B→G→C；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
 
 ## 按阶段选择资料
 
@@ -47,7 +47,7 @@ IDEA中的项目SDK、终端PATH和Maven使用的Java可能不同。终端显示
 
 ## 固定版本的方法
 
-在项目README记录Java、Maven、Spring Boot、MyBatis Starter、MySQL服务端和Connector/J版本。沿用Java21和当前MySQL8.0.44；进入Web时按[MyBatis兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)选择匹配的Boot/Starter正式版本，不把旧教材补丁号当作当前安装情况。只使用正式版本，学习期间不因“出现新版本”频繁升级。
+在项目README记录Java、Maven、Spring Boot、MyBatis Starter、MySQL服务端和Connector/J版本。沿用Java21和已记录升级的MySQL8.4.13（2026-10-28记录；本次未重新连接核验）；进入Web时按[MyBatis兼容表](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)选择匹配的Boot/Starter正式版本，不把旧教材补丁号当作当前安装情况。只使用正式版本，学习期间不因“出现新版本”频繁升级。
 
 Spring Boot管理的依赖优先跟随其依赖管理清单。若使用本机MySQL8.0练习，仍须核对被选中的驱动能否连接8.0；使用较新驱动不能自动推导为旧服务端兼容。课程JDBC阶段若指定驱动版本，按该阶段说明核对；进入Web阶段再检查实际依赖树。升级另建练习环境，不直接替换其他项目的数据库。
 

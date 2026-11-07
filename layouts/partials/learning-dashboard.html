@@ -51,9 +51,9 @@
     </details>
     {{ end }}
   </div>
-  <details class="journey-optional"><summary><span>按需探索</span><span>RAG / Agent 等 {{ len .optional_tasks }} 项，不计入总进度</span><span class="journey-expand" aria-hidden="true">⌄</span></summary><p>遇到真实业务需求再选，不因为尚未学习而扣减主线进度。</p><ol class="journey-tasks">{{ range .optional_tasks }}{{ partial "learning-task.html" . }}{{ end }}</ol></details>
+  <details class="journey-optional"><summary><span>按需探索</span><span>MCP / SubAgent 等 {{ len .optional_tasks }} 项，不计入总进度</span><span class="journey-expand" aria-hidden="true">⌄</span></summary><p>遇到真实业务需求再选，不因为尚未学习而扣减主线进度。</p><ol class="journey-tasks">{{ range .optional_tasks }}{{ partial "learning-task.html" . }}{{ end }}</ol></details>
   <div class="journey-bottom-meta"><span>依据实际验收记录</span><span>更新于 <time datetime="{{ .updated }}">{{ time.Format "2006.01.02" .updated }}</time></span></div>
-  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需扩展不计入分母；其余 {{ .stats.total }} 项包含 Java 基础、A1/A2 后端、B AI、C 验证和贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
+  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需扩展不计入分母；其余 {{ .stats.total }} 项包含 Java 基础、A1/A2 后端、B模型调用、G只读Agent、C知识检索与评测，以及贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
 </section>
 {{ $script := resources.Get "js/learning-dashboard.js" | minify | fingerprint }}<script defer src="{{ $script.RelPermalink }}"></script>
 {{ end }}
