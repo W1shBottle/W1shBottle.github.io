@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
 
-核对日期：2026-11-07。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节说明本次计划修订。没有新增运行验收。
+核对日期：2026-11-07。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节记录路线修订，第17节记录11月7日 MyBatis 临时只读查询的学习者运行反馈。
 
 ## 1. 环境与构建
 
@@ -380,7 +380,7 @@ HTTP请求/响应、GET、URL、JSON和200/404已经初步讲解；Network主文
 
 复现时在IDEA用JDK21运行OpsTicketApplication，工作目录为项目根目录，逐条运行tickets.http；修改异常处理器后需要重启。检查实际HTTP状态行和响应体message，不能只看正文里有没有“404”。断点暂停期间客户端等待是正常的，恢复执行后再查看Services响应。
 
-下一项：独立GET /api/tickets/abc，记录状态、正文和Controller是否执行，再学习路径参数类型转换异常的专门处理。尚未统一全部错误分支，Bean Validation、Web测试、数据库业务和权限仍待逐项实现。
+当时下一项为独立 GET `/api/tickets/abc` 并处理路径参数类型转换错误；该步骤已在11月7日完成并有学习者反馈。Bean Validation、Web测试、正式数据库业务和权限仍待逐项实现。
 
 ## 16. 2026-11-07学习路线与当前状态核对
 
@@ -391,3 +391,18 @@ HTTP请求/响应、GET、URL、JSON和200/404已经初步讲解；Network主文
 路线A→B→G→C：保留后端门槛，B做真实模型调用，G明确完成只读工具Agent/上下文/任务与步骤记录，C增加运维资料检索与评测。G/C目标详见requirements/design，不因为写了计划就算通过。
 
 G待验：真实工具调用、歧义追问、无结果、无权、错误参数、重复调用/超时/超限、会话隔离、补信息继续和重启中断。C待验：来源引用、检索/工具/生成错误分类、固定任务集、真实耗时/成本与一次回归改进。所有结果均待实际实现后填写。
+
+## 17. 2026-11-07 MyBatis 临时只读查询验收
+
+本次运行结果来自学习者按指导在 IDEA Debug 和 HTTP Client 中的反馈；助手日结读取源码、整理文档，没有重新启动应用、查询数据库或重跑 JUnit。正式 `/api/tickets` 仍使用文件仓库。
+
+| 场景 | 学习者反馈 |
+| --- | --- |
+| GET `/api/db/tickets/1/title` | 进入 Controller，Mapper 返回标题，200 与 title JSON 符合预期 |
+| GET `/api/db/tickets/999/title` | 进入 Controller，Mapper 返回 null，404 符合预期 |
+| GET `/api/db/tickets/abc/title` | 未进入 Controller，参数转换阶段返回 400 |
+| 断点与控制台 | 学习者反馈与课堂预期一致 |
+
+本次证明：MyBatis Starter、数据源环境变量、Mapper 注册、构造器注入、`@Select` 参数绑定、单列 String 映射和 JSON 响应可以连通。它不等同于数据库业务完成：没有新增 Web 自动测试，正式 JUnit 仍为 17 项；没有数据库写入、自增主键、完整 Ticket 对象映射、数据库仓库或 Service 接入。
+
+下一项：新建 `TicketSummary`（id、title、status），在 `TicketMapper` 增加多列 `findSummaryById`，在 `DatabaseTicketController` 增加 GET `/api/db/tickets/{id}`，验证 MyBatis 默认对象映射和 JSON，再处理列名差异与领域对象转换。

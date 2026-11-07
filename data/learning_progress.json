@@ -1,7 +1,7 @@
 {
   "version": 1,
   "updated": "2026-11-07",
-  "stage": "A1 文件版Web已接Service → 错误响应收尾与MyBatis数据库接线",
+  "stage": "A1 MyBatis单列只读已接通 → 多列对象映射与数据库仓库",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -190,12 +190,12 @@
     {
       "date": "2026-11-07",
       "project": "ops-ticket",
-      "kind": "plan-update",
-      "status": "in-progress",
-      "title": "将只读运维Agent纳入学习主线",
-      "summary": "继续同一工单项目，路线调整为后端基础→模型调用→只读运维Agent→知识检索与评测；同步技能清单和过时进度说明。",
-      "verification": "核对源码与已有学习记录，Web已接Service和文件仓库；MyBatis业务、权限、完整状态流及AI/Agent未实现。原6项验收不变，新增任务均待学；本次未运行Java测试或数据库验收，最近学习反馈仍为11月4日。",
-      "next": "独立验证GET /api/tickets/abc的状态码、正文与Controller断点，补路径参数错误处理；随后接MyBatis查询、创建及数据库主键，再独立增加状态筛选。"
+      "status": "reviewed",
+      "title": "MyBatis 接口映射与数据库查询接线",
+      "summary": "完成路径参数错误收尾，接入Spring Boot与MyBatis的临时只读查询；理解@Mapper代理、@Select、@Param、#{}和Controller→Mapper链路。",
+      "verification": "学习者反馈数据库临时接口1返回200与标题JSON、999返回404、abc在参数转换阶段返回400，Debug与控制台符合预期；日期2026-11-07。正式/api/tickets仍用文件仓库，未新增Web自动测试或重跑17项JUnit，数据库写入和完整对象映射未实现。",
+      "next": "新建TicketSummary（id、title、status），在TicketMapper增加多列findSummaryById，并在DatabaseTicketController增加GET /api/db/tickets/{id}；先验证对象映射与JSON，再处理列名差异、领域Ticket转换和数据库仓库。",
+      "note": "/posts/ops-ticket-20261107/"
     }
   ],
   "current_project": "ops-ticket"

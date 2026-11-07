@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-07；以下学习反馈与编译证据发生于11月4日，本次没有新运行验收。已用断点区分请求体转换与业务校验，完成 ErrorResponse 和两类统一异常处理。学习者确认重启后可读编号2，并反馈 JSON 格式错误400、空白标题400、未知编号404的状态码与message均符合预期；助手源码核对和编译通过。当前仍使用文件仓库，MyBatis/MySQL业务、权限和AI尚未接入，泛型与调用链继续用独立变体巩固。
+核对日期：2026-11-07。11月4日已完成请求转换、断点调用链、ErrorResponse 和基础统一异常处理；11月7日完成 MyBatis 临时只读查询接线。学习者反馈 `/api/db/tickets/1/title` 返回200与标题JSON、999返回404、abc在参数转换阶段返回400。当前正式工单业务仍使用文件仓库；数据库写入、完整对象映射、权限、状态流和AI尚未接入，手动HTTP反馈不等于新增Web自动测试。
 
 ## 1. 项目背景与目标用户
 
@@ -49,7 +49,8 @@ Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表�
 | R19 | Web问候与查询参数 | Boot4.1.2启动；HelloController返回JSON，name缺失使用访客；学习者反馈参数场景通过 |
 | R20 | HTTP工单查询 | Web已接文件仓库；详情200/未知404、列表与可选关键词筛选；非法关键词400，课堂GET已验 |
 | R21 | HTTP创建工单 | DTO接JSON标题，Service校验与文件自动保存，成功201；空白标题400且数量不变由学习者反馈 |
-| R22 | 基础统一错误响应 | ErrorResponse与GlobalExceptionHandler已实现；请求体转换错误400，空白标题400，未知工单404，均带message；学习者反馈三项符合预期。Bean Validation、路径参数类型错误和其他异常分支仍待完善 |
+| R22 | 基础统一错误响应 | ErrorResponse与GlobalExceptionHandler已实现；请求体转换错误400、空白标题400、未知工单404和方法参数类型错误400均有学习者反馈，带message；尚未覆盖全部异常分支 |
+| R23 | MyBatis只读查询 | 临时接口按编号查询MySQL的title；1返回200标题JSON，999返回404，abc返回400。仅验证代理、参数绑定、单列映射和错误边界；正式业务仍走文件仓库，多列对象与写入未实现 |
 
 标题长度按 Java `String.length()` 的 UTF-16 代码单元计数，不按用户感知字符数计数。自动编号当前面向单线程内存练习，不提供数据库自增或并发编号分配。
 
@@ -131,7 +132,8 @@ A1/A2后进入B，B达标进入G；评测从B/G开始，C集中加入资料检�
 | 3 多表与统计（已练习） | JOIN、COUNT、GROUP BY、HAVING、LIMIT/OFFSET；03_queries.sql | OPEN 筛选、2/1计数、无工单设备和分页/总数已有用户反馈 | 继续结合后续需求解释连接与NULL；不重做全部练习 |
 | 4 事务与冲突（SQL已练习） | 03_queries.sql、06_transactions.sql | 提交/回滚、CHECK失败后回滚、条件更新和双窗口版本竞争已有反馈 | A=1、B=0是SQL实验；正式Service尚无数据库事务与版本契约 |
 | 5 短 JDBC（本轮已跟练） | JdbcTicketQueryDemo、JdbcTicketUpdateDemo；参数绑定、结果读取、影响行数和事务范围 | 已跟写版本查询、1/0检查、成功提交和中途失败回滚；更新方法由main调用，当前simulateFailure=false | 用户运行反馈＋助手源码检查；无新增JDBC自动测试，独立迁移业务继续验收 |
-| 6 文件版 Web 与基础错误响应（已跟练） | TicketConfig、TicketController、DTO、GlobalExceptionHandler、tickets.http | 查询/创建、重启恢复和断点追踪已练；三种400/404响应有用户反馈；下一步观察abc路径转换错误 | 区分JSON转换与业务校验，保留状态码；独立变体和MyBatis/数据库业务仍继续验收 |
+| 6 文件版 Web 与基础错误响应（已跟练） | TicketConfig、TicketController、DTO、GlobalExceptionHandler、tickets.http | 查询/创建、重启恢复、断点追踪和abc类型错误已有反馈；三类统一错误处理已接上 | 正式接口仍用文件仓库；下一步从数据库单列查询走向多列对象映射 |
+| 6b MyBatis只读查询（已跟练） | Spring Boot 4.1.2、MyBatis Starter 4.1.0、TicketMapper、DatabaseTicketController、MySQL数据源 | 学习者Debug验证1=200标题JSON、999=404、abc=400；理解@Mapper代理、@Select、@Param、#{}和Controller→Mapper链路 | 临时只读入口不等于数据库业务；完整对象、Service/Repository接入、写入、主键和自动测试待完成 |
 | 7 完成 A | 需求第 6 节与设计第 10 节 | 依次补创建ID契约、状态方法、操作日志事务、登录授权和重复请求 | 运行验收清单；独立解释并修改一处业务；完成一次故障复现、修复、回归，再接 AI |
 
 ## 9. 模型调用、G只读Agent与C知识检索（计划）

@@ -8,13 +8,13 @@
   "lastmod": "2026-11-07T00:00:00+08:00"
 }
 
-> 2026-11-07 路线说明：本页“第几周”为教材单元，不是固定工期。第1—3单元已有项目成果，不整章重做；SQL与短JDBC已有跟练，当前文件版Web已接Service，接下来收尾错误响应并接MyBatis/数据库业务。各任务耗时只是拆分参考，能独立解释与修改才通过。后续顺序为必要SQL→短JDBC→Web/MyBatis→最小工程验收→AI，详见[阶段日程](/learning/schedule/)。
+> 2026-11-07 路线说明：本页“第几周”为教材单元，不是固定工期。第1—3单元已有项目成果，不整章重做；SQL与短JDBC已有跟练，当前文件版Web已接Service与三类错误处理，临时 MyBatis 单列查询已接通MySQL。各任务耗时只是拆分参考，能独立解释与修改才通过。后续顺序为必要SQL→短JDBC→Web/MyBatis→最小工程验收→AI，详见[阶段日程](/learning/schedule/)。
 
 ## 当前接续任务与代码位置
 
 现有源码在 `src\main\java\cn\wishbottle\opsticket`，测试/Demo在对应 `src/test/java`。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 `sql/01_schema.sql` 至 `sql/06_transactions.sql`，先继续修改这些文件，避免重复建一套脚本。
 
-截至2026-11-07源码与文档核对，最近一次学习反馈仍为2026-11-04。文件版Web已通过Bean配置和构造器注入接入TicketService，支持详情、列表、关键词查询和POST创建；ErrorResponse及两类统一异常处理已实现。重启恢复、错误JSON400、空白标题400、未知编号404及message来自学习者此前反馈。SQL关联/统计/分页/事务与独立JDBC查询、更新回滚已有跟练；正式Web仍用文件仓库。MyBatis/MySQL业务、认证授权、完整状态流、模型调用和Agent均未接入。现有17个JUnit测试方法；本次仅调整文档，没有新增业务实现、运行测试或提高技能勾选状态。 下一步：先独立请求 `GET /api/tickets/abc`，记录状态码、响应正文与Controller断点是否进入，补路径参数类型转换错误处理；随后接MyBatis，先数据库查询、再创建及真实自增主键，独立增加状态筛选，最后继续派单/处理/验收、权限和事务。
+截至2026-11-07最新学习反馈：文件版Web已接入TicketService、查询创建与三类统一错误处理；当天完成 MyBatis 临时只读查询，学习者验证 `/api/db/tickets/1/title` 返回200与标题JSON、999返回404、abc返回400，并能解释 Mapper 代理、`@Select`、`@Param` 和 `#{}`。正式Web仍用文件仓库，完整对象映射、数据库写入、认证授权、完整状态流、模型调用和Agent未接入。现有17个JUnit测试方法；手动HTTP请求不计入自动测试。下一步：新建 `TicketSummary` 与多列 `findSummaryById`，验证对象映射和JSON，再处理领域Ticket、数据库写入与自增主键。
 
 第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。
 

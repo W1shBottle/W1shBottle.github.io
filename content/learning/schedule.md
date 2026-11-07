@@ -16,14 +16,15 @@
 
 ## 现状与证据
 
-截至2026-11-07源码与文档核对，最近一次学习反馈仍为2026-11-04。文件版Web已通过Bean配置和构造器注入接入TicketService，支持详情、列表、关键词查询和POST创建；ErrorResponse及两类统一异常处理已实现。重启恢复、错误JSON400、空白标题400、未知编号404及message来自学习者此前反馈。SQL关联/统计/分页/事务与独立JDBC查询、更新回滚已有跟练；正式Web仍用文件仓库。MyBatis/MySQL业务、认证授权、完整状态流、模型调用和Agent均未接入。现有17个JUnit测试方法；本次仅调整文档，没有新增业务实现、运行测试或提高技能勾选状态。
+截至2026-11-07最新反馈：文件版Web已接入TicketService、查询创建及三类统一错误处理；MyBatis 临时只读接口已接通MySQL，学习者验证1=200标题JSON、999=404、abc=400并理解Mapper代理与参数绑定。正式Web仍用文件仓库，完整对象映射、数据库写入、认证授权、状态流、模型调用和Agent未接入。现有17个JUnit测试方法，手动HTTP请求不等于自动测试。
 
 | 内容 | 已有证据 | 尚缺什么 |
 | --- | --- | --- |
 | Java/文件仓库/控制台 | Ticket规则、接口、Service、两种仓库、控制台与历史运行记录 | 泛型、调用链与独立变体继续巩固；不能推定独立重写全部代码 |
 | Maven/JUnit | 17个现有测试方法；历史通过记录保留 | 本次未复跑；Web与Agent测试尚未建立 |
 | SQL/JDBC | JOIN筛选、统计/分页、SQL事务/版本竞争，JDBC查询/更新回滚已跟练 | 正式Repository未接库；不要把Demo当Web数据源 |
-| Web/依赖注入 | Bean与构造器注入已连接Controller→Service→文件仓库；查询/创建与两类错误响应已有反馈 | abc路径错误待验；MyBatis、认证和完整状态流未实现 |
+| Web/依赖注入 | Bean与构造器注入已连接Controller→Service→文件仓库；查询/创建、三类错误响应和 abc 参数错误已有反馈 | 正式数据库业务、认证和完整状态流未实现 |
+| MyBatis/MySQL | 临时只读Controller→Mapper→MySQL已接通；1=200标题JSON、999=404、abc=400有学习者反馈 | 多列对象映射、Service/Repository接入、写入、主键和事务待完成 |
 | AI/Agent | 无模型依赖或真实调用、无工具Agent | B/G/C均待实现；今天只更新计划 |
 
 ## 保留、提前与延后
@@ -50,8 +51,8 @@
 
 按以下顺序推进，每项通常一次或几次学习，不塞进固定天数：
 
-1. **W03/E01请求错误收尾**：独立GET `/api/tickets/abc`，记录状态、正文、Controller断点；区分路径类型转换、请求体转换和业务校验，补专门错误处理。
-2. **W05接数据库查询**：核对Boot与MyBatis兼容性，在Mapper执行自己能解释的SQL，先按编号查询，再列表。解释Controller→Service→Mapper→MySQL→响应；确认数据确实来自数据库。
+1. **W03/E01请求错误收尾（已跟练）**：GET `/api/tickets/abc` 与 `/api/db/tickets/abc/title` 的 400 已有反馈；继续用不同参数巩固转换失败发生在Controller之前。
+2. **W05接数据库查询（已接通单列）**：临时接口已通过Mapper查询MySQL title，1/999/abc有学习者反馈；下一步改为多列对象映射，再进入正式Service。
 3. **W02创建与主键**：调整当前create/add契约，使用数据库生成ID，处理映射与资源；不沿用maxId+1。重启后读回同一记录，非法输入不新增。
 4. **W06独立筛选变体**：增加状态条件；自己预测命中、无结果和非法参数，保留请求与SQL证据。已有JOIN/统计/SQL事务/JDBC实验按需复习，不从头重抄。
 5. **W06/E04状态与日志**：OPEN→IN_PROGRESS→RESOLVED→CLOSED，说明与动作日志同事务；故意令日志保存失败，验证状态也回滚。

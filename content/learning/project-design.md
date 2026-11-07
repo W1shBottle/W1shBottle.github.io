@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-07。本次更新目标设计，不新增代码或测试。第1—9节记录原控制台及当前可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—15节保留历史接线快照，第16节是11月4日基础错误响应记录。当前Web已连接Service与文件仓库，数据库业务未接入。
+核对日期：2026-11-07。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—16节保留历史接线快照；第17节记录11月7日 MyBatis 临时只读查询。正式 Web 仍连接 Service 与文件仓库，只有临时 `/api/db` 入口直接访问 Mapper/MySQL。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -309,4 +309,20 @@ create中IllegalArgumentException被包装成ResponseStatusException(400, messag
 
 有效空白标题在创建Ticket时失败，未执行Service后面的add；格式错误JSON在准备RequestBody参数时失败，未进入Controller方法。异常处理器可接管后一条路径。ResponseEntity携带状态、响应头和响应体，ErrorResponse只是本次body的数据类型；JSON序列化由Spring在返回处理阶段完成。
 
-当前未统一覆盖路径参数类型错误、存储错误或其他内部异常；未引入Bean Validation、requestId日志、权限、数据库事务、幂等或并发保护。Service编号仍为maxId+1，成功POST仍会新增，不代表数据库主键或重复请求契约已经实现。
+本段保留11月4日状态；路径参数类型错误已在此后补上，但存储错误、其他内部异常、Bean Validation、requestId日志、权限、数据库事务、幂等和并发保护仍未统一覆盖。Service编号仍为maxId+1，成功POST仍会新增，不代表数据库主键或重复请求契约已经实现。
+
+
+## 17. 2026-11-07 MyBatis 只读查询接线
+
+临时数据库链路为：
+
+```text
+HTTP Client → Tomcat → Spring MVC → DatabaseTicketController
+            → TicketMapper 代理 → MyBatis → MySQL
+```
+
+- `TicketMapper` 使用 `@Mapper`，`findTitleById` 通过 `@Select("SELECT title FROM ticket WHERE id = #{id}")` 查询单列；`@Param("id")` 与 `#{id}` 对应，使用预编译参数绑定。
+- MyBatis-Spring 启动时注册 Mapper，`SqlSession.getMapper(...)` 在运行时生成实现接口的代理对象；Spring 通过构造器把它注入 `DatabaseTicketController`。
+- `DatabaseTicketController` 的 GET `/api/db/tickets/{id}/title` 调用 Mapper，查到标题后组装 `Map<String,String>` 并由 Jackson 返回 JSON；无记录抛 404，非数字路径在参数转换阶段返回 400。
+- 这条链路绕过 `TicketService` 和文件仓库，仅用于验证数据库接线。最终结构仍是 Controller → Service → Repository/Mapper → 数据库，数据库映射不能长期由临时 Controller 直接承担。
+- 现阶段只完成单列只读。完整列映射、`@Results`/`resultMap` 或构造器映射、领域 `Ticket` 转换、数据库写入、自增主键、事务和状态流均待后续实现。

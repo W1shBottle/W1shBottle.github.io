@@ -10,7 +10,7 @@
 
 2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和[数据接口约定](/learning/contracts/)决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，**不计入进入AI的前置验收**。先通过 SQL 与短 JDBC，再从一个请求开始，不一次生成后端。
 
-截至2026-11-07源码与文档核对，最近一次学习反馈仍为2026-11-04。文件版Web已通过Bean配置和构造器注入接入TicketService，支持详情、列表、关键词查询和POST创建；ErrorResponse及两类统一异常处理已实现。重启恢复、错误JSON400、空白标题400、未知编号404及message来自学习者此前反馈。SQL关联/统计/分页/事务与独立JDBC查询、更新回滚已有跟练；正式Web仍用文件仓库。MyBatis/MySQL业务、认证授权、完整状态流、模型调用和Agent均未接入。现有17个JUnit测试方法；本次仅调整文档，没有新增业务实现、运行测试或提高技能勾选状态。 下一步：先独立请求 `GET /api/tickets/abc`，记录状态码、响应正文与Controller断点是否进入，补路径参数类型转换错误处理；随后接MyBatis，先数据库查询、再创建及真实自增主键，独立增加状态筛选，最后继续派单/处理/验收、权限和事务。
+截至2026-11-07最新学习反馈：文件版Web已接入TicketService、查询创建与三类统一错误处理；当天完成 MyBatis 临时只读查询，学习者验证 `/api/db/tickets/1/title` 返回200与标题JSON、999返回404、abc返回400，并能解释 Mapper 代理、`@Select`、`@Param` 和 `#{}`。正式Web仍用文件仓库，完整对象映射、数据库写入、认证授权、完整状态流、模型调用和Agent未接入。现有17个JUnit测试方法；手动HTTP请求不计入自动测试。下一步：新建 `TicketSummary` 与多列 `findSummaryById`，验证对象映射和JSON，再处理领域Ticket、数据库写入与自增主键。
 
 ## 现行最小任务顺序
 
@@ -18,8 +18,8 @@
 
 | 任务 | 先理解与阅读 | 由学习者完成 | 怎样验收 |
 | --- | --- | --- | --- |
-| HTTP入门（正在学） | 已有OpsTicketApplication、HelloController、TicketController；请求/响应、JSON、参数注解 | 先验路径编号回显3/10/abc，再接业务查询与未来DTO；已有类不重建 | 解释类型转换400与对象不存在404，回显成功不能算查询成功；真实接口必须对应业务数据 |
-| MyBatis持久化 | 自己的 `sql/01_schema.sql`、JDBC参数绑定；未来 `mapper/TicketMapper.java` | 先按id查询，再创建回填真实id，再列表筛选 | 数据重启保留；Long null正确；独立加设备筛选；不沿用maxId+1，不为旧add签名填假编号 |
+| HTTP入门（已跟练） | 已有OpsTicketApplication、HelloController、TicketController；请求/响应、JSON、参数注解 | 先验路径编号回显3/10/abc，再接业务查询与未来DTO；已有类不重建 | 解释类型转换400与对象不存在404，回显成功不能算查询成功；真实接口必须对应业务数据 |
+| MyBatis持久化（单列已接通） | 自己的 `sql/01_schema.sql`、JDBC参数绑定；未来 `mapper/TicketMapper.java` | 先按id查询，再创建回填真实id，再列表筛选 | 数据重启保留；Long null正确；独立加设备筛选；不沿用maxId+1，不为旧add签名填假编号 |
 | 最小状态流 | TicketStatus与assign；状态表、版本条件和事务 | assign/resolve/accept三个方法，新增ticket_action_log保存动作；resolve说明放note | OPEN→IN_PROGRESS→RESOLVED→CLOSED；旧版本409；记录失败时状态与版本一起回滚 |
 | 校验和错误 | DTO边界与Service业务规则；未来异常Advice | 必要参数校验、统一错误、requestId日志；列表稳定分页 | 非法字段400、未知对象404、业务冲突409；错误不返回假成功；日志无密码或密钥 |
 | 登录与授权 | 下方第12/13单元Session、CSRF、PasswordEncoder | 三角色登录；列表/详情/所有写操作检查角色与归属 | 未登录、他人工单、错误角色、停用工程师均拒绝；身份取会话；有效CSRF下仍能证明越权被拦 |

@@ -29,9 +29,9 @@
 
 ## 当前接续点
 
-截至2026-11-07源码与文档核对，最近一次学习反馈仍为2026-11-04。文件版Web已通过Bean配置和构造器注入接入TicketService，支持详情、列表、关键词查询和POST创建；ErrorResponse及两类统一异常处理已实现。重启恢复、错误JSON400、空白标题400、未知编号404及message来自学习者此前反馈。SQL关联/统计/分页/事务与独立JDBC查询、更新回滚已有跟练；正式Web仍用文件仓库。MyBatis/MySQL业务、认证授权、完整状态流、模型调用和Agent均未接入。现有17个JUnit测试方法；本次仅调整文档，没有新增业务实现、运行测试或提高技能勾选状态。 下一步：先独立请求 `GET /api/tickets/abc`，记录状态码、响应正文与Controller断点是否进入，补路径参数类型转换错误处理；随后接MyBatis，先数据库查询、再创建及真实自增主键，独立增加状态筛选，最后继续派单/处理/验收、权限和事务。
+截至2026-11-07最新学习反馈：文件版Web已接入TicketService、两种统一异常响应和方法参数类型错误处理；当天进一步完成 MyBatis 临时只读查询，学习者验证 `/api/db/tickets/1/title` 返回200与标题JSON、999返回404、abc返回400。已经理解 `@Mapper` 代理、`@Select`、`@Param`、`#{}` 和 Controller→Mapper 调用链。正式 `/api/tickets` 仍使用文件仓库，完整对象映射、数据库写入、权限、完整状态流、模型调用和Agent尚未接入。现有17个JUnit测试方法，本次没有新增Web自动测试。 下一步：新建 `TicketSummary`（id、title、status），增加多列 `findSummaryById`，先验证对象映射与JSON，再处理列名差异、领域对象转换、数据库写入和自增主键。
 
-下一次：启动 OpsTicketApplication，分别访问 /api/tickets/3、/api/tickets/10、/api/tickets/abc，记录响应体和HTTP状态码；解释参数回显与真实工单查询的区别，再逐步接入业务与持久层。
+下一次：从 `TicketSummary` 与 `findSummaryById` 接续，先让 MyBatis 把 id、title、status 多列结果映射成对象并返回 JSON，再进入领域 Ticket 和数据库仓库。
 
 ## 第一版只做这些
 

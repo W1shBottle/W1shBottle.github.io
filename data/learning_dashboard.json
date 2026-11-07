@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "55fea701f32e86421902e43fc9351085eed5b398b3fa0ff63a4ce3a37815399e",
+  "source_sha256": "56c563b9f2bd8775f6f81f937a998e1fb2fa7c10ac9c0dac4d2bdeade07731d5",
   "updated": "2026-11-07",
   "project": "设备运维工单",
-  "stage": "A1 文件版Web已接Service → 错误响应收尾与MyBatis数据库接线",
+  "stage": "A1 MyBatis单列只读已接通 → 多列对象映射与数据库仓库",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -21,8 +21,8 @@
       "description": "在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。"
     }
   ],
-  "next": "独立验证GET /api/tickets/abc的状态码、正文与Controller断点，补路径参数错误处理；随后接MyBatis查询、创建及数据库主键，再独立增加状态筛选。",
-  "note": null,
+  "next": "新建TicketSummary（id、title、status），在TicketMapper增加多列findSummaryById，并在DatabaseTicketController增加GET /api/db/tickets/{id}；先验证对象映射与JSON，再处理列名差异、领域Ticket转换和数据库仓库。",
+  "note": "/posts/ops-ticket-20261107/",
   "stats": {
     "accepted": 6,
     "practicing": 15,
