@@ -65,10 +65,14 @@ jobs:
         with:
           path: .cache/github-daily.json
           key: github-daily-v1-${{ github.run_id }}-${{ github.run_attempt }}
-      - uses: peaceiris/actions-hugo@v3
+      - uses: actions/setup-go@v5
         with:
-          hugo-version: '0.156.0'
-          extended: true
+          go-version: '1.25'
+          cache: false
+      - name: Install Hugo
+        run: |
+          go install github.com/gohugoio/hugo@v0.156.0
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Build
         run: hugo --minify
       - uses: actions/upload-pages-artifact@v3
