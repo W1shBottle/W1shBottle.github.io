@@ -2,7 +2,7 @@
   "title": "设备运维工单项目文档",
   "description": "当前控制台、JDBC与Web练习进度，Java＋AI路线和运行入口。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-07T00:00:00+08:00",
+  "lastmod": "2026-11-08T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
@@ -10,9 +10,9 @@
 
 > 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。后续功能以各页的实现状态为准。
 
-围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**。现有v0.1控制台包含内存/文件仓库、自动保存和恢复；SQL与独立JDBC已有跟练成果。现已加入 **Spring Boot 工单查询、创建与基础统一错误响应**，通过 Bean 配置和构造器注入复用原有 Service/文件仓库。2026-11-07 又通过临时只读接口接通 MyBatis→MySQL 单列查询，但正式工单业务仍使用文件仓库。处理/验收、登录权限、数据库写入、AI与Agent仍待实现。
+围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**。现有v0.1控制台包含内存/文件仓库、自动保存和恢复；SQL与独立JDBC已有跟练成果。现已加入 **Spring Boot 工单查询、创建与基础统一错误响应**，通过 Bean 配置和构造器注入复用原有 Service/文件仓库。2026-11-08 完成 TicketSummary 多列对象映射、`assignee_id → assigneeId` 自动映射、领域 `Ticket` 转换和只读 Repository 分层；数据库插入组件已开始准备，但 POST 创建、自增主键验收和正式业务接库仍未完成。正式工单业务仍使用文件仓库，处理/验收、登录权限、数据库写入、AI与Agent仍待实现。
 
-文档核对日期：2026-11-07；最近学习证据更新到11月7日：学习者在 Debug 中验证 MyBatis 单列查询，编号1返回200与标题JSON、999返回404、abc在参数转换阶段返回400。路线为 A 后端业务与基础工程 → B 模型调用入门 → G 只读运维 Agent → C 知识检索与评测改进。数据库临时查询已接通，正式业务、权限、完整对象映射、写入与AI仍待实现；历史笔记保留当时进度。
+文档核对日期：2026-11-08；最近学习证据更新到11月8日：学习者请求 `/api/db/tickets` 得到200与两条JSON（编号1、3，无编号2），确认多列列表映射；补上 `assigneeId` 后输出符合预期。路线为 A 后端业务与基础工程 → B 模型调用入门 → G 只读运维 Agent → C 知识检索与评测改进。数据库临时只读查询和领域对象转换已接通，正式业务、数据库写入POST闭环、权限与AI仍待实现；历史笔记保留当时进度。
 
 ## 项目文档
 
@@ -36,7 +36,9 @@
 
 - `OpsTicketApplication` 启动 Spring Boot；`config/TicketConfig` 注册文件仓库与 Service；`TicketController` 构造器注入 Service，支持详情、列表、关键词和创建。`dto/CreateTicketRequest` 接收创建标题，`tickets.http` 保存手动验收请求。
 - `dto/ErrorResponse`承载message；`exception/GlobalExceptionHandler`处理请求体无法读取/转换、ResponseStatusException和方法参数类型不匹配。前者固定400，第二类保留原状态及reason，第三类返回参数名并固定400。现有Controller内的异常包装保留，不代表全部错误分支已经覆盖。
-- `mapper/TicketMapper` 使用`@Mapper`、`@Select`和`@Param`查询MySQL；`controller/DatabaseTicketController` 临时注入Mapper，GET `/api/db/tickets/{id}/title` 查到标题返回Map JSON，查无记录404。它只验证只读数据库链路，不代表正式工单业务已改为数据库仓库。
+- `dto/TicketSummary`承载数据库查询的`id/title/status/assigneeId`，`TicketSummaryConverter`把DTO转换为领域`Ticket`并调用`Ticket.restore`校验状态与处理人组合。`application.properties`已开启`map-underscore-to-camel-case`，`assignee_id`可自动映射到`assigneeId`。
+- `DatabaseTicketQueryService`组织数据库只读查询：标题、摘要、摘要列表、单张领域对象和领域对象列表。领域查询通过`TicketQueryRepository`接口和`DatabaseTicketRepository`实现，返回`Optional<Ticket>`或`List<Ticket>`；Controller只负责HTTP参数与404。
+- `mapper/TicketMapper`使用`@Mapper`、`@Select`、`@Param`和`#{}`查询MySQL；已加入`@Insert`、`@Options(useGeneratedKeys...)`与`insertTicket`，`DatabaseTicketRepository.create`也已写好插入、主键检查和回查逻辑，但尚无POST Controller、命令Service和运行验收，不能据此宣称数据库创建完成。
 
 ## 快速构建与运行
 
@@ -65,10 +67,14 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 | GET /api/tickets[?keyword=...] | 不传查全部；有效关键词筛选；无匹配返回[]；空值或空白400 | 课堂助手实际GET五个场景 |
 | POST /api/tickets | JSON标题→DTO→Service创建并自动保存，返回Ticket与201；非法标题400 | 用户201截图，源码/存档核对；空白标题及数量不变由用户反馈 |
 | GET /api/db/tickets/{id}/title | 临时只读接口直接调用MyBatis Mapper查询MySQL的title；查到返回JSON，无记录404，非数字路径400 | 学习者Debug反馈1=200标题JSON、999=404、abc=400；不是正式数据库业务 |
+| GET /api/db/tickets/{id} | 返回`TicketSummary`；字段含id/title/status/assigneeId，无记录404 | 学习者反馈多列映射与JSON符合预期 |
+| GET /api/db/tickets | 返回`List<TicketSummary>`；按id排序 | 学习者反馈200、编号1和3两条JSON、无编号2 |
+| GET /api/db/tickets/{id}/domain | 通过Repository查询并转换成`Ticket`；无记录404 | 源码核对；未单独记录本轮运行正文 |
+| GET /api/db/domain/tickets | 返回`List<Ticket>`；逐行调用`Ticket.restore` | 源码核对；未单独记录本轮运行正文 |
 
 列表和创建均显式支持末尾斜杠；详情路径没有额外配置尾斜杠。GET与POST同路径按请求方法区分；不要保留两个相同GET映射。请求体转换错误、Controller抛出的ResponseStatusException和方法参数类型不匹配已由GlobalExceptionHandler统一返回带message的JSON；状态码仍按400/404区分。尚未统一全部异常分支。
 
-在 IDEA 打开 `tickets.http`，逐条运行请求。成功 POST 每次都会新增并写文件；目前不是幂等接口。创建截图中编号2，具体编号以当时数据为准。先查列表、提交空白标题、再查列表，验证失败没有新增。2026-11-04学习者反馈重启后GET编号2恢复成功；同时反馈统一错误响应的三个场景通过，详见验收文档第15节。2026-11-07又反馈数据库临时接口1/999/abc分别符合200/404/400预期，详见第17节。
+在 IDEA 打开 `tickets.http`，逐条运行请求。成功 POST 每次都会新增并写文件；目前不是幂等接口。创建截图中编号2，具体编号以当时数据为准。先查列表、提交空白标题、再查列表，验证失败没有新增。2026-11-04学习者反馈重启后GET编号2恢复成功；同时反馈统一错误响应的三个场景通过，详见验收文档第15节。2026-11-07又反馈数据库临时接口1/999/abc分别符合200/404/400预期，详见第17节。2026-11-08反馈数据库多列列表接口返回编号1和3，补上`assigneeId`后输出符合预期；领域对象与Repository分层以源码核对为准，尚未新增Web自动测试。
 
 普通 `java -jar` 仍启动 ConsoleApp，尚未配置 Spring Boot 可执行 Web 包。本机学习时使用一个进程访问存档；不要同时运行控制台和 Web 写同一文件，两者不共享运行中的 Map，也无并发保护。正式 `/api/tickets` 数据源仍是文件；只有临时 `/api/db/tickets/{id}/title` 读取 MySQL，独立 JDBC Demo 也不是正式业务数据源。
 
@@ -151,7 +157,7 @@ JavaProject/
 
 ## 已知限制
 
-- 当前正式 Web 仍使用文件仓库查询与创建；临时数据库接口只能按编号查title，数据库仓库、数据库写入、HTTP改名/派单、登录权限及处理/验收状态流尚未接入。当前新编号来自最大编号加一，没有并发或重复请求保护；未知数字编号按查无结果404处理，尚无统一正数参数校验。
+- 当前正式 Web 仍使用文件仓库查询与创建；`/api/db`提供只读摘要与领域对象查询，正式业务尚未切换到数据库仓库。`insertTicket`、`TicketWriteRepository`和`DatabaseTicketRepository.create`已准备，但没有POST Controller、命令Service、外键/约束错误转换或成功创建验收。HTTP改名/派单、登录权限及处理/验收状态流尚未接入。当前文件仓库新编号来自最大编号加一，没有并发或重复请求保护。
 - 保存直接覆盖目标文件，尚无原子替换、备份或事务机制；写入中断可能损坏存档。
 - 保存失败时控制台提示并退出，不打印操作成功；此前发生的内存修改不会自动回滚。
 - 多个程序同时操作同一存档文件时没有并发保护。
@@ -159,7 +165,7 @@ JavaProject/
 
 ## 学习进度与下一步
 
-已用断点区分请求体转换与业务校验，完成 ErrorResponse 和方法参数类型错误等统一处理。11月7日接通 MyBatis 临时只读查询：学习者反馈编号1返回200与标题JSON、999返回404、abc返回400，Debug与HTTP结果符合预期。正式 `/api/tickets` 仍使用文件仓库；完整对象映射、数据库写入、Service/数据库仓库、权限和AI尚未接入。
+已用断点区分请求体转换与业务校验，完成 ErrorResponse 和方法参数类型错误等统一处理。11月8日完成`TicketSummary`多列映射、`assigneeId`自动映射、`Ticket.restore`转换和只读Repository分层：学习者反馈`GET /api/db/tickets`返回200与编号1/3两条JSON，补`assigneeId`后符合预期。正式 `/api/tickets` 仍使用文件仓库；数据库写入POST闭环、真实自增主键验收、权限和AI尚未接入。
 
 | 阶段 | 项目交付 | 进入下一步的证据 |
 | --- | --- | --- |
@@ -175,4 +181,4 @@ G只读Agent复用已授权Service，先findVisibleTickets/getTicketDetail，再
 
 新路线与技能编号详见学习阶段计划；历史文章保留当时事实，未把历史测试或跟练升级为本次独立验收。
 
-**下一项亲手任务**：新建 `TicketSummary`（id、title、status），在 `TicketMapper` 增加多列 `findSummaryById`，并在 `DatabaseTicketController` 增加 GET `/api/db/tickets/{id}`，先验证对象映射与JSON，再接入领域Ticket和数据库仓库。详见[11月7日笔记](https://wishbottle.cn/posts/ops-ticket-20261107/)。
+**下一项亲手任务**：完成`POST /api/db/tickets`：新建`CreateDatabaseTicketRequest`与`DatabaseTicketCommandService`，调用`TicketWriteRepository.create`，验证INSERT、`@Options`自增主键、重新查询后的`Ticket`和201 JSON；再处理外键/标题约束错误的HTTP状态。详见[11月8日笔记](https://wishbottle.cn/posts/ops-ticket-20261108/)。

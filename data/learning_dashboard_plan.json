@@ -2,8 +2,9 @@
   "version": 1,
   "current_group": "backend",
   "focus_tasks": [
-    "W03",
-    "W05"
+    "W02",
+    "W05",
+    "W06"
   ],
   "optional_ids": [
     "P05",

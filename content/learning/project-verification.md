@@ -2,7 +2,7 @@
   "title": "工单项目运行与验收",
   "description": "实际运行证据、后端验收与模型效果评估标准。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-07T00:00:00+08:00",
+  "lastmod": "2026-11-08T00:00:00+08:00",
   "weight": 190,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
 
-核对日期：2026-11-07。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节记录路线修订，第17节记录11月7日 MyBatis 临时只读查询的学习者运行反馈。
+核对日期：2026-11-08。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节记录路线修订，第17节记录11月7日MyBatis单列查询，第18节记录11月8日多列DTO、领域对象与只读Repository。
 
 ## 1. 环境与构建
 
@@ -406,3 +406,36 @@ G待验：真实工具调用、歧义追问、无结果、无权、错误参数�
 本次证明：MyBatis Starter、数据源环境变量、Mapper 注册、构造器注入、`@Select` 参数绑定、单列 String 映射和 JSON 响应可以连通。它不等同于数据库业务完成：没有新增 Web 自动测试，正式 JUnit 仍为 17 项；没有数据库写入、自增主键、完整 Ticket 对象映射、数据库仓库或 Service 接入。
 
 下一项：新建 `TicketSummary`（id、title、status），在 `TicketMapper` 增加多列 `findSummaryById`，在 `DatabaseTicketController` 增加 GET `/api/db/tickets/{id}`，验证 MyBatis 默认对象映射和 JSON，再处理列名差异与领域对象转换。
+
+## 18. 2026-11-08 多列对象映射与只读数据库分层
+
+### 学习者运行反馈
+
+| 场景 | 结果 |
+| --- | --- |
+| `GET /api/db/tickets` | 200；返回编号1和3两条JSON；数据库无编号2 |
+| `assigneeId`补充后 | 学习者反馈输出符合预期；`IN_PROGRESS`有处理人，`OPEN`为null |
+
+上述验证覆盖多列自动映射、`assignee_id → assigneeId`、列表JSON和当前数据库记录；不把未单独反馈的`/domain`、`/api/db/domain/tickets`写成已运行。
+
+### 源码与结构
+
+- `TicketSummary`增加`Long assigneeId`；全局开启下划线转驼峰；
+- `TicketSummaryConverter`通过`Ticket.restore`完成DTO→领域对象；
+- `DatabaseTicketQueryService`组织标题、摘要、列表和领域查询；
+- `TicketQueryRepository`定义`Optional<Ticket> findById`与`List<Ticket> findAll`；
+- `DatabaseTicketRepository`完成Mapper查询、null→`Optional.empty()`和DTO转换；
+- `DatabaseTicketController`改为依赖QueryService，增加单张/全部领域对象接口；
+- `TicketInsert`、`@Insert`、`@Options`、`TicketWriteRepository`与Repository.create已准备数据库插入，但未形成POST入口。
+
+### 验证边界
+
+- 学习者提供了多列列表和`assigneeId`输出反馈；
+- 助手只读核对源码和接口结构，未启动Spring Boot、未查询MySQL、未发HTTP、未执行JUnit；
+- 正式JUnit仍为17个方法；没有新增Web自动测试；
+- 未执行INSERT，未验证自增主键、外键失败、标题CHECK失败或201响应；
+- 正式`/api/tickets`仍使用文件仓库。
+
+### 下一页
+
+完成`POST /api/db/tickets`与`DatabaseTicketCommandService`，验证真实INSERT、数据库生成id、回查Ticket和201 JSON；再把外键/标题约束错误转换成合适的HTTP响应。

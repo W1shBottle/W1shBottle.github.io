@@ -1,36 +1,43 @@
 {
   "version": 1,
-  "source_sha256": "56c563b9f2bd8775f6f81f937a998e1fb2fa7c10ac9c0dac4d2bdeade07731d5",
-  "updated": "2026-11-07",
+  "source_sha256": "066c7114cea3e28c07dc660d453353612fc2ef2eb3f389cc8d4dbfdfd543805f",
+  "updated": "2026-11-08",
   "project": "设备运维工单",
-  "stage": "A1 MyBatis单列只读已接通 → 多列对象映射与数据库仓库",
+  "stage": "A1 多列映射与只读Repository已完成 → 数据库创建POST与自增主键",
   "current_group": "backend",
   "focus_tasks": [
     {
-      "id": "W03",
-      "title": "HTTP 和 JSON",
+      "id": "W02",
+      "title": "数据库生成 ID 与映射",
       "status": "practicing",
       "optional": false,
-      "description": "文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。"
+      "description": "已准备`TicketInsert`、`@Insert`、`@Options`和Repository.create，插入后读取`TicketInsert.id`再回查；尚无POST接口、真实自增ID结果和约束失败反馈，继续完成后再验收。"
     },
     {
       "id": "W05",
       "title": "MyBatis",
-      "status": "planned",
+      "status": "practicing",
       "optional": false,
-      "description": "在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。"
+      "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰和Mapper代理；生成主键代码已准备但未运行。继续独立定位一个字段映射错误并验证明细。"
+    },
+    {
+      "id": "W06",
+      "title": "分层与核心状态流",
+      "status": "practicing",
+      "optional": false,
+      "description": "已串起Controller→QueryService→Repository→Mapper的只读链并理解构造器注入；创建、派单、解决、验收等写业务尚未完成，继续从数据库创建POST闭环开始。"
     }
   ],
-  "next": "新建TicketSummary（id、title、status），在TicketMapper增加多列findSummaryById，并在DatabaseTicketController增加GET /api/db/tickets/{id}；先验证对象映射与JSON，再处理列名差异、领域Ticket转换和数据库仓库。",
-  "note": "/posts/ops-ticket-20261107/",
+  "next": "完成POST /api/db/tickets：CreateDatabaseTicketRequest → DatabaseTicketCommandService → TicketWriteRepository → INSERT，验证@Options自增id、回查Ticket和201 JSON；再处理外键/标题CHECK错误。",
+  "note": "/posts/ops-ticket-20261108/",
   "stats": {
     "accepted": 6,
-    "practicing": 15,
-    "planned": 37,
+    "practicing": 18,
+    "planned": 34,
     "total": 58,
     "percent": 10,
     "accepted_width": 10.3448,
-    "practicing_width": 25.8621
+    "practicing_width": 31.0345
   },
   "groups": [
     {
@@ -185,9 +192,9 @@
         {
           "id": "W02",
           "title": "数据库生成 ID 与映射",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。"
+          "description": "已准备`TicketInsert`、`@Insert`、`@Options`和Repository.create，插入后读取`TicketInsert.id`再回查；尚无POST接口、真实自增ID结果和约束失败反馈，继续完成后再验收。"
         },
         {
           "id": "W03",
@@ -206,26 +213,26 @@
         {
           "id": "W05",
           "title": "MyBatis",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。"
+          "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰和Mapper代理；生成主键代码已准备但未运行。继续独立定位一个字段映射错误并验证明细。"
         },
         {
           "id": "W06",
           "title": "分层与核心状态流",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。"
+          "description": "已串起Controller→QueryService→Repository→Mapper的只读链并理解构造器注入；创建、派单、解决、验收等写业务尚未完成，继续从数据库创建POST闭环开始。"
         }
       ],
       "stats": {
         "accepted": 0,
-        "practicing": 8,
-        "planned": 4,
+        "practicing": 11,
+        "planned": 1,
         "total": 12,
         "percent": 0,
         "accepted_width": 0.0,
-        "practicing_width": 66.6667
+        "practicing_width": 91.6667
       }
     },
     {

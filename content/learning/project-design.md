@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-07T00:00:00+08:00",
+  "lastmod": "2026-11-08T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-07。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—16节保留历史接线快照；第17节记录11月7日 MyBatis 临时只读查询。正式 Web 仍连接 Service 与文件仓库，只有临时 `/api/db` 入口直接访问 Mapper/MySQL。
+核对日期：2026-11-08。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供只读摘要/领域对象查询，数据库写入POST尚未闭环。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -326,3 +326,35 @@ HTTP Client → Tomcat → Spring MVC → DatabaseTicketController
 - `DatabaseTicketController` 的 GET `/api/db/tickets/{id}/title` 调用 Mapper，查到标题后组装 `Map<String,String>` 并由 Jackson 返回 JSON；无记录抛 404，非数字路径在参数转换阶段返回 400。
 - 这条链路绕过 `TicketService` 和文件仓库，仅用于验证数据库接线。最终结构仍是 Controller → Service → Repository/Mapper → 数据库，数据库映射不能长期由临时 Controller 直接承担。
 - 现阶段只完成单列只读。完整列映射、`@Results`/`resultMap` 或构造器映射、领域 `Ticket` 转换、数据库写入、自增主键、事务和状态流均待后续实现。
+
+## 18. 2026-11-08 多列映射、领域对象与只读 Repository
+
+数据库只读链路已从单列`title`扩展为多列对象：
+
+```text
+HTTP Client
+→ DatabaseTicketController
+→ DatabaseTicketQueryService
+→ TicketQueryRepository（接口）
+→ DatabaseTicketRepository
+→ TicketMapper 代理
+→ MyBatis
+→ MySQL
+```
+
+`TicketSummary`承载`id/title/status/assigneeId`，由MyBatis通过无参构造和setter填充。`assigneeId`使用`Long`表示可空处理人；`application.properties`开启`mybatis.configuration.map-underscore-to-camel-case=true`，使`assignee_id`映射到`assigneeId`。列表查询使用`ORDER BY id`，返回`List<TicketSummary>`；实际反馈为编号1和3，不存在编号2属于数据库当前状态。
+
+`TicketSummaryConverter`把DTO转换为领域对象：先`TicketStatus.valueOf`，再调用`Ticket.restore(id,title,status,assigneeId)`。不把数据库行直接反射进`Ticket`，因为`Ticket`有final id、无无参构造器、枚举状态和状态/处理人组合校验。相同getter可能生成相同JSON，但DTO与领域对象的职责不同。
+
+只读Repository接口为：
+
+```java
+Optional<Ticket> findById(long id);
+List<Ticket> findAll();
+```
+
+`DatabaseTicketRepository`实现查询与DTO转换，`DatabaseTicketQueryService`负责应用层查询。`TicketMapper`是MyBatis动态代理，`DatabaseTicketRepository`是Spring普通Bean；构造器注入把代理和仓库按依赖顺序传入Controller/Service。HTTP 404由Controller决定，Repository用`Optional.empty()`表达未找到。
+
+接口：`GET /api/db/tickets`、`/api/db/tickets/{id}`、`/api/db/tickets/{id}/domain`、`/api/db/domain/tickets`。前两者返回摘要DTO，后两者返回领域对象。
+
+写入只做了准备：`TicketInsert`、`@Insert`、`@Options(useGeneratedKeys=true,keyProperty="id",keyColumn="id")`、`TicketWriteRepository`和`DatabaseTicketRepository.create`已存在；尚无`DatabaseTicketCommandService`、`CreateDatabaseTicketRequest`和POST Controller，也未验证自增主键或处理外键/CHECK错误，不能算数据库创建完成。

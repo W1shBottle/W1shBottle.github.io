@@ -5,10 +5,10 @@
   "weight": 90,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-07T00:00:00+08:00"
+  "lastmod": "2026-11-08T00:00:00+08:00"
 }
 
-更新：2026-11-07。当前进入A1的MyBatis数据库接线。文件版Web已接入TicketService、查询创建与三类统一错误处理；当天临时只读接口已接通 MyBatis→MySQL，学习者验证1=200标题JSON、999=404、abc=400，并能解释 Mapper 代理、`@Select`、`@Param` 和 `#{}`。正式业务仍用文件仓库，完整对象、数据库写入、认证授权、状态流、模型调用和Agent未接入。现有17个JUnit测试方法；手动HTTP验证未计入自动测试。
+更新：2026-11-08。当前进入A1数据库只读分层与写入准备。已完成单列/多列查询、`TicketSummary`列表、`assignee_id → assigneeId`、`Ticket.restore`领域转换和`DatabaseTicketRepository`只读接口；学习者反馈列表200与编号1/3 JSON，补`assigneeId`后符合预期。`TicketInsert`、`@Insert`、`@Options`与Repository.create已准备，但POST创建、自增主键和约束错误响应尚未验收。正式业务仍用文件仓库，认证授权、完整状态流、模型调用和Agent未接入。现有17个JUnit测试方法；手动HTTP验证未计入自动测试。
 
 ## 怎样看这份清单
 
@@ -70,11 +70,11 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前We
 先一个请求，再逐步完成闭环；以下未来文件只在轮到任务时创建。
 
 - [ ] **W01【查询与更新事务已跟练】JDBC**：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。
-- [ ] **W02【待学】数据库生成 ID 与映射**：创建输入不伪造编号，插入后取真实自增 ID；逐步映射 description/deviceId/reporterId/version/时间，解释为什么要调整当前 add/create 契约。
+- [ ] **W02【正在学】数据库生成 ID 与映射**：已准备`TicketInsert`、`@Insert`、`@Options`和Repository.create，插入后读取`TicketInsert.id`再回查；尚无POST接口、真实自增ID结果和约束失败反馈，继续完成后再验收。
 - [ ] **W03【已跟练，继续验收】HTTP 和 JSON**：文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。
 - [ ] **W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入**：已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。
-- [ ] **W05【待学】MyBatis**：在未来 TicketMapper 中绑定参数、查询映射、获取生成主键和写条件 UPDATE；会看实际 SQL，能够定位一个字段名或映射错误。
-- [ ] **W06【待学】分层与核心状态流**：串起 Controller→Service→Mapper→MySQL；独立完成/修改创建、查询、派单、解决、验收中的一个功能；状态、说明和动作记录保持一致。
+- [ ] **W05【已跟练】MyBatis**：已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰和Mapper代理；生成主键代码已准备但未运行。继续独立定位一个字段映射错误并验证明细。
+- [ ] **W06【正在学】分层与核心状态流**：已串起Controller→QueryService→Repository→Mapper的只读链并理解构造器注入；创建、派单、解决、验收等写业务尚未完成，继续从数据库创建POST闭环开始。
 
 ## E：能运行、能交付的工程能力（A2）
 
@@ -157,11 +157,11 @@ G从单工具和串行流程做起。框架选一种，按兼容性与实际缺�
 
 ## 今天只看这一小段
 
-1. W03/E01：先独立请求 `GET /api/tickets/abc`，记录状态码、响应正文与Controller断点是否进入，补路径参数类型转换错误处理。
-2. W04：独立解释已有POST的JSON→DTO→Controller→Service→Ticket→文件仓库，明确这条链路尚无SQL。
-3. W05/W02：错误响应收尾后，接MyBatis查询，再创建/真实主键；从旧SQL和JDBC练习迁移，不重复提交原事务样本。
+1. W02/W05：完成 `POST /api/db/tickets`，用有效deviceId/reporterId验证INSERT、`@Options`自增id、回查Ticket和201 JSON。
+2. W06：把命令请求交给`DatabaseTicketCommandService → TicketWriteRepository → DatabaseTicketRepository`，不让Controller直接调用Mapper。
+3. E01：区分外键不存在、标题违反CHECK和未知内部错误的HTTP响应，不把数据库异常原样暴露给客户端。
 
-本段是2026-11-07核对后的接续点；数据库、权限与Agent没有因调整计划而完成。
+本段是2026-11-08核对后的接续点；数据库写入POST、权限与Agent没有因代码准备而完成。
 
 ## 每周记录
 

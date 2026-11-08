@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-07",
-  "stage": "A1 MyBatis单列只读已接通 → 多列对象映射与数据库仓库",
+  "updated": "2026-11-08",
+  "stage": "A1 多列映射与只读Repository已完成 → 数据库创建POST与自增主键",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -196,6 +196,16 @@
       "verification": "学习者反馈数据库临时接口1返回200与标题JSON、999返回404、abc在参数转换阶段返回400，Debug与控制台符合预期；日期2026-11-07。正式/api/tickets仍用文件仓库，未新增Web自动测试或重跑17项JUnit，数据库写入和完整对象映射未实现。",
       "next": "新建TicketSummary（id、title、status），在TicketMapper增加多列findSummaryById，并在DatabaseTicketController增加GET /api/db/tickets/{id}；先验证对象映射与JSON，再处理列名差异、领域Ticket转换和数据库仓库。",
       "note": "/posts/ops-ticket-20261107/"
+    },
+    {
+      "date": "2026-11-08",
+      "project": "ops-ticket",
+      "status": "reviewed",
+      "title": "多列对象映射与只读数据库分层",
+      "summary": "完成TicketSummary多列与列表映射、assigneeId下划线转驼峰、Ticket.restore领域转换、Optional与TicketQueryRepository/DatabaseTicketRepository只读分层；开始准备数据库插入与自增主键。",
+      "verification": "学习者反馈GET /api/db/tickets返回200与编号1/3两条JSON，数据库无编号2；补assigneeId后输出符合预期。领域对象接口以源码核对为主，未单独记录运行正文。未新增Web自动测试或重跑JUnit，正式测试仍17项；未执行INSERT，不能算数据库创建完成。",
+      "next": "完成POST /api/db/tickets：CreateDatabaseTicketRequest → DatabaseTicketCommandService → TicketWriteRepository → INSERT，验证@Options自增id、回查Ticket和201 JSON；再处理外键/标题CHECK错误。",
+      "note": "/posts/ops-ticket-20261108/"
     }
   ],
   "current_project": "ops-ticket"
