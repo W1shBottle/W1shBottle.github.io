@@ -2,7 +2,7 @@
   "title": "工单项目运行与验收",
   "description": "实际运行证据、后端验收与模型效果评估标准。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-08T00:00:00+08:00",
+  "lastmod": "2026-11-09T00:00:00+08:00",
   "weight": 190,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
 
-核对日期：2026-11-08。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节记录路线修订，第17节记录11月7日MyBatis单列查询，第18节记录11月8日多列DTO、领域对象与只读Repository。
+核对日期：2026-11-09。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节记录路线修订，第17节记录11月7日MyBatis单列查询，第18节记录11月8日多列DTO、领域对象与只读Repository，第19节记录11月9日数据库创建POST与自增主键。
 
 ## 1. 环境与构建
 
@@ -439,3 +439,39 @@ G待验：真实工具调用、歧义追问、无结果、无权、错误参数�
 ### 下一页
 
 完成`POST /api/db/tickets`与`DatabaseTicketCommandService`，验证真实INSERT、数据库生成id、回查Ticket和201 JSON；再把外键/标题约束错误转换成合适的HTTP响应。
+
+## 19. 2026-11-09 数据库创建 POST 与自增主键
+
+### 学习者运行反馈
+
+- 学习者编写 `CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`DatabaseTicketController` 的 POST 方法和 `GlobalExceptionHandler` 的约束错误处理；
+- 学习者自行 `POST /api/db/tickets` 一次，返回 `id=9`、`title=打印机缺纸`、`status=OPEN`、`assigneeId=null`；
+- `id=9` 引发对自增跳号的疑问，后续确认失败 INSERT 会消耗编号、删除不回退计数器、`information_schema` 可能显示缓存值。
+
+### 助手运行验证
+
+| 场景 | 结果 |
+| --- | --- |
+| 合法 POST | 201；`id=4`、`status=OPEN`、`assigneeId=null` |
+| 插入后 GET 列表 | 200；包含新工单 |
+| `deviceId=999` | 400；通用约束提示 |
+| `reporterId=999` | 400；通用约束提示 |
+| 空标题 | 400；`工单标题不能为空` |
+| 缺 title | 400；`工单标题不能为null` |
+| 51 字标题 | 400；`工单标题不能超过50` |
+| `deviceId=0` | 400；`设备编号必须大于0` |
+| 数据库行 | `id=4, device_id=3, reporter_id=4, status=OPEN, version=0` |
+
+### 边界
+
+- 上述完整矩阵为助手启动应用后运行，不是学习者独立复跑；
+- 学习者只自行完成一次合法 POST（`id=9`）；
+- 未完成数据库派单/解决/验收 UPDATE；
+- 未新增 Web 自动测试；JUnit 仍 17 项；
+- 正式 `/api/tickets` 仍使用文件仓库；
+- 测试行 id=4、9 已按学习者要求删除，`SHOW CREATE TABLE` 显示 `AUTO_INCREMENT=4`；`information_schema`/`SHOW TABLE STATUS` 的缓存值可能滞后。
+
+### 下一页
+
+完成数据库派单 UPDATE：`TicketMapper.assignTicket`、`TicketWriteRepository.assign`、`DatabaseTicketCommandService.assign`、404/409 映射，并验证工单 3 派单与重复派单。
+

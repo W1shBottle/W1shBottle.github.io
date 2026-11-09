@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-08",
-  "stage": "A1 多列映射与只读Repository已完成 → 数据库创建POST与自增主键",
+  "updated": "2026-11-09",
+  "stage": "A1 数据库创建POST与自增主键已完成 → 数据库派单UPDATE",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -206,6 +206,16 @@
       "verification": "学习者反馈GET /api/db/tickets返回200与编号1/3两条JSON，数据库无编号2；补assigneeId后输出符合预期。领域对象接口以源码核对为主，未单独记录运行正文。未新增Web自动测试或重跑JUnit，正式测试仍17项；未执行INSERT，不能算数据库创建完成。",
       "next": "完成POST /api/db/tickets：CreateDatabaseTicketRequest → DatabaseTicketCommandService → TicketWriteRepository → INSERT，验证@Options自增id、回查Ticket和201 JSON；再处理外键/标题CHECK错误。",
       "note": "/posts/ops-ticket-20261108/"
+    },
+    {
+      "date": "2026-11-09",
+      "project": "ops-ticket",
+      "status": "reviewed",
+      "title": "数据库创建 POST 与自增主键",
+      "summary": "完成 CreateDatabaseTicketRequest、DatabaseTicketCommandService、POST /api/db/tickets 与 DataIntegrityViolationException 处理；走通 INSERT、@Options 自增主键回填、回查 Ticket 和 201 JSON。",
+      "verification": "学习者编写四块代码并自行 POST 一次，返回 id=9；助手用 JDK 21 编译，启动应用验证合法 POST 201（id=4）、GET 列表包含新工单、deviceId/reporterId=999 与标题/编号错误均返回 400，并核对数据库行。随后按学习者要求删除测试行并把自增重置为 4（SHOW CREATE TABLE 显示 AUTO_INCREMENT=4）。未完成数据库派单 UPDATE，未新增 Web 自动测试，JUnit 仍 17 项。",
+      "next": "明天完成数据库派单 UPDATE：TicketMapper.assignTicket、TicketWriteRepository.assign、DatabaseTicketCommandService.assign、404/409 映射，并验证工单 3 派单与重复派单。",
+      "note": "/posts/ops-ticket-20261109/"
     }
   ],
   "current_project": "ops-ticket"

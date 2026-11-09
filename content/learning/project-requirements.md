@@ -2,7 +2,7 @@
   "title": "工单项目需求与开发计划",
   "description": "最小业务闭环、阶段验收与后续 AI、Agent 任务。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-08T00:00:00+08:00",
+  "lastmod": "2026-11-09T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-08。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层。学习者反馈`GET /api/db/tickets`返回200与编号1/3两条JSON，补`assigneeId`后符合预期。当前正式工单业务仍使用文件仓库；数据库写入POST闭环、真实自增主键、权限、状态流和AI尚未接入，手动HTTP反馈不等于新增Web自动测试。
+核对日期：2026-11-09。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层；11月9日完成`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`和`POST /api/db/tickets`，学习者自行POST得到真实自增id，助手运行合法201/非法400矩阵并核对数据库行。当前正式工单业务仍使用文件仓库；数据库派单/解决/验收、权限、事务和AI尚未接入，手动HTTP反馈不等于新增Web自动测试。
 
 ## 1. 项目背景与目标用户
 
@@ -155,3 +155,28 @@ AI 辅助编码单独训练：每个模块允许助手解释/评审，学习者�
 评论、验收退回、独立处理记录表、统计看板、完整设备用户管理、缓存、MQ、微服务、Kubernetes、本地模型训练/部署、Python 服务、多 Agent 都不阻挡 A→B。线程/集合/算法仍作为短时基础训练；遇到真实并发问题再深入。
 
 最新构建和阶段检查表见 [运行与验收](/learning/project-verification/)。保留旧 Demo 和学习记录；不为了新路线删除成果，也不把尚未实施的 Web/AI 任务标为已掌握。
+
+## 19. 2026-11-09 数据库创建 POST
+
+`POST /api/db/tickets` 的链路为：
+
+```text
+POST /api/db/tickets
+→ CreateDatabaseTicketRequest
+→ DatabaseTicketCommandService
+→ TicketWriteRepository.create
+→ TicketMapper.insertTicket
+→ INSERT + @Options 自增主键
+→ 回查 Ticket
+→ 201 JSON
+```
+
+- 请求字段为 `title`、`deviceId`、`reporterId`，后两者对应数据库 `NOT NULL` 外键；
+- 命令服务校验标题与编号后委托写仓库；
+- `@Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")` 把自增主键回填到 `TicketInsert.id`；
+- `affectedRows` 与 `insert.getId()` 分别表示影响行数和生成主键；
+- 回查 `Ticket` 获取数据库默认状态与字段；
+- 外键/标题 CHECK 错误由 `DataIntegrityViolationException` 统一转 400。
+
+下一步：数据库派单 UPDATE（`WHERE id=? AND status='OPEN'`），并区分 404/409。
+

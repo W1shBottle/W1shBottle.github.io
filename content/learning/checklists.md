@@ -70,11 +70,11 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前We
 先一个请求，再逐步完成闭环；以下未来文件只在轮到任务时创建。
 
 - [ ] **W01【查询与更新事务已跟练】JDBC**：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。
-- [ ] **W02【正在学】数据库生成 ID 与映射**：已准备`TicketInsert`、`@Insert`、`@Options`和Repository.create，插入后读取`TicketInsert.id`再回查；尚无POST接口、真实自增ID结果和约束失败反馈，继续完成后再验收。
+- [ ] **W02【已跟练，继续验收】数据库生成 ID 与映射**：`POST /api/db/tickets` 已接通；学习者自行 POST 返回 id=9，确认自增主键回填与回查；助手运行合法 201/非法 400 矩阵并核对数据库行。约束错误的独立复跑与口头解释仍待学习者完成。
 - [ ] **W03【已跟练，继续验收】HTTP 和 JSON**：文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。
 - [ ] **W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入**：已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。
-- [ ] **W05【已跟练】MyBatis**：已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰和Mapper代理；生成主键代码已准备但未运行。继续独立定位一个字段映射错误并验证明细。
-- [ ] **W06【正在学】分层与核心状态流**：已串起Controller→QueryService→Repository→Mapper的只读链并理解构造器注入；创建、派单、解决、验收等写业务尚未完成，继续从数据库创建POST闭环开始。
+- [ ] **W05【已跟练】MyBatis**：已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰、Mapper代理和生成主键；POST创建已运行。继续独立定位一个字段映射错误并验证明细。
+- [ ] **W06【已跟练，继续验收】分层与核心状态流**：已串起Controller→CommandService→WriteRepository→Mapper的创建链并验证自增主键与回查；派单、解决、验收等UPDATE状态流尚未完成，下一步派单。
 
 ## E：能运行、能交付的工程能力（A2）
 

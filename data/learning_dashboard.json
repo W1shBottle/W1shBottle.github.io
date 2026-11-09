@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "066c7114cea3e28c07dc660d453353612fc2ef2eb3f389cc8d4dbfdfd543805f",
-  "updated": "2026-11-08",
+  "source_sha256": "6a503c976b237ab5badc3820dcc9006deed035743de7c05093dbe90f2c61e13d",
+  "updated": "2026-11-09",
   "project": "设备运维工单",
-  "stage": "A1 多列映射与只读Repository已完成 → 数据库创建POST与自增主键",
+  "stage": "A1 数据库创建POST与自增主键已完成 → 数据库派单UPDATE",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -11,25 +11,25 @@
       "title": "数据库生成 ID 与映射",
       "status": "practicing",
       "optional": false,
-      "description": "已准备`TicketInsert`、`@Insert`、`@Options`和Repository.create，插入后读取`TicketInsert.id`再回查；尚无POST接口、真实自增ID结果和约束失败反馈，继续完成后再验收。"
+      "description": "`POST /api/db/tickets` 已接通；学习者自行 POST 返回 id=9，确认自增主键回填与回查；助手运行合法 201/非法 400 矩阵并核对数据库行。约束错误的独立复跑与口头解释仍待学习者完成。"
     },
     {
       "id": "W05",
       "title": "MyBatis",
       "status": "practicing",
       "optional": false,
-      "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰和Mapper代理；生成主键代码已准备但未运行。继续独立定位一个字段映射错误并验证明细。"
+      "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰、Mapper代理和生成主键；POST创建已运行。继续独立定位一个字段映射错误并验证明细。"
     },
     {
       "id": "W06",
       "title": "分层与核心状态流",
       "status": "practicing",
       "optional": false,
-      "description": "已串起Controller→QueryService→Repository→Mapper的只读链并理解构造器注入；创建、派单、解决、验收等写业务尚未完成，继续从数据库创建POST闭环开始。"
+      "description": "已串起Controller→CommandService→WriteRepository→Mapper的创建链并验证自增主键与回查；派单、解决、验收等UPDATE状态流尚未完成，下一步派单。"
     }
   ],
-  "next": "完成POST /api/db/tickets：CreateDatabaseTicketRequest → DatabaseTicketCommandService → TicketWriteRepository → INSERT，验证@Options自增id、回查Ticket和201 JSON；再处理外键/标题CHECK错误。",
-  "note": "/posts/ops-ticket-20261108/",
+  "next": "明天完成数据库派单 UPDATE：TicketMapper.assignTicket、TicketWriteRepository.assign、DatabaseTicketCommandService.assign、404/409 映射，并验证工单 3 派单与重复派单。",
+  "note": "/posts/ops-ticket-20261109/",
   "stats": {
     "accepted": 6,
     "practicing": 18,
@@ -194,7 +194,7 @@
           "title": "数据库生成 ID 与映射",
           "status": "practicing",
           "optional": false,
-          "description": "已准备`TicketInsert`、`@Insert`、`@Options`和Repository.create，插入后读取`TicketInsert.id`再回查；尚无POST接口、真实自增ID结果和约束失败反馈，继续完成后再验收。"
+          "description": "`POST /api/db/tickets` 已接通；学习者自行 POST 返回 id=9，确认自增主键回填与回查；助手运行合法 201/非法 400 矩阵并核对数据库行。约束错误的独立复跑与口头解释仍待学习者完成。"
         },
         {
           "id": "W03",
@@ -215,14 +215,14 @@
           "title": "MyBatis",
           "status": "practicing",
           "optional": false,
-          "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰和Mapper代理；生成主键代码已准备但未运行。继续独立定位一个字段映射错误并验证明细。"
+          "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰、Mapper代理和生成主键；POST创建已运行。继续独立定位一个字段映射错误并验证明细。"
         },
         {
           "id": "W06",
           "title": "分层与核心状态流",
           "status": "practicing",
           "optional": false,
-          "description": "已串起Controller→QueryService→Repository→Mapper的只读链并理解构造器注入；创建、派单、解决、验收等写业务尚未完成，继续从数据库创建POST闭环开始。"
+          "description": "已串起Controller→CommandService→WriteRepository→Mapper的创建链并验证自增主键与回查；派单、解决、验收等UPDATE状态流尚未完成，下一步派单。"
         }
       ],
       "stats": {

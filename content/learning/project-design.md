@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-08T00:00:00+08:00",
+  "lastmod": "2026-11-09T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-08。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供只读摘要/领域对象查询，数据库写入POST尚未闭环。
+核对日期：2026-11-09。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层；第19节记录11月9日数据库创建POST、自增主键与约束错误处理。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供只读查询和创建POST，数据库派单/解决/验收尚未闭环。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -358,3 +358,30 @@ List<Ticket> findAll();
 接口：`GET /api/db/tickets`、`/api/db/tickets/{id}`、`/api/db/tickets/{id}/domain`、`/api/db/domain/tickets`。前两者返回摘要DTO，后两者返回领域对象。
 
 写入只做了准备：`TicketInsert`、`@Insert`、`@Options(useGeneratedKeys=true,keyProperty="id",keyColumn="id")`、`TicketWriteRepository`和`DatabaseTicketRepository.create`已存在；尚无`DatabaseTicketCommandService`、`CreateDatabaseTicketRequest`和POST Controller，也未验证自增主键或处理外键/CHECK错误，不能算数据库创建完成。
+
+## 19. 2026-11-09 数据库创建 POST
+
+创建链路：
+
+```text
+HTTP Client
+→ DatabaseTicketController.create
+→ DatabaseTicketCommandService.create
+→ TicketWriteRepository.create
+→ DatabaseTicketRepository.create
+→ TicketMapper.insertTicket
+→ MyBatis INSERT
+→ MySQL 自增主键
+→ findById 回查
+→ Ticket / 201 JSON
+```
+
+- `CreateDatabaseTicketRequest` 承载 `title`、`deviceId`、`reporterId`；
+- `DatabaseTicketCommandService` 校验标题空白/长度和编号正数，然后委托写仓库；
+- `TicketMapper.insertTicket` 使用 `@Insert` 写入 `title/device_id/reporter_id`；
+- `@Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")` 把数据库生成的 `id` 回填到 `TicketInsert.id`；
+- `DatabaseTicketRepository.create` 检查影响行数与主键非空，再用 `findById` 读取数据库中的真实 `Ticket`；
+- `DatabaseTicketController` 返回 201；`IllegalArgumentException` 由 Controller 转 400；外键/CHECK 的 `DataIntegrityViolationException` 由 `GlobalExceptionHandler` 统一转 400。
+
+边界：`Ticket` 领域对象目前不含 `version` 和 `deviceId/reporterId`，HTTP 响应只有 `id/title/status/assigneeId`；版本条件和派单/解决/验收状态流仍待下一步。
+
