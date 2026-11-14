@@ -2,7 +2,7 @@
   "title": "工单项目需求与开发计划",
   "description": "最小业务闭环、阶段验收与后续 AI、Agent 任务。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-09T00:00:00+08:00",
+  "lastmod": "2026-11-14T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-09。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层；11月9日完成`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`和`POST /api/db/tickets`，学习者自行POST得到真实自增id，助手运行合法201/非法400矩阵并核对数据库行。当前正式工单业务仍使用文件仓库；数据库派单/解决/验收、权限、事务和AI尚未接入，手动HTTP反馈不等于新增Web自动测试。
+核对日期：2026-11-14；本次为计划调整和源码只读检查，未新增实现或运行测试。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层；11月9日完成`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`和`POST /api/db/tickets`，学习者自行POST得到真实自增id，助手运行合法201/非法400矩阵并核对数据库行。当前正式工单业务仍使用文件仓库；数据库派单/解决/验收、权限和AI尚未接入。11月13日助手补充数据库创建的事务保护和隔离自动测试，不能据此认定学习者已掌握事务。
 
 ## 1. 项目背景与目标用户
 
@@ -51,9 +51,9 @@ Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表�
 | R21 | HTTP创建工单 | DTO接JSON标题，Service校验与文件自动保存，成功201；空白标题400且数量不变由学习者反馈 |
 | R22 | 基础统一错误响应 | ErrorResponse与GlobalExceptionHandler已实现；请求体转换错误400、空白标题400、未知工单404和方法参数类型错误400均有学习者反馈，带message；尚未覆盖全部异常分支 |
 | R23 | MyBatis只读查询与对象映射 | 已接通单列、`TicketSummary`多列与列表、`assigneeId`自动映射、`Ticket.restore`领域转换；学习者反馈列表200与编号1/3 JSON。正式业务仍走文件仓库，领域接口以源码核对为主 |
-| R24 | 数据库写入 | `TicketInsert`、`@Insert`、`@Options`、`TicketWriteRepository`与`DatabaseTicketRepository.create`已准备；尚无POST请求、命令Service、自增主键运行结果和约束错误响应，不计完成 |
+| R24 | 数据库创建 | `POST /api/db/tickets` 已接通 DTO、命令 Service、仓库与 MyBatis INSERT；学习者曾请求得到自增编号 9，助手另做请求矩阵。11 月 13 日补充创建事务保护；派单、完整状态流及独立验收仍待完成 |
 
-标题长度按 Java `String.length()` 的 UTF-16 代码单元计数，不按用户感知字符数计数。自动编号当前面向单线程内存练习，不提供数据库自增或并发编号分配。
+标题长度按 Java `String.length()` 的 UTF-16 代码单元计数，不按用户感知字符数计数。文件版自动编号面向单线程练习；数据库创建已有自增编号，但业务级并发和重复请求保护尚未完成。
 
 ## 3. 状态规则
 
@@ -85,11 +85,11 @@ FileTicketRepository 查询复用内部内存仓库，新增/更新后保存文�
 | 内容 | 实际证据 | 调整 |
 | --- | --- | --- |
 | 对象、集合、异常、仓库接口、文件恢复、ConsoleApp | 原控制台业务保留，新增Web启动类与两个Controller练习 | 保留原业务，Web已注入Service/文件仓库，数据库实现仍待学 |
-| 测试 | 17 项 JUnit；主要是 rename、文件往返、内存仓库和 create/rename | 保留；后续只补真实行为风险，不机械重复同类 assertEquals |
-| MySQL / JDBC | 三表、SQL查询/事务、独立JDBC查询与更新事务已有跟练反馈 | 正式Service/Repository尚未接库；Web入门已开始，但没有HTTP→SQL链路 |
+| 测试 | 25 项 JUnit：原有 17 项与助手本次新增的 8 项事务、接口、边界测试 | H2 为隔离测试库，不代表真实 MySQL 已再次验证；后续补业务风险，不机械重复断言 |
+| MySQL / JDBC | 三表、SQL/JDBC跟练；数据库查询和创建已有 HTTP→Service→Repository→MyBatis 链路 | 正式 `/api/tickets` 仍用文件；数据库完整业务流未完成 |
 | 主流程 | 当前只有创建、改名、派单；RESOLVED/CLOSED 只是枚举/恢复支持 | 补 resolve 与 accept；不因枚举存在而标完成 |
-| Web、认证、事务、并发 | Boot4.1.2与两个Controller已存在；正式业务无权限/数据库事务，version已做SQL/JDBC实验 | 文件版查询与创建已接通；数据库、权限与并发能力仍待学 |
-| AI、RAG、Agent | 无实现、无已验证模型配置 | B做真实模型调用，G做只读工具Agent，C做运维资料检索与评测；均尚未实现 |
+| Web、认证、事务、并发 | 文件版及数据库版查询/创建已接通；数据库创建由助手补事务；version已做SQL/JDBC实验 | 授权、完整业务事务和并发能力仍待实现及学习 |
+| AI、RAG、Agent | 无实现、无已验证模型配置 | Y做Python基础，B做真实模型调用，G做只读工具Agent，C做检索评测；均尚未实现 |
 
 现有结构规模适合继续学习。复杂度主要来自旧计划范围，不需要把控制台重写成多个服务。项目具备功能与学习者掌握必须分别记录：助手曾修复 Service 接线，需独立修改确认；用户已解释引用、Map 覆盖、最大编号和路径等，不等于已掌握事务或后端框架。
 
@@ -110,49 +110,42 @@ FileTicketRepository 查询复用内部内存仓库，新增/更新后保存文�
 
 创建用 requestKey 防止重复提交：同一用户、同一动作、同一个 key 的相同输入返回原 ticketId；不同输入返回 409。存请求摘要用于比较，不以“标题相同”判重。并发重复日志唯一约束冲突必须回滚本次新工单，再查已完成操作。其他状态操作先以 expectedVersion＋前置状态条件更新；重复/竞争失败返回 409、不新增重复日志。具体设计见 design.md 第 10 节。
 
-## 7. Java＋Agent阶段计划与验收（2026-11-07）
+## 7. Java工单＋Python Agent阶段计划（2026-11-14）
 
-| 阶段 | 项目交付 | 进入下一步的证据 |
+Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调。
+
+| 阶段 | 亲手交付 | 达标证据 |
 | --- | --- | --- |
-| A1 最小后端业务 | Boot/MyBatis/MySQL，创建→派单→解决→验收，详情与必要筛选 | 请求真实落库、数据库生成主键；本人能解释调用链并独立改一个筛选或规则 |
-| A2 基础工程 | 身份/角色/归属、参数与异常、状态日志同事务、版本冲突/重复请求、关键测试、可复现启动 | 拒绝越权/非法迁移；故障回滚、竞争请求、重启和一次排错有证据 |
-| B 模型调用入门 | 对有权访问的工单生成摘要、分类建议、待补充信息，只展示参考 | 真实API记录、输出校验、超时/无效输出回退可核对；同时开始评测，达标即进入G |
-| G 只读运维Agent | 查可见工单、读详情，追问→工具调用→结果整合；上下文、任务状态和执行步骤持久化 | 单工具到有限多步实际可跑；中断可解释、补信息可继续、工具失败/越权/超限有明确退出 |
-| C 知识检索与评测改进 | 小型运维资料检索、可定位引用、固定任务集、基线、失败归因和回归 | 区分检索/工具/生成错误；报告真实任务完成率、延迟和用量成本，展示一次改进与剩余失败 |
+| A Java工单业务 | 读懂现有事务与数据库创建；逐步完成派单、状态与必要鉴权 | 能独立画请求链并解释回滚；派单接口、失败分支及授权按实际结果记录 |
+| Y Python基础 | venv、数据结构、函数/异常、JSON/HTTP；用虚构工单写查询小程序 | 自己写并调试按ID查询和空结果；解释Java Map/List与Python dict/list的区别 |
+| B Python模型调用 | 先用虚构数据请求一个模型，返回摘要和待补充信息；模拟错误 | 保存真实调用与模拟测试各一份证据，校验结构、超时与错误；没有API时仅标契约测试 |
+| G Python只读Agent | 先对假数据接查询工具，完成查找→追问/详情→回答，记录步骤 | 真实模型发出工具调用、Python执行；无结果、坏参数、超时和步数限制可复现 |
+| C 资料与评测 | 维护少量自编设备资料，检索并引用；用固定任务集改进 | 引用可定位；区分检索、工具、生成错误，记录真实样本数、耗时与用量 |
+| L 安全联调 | Java提供经授权的只读工单接口，Python通过HTTP调用 | 隔离演示数据、真实身份与授权已验证；无权请求不能读取；超时/故障可解释 |
 
-A1/A2后进入B，B达标进入G；评测从B/G开始，C集中加入资料检索与改进。G是主线，代码和文档任务均未因路线调整而完成。
+A/Y可以并行；Python虚构数据实验可提前，真实工单联调必须先完成认证和资源授权。
 
-## 8. 接下来可以直接执行的小任务
+## 8. 接续任务与已有进展
 
-路径均相对于项目根；“未来文件”是任务目标，不表示已存在。每次只推进一项，结果或解释不足时回补具体知识，不重做所有基础课。
+截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。
 
-| 顺序 | 先理解 / 阅读 | 亲手完成 | 验证与进入下一步的门槛 |
-| --- | --- | --- | --- |
-| 1 组合查询实操通过 | AND、LIKE、IS NULL；sql/02_seed.sql、03_queries.sql | 已提交SQL和正确结果：3／打印机卡纸／NULL／OPEN | 本条不重抄；解释和条件变体在关联查询任务中继续验证 |
-| 2 数据规则复盘 | sql/01_schema.sql、04_constraints.sql、05_updates.sql | 画三表关联；指出外键、CHECK、Java 状态方法分别能/不能拦住什么 | 能解释存在的 REPORTER 仍可能通过 assignee 外键，但业务必须拒绝；版本字段存在不等于并发保护 |
-| 3 多表与统计（已练习） | JOIN、COUNT、GROUP BY、HAVING、LIMIT/OFFSET；03_queries.sql | OPEN 筛选、2/1计数、无工单设备和分页/总数已有用户反馈 | 继续结合后续需求解释连接与NULL；不重做全部练习 |
-| 4 事务与冲突（SQL已练习） | 03_queries.sql、06_transactions.sql | 提交/回滚、CHECK失败后回滚、条件更新和双窗口版本竞争已有反馈 | A=1、B=0是SQL实验；正式Service尚无数据库事务与版本契约 |
-| 5 短 JDBC（本轮已跟练） | JdbcTicketQueryDemo、JdbcTicketUpdateDemo；参数绑定、结果读取、影响行数和事务范围 | 已跟写版本查询、1/0检查、成功提交和中途失败回滚；更新方法由main调用，当前simulateFailure=false | 用户运行反馈＋助手源码检查；无新增JDBC自动测试，独立迁移业务继续验收 |
-| 6 文件版 Web 与基础错误响应（已跟练） | TicketConfig、TicketController、DTO、GlobalExceptionHandler、tickets.http | 查询/创建、重启恢复、断点追踪和abc类型错误已有反馈；三类统一错误处理已接上 | 正式接口仍用文件仓库；下一步从数据库单列查询走向多列对象映射 |
-| 6b MyBatis查询与对象映射（已跟练） | TicketMapper、TicketSummary、TicketSummaryConverter、DatabaseTicketQueryService、TicketQueryRepository、DatabaseTicketRepository | 学习者反馈单列1/999/abc和无编号2的多列列表；补`assigneeId`后输出符合预期；理解DTO、领域对象、Optional和只读分层 | 领域接口需独立运行反馈；正式业务仍是文件仓库，不新增自动测试 |
-| 6c 数据库创建准备（正在学） | TicketInsert、@Insert、@Options、TicketWriteRepository、DatabaseTicketRepository.create | 源码已准备生成主键与插入后回查 | 补POST Controller、CreateDatabaseTicketRequest、DatabaseTicketCommandService；验证201、自增id、外键/标题约束错误 |
-| 7 完成 A | 需求第 6 节与设计第 10 节 | 依次补创建ID契约、状态方法、操作日志事务、登录授权和重复请求 | 运行验收清单；独立解释并修改一处业务；完成一次故障复现、修复、回归，再接 AI |
+先读 `DatabaseTicketRepository.create`，画出POST→Service→Repository→Mapper→MySQL调用链，解释 `@Transactional` 生效条件和失败回滚；同时开始Python基础，使用虚构工单列表练变量、列表、字典与函数。理解后继续数据库派单的接口和404/409；不在真实数据库上做未隔离的写入实验。
 
-## 9. 模型调用、G只读Agent与C知识检索（计划）
+Python前几项：配置venv→使用虚构工单练list/dict与状态筛选→写查询函数/错误处理→JSON/HTTP→FastAPI最小只读接口。具体单元与验收见学习阶段计划；先不对真实数据库做Python写入。
 
-首个功能是对**有权访问的既有工单**生成 `{summary, category, missingInformation}`。category 只允许 DISPLAY/PRINTING/HVAC/OTHER/UNKNOWN，模型只给建议，分类不自动作为工单字段落库。输入不足时明确 UNKNOWN/待补充信息，不臆造设备型号、维修步骤或已完成处理。首版仅展示/复制参考，不提供直接回写按钮，原始描述保留。现有 rename 只在控制台/Service 中，不是 HTTP 接口。以后如需人工采纳改标题，再定义报修人归属、允许状态、expectedVersion 和操作日志同事务的接口后实现。
+## 9. Python模型、Agent与Java联调（计划）
 
-先用 Java ModelClient 边界调用选定模型 API，供应商/模型/密钥/费用上限到 B 前配置；没有密钥时可做解析器的模拟测试，但标记“真实模型未验证”。超时、429/5xx、格式错误和模型拒答区分记录；单次限时、有限重试、用户级配额，不开无限重试。网络请求在数据库写事务之外；关闭 AI 不影响工单读写。
+模型客户端由Python实现，先发送自编虚构工单并生成结构化summary/category/missingInformation。校验字段、超时和错误，模型配置通过环境变量提供；模拟服务与真实模型调用分开记录。模型建议不自动写回，模型调用不放在数据库写事务内。
 
-- **C知识检索主线**：准备少量有来源说明的虚构运维资料，为设备维护问答提供依据。先关键词检索基线，按实验需要再加向量检索。记录资料来源/许可、版本、切片和导入结果；按用户可见范围检索，返回可定位引用。检索无依据时明确无法给出基于资料的回答；把检索召回与生成错误分别评估，不凭模型编造出处。
-- **G只读工具Agent主线**：先两个受控工具查本人/授权范围工单、读工单详情；工具复用 Service，每次重验权限、参数和返回字段。模型不能执行任意 SQL、文件命令或任意 URL。从单工具到有限多步，设置步数/次数/总时长，处理超时、工具错误和上下文过期。持久化taskId、归属、状态和每步记录；追问后可继续，重启后恢复或明确中断，不能永久停在执行中。每步可审查，日志包含模型与Prompt版本。
-- **写工具更后置**：不把模型建议当授权。确认页面展示操作对象、字段和版本；用户确认绑定具体动作，再由服务重新做权限/状态/版本/参数检查，拒绝过期确认。给模型的资料或对话不能提升权限。
+Agent先对假数据使用 `list_tickets`/`find_ticket` 等有限只读工具，从单次调用到多步追问，控制调用次数、时间、结果条数并记录步骤；不允许任意SQL或系统命令。按需引入LangChain/LangGraph，随后加入虚构资料检索与引用，固定案例评测。
 
-AI 辅助编码单独训练：每个模块允许助手解释/评审，学习者必须追踪调用链、独立改一处需求、设计一个有意义的失败场景并定位修复；记录哪些代码由谁写。上述练习不等于产品已经实现 AI。
+联调先使用隔离演示数据、本机HTTP；访问真实用户工单前由Java执行认证、角色与归属授权，并建立可信服务间身份传递，不能以模型输出或用户自报ID作为授权。写操作、MCP、多Agent与模型训练后置。
+
+AI辅助编程与产品AI是不同能力：本人追踪调用链、独立改一个小需求并验证；代码存在和助手测试不自动代表掌握。
 
 ## 10. 延后项和验收记录
 
-评论、验收退回、独立处理记录表、统计看板、完整设备用户管理、缓存、MQ、微服务、Kubernetes、本地模型训练/部署、Python 服务、多 Agent 都不阻挡 A→B。线程/集合/算法仍作为短时基础训练；遇到真实并发问题再深入。
+评论、验收退回、独立处理记录表、统计看板、完整设备用户管理、缓存、MQ、微服务、Kubernetes、本地模型训练/部署、多Agent都不阻挡Python原型；Python Agent服务是本路线后续目标。线程/集合/算法仍作为短时基础训练；遇到真实并发问题再深入。
 
 最新构建和阶段检查表见 [运行与验收](/learning/project-verification/)。保留旧 Demo 和学习记录；不为了新路线删除成果，也不把尚未实施的 Web/AI 任务标为已掌握。
 
@@ -180,3 +173,8 @@ POST /api/db/tickets
 
 下一步：数据库派单 UPDATE（`WHERE id=? AND status='OPEN'`），并区分 404/409。
 
+## 20. 2026-11-13 审查与学习接续
+
+本次修复数据库创建的插入与回查事务、拒绝 JSON 小数转整数编号、文件存档重复编号、两数之和整数溢出，以及加载 Demo 的空指针提示。详见[全面检查记录](/learning/project-verification/#20-2026-11-13-隔离审查验证)。
+
+先学习本次 `@Transactional` 为什么加在 `DatabaseTicketRepository.create`，自己沿 HTTP→Service→Repository→Mapper 解释一次成功与失败的路径，再继续数据库派单。助手写好的事务和测试不算个人验收。

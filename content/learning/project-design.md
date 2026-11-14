@@ -2,7 +2,7 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-09T00:00:00+08:00",
+  "lastmod": "2026-11-14T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-09。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层；第19节记录11月9日数据库创建POST、自增主键与约束错误处理。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供只读查询和创建POST，数据库派单/解决/验收尚未闭环。
+核对日期：2026-11-14；本次只读审查并调整计划，未新增功能。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层；第19节记录11月9日数据库创建POST、自增主键与约束错误处理。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供只读查询和创建POST，数据库派单/解决/验收尚未闭环。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -36,7 +36,7 @@ ConsoleApp → TicketService → TicketRepository（接口）
 | FileTicketRepository | 启动时恢复到内部内存仓库；变更后自动保存 |
 | TicketFileStore | UTF-8 Properties 与工单列表转换、存档校验 |
 | TicketRepositorySwitchDemo | 共用业务流程运行两种实现，再新建文件仓库验证恢复 |
-| 四个 JUnit 测试类 | 标题 6、文件往返 2、内存仓库 7、Service 2，共 17 项 |
+| 原有四个 JUnit 测试类 | 标题 6、文件往返 2、内存仓库 7、Service 2，共 17 项；2026-11-13 另加 8 项隔离测试 |
 
 原有启动、两阶段重启和坏数据 Demo 保留；它们与正式 ConsoleApp 的运行入口和数据路径不同。正式业务仍用文件仓库；独立JDBC已有查询/更新实验，当前Web已有工单查询/创建和Service接线。SQL三表和JDBC Demo不等于正式业务已接库。
 
@@ -213,39 +213,19 @@ save 在内存准备 Properties 后才打开 Writer，null 列表元素会提前
 
 Java contains 与 MySQL 排序规则的大小写行为、String.length 与 CHAR_LENGTH 对 emoji 的计数不同；数据库课程需确定统一输入/搜索约定并补边界验证，不能默认为语义完全相同。
 
-## 11. 计划中的 AI 边界与失败路径
+## 11. Python模型与Java业务边界（计划）
 
-首版建议接口为 `POST /api/tickets/{id}/ai-assistance`，读取会话有权访问的工单；失败与业务写入解耦。返回建议对象而非自动更新业务数据：
+当前Java已有数据库查询/创建练习接口，认证与真实业务授权未完成；Python组件和模型调用尚不存在。Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调。
 
-```json
-{
-  "summary": "对现有描述的简短忠实摘要",
-  "category": "UNKNOWN",
-  "missingInformation": ["尚缺少的故障现象或发生时间"]
-}
-```
+先在Python使用虚构工单，通过模型SDK生成summary/category/missingInformation，程序校验字段与类型；key/模型/端点从环境注入，超时和429/5xx/无效输出单独处理，模型调用放在Java数据库事务外。模拟故障不能算真实模型验证。
 
-示例仅展示协议，**不是模型实测结果**。分类限定 DISPLAY/PRINTING/HVAC/OTHER/UNKNOWN，输入不足不能凭空确定；程序校验必需字段、类型、枚举、字符串长度、列表数量和整体响应大小。category 先不作为数据库字段；首版 summary 仅展示/复制参考，不提供写回。当前 rename 是控制台用例，不是已有 HTTP 接口。后续确需人工采纳改标题时，再明确报修人归属、可修改状态、expectedVersion 及日志事务，增加相应端点并测试。
+## 12. Python只读Agent、检索及Java联调（计划）
 
-计划新增 `ai/ModelClient`、`ai/AiAssistanceService`、`controller/AiAssistanceController` 及对应 DTO/测试，均当前不存在。先用 Java HTTP 客户端理解请求与响应，再决定是否引入 Spring AI；不为 AI 拆 Python 服务，不引入 Agent 框架作为第一步。
+先用Python函数查询本机假工单，模型请求工具后程序校验执行并回传，限制步数、调用数、耗时和返回大小；无结果、歧义、失败有明确路径。按需引入LangChain/LangGraph；记录任务、模型/提示版本、工具参数/结果摘要、耗时及错误，不能包含密钥。
 
-调用链：授权读取→选取最少必要输入→模型调用→结构/业务校验→返回建议。远程调用不在数据库写事务里。输入文本视为数据，不能让工单中的“忽略之前要求”等内容更改权限或工具能力；不将密码、密钥或整个用户表发给模型。
+Java业务接口只读联调先限定本机隔离演示数据。真实用户数据必须先完成Java端身份/资源授权和服务间可信身份传递；不得把模型生成的userId视为授权。Python通过受控HTTP工具调用Java，不暴露任意SQL/文件/命令。写工具需具体确认和重新鉴权及版本/幂等校验，后置。
 
-配置待选：供应商、base URL、模型名、API key 环境变量、费用上限、超时、重试及请求/响应长度上限。实现时按实际 API 文档核对是否支持原生 JSON Schema；即便支持仍做服务端校验。超时/429/5xx可做有上限的重试，鉴权失败和不合法请求不盲重试；无有效结果则明确“暂不可用/资料不足”，保留用户输入和正常业务入口。
-
-日志记录 requestId、内部用户标识、模型/提示版本、耗时、状态、token 使用量与错误类别；避免默认记录完整敏感正文，异常也不打印密钥。成本按实际供应商价格和真实用量计算；缺价格/usage 时记未知或有说明的估算，不填 0 冒充免费。
-
-## 12. G只读Agent与C知识检索目标（2026-11-07）
-
-B完成真实模型调用/结构校验/失败降级后进入G；G和C列为明确里程碑，以下均尚未实现。
-
-工具层在完成A2授权的Service外封装findVisibleTickets/getTicketDetail，schema限定参数、结果字段和数量。身份从会话取，每次执行检查权限，不提供任意SQL/URL/命令。Agent负责选择工具，Java负责执行和结果回传。
-
-任务先串行查询→详情→追问/整合，控制总步数、调用数、耗时、上下文和预算。任务持久化taskId/owner/status/model/promptVersion/时间，步骤保存toolName及参数/结果摘要、耗时、错误；不记录密钥或不必要全文。状态PENDING/RUNNING/WAITING_INPUT/SUCCEEDED/FAILED；补充输入可继续，重启后恢复或明确标记中断，先不做分布式调度。远端调用放在数据库写事务外。
-
-C准备少量自编虚构运维资料，明确来源说明/版本/设备范围；searchMaintenanceDocs返回可定位出处，检索遵守权限。先关键词基线，需要时再比较向量召回/重排；无依据不编造结论。B/G开始收集案例，C扩展固定任务集并分开检索、工具与生成错误，报告真实延迟/用量/成本。
-
-写工具、MCP、SubAgent与模型路由在G/C稳定后按需求扩展。写操作确认绑定具体动作/参数/版本，执行时仍重新鉴权和校验状态/幂等；模型不取得额外权限。
+C阶段加入自编资料检索、可定位引用和固定任务评测。任务恢复先覆盖等待输入后继续与重启中断可解释；多Agent/MCP/复杂调度按需后置。
 
 ## 13. 2026-10-29 独立 JDBC 更新事务练习（历史快照，以第16节及页首为当前状态）
 
@@ -385,3 +365,8 @@ HTTP Client
 
 边界：`Ticket` 领域对象目前不含 `version` 和 `deviceId/reporterId`，HTTP 响应只有 `id/title/status/assigneeId`；版本条件和派单/解决/验收状态流仍待下一步。
 
+## 20. 2026-11-13 创建事务与输入边界
+
+创建时由 Spring 管理的 `DatabaseTicketRepository.create` 使用 `@Transactional`：同一事务内完成 INSERT、获取生成的主键和回查。回填主键缺失、回查失败抛出运行时异常时回滚。此保护依赖通过 Spring 创建的代理调用；直接 `new DatabaseTicketRepository(...)` 不会自动得到声明式事务。事务不能保证客户端重试不会创建两条，也不代替权限校验。
+
+`spring.jackson.deserialization.accept-float-as-int=false` 禁止 JSON 小数被截断为整数；该设置对所有 JSON 整数属性生效，例如 3.8 和 3.0 不再当作 long 编号。文件保存前检查重复工单编号，发现重复时尚未打开覆盖文件；IO 写入中断仍没有原子替换保证。

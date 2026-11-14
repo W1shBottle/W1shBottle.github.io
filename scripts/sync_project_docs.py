@@ -30,6 +30,8 @@ LINKS = {
 }
 # Local project links after the workspace was grouped into projects/learning.
 LINKS.update({
+    "docs/audit-2026-11-13.md": "/learning/project-verification/#20-2026-11-13-隔离审查验证",
+    "audit-2026-11-13.md": "/learning/project-verification/#20-2026-11-13-隔离审查验证",
     "../../learning/java/实习训练/README.md": "/learning/start/",
     "../../learning/java/实习训练/离线自学包/01_20周弹性日程.md": "/learning/schedule/",
     "../../learning/java/实习训练/学习进度.md": "/learning/#progress",

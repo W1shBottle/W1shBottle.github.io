@@ -5,12 +5,12 @@
   "weight": 50,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-11-07T00:00:00+08:00"
+  "lastmod": "2026-11-14T00:00:00+08:00"
 }
 
-2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和[数据接口约定](/learning/contracts/)决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，**不计入进入AI的前置验收**。先通过 SQL 与短 JDBC，再从一个请求开始，不一次生成后端。
+2026-10-26 调整。本页是 A1/A2 的 Web 教材，周号仅为材料索引。下面的现行任务和[数据接口约定](/learning/contracts/)决定首版范围；保留的评论、退回、设备维护段落是后续扩展参考，**不计入进入AI的前置验收**。SQL、JDBC与查询/创建已跟练；从现有数据库创建事务及未完成的派单接口继续，不一次生成后端。
 
-截至2026-11-07最新学习反馈：文件版Web已接入TicketService、查询创建与三类统一错误处理；当天完成 MyBatis 临时只读查询，学习者验证 `/api/db/tickets/1/title` 返回200与标题JSON、999返回404、abc返回400，并能解释 Mapper 代理、`@Select`、`@Param` 和 `#{}`。正式Web仍用文件仓库，完整对象映射、数据库写入、认证授权、完整状态流、模型调用和Agent未接入。现有17个JUnit测试方法；手动HTTP请求不计入自动测试。下一步：新建 `TicketSummary` 与多列 `findSummaryById`，验证对象映射和JSON，再处理领域Ticket、数据库写入与自增主键。
+截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。 下一步：先读 `DatabaseTicketRepository.create`，画出POST→Service→Repository→Mapper→MySQL调用链，解释 `@Transactional` 生效条件和失败回滚；同时开始Python基础，使用虚构工单列表练变量、列表、字典与函数。理解后继续数据库派单的接口和404/409；不在真实数据库上做未隔离的写入实验。
 
 ## 现行最小任务顺序
 
@@ -18,8 +18,8 @@
 
 | 任务 | 先理解与阅读 | 由学习者完成 | 怎样验收 |
 | --- | --- | --- | --- |
-| HTTP入门（已跟练） | 已有OpsTicketApplication、HelloController、TicketController；请求/响应、JSON、参数注解 | 先验路径编号回显3/10/abc，再接业务查询与未来DTO；已有类不重建 | 解释类型转换400与对象不存在404，回显成功不能算查询成功；真实接口必须对应业务数据 |
-| MyBatis持久化（单列已接通） | 自己的 `sql/01_schema.sql`、JDBC参数绑定；未来 `mapper/TicketMapper.java` | 先按id查询，再创建回填真实id，再列表筛选 | 数据重启保留；Long null正确；独立加设备筛选；不沿用maxId+1，不为旧add签名填假编号 |
+| HTTP入门（正在学） | 已有OpsTicketApplication、HelloController、TicketController；请求/响应、JSON、参数注解 | 先验路径编号回显3/10/abc，再接业务查询与未来DTO；已有类不重建 | 解释类型转换400与对象不存在404，回显成功不能算查询成功；真实接口必须对应业务数据 |
+| MyBatis持久化 | 自己的 `sql/01_schema.sql`、JDBC参数绑定；未来 `mapper/TicketMapper.java` | 先按id查询，再创建回填真实id，再列表筛选 | 数据重启保留；Long null正确；独立加设备筛选；不沿用maxId+1，不为旧add签名填假编号 |
 | 最小状态流 | TicketStatus与assign；状态表、版本条件和事务 | assign/resolve/accept三个方法，新增ticket_action_log保存动作；resolve说明放note | OPEN→IN_PROGRESS→RESOLVED→CLOSED；旧版本409；记录失败时状态与版本一起回滚 |
 | 校验和错误 | DTO边界与Service业务规则；未来异常Advice | 必要参数校验、统一错误、requestId日志；列表稳定分页 | 非法字段400、未知对象404、业务冲突409；错误不返回假成功；日志无密码或密钥 |
 | 登录与授权 | 下方第12/13单元Session、CSRF、PasswordEncoder | 三角色登录；列表/详情/所有写操作检查角色与归属 | 未登录、他人工单、错误角色、停用工程师均拒绝；身份取会话；有效CSRF下仍能证明越权被拦 |

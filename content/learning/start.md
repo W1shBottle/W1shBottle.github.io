@@ -5,10 +5,10 @@
   "weight": 10,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-11-07T00:00:00+08:00"
+  "lastmod": "2026-11-14T00:00:00+08:00"
 }
 
-2026-11-07调整。用同一个设备运维工单平台，按 **A 后端业务与基础工程 → B 模型调用入门 → G 只读运维 Agent → C 知识检索与评测改进** 推进。A包含最小业务与必要工程；G只读Agent是主线里程碑，C加入小型运维知识检索。保留原C评测编号，评测从B开始。
+2026-11-14调整。继续同一个设备运维工单平台，路线为 **Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调**。先用假数据练Python Agent，真实数据联调前完成对应授权。
 
 每周以成果为目标，周内有弹性，每天约 3 小时；不承诺 20 周掌握全部内容。文件名中的“第几周”保留为旧教材索引，时间与实施顺序以新版[阶段日程](/learning/schedule/)为准。课后答案是局部参考，不能把生成的代码视为已学会。
 
@@ -19,7 +19,7 @@
 | [阶段日程](/learning/schedule/) | 当前证据、保留/调整/延后项、阶段门槛、下一批小任务 |
 | [Java与数据库](/learning/java-sql/) | 已练 Java/SQL 的复习入口，以及 JDBC 查询与事务 |
 | [Web与权限](/learning/web-security/) | 最小接口、MyBatis、状态流、Session 权限、错误处理 |
-| [测试部署与AI验证](/learning/testing-delivery/) | A2工程验收、B真实API、G只读Agent、C知识检索与评测 |
+| [测试部署与AI验证](/learning/testing-delivery/) | Y Python基础、B模型API、G只读Agent、C知识检索、Java联调 |
 | [投递与面试](/learning/spring-applications/) | 目标岗位核对和能力证据表达 |
 | [资料与排错](/learning/resources/) | 按当前步骤查官方文档与故障原因 |
 | [技能 To-do List 与验收模板](/learning/checklists/) | 分阶段技术栈、可勾选技能、已有证据与独立验收 |
@@ -29,17 +29,17 @@
 
 ## 当前接续点
 
-截至2026-11-07最新学习反馈：文件版Web已接入TicketService、两种统一异常响应和方法参数类型错误处理；当天进一步完成 MyBatis 临时只读查询，学习者验证 `/api/db/tickets/1/title` 返回200与标题JSON、999返回404、abc返回400。已经理解 `@Mapper` 代理、`@Select`、`@Param`、`#{}` 和 Controller→Mapper 调用链。正式 `/api/tickets` 仍使用文件仓库，完整对象映射、数据库写入、权限、完整状态流、模型调用和Agent尚未接入。现有17个JUnit测试方法，本次没有新增Web自动测试。 下一步：新建 `TicketSummary`（id、title、status），增加多列 `findSummaryById`，先验证对象映射与JSON，再处理列名差异、领域对象转换、数据库写入和自增主键。
+截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。 下一步：先读 `DatabaseTicketRepository.create`，画出POST→Service→Repository→Mapper→MySQL调用链，解释 `@Transactional` 生效条件和失败回滚；同时开始Python基础，使用虚构工单列表练变量、列表、字典与函数。理解后继续数据库派单的接口和404/409；不在真实数据库上做未隔离的写入实验。
 
-下一次：从 `TicketSummary` 与 `findSummaryById` 接续，先让 MyBatis 把 id、title、status 多列结果映射成对象并返回 JSON，再进入领域 Ticket 和数据库仓库。
+近期先解释数据库创建事务并用虚构工单入门Python；数据库派单继续循序完成。
 
 ## 第一版只做这些
 
 报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；能查自己的列表和详情，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。最小同源页面或 HTTP 客户端足以演示。
 
-A2 补齐登录、校验、统一错误、事务、关键测试、可重复启动与一次排错后，即可进入 B。不先做评论、退回、附件、设备后台大全、缓存、消息队列、微服务或 Kubernetes。
+Python基础和使用虚构数据的B/G实验可以与A2并行；连接真实工单前必须完成相应登录、资源授权和接口验证。不先做评论、退回、附件、设备后台大全、缓存、消息队列、微服务或 Kubernetes。
 
-B 只做已有工单摘要/分类建议：先授权读取已有工单，用户看完后审阅；模型不能直接改状态或派单。没有 API key、模型名称、可访问端点或预算时，先完成客户端契约和本地故障测试；结果标注“真实调用待配置”，不能用模拟响应声称 AI 验收通过。
+B先用Python和虚构工单做摘要/分类建议；真实工单场景须先授权读取，模型不能直接改状态或派单。没有 API key、模型名称、可访问端点或预算时，先完成客户端契约和本地故障测试；结果标注“真实调用待配置”，不能用模拟响应声称 AI 验收通过。
 
 ## 每次学习的四件事
 

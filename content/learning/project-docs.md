@@ -2,7 +2,7 @@
   "title": "设备运维工单项目文档",
   "description": "当前控制台、JDBC与Web练习进度，Java＋AI路线和运行入口。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-09T00:00:00+08:00",
+  "lastmod": "2026-11-14T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
@@ -12,7 +12,7 @@
 
 围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**。现有v0.1控制台包含内存/文件仓库、自动保存和恢复；SQL与独立JDBC已有跟练成果。现已加入 **Spring Boot 工单查询、创建与基础统一错误响应**，通过 Bean 配置和构造器注入复用原有 Service/文件仓库。2026-11-09 完成数据库创建 POST：`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`POST /api/db/tickets`、`@Options` 自增主键回填、回查 `Ticket` 和 201 JSON；外键/标题 CHECK 错误统一转 400。正式工单业务仍使用文件仓库，数据库派单/解决/验收、登录权限、AI与Agent仍待实现。
 
-文档核对日期：2026-11-09；最近学习证据更新到11月9日：学习者编写数据库创建 POST 四块代码并自行请求，得到真实自增id=9；助手编译并验证合法201、GET列表、外键/标题/编号错误400和数据库行，随后按学习者要求删除测试行并把自增重置为4。路线为 A 后端业务与基础工程 → B 模型调用入门 → G 只读运维 Agent → C 知识检索与评测改进。数据库临时只读查询、创建POST与约束错误映射已接通，正式业务、数据库派单/解决/验收、权限与AI仍待实现；历史笔记保留当时进度。
+文档核对日期：2026-11-14；最近学习证据更新到11月9日：学习者编写数据库创建 POST 四块代码并自行请求，得到真实自增id=9；助手编译并验证合法201、GET列表、外键/标题/编号错误400和数据库行，随后按学习者要求删除测试行并把自增重置为4。路线改为Java工单业务与Python基础并行，随后完成Python模型调用、只读Agent、资料检索与评测，最后按权限条件与Java联调。数据库临时只读查询、创建POST与约束错误映射已接通，正式业务、数据库派单/解决/验收、权限与AI仍待实现；历史笔记保留当时进度。
 
 ## 项目文档
 
@@ -21,6 +21,7 @@
 | [需求与开发计划](/learning/project-requirements/) | 业务规则、已实现功能和待完成任务 |
 | [设计与数据约定](/learning/project-design/) | 类的分工、方法契约、状态和存档格式 |
 | [运行与验收](/learning/project-verification/) | 环境、运行命令、测试证据和验收边界 |
+| [2026-11-13 全面检查记录](/learning/project-verification/#20-2026-11-13-隔离审查验证) | 本次修复、测试、实际学习证据和剩余风险 |
 
 学习入口：[路线说明](/learning/start/) · [阶段计划](/learning/schedule/) · [技能清单](/learning/checklists/) · [实际学习进度](/learning/#progress)。本组项目文档记录实现与验收，课程材料记录后续学习安排。
 
@@ -75,9 +76,9 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 
 列表和创建均显式支持末尾斜杠；详情路径没有额外配置尾斜杠。GET与POST同路径按请求方法区分；不要保留两个相同GET映射。请求体转换错误、Controller抛出的ResponseStatusException和方法参数类型不匹配已由GlobalExceptionHandler统一返回带message的JSON；状态码仍按400/404区分。尚未统一全部异常分支。
 
-在 IDEA 打开 `tickets.http`，逐条运行请求。成功 POST 每次都会新增并写文件；目前不是幂等接口。创建截图中编号2，具体编号以当时数据为准。先查列表、提交空白标题、再查列表，验证失败没有新增。2026-11-04学习者反馈重启后GET编号2恢复成功；同时反馈统一错误响应的三个场景通过，详见验收文档第15节。2026-11-07又反馈数据库临时接口1/999/abc分别符合200/404/400预期，详见第17节。2026-11-08反馈数据库多列列表接口返回编号1和3，补上`assigneeId`后输出符合预期；领域对象与Repository分层以源码核对为准，尚未新增Web自动测试。2026-11-09学习者编写数据库创建POST并自行请求得到id=9；助手用JDK 21启动应用验证合法201、GET列表、外键/标题/编号错误400并核对数据库行；完整矩阵不算学习者独立复跑。
+在 IDEA 打开 `tickets.http`，逐条运行请求。成功 POST 每次都会新增并写文件；目前不是幂等接口。创建截图中编号2，具体编号以当时数据为准。先查列表、提交空白标题、再查列表，验证失败没有新增。2026-11-04学习者反馈重启后GET编号2恢复成功；同时反馈统一错误响应的三个场景通过，详见验收文档第15节。2026-11-07又反馈数据库临时接口1/999/abc分别符合200/404/400预期，详见第17节。2026-11-08反馈数据库多列列表接口返回编号1和3，补上`assigneeId`后输出符合预期；领域对象与Repository分层以源码核对为准，当时尚未新增Web自动测试。2026-11-09学习者编写数据库创建POST并自行请求得到id=9；助手用JDK 21启动应用验证合法201、GET列表、外键/标题/编号错误400并核对数据库行；完整矩阵不算学习者独立复跑。
 
-普通 `java -jar` 仍启动 ConsoleApp，尚未配置 Spring Boot 可执行 Web 包。本机学习时使用一个进程访问存档；不要同时运行控制台和 Web 写同一文件，两者不共享运行中的 Map，也无并发保护。正式 `/api/tickets` 数据源仍是文件；只有临时 `/api/db/tickets/{id}/title` 读取 MySQL，独立 JDBC Demo 也不是正式业务数据源。
+普通 `java -jar` 仍启动 ConsoleApp，尚未配置 Spring Boot 可执行 Web 包。本机学习时使用一个进程访问存档；不要同时运行控制台和 Web 写同一文件，两者不共享运行中的 Map，也无并发保护。正式 `/api/tickets` 数据源仍是文件；`/api/db` 下已有的查询和创建接口使用数据库，独立 JDBC Demo 也不是正式业务数据源。
 
 ### MySQL 与 JDBC 环境（2026-10-28）
 
@@ -103,9 +104,11 @@ java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
 mvn test
 ```
 
-2026-10-26 使用 JDK 21 执行离线 `package` 成功；2026-10-28 更新驱动后再次执行 `mvn test`，17 项测试全部通过。10月30日学习者反馈加入Boot配置后测试通过；日结未重跑，未新增Web自动测试。10月31日的HTTP Client练习是手动验收，没有增加JUnit数量。现有 17 个 JUnit 测试：`TicketTest` 6 个、`TicketFileStoreTest` 2 个、`InMemoryTicketRepositoryTest` 7 个、`TicketServiceTest` 2 个。现有测试覆盖标题校验、文件往返、部分仓库契约和 Service 行为，不代表所有功能与故障场景均已自动覆盖。`update(null)` 的同类练习已跳过，不计入测试数量。
+2026-10-26 使用 JDK 21 执行离线 `package` 成功；2026-10-28 更新驱动后再次执行 `mvn test`，17 项测试全部通过。10月30日学习者反馈加入Boot配置后测试通过；日结未重跑，未新增Web自动测试。10月31日的HTTP Client练习是手动验收，没有增加JUnit数量。当时的 17 个 JUnit 测试：`TicketTest` 6 个、`TicketFileStoreTest` 2 个、`InMemoryTicketRepositoryTest` 7 个、`TicketServiceTest` 2 个。现有测试覆盖标题校验、文件往返、部分仓库契约和 Service 行为，不代表所有功能与故障场景均已自动覆盖。`update(null)` 的同类练习已跳过，不计入测试数量。
 
-2026-11-04助手使用JDK21执行离线`compile`成功；学习者通过HTTP Client验证错误JSON400、空白标题400、未知编号404及各自message。现有17项JUnit没有作为本次新测试重跑，也没有新增Web自动测试。
+2026-11-04助手使用JDK21执行离线`compile`成功；学习者通过HTTP Client验证错误JSON400、空白标题400、未知编号404及各自message。当时17项JUnit没有重跑，也没有新增Web自动测试。
+
+2026-11-13 助手在隔离副本使用 JDK 21 与 H2 内存数据库执行 `mvn -o test`：**25 项通过**，其中 17 项为原有测试，8 项为本次新增的事务、接口和边界测试。17 个原有 Demo 在隔离副本中运行成功。H2 不能替代真实 MySQL 兼容性测试；本次未连接或修改你的 MySQL，也未运行会提交 MySQL 更新的 JDBC Demo。测试由助手编写和执行，不视为学习者已掌握。详见[全面检查记录](/learning/project-verification/#20-2026-11-13-隔离审查验证)。
 
 `mvn test` 不会自动运行带 `main` 的 Demo。两种仓库的共用业务流程与文件重新加载可以单独运行：
 
@@ -134,10 +137,13 @@ JavaProject/
 │   │   ├── OpsTicketApplication.java       # Web启动入口
 │   │   ├── controller/
 │   │   │   ├── HelloController.java
-│   │   │   └── TicketController.java        # 查询、关键词和创建
+│   │   │   ├── TicketController.java        # 文件版查询、关键词和创建
+│   │   │   └── DatabaseTicketController.java # 数据库版查询和创建
 │   │   ├── config/TicketConfig.java        # Bean 配置
-│   │   ├── dto/                            # CreateTicketRequest、ErrorResponse
-│   │   ├── exception/GlobalExceptionHandler.java # 两类错误响应
+│   │   ├── dto/、mapper/TicketMapper.java   # 请求/响应数据和数据库 SQL 映射
+│   │   ├── DatabaseTicket*Service.java       # 数据库查询和创建业务
+│   │   ├── DatabaseTicketRepository.java    # 数据库查询、创建及事务边界
+│   │   ├── exception/GlobalExceptionHandler.java # 统一错误响应
 │   │   ├── ConsoleApp.java
 │   │   ├── Ticket.java
 │   │   ├── TicketStatus.java
@@ -146,7 +152,7 @@ JavaProject/
 │   │   ├── InMemoryTicketRepository.java
 │   │   ├── FileTicketRepository.java
 │   │   └── TicketFileStore.java
-│   └── test/java/cn/wishbottle/opsticket/   # JUnit、Demo 和 ArrayPractice
+│   └── test/java/                          # JUnit、隔离数据库测试、Demo 和练习
 ├── data/                                  # 控制台存档、演示数据与坏存档样本
 │   ├── tickets-app.properties             # 控制台运行时保存
 │   ├── tickets-auto-demo.properties       # 自动保存演示使用
@@ -166,20 +172,19 @@ JavaProject/
 
 ## 学习进度与下一步
 
-已用断点区分请求体转换与业务校验，完成 ErrorResponse 和方法参数类型错误等统一处理。11月9日完成数据库创建POST：`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`POST /api/db/tickets`、`DataIntegrityViolationException`处理已接通；学习者自行POST得到id=9，助手验证合法201、GET列表、外键/标题/编号错误400并核对数据库行。正式 `/api/tickets` 仍使用文件仓库；数据库派单/解决/验收、权限和AI尚未接入。
+截至 11 月 9 日，已用断点区分请求体转换与业务校验，完成 ErrorResponse 和方法参数类型错误等统一处理。11月9日完成数据库创建POST：`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`POST /api/db/tickets`、`DataIntegrityViolationException`处理已接通；学习者自行POST得到id=9，助手验证合法201、GET列表、外键/标题/编号错误400并核对数据库行。正式 `/api/tickets` 仍使用文件仓库；数据库派单/解决/验收、权限和AI尚未接入。
 
-| 阶段 | 项目交付 | 进入下一步的证据 |
+11 月 13 日助手补充了数据库创建的事务保护和自动验证；这属于代码已有能力，事务注解及测试原理仍需要本人学习。下一步先解释现有创建链路和事务，再进入数据库派单。
+
+| 阶段 | 亲手交付 | 达标证据 |
 | --- | --- | --- |
-| A1 最小后端业务 | Boot/MyBatis/MySQL，创建→派单→解决→验收，详情与必要筛选 | 请求真实落库、数据库生成主键；本人能解释调用链并独立改一个筛选或规则 |
-| A2 基础工程 | 身份/角色/归属、参数与异常、状态日志同事务、版本冲突/重复请求、关键测试、可复现启动 | 拒绝越权/非法迁移；故障回滚、竞争请求、重启和一次排错有证据 |
-| B 模型调用入门 | 对有权访问的工单生成摘要、分类建议、待补充信息，只展示参考 | 真实API记录、输出校验、超时/无效输出回退可核对；同时开始评测，达标即进入G |
-| G 只读运维Agent | 查可见工单、读详情，追问→工具调用→结果整合；上下文、任务状态和执行步骤持久化 | 单工具到有限多步实际可跑；中断可解释、补信息可继续、工具失败/越权/超限有明确退出 |
-| C 知识检索与评测改进 | 小型运维资料检索、可定位引用、固定任务集、基线、失败归因和回归 | 区分检索/工具/生成错误；报告真实任务完成率、延迟和用量成本，展示一次改进与剩余失败 |
+| A Java工单业务 | 读懂现有事务与数据库创建；逐步完成派单、状态与必要鉴权 | 能独立画请求链并解释回滚；派单接口、失败分支及授权按实际结果记录 |
+| Y Python基础 | venv、数据结构、函数/异常、JSON/HTTP；用虚构工单写查询小程序 | 自己写并调试按ID查询和空结果；解释Java Map/List与Python dict/list的区别 |
+| B Python模型调用 | 先用虚构数据请求一个模型，返回摘要和待补充信息；模拟错误 | 保存真实调用与模拟测试各一份证据，校验结构、超时与错误；没有API时仅标契约测试 |
+| G Python只读Agent | 先对假数据接查询工具，完成查找→追问/详情→回答，记录步骤 | 真实模型发出工具调用、Python执行；无结果、坏参数、超时和步数限制可复现 |
+| C 资料与评测 | 维护少量自编设备资料，检索并引用；用固定任务集改进 | 引用可定位；区分检索、工具、生成错误，记录真实样本数、耗时与用量 |
+| L 安全联调 | Java提供经授权的只读工单接口，Python通过HTTP调用 | 隔离演示数据、真实身份与授权已验证；无权请求不能读取；超时/故障可解释 |
 
-G只读Agent复用已授权Service，先findVisibleTickets/getTicketDetail，再加C的searchMaintenanceDocs。任务状态、工具步骤和模型/Prompt版本可追踪，等待输入可继续、重启中断有解释。模型/框架到接入时核对；写工具、MCP、SubAgent、模型路由后置。
+Python原型先使用虚构工单与受控只读工具；真实工单联调前Java必须具备认证、资源范围和服务身份校验。现有业务数据、接口和代码不因方案调整而改变。MCP、SubAgent、写工具、Redis和微服务按需后置。
 
-首版仍只保留工单闭环、必要查询和权限。设备与用户使用种子数据；评论、退回、全套后台、Redis/MQ、微服务和Kubernetes不阻挡B/G。AI辅助编程与产品内AI分别验收。
-
-新路线与技能编号详见学习阶段计划；历史文章保留当时事实，未把历史测试或跟练升级为本次独立验收。
-
-**下一项亲手任务**：完成数据库派单 UPDATE：`TicketMapper.assignTicket`、`TicketWriteRepository.assign`、`DatabaseTicketCommandService.assign`，用 `UPDATE ... WHERE id=? AND status='OPEN'` 检查影响行数，区分404/409，并验证工单3派单与重复派单。详见[11月9日笔记](https://wishbottle.cn/posts/ops-ticket-20261109/)。
+**下一项亲手任务**：先读 `DatabaseTicketRepository.create`，画出POST→Service→Repository→Mapper→MySQL调用链，解释 `@Transactional` 生效条件和失败回滚；同时开始Python基础，使用虚构工单列表练变量、列表、字典与函数。理解后继续数据库派单的接口和404/409；不在真实数据库上做未隔离的写入实验。

@@ -96,3 +96,12 @@ hugo --minify
 ## 2026-11-09 数据库创建 POST 与自增主键
 
 新增当天 ops-ticket 记录并发布第 15 篇。学习者编写 `CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`POST /api/db/tickets` 和 `DataIntegrityViolationException` 处理；学习者自行 POST 返回 id=9。助手用 JDK 21 编译并启动应用，验证合法 POST 201（id=4）、GET 列表包含新工单、外键/标题/编号错误均为 400，并核对数据库行；随后按学习者要求删除测试行并把自增重置为 4（`SHOW CREATE TABLE` 显示 `AUTO_INCREMENT=4`）。未完成数据库派单 UPDATE，W02/W05/W06 继续跟练；17 项 JUnit 和 Web 自动测试边界不变。下一步完成派单 UPDATE 与 404/409 映射。
+
+
+## 2026-11-14 Python Agent路线同步
+
+保留原时间线记录，仅新增kind=plan-update、status=in-progress的方案记录，不生成日报；最近实际学习反馈仍为11月9日，11月13日为助手隔离审查。当前Java创建查询已接数据库，派单Mapper/Service部分已有，Controller与完整流程待完成。
+
+原有6项验收与全部任务状态不变；新增Y01—Y06为待学，Python Agent是主方向，A与Y并行。看板必修58→64，比例10%→9%仅因范围增加；总69项，按需5项。Python模拟数据实验可提前，真实用户数据接入需Java侧认证与资源归属授权。
+
+项目/课程文档从原源文件生成；不将方案更新误写为独立完成、真实模型调用或测试通过。

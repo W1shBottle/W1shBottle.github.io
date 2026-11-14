@@ -5,16 +5,16 @@
   "weight": 40,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-11-07T00:00:00+08:00"
+  "lastmod": "2026-11-14T00:00:00+08:00"
 }
 
-> 2026-11-07 路线说明：本页“第几周”为教材单元，不是固定工期。第1—3单元已有项目成果，不整章重做；SQL与短JDBC已有跟练，当前文件版Web已接Service与三类错误处理，临时 MyBatis 单列查询已接通MySQL。各任务耗时只是拆分参考，能独立解释与修改才通过。后续顺序为必要SQL→短JDBC→Web/MyBatis→最小工程验收→AI，详见[阶段日程](/learning/schedule/)。
+> 2026-11-07 路线说明：本页“第几周”为教材单元，不是固定工期。第1—3单元已有项目成果，不整章重做；SQL、JDBC与MyBatis查询/创建已有跟练，当前先理解数据库创建事务，并继续数据库派单。各任务耗时只是拆分参考，能独立解释与修改才通过。后续顺序为必要SQL→短JDBC→Web/MyBatis→最小工程验收→AI，详见[阶段日程](/learning/schedule/)。
 
 ## 当前接续任务与代码位置
 
 现有源码在 `src\main\java\cn\wishbottle\opsticket`，测试/Demo在对应 `src/test/java`。第1单元提到的扁平src是历史练习位置，不要搬回去。现有SQL为项目 `sql/01_schema.sql` 至 `sql/06_transactions.sql`，先继续修改这些文件，避免重复建一套脚本。
 
-截至2026-11-07最新学习反馈：文件版Web已接入TicketService、查询创建与三类统一错误处理；当天完成 MyBatis 临时只读查询，学习者验证 `/api/db/tickets/1/title` 返回200与标题JSON、999返回404、abc返回400，并能解释 Mapper 代理、`@Select`、`@Param` 和 `#{}`。正式Web仍用文件仓库，完整对象映射、数据库写入、认证授权、完整状态流、模型调用和Agent未接入。现有17个JUnit测试方法；手动HTTP请求不计入自动测试。下一步：新建 `TicketSummary` 与多列 `findSummaryById`，验证对象映射和JSON，再处理领域Ticket、数据库写入与自增主键。
+截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。 下一步：先读 `DatabaseTicketRepository.create`，画出POST→Service→Repository→Mapper→MySQL调用链，解释 `@Transactional` 生效条件和失败回滚；同时开始Python基础，使用虚构工单列表练变量、列表、字典与函数。理解后继续数据库派单的接口和404/409；不在真实数据库上做未隔离的写入实验。
 
 第5单元先通过关联、稳定分页和提交/回滚；GROUP BY和基础EXPLAIN通过小实验理解，性能大数据对比后置。第6单元先只读查询、再回滚更新、最后创建读主键的短JDBC桥接，不维护第二套正式持久层。数据库生成ID，不能将控制台maxId+1直接复制到数据库；既有Repository接口可在有真实需要时调整。
 

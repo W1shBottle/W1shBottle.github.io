@@ -5,10 +5,16 @@
   "weight": 80,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-07T00:00:00+08:00"
+  "lastmod": "2026-11-14T00:00:00+08:00"
 }
 
-这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年11月7日调整为A→B→G→C；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
+这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年11月14日调整为Java工单与Python Agent并行；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
+
+## Python与Agent入门资料
+
+- [Python官方教程](https://docs.python.org/zh-cn/3/tutorial/)：结合Java基础学习list/dict、函数、模块和异常；每节配虚构工单练习。
+- [FastAPI官方教程](https://fastapi.tiangolo.com/zh/tutorial/first-steps/)：在基础语法之后做一个本地只读假接口。
+- [LangChain Agent文档](https://docs.langchain.com/oss/python/langchain/agents) 和 [LangGraph概览](https://docs.langchain.com/oss/python/langgraph/overview)：先理解模型与工具调用，再按多步状态需要选用；具体版本到安装时核对。
 
 ## 按阶段选择资料
 
@@ -90,7 +96,7 @@ Spring Boot管理的依赖优先跟随其依赖管理清单。若使用本机MyS
 
 ## AI接入时才需要的资料与排错
 
-先读所选提供方的官方API文档，核对请求协议、模型名、结构化输出支持、错误码、用量字段与计费；目前提供方未选择，key/端点/预算仍待配置。Java客户端先查[JDK21 HttpClient](https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/HttpClient.html)，不必先安装Agent框架。
+先读所选提供方的官方API文档，核对请求协议、模型名、结构化输出支持、错误码、用量字段与计费；目前提供方未选择，key/端点/预算仍待配置。Python客户端可先查提供方的官方SDK或Python标准库HTTP文档；Java HttpClient作为可选对照，不必先安装Agent框架。
 
 概念参考：[结构化输出与校验](https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html)、[应用端工具执行](https://docs.spring.io/spring-ai/reference/api/tools.html)。这些链接用于理解，并不代表项目已安装Spring AI。
 

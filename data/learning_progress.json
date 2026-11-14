@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-09",
-  "stage": "A1 数据库创建POST与自增主键已完成 → 数据库派单UPDATE",
+  "updated": "2026-11-14",
+  "stage": "Java数据库创建事务与派单接续；并行学习Python基础",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -216,6 +216,16 @@
       "verification": "学习者编写四块代码并自行 POST 一次，返回 id=9；助手用 JDK 21 编译，启动应用验证合法 POST 201（id=4）、GET 列表包含新工单、deviceId/reporterId=999 与标题/编号错误均返回 400，并核对数据库行。随后按学习者要求删除测试行并把自增重置为 4（SHOW CREATE TABLE 显示 AUTO_INCREMENT=4）。未完成数据库派单 UPDATE，未新增 Web 自动测试，JUnit 仍 17 项。",
       "next": "明天完成数据库派单 UPDATE：TicketMapper.assignTicket、TicketWriteRepository.assign、DatabaseTicketCommandService.assign、404/409 映射，并验证工单 3 派单与重复派单。",
       "note": "/posts/ops-ticket-20261109/"
+    },
+    {
+      "date": "2026-11-14",
+      "project": "ops-ticket",
+      "kind": "plan-update",
+      "status": "in-progress",
+      "title": "将Python作为Agent开发主语言",
+      "summary": "保留Java工单后端，Python基础和Agent假数据实验提前并行；逐步完成模型调用、只读工具、知识检索与安全联调。",
+      "verification": "本次核对源码和已有记录，不新增学习验收或重跑项目测试；11月9日学习者反馈创建POST返回自增id，11月13日助手在隔离H2环境完成25项测试。数据库派单接口、用户授权和Python Agent仍未完成。",
+      "next": "解释数据库创建请求链和事务回滚，再继续派单接口；并行配置Python虚拟环境，用虚构工单练列表、字典和筛选。"
     }
   ],
   "current_project": "ops-ticket"

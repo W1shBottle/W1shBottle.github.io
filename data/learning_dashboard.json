@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "6a503c976b237ab5badc3820dcc9006deed035743de7c05093dbe90f2c61e13d",
-  "updated": "2026-11-09",
+  "source_sha256": "fdd45ec95aefe46bd5e38e2215bcc778ab575e58bc24921a9cb016bfef637f85",
+  "updated": "2026-11-14",
   "project": "设备运维工单",
-  "stage": "A1 数据库创建POST与自增主键已完成 → 数据库派单UPDATE",
+  "stage": "Java数据库创建事务与派单接续；并行学习Python基础",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -11,33 +11,33 @@
       "title": "数据库生成 ID 与映射",
       "status": "practicing",
       "optional": false,
-      "description": "`POST /api/db/tickets` 已接通；学习者自行 POST 返回 id=9，确认自增主键回填与回查；助手运行合法 201/非法 400 矩阵并核对数据库行。约束错误的独立复跑与口头解释仍待学习者完成。"
+      "description": "学习者跟写数据库 POST 并取得自增 id=9；独立解释主键回填和 add/create 差别，再逐步补映射字段。"
     },
     {
       "id": "W05",
       "title": "MyBatis",
       "status": "practicing",
       "optional": false,
-      "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰、Mapper代理和生成主键；POST创建已运行。继续独立定位一个字段映射错误并验证明细。"
+      "description": "`TicketMapper` 已做参数绑定、查询映射及创建主键回填；条件UPDATE已有部分源码，本人理解和端到端验证待完成。独立看 SQL，定位字段名或映射错误。"
     },
     {
       "id": "W06",
       "title": "分层与核心状态流",
       "status": "practicing",
       "optional": false,
-      "description": "已串起Controller→CommandService→WriteRepository→Mapper的创建链并验证自增主键与回查；派单、解决、验收等UPDATE状态流尚未完成，下一步派单。"
+      "description": "已有数据库查询/创建分层链路；派单的Mapper/仓库/Service已有部分代码，但Controller与完整验收未完成，解决、验收与动作记录仍待实现。"
     }
   ],
-  "next": "明天完成数据库派单 UPDATE：TicketMapper.assignTicket、TicketWriteRepository.assign、DatabaseTicketCommandService.assign、404/409 映射，并验证工单 3 派单与重复派单。",
-  "note": "/posts/ops-ticket-20261109/",
+  "next": "解释数据库创建请求链和事务回滚，再继续派单接口；并行配置Python虚拟环境，用虚构工单练列表、字典和筛选。",
+  "note": null,
   "stats": {
     "accepted": 6,
     "practicing": 18,
-    "planned": 34,
-    "total": 58,
-    "percent": 10,
-    "accepted_width": 10.3448,
-    "practicing_width": 31.0345
+    "planned": 40,
+    "total": 64,
+    "percent": 9,
+    "accepted_width": 9.375,
+    "practicing_width": 28.125
   },
   "groups": [
     {
@@ -194,35 +194,35 @@
           "title": "数据库生成 ID 与映射",
           "status": "practicing",
           "optional": false,
-          "description": "`POST /api/db/tickets` 已接通；学习者自行 POST 返回 id=9，确认自增主键回填与回查；助手运行合法 201/非法 400 矩阵并核对数据库行。约束错误的独立复跑与口头解释仍待学习者完成。"
+          "description": "学习者跟写数据库 POST 并取得自增 id=9；独立解释主键回填和 add/create 差别，再逐步补映射字段。"
         },
         {
           "id": "W03",
           "title": "HTTP 和 JSON",
           "status": "practicing",
           "optional": false,
-          "description": "文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复和三种统一400/404响应正确；GET abc的转换边界与独立解释继续验收。"
+          "description": "文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复、统一400/404响应及 GET abc 转换边界正确；数据库 POST 有本人运行反馈，独立解释继续验收。"
         },
         {
           "id": "W04",
           "title": "Spring Boot/MVC 与依赖注入",
           "status": "practicing",
           "optional": false,
-          "description": "已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版HTTP已接通，独立对象/调用链解释、数据库与权限仍待验证。"
+          "description": "已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版及数据库查询/创建 HTTP 已接通；独立解释对象/调用链、权限仍待验收。"
         },
         {
           "id": "W05",
           "title": "MyBatis",
           "status": "practicing",
           "optional": false,
-          "description": "已跟练`@Param`/`#{}`、单列与多列结果、列表、下划线转驼峰、Mapper代理和生成主键；POST创建已运行。继续独立定位一个字段映射错误并验证明细。"
+          "description": "`TicketMapper` 已做参数绑定、查询映射及创建主键回填；条件UPDATE已有部分源码，本人理解和端到端验证待完成。独立看 SQL，定位字段名或映射错误。"
         },
         {
           "id": "W06",
           "title": "分层与核心状态流",
           "status": "practicing",
           "optional": false,
-          "description": "已串起Controller→CommandService→WriteRepository→Mapper的创建链并验证自增主键与回查；派单、解决、验收等UPDATE状态流尚未完成，下一步派单。"
+          "description": "已有数据库查询/创建分层链路；派单的Mapper/仓库/Service已有部分代码，但Controller与完整验收未完成，解决、验收与动作记录仍待实现。"
         }
       ],
       "stats": {
@@ -249,7 +249,7 @@
           "title": "参数校验与异常响应",
           "status": "practicing",
           "optional": false,
-          "description": "ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误、Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。"
+          "description": "ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误已跟练，Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。"
         },
         {
           "id": "E02",
@@ -270,7 +270,7 @@
           "title": "业务事务",
           "status": "planned",
           "optional": false,
-          "description": "Service 划定状态变更＋ticket_action_log 的事务；在真实测试库令日志写失败，核对状态/版本也回滚，解释事务生效与异常传播。"
+          "description": "助手已为数据库创建的仓库方法加事务并用 H2 测试回滚；本人需解释代理、传播和异常。未来再为状态变更＋ticket_action_log 划事务，在真实测试库验证。"
         },
         {
           "id": "E05",
@@ -326,13 +326,75 @@
       }
     },
     {
+      "id": "python",
+      "code": "Y",
+      "title": "Python基础",
+      "prefixes": [
+        "Y"
+      ],
+      "description": "在虚构工单上练集合、函数、异常、JSON、HTTP和FastAPI。",
+      "tasks": [
+        {
+          "id": "Y01",
+          "title": "解释器与虚拟环境",
+          "status": "planned",
+          "optional": false,
+          "description": "确认Python及venv位置，创建独立环境，理解pip和依赖隔离；运行hello并说明退出/重新进入。"
+        },
+        {
+          "id": "Y02",
+          "title": "工单数据与集合",
+          "status": "planned",
+          "optional": false,
+          "description": "变量、字符串、if/for、list/dict；构造虚构工单列表，独立筛选OPEN并验证无结果。"
+        },
+        {
+          "id": "Y03",
+          "title": "函数与异常",
+          "status": "planned",
+          "optional": false,
+          "description": "参数、返回值、None、异常与模块；编写假数据按ID查询，处理不存在与非法输入，自己调试一次。"
+        },
+        {
+          "id": "Y04",
+          "title": "JSON与基础测试",
+          "status": "planned",
+          "optional": false,
+          "description": "从虚构JSON载入工单、处理缺字段/格式错误，写并解释一个正常和一个失败用例；不读取真实敏感数据。"
+        },
+        {
+          "id": "Y05",
+          "title": "HTTP与接口调试",
+          "status": "planned",
+          "optional": false,
+          "description": "理解请求方法、状态、JSON、超时，Python调用只读本地假接口；能定位端口错误与404。"
+        },
+        {
+          "id": "Y06",
+          "title": "FastAPI最小服务",
+          "status": "planned",
+          "optional": false,
+          "description": "完成health与假工单查询接口，Pydantic校验参数，验证成功、错误参数和无结果；记录如何启动与停止。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 0,
+        "planned": 6,
+        "total": 6,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 0.0
+      }
+    },
+    {
       "id": "ai",
       "code": "B",
-      "title": "模型调用入门",
+      "title": "Python模型调用",
       "prefixes": [
         "B"
       ],
-      "description": "用Java接入真实模型，处理结构校验、超时和失败回退。",
+      "description": "先以虚构工单练Python模型API、结构校验、超时与故障处理。",
       "tasks": [
         {
           "id": "B01",
@@ -343,10 +405,10 @@
         },
         {
           "id": "B02",
-          "title": "Java模型客户端",
+          "title": "Python模型客户端",
           "status": "planned",
           "optional": false,
-          "description": "写 ModelClient，用 Java HttpClient 调一个真实提供方；端点/模型/key从配置取，设置连接和请求超时。未配置时明确标记真实调用未验证。"
+          "description": "用Python SDK或HTTP客户端接一个真实提供方；端点/模型/key从环境配置取，设置超时。使用虚构数据，未配置时标记真实调用未验证。"
         },
         {
           "id": "B03",
@@ -360,7 +422,7 @@
           "title": "提示与上下文设计",
           "status": "planned",
           "optional": false,
-          "description": "只给有权读取且必要的工单内容，明确任务与输出格式；信息少则UNKNOWN/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。"
+          "description": "先只给虚构工单；真实联调时只给有权读取且必要的内容，明确任务与输出格式；信息少则UNKNOWN/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。"
         },
         {
           "id": "B05",
@@ -381,7 +443,7 @@
           "title": "业务接入与验证",
           "status": "planned",
           "optional": false,
-          "description": "AiAssistanceService复用详情授权；无权工单不发模型请求。至少保存一组真实调用和一组模拟故障证据，二者不能混写为模型效果。"
+          "description": "先用虚构数据验证Python服务；真实数据联调时Java必须校验详情授权、服务身份及资源范围，无权工单不发模型请求。真实模型与模拟故障证据分开。"
         }
       ],
       "stats": {
@@ -397,25 +459,25 @@
     {
       "id": "agent",
       "code": "G",
-      "title": "只读运维Agent",
+      "title": "Python只读运维Agent",
       "prefixes": [
         "G"
       ],
-      "description": "从真实工具调用到追问、上下文、任务持久化与执行追踪。",
+      "description": "先用假数据完成工具调用和任务流程，再安全接入工单接口。",
       "tasks": [
         {
           "id": "G01",
           "title": "工具契约与授权",
           "status": "planned",
           "optional": false,
-          "description": "封装findVisibleTickets/getTicketDetail；定义参数类型、范围、返回上限和错误。身份从会话取，每次复用A2授权，拒绝任意SQL/命令和伪造userId。"
+          "description": "先封装Python假数据查询；真实联调时定义findVisibleTickets/getTicketDetail参数、结果上限和错误，Java端依据可信身份逐次授权，不允许任意SQL/命令或模型伪造userId。"
         },
         {
           "id": "G02",
           "title": "真实工具调用",
           "status": "planned",
           "optional": false,
-          "description": "保存模型请求工具、Java校验执行、结果回传和最终回答；区别文本建议与真实执行，错误参数不执行，模拟结果不计模型成功。"
+          "description": "保存模型请求工具、Python校验执行、结果回传和最终回答；错误参数不执行，模型和数据均用真实/模拟标签区分。"
         },
         {
           "id": "G03",
@@ -447,10 +509,10 @@
         },
         {
           "id": "G07",
-          "title": "独立修改与验证",
+          "title": "安全联调与独立修改",
           "status": "planned",
           "optional": false,
-          "description": "自己增加一个有界查询条件，从工具Schema、Service到SQL验证；覆盖成功、空结果、无权和工具故障，口述模型和程序的职责边界。"
+          "description": "假数据阶段独立加查询条件；真实联调前补Java认证、用户/资源授权及服务身份传递。Python通过受控HTTP读Java接口，覆盖成功、空结果、无权、超时，不由模型自报权限或执行任意SQL。"
         }
       ],
       "stats": {
@@ -625,5 +687,5 @@
       "description": "在单Agent基线上定义一项独立子任务或按任务选模型/备用模型，比较完成率、交接错误、延迟和成本，保留无收益结果。"
     }
   ],
-  "total_items": 63
+  "total_items": 69
 }

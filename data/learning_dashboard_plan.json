@@ -43,22 +43,31 @@
       "description": "补齐权限、事务、测试与 Linux 部署，交付可靠的小版本。"
     },
     {
+      "id": "python",
+      "code": "Y",
+      "title": "Python基础",
+      "prefixes": [
+        "Y"
+      ],
+      "description": "在虚构工单上练集合、函数、异常、JSON、HTTP和FastAPI。"
+    },
+    {
       "id": "ai",
       "code": "B",
-      "title": "模型调用入门",
+      "title": "Python模型调用",
       "prefixes": [
         "B"
       ],
-      "description": "用Java接入真实模型，处理结构校验、超时和失败回退。"
+      "description": "先以虚构工单练Python模型API、结构校验、超时与故障处理。"
     },
     {
       "id": "agent",
       "code": "G",
-      "title": "只读运维Agent",
+      "title": "Python只读运维Agent",
       "prefixes": [
         "G"
       ],
-      "description": "从真实工具调用到追问、上下文、任务持久化与执行追踪。"
+      "description": "先用假数据完成工具调用和任务流程，再安全接入工单接口。"
     },
     {
       "id": "evaluation",
