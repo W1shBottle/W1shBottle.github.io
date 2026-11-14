@@ -52,6 +52,15 @@
       "description": "在虚构工单上练集合、函数、异常、JSON、HTTP和FastAPI。"
     },
     {
+      "id": "redis",
+      "code": "R",
+      "title": "Redis核心与实战",
+      "prefixes": [
+        "R"
+      ],
+      "description": "数据结构、TTL、Python访问、工单缓存与Agent会话；分阶段练习。"
+    },
+    {
       "id": "ai",
       "code": "B",
       "title": "Python模型调用",

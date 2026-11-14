@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source_sha256": "fdd45ec95aefe46bd5e38e2215bcc778ab575e58bc24921a9cb016bfef637f85",
+  "source_sha256": "2bfb6c8de5754ef8d2cf42f0745bc175df489eea18018c9304b9c88244419f2d",
   "updated": "2026-11-14",
   "project": "设备运维工单",
   "stage": "Java数据库创建事务与派单接续；并行学习Python基础",
@@ -28,16 +28,16 @@
       "description": "已有数据库查询/创建分层链路；派单的Mapper/仓库/Service已有部分代码，但Controller与完整验收未完成，解决、验收与动作记录仍待实现。"
     }
   ],
-  "next": "解释数据库创建请求链和事务回滚，再继续派单接口；并行配置Python虚拟环境，用虚构工单练列表、字典和筛选。",
+  "next": "先看Java事务P101并对照创建请求链；并行看Python变量P10，后续按阶段学习Redis基础与项目实践。",
   "note": null,
   "stats": {
     "accepted": 6,
     "practicing": 18,
-    "planned": 40,
-    "total": 64,
+    "planned": 44,
+    "total": 68,
     "percent": 9,
-    "accepted_width": 9.375,
-    "practicing_width": 28.125
+    "accepted_width": 8.8235,
+    "practicing_width": 26.4706
   },
   "groups": [
     {
@@ -388,6 +388,54 @@
       }
     },
     {
+      "id": "redis",
+      "code": "R",
+      "title": "Redis核心与实战",
+      "prefixes": [
+        "R"
+      ],
+      "description": "数据结构、TTL、Python访问、工单缓存与Agent会话；分阶段练习。",
+      "tasks": [
+        {
+          "id": "R01",
+          "title": "基础命令与TTL",
+          "status": "planned",
+          "optional": false,
+          "description": "能解释Redis用途和String/Hash/List，使用虚构数据操作 `SET/GET/EXPIRE/TTL`、`HSET/HGETALL`、`RPUSH/LRANGE`，预测并验证键过期。按指定分P分次学习，不默认已安装Redis。"
+        },
+        {
+          "id": "R02",
+          "title": "Python访问Redis",
+          "status": "planned",
+          "optional": false,
+          "description": "按官方redis-py文档连接隔离服务，对虚构数据读写、设置TTL，解释返回类型；设置连接超时并处理连接错误，记录真实运行与模拟错误。"
+        },
+        {
+          "id": "R03",
+          "title": "虚构设备缓存",
+          "status": "planned",
+          "optional": false,
+          "description": "先查Redis，缺失时读MySQL并写缓存；写数据库后删除对应缓存，设置TTL，Redis不可用回源数据库；验证命中、失效、异常，说明并发导致短暂陈旧的限制。真实用户工单先认证授权，不用公共键缓存私有信息。"
+        },
+        {
+          "id": "R04",
+          "title": "Agent会话记忆",
+          "status": "planned",
+          "optional": false,
+          "description": "为虚构会话使用List、长度上限和TTL保存最近对话，验证顺序、不同会话隔离、过期与Redis异常；故障时明确临时内存降级或报错，不声称永久保存。接入真实数据前必须有身份与资源授权。"
+        }
+      ],
+      "stats": {
+        "accepted": 0,
+        "practicing": 0,
+        "planned": 4,
+        "total": 4,
+        "percent": 0,
+        "accepted_width": 0.0,
+        "practicing_width": 0.0
+      }
+    },
+    {
       "id": "ai",
       "code": "B",
       "title": "Python模型调用",
@@ -670,7 +718,7 @@
       "title": "部署和性能扩展",
       "status": "planned",
       "optional": true,
-      "description": "需要可复现容器环境再学Docker/Compose；有查询瓶颈再考虑Redis与失效策略；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。"
+      "description": "需要可复现容器环境再学Docker/Compose；Redis基础、缓存和会话按R项学习；按需深入多级缓存和性能调优；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。"
     },
     {
       "id": "O06",
@@ -687,5 +735,5 @@
       "description": "在单Agent基线上定义一项独立子任务或按任务选模型/备用模型，比较完成率、交接错误、延迟和成本，保留无收益结果。"
     }
   ],
-  "total_items": 69
+  "total_items": 73
 }

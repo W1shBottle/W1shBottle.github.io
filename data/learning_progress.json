@@ -222,10 +222,10 @@
       "project": "ops-ticket",
       "kind": "plan-update",
       "status": "in-progress",
-      "title": "将Python作为Agent开发主语言",
-      "summary": "保留Java工单后端，Python基础和Agent假数据实验提前并行；逐步完成模型调用、只读工具、知识检索与安全联调。",
-      "verification": "本次核对源码和已有记录，不新增学习验收或重跑项目测试；11月9日学习者反馈创建POST返回自增id，11月13日助手在隔离H2环境完成25项测试。数据库派单接口、用户授权和Python Agent仍未完成。",
-      "next": "解释数据库创建请求链和事务回滚，再继续派单接口；并行配置Python虚拟环境，用虚构工单练列表、字典和筛选。"
+      "title": "Python Agent路线与Redis课程安排",
+      "summary": "保留Java工单后端，Python基础和Agent假数据实验提前并行；逐步完成模型调用、只读工具、知识检索与安全联调。 Redis基础、设备缓存和会话记忆列为后续主线，按阶段提供具体视频和练习。",
+      "verification": "本次核对源码和已有记录，不新增学习验收或重跑项目测试；11月9日学习者反馈创建POST返回自增id，11月13日助手在隔离H2环境完成25项测试。数据库派单接口、用户授权和Python Agent仍未完成。 Redis课程按公开目录筛选，本环境未逐段播放；本次不新增学习验收。",
+      "next": "先看Java事务P101并对照创建请求链；并行看Python变量P10，后续按阶段学习Redis基础与项目实践。"
     }
   ],
   "current_project": "ops-ticket"

@@ -35,6 +35,7 @@
 | --- | --- | --- |
 | A Java工单业务 | 读懂现有事务与数据库创建；逐步完成派单、状态与必要鉴权 | 能独立画请求链并解释回滚；派单接口、失败分支及授权按实际结果记录 |
 | Y Python基础 | venv、数据结构、函数/异常、JSON/HTTP；用虚构工单写查询小程序 | 自己写并调试按ID查询和空结果；解释Java Map/List与Python dict/list的区别 |
+| R Redis核心与项目实践 | 学数据结构、过期、Python连接；逐步加虚构工单缓存和Agent会话记忆 | 自己解释命中/失效、回源与会话隔离，验证过期与Redis不可用的处理 |
 | B Python模型调用 | 先用虚构数据请求一个模型，返回摘要和待补充信息；模拟错误 | 保存真实调用与模拟测试各一份证据，校验结构、超时与错误；没有API时仅标契约测试 |
 | G Python只读Agent | 先对假数据接查询工具，完成查找→追问/详情→回答，记录步骤 | 真实模型发出工具调用、Python执行；无结果、坏参数、超时和步数限制可复现 |
 | C 资料与评测 | 维护少量自编设备资料，检索并引用；用固定任务集改进 | 引用可定位；区分检索、工具、生成错误，记录真实样本数、耗时与用量 |
@@ -55,6 +56,20 @@
 | 6 | 继续完成必要角色/归属和测试，不公开未授权开发接口 | 在隔离演示中调用模型API生成摘要；配置密钥/预算/超时 | 真实模型调用与模拟故障分别记录；无可用API则只完成本地契约 |
 
 **下一次亲手做：** 先读 `DatabaseTicketRepository.create`，画出POST→Service→Repository→Mapper→MySQL调用链，解释 `@Transactional` 生效条件和失败回滚；同时开始Python基础，使用虚构工单列表练变量、列表、字典与函数。理解后继续数据库派单的接口和404/409；不在真实数据库上做未隔离的写入实验。
+
+## 按阶段看网课与做练习
+
+学习方式：每次只安排当前任务相关的1—2集，给出视频链接、分P、时长和要留意的问题；看完由学习者反馈、提问，再回到现有工单项目独立做小练习。下面时长约数仅为视频播放时长，不含暂停和练习；不要求从头看完大课。看过、跟练和能独立完成分开记录。以下是依据公开简介和选集目录筛选，当前环境受B站访问限制，未逐段播放；若选集顺序或时长变化，以标题为准。配套付费服务不作为学习前提，安装与API版本以官方文档和本机环境为准。
+
+1. **现在：Java事务，先看一集。** 黑马JavaWeb [P101「事务管理-介绍与操作」](https://www.bilibili.com/video/BV1yGydYEE3H/?p=101)约20分钟；接着看 [P102「Spring事务管理-介绍」](https://www.bilibili.com/video/BV1yGydYEE3H/?p=102)约16分钟。看后对照 `DatabaseTicketRepository.create`，画POST→Service→Repository→Mapper→MySQL调用链，说出出错时为什么需要回滚；结合[Spring事务官方说明](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)核对代理和异常规则。先理解，不操作真实业务数据。
+2. **现在并行：Python基础（Y）。** 黑马Python课先看 [P10「变量」](https://www.bilibili.com/video/BV1sHU9BmEne/?p=10)约19分钟和 [P13「数据类型」](https://www.bilibili.com/video/BV1sHU9BmEne/?p=13)约14分钟；再按练习需要看 [P22 if](https://www.bilibili.com/video/BV1sHU9BmEne/?p=22)、[P30 for](https://www.bilibili.com/video/BV1sHU9BmEne/?p=30)、[P37列表](https://www.bilibili.com/video/BV1sHU9BmEne/?p=37)、[P52字典](https://www.bilibili.com/video/BV1sHU9BmEne/?p=52)和[P58函数](https://www.bilibili.com/video/BV1sHU9BmEne/?p=58)。每次用2—3条虚构工单做筛选或查询；解释Python的list/dict与Java集合的区别。先检查现有Python，按[官方venv教程](https://docs.python.org/zh-cn/3/library/venv.html)建立项目隔离环境，不重装或替换现有环境。
+3. **Python集合基础后：Redis基础（R01）。** 选择黑马Redis课的 [P4「认识Redis」](https://www.bilibili.com/video/BV1cr4y1671t/?p=4)约7分钟、[P9「通用命令」](https://www.bilibili.com/video/BV1cr4y1671t/?p=9)约12分钟、[P10「String类型」](https://www.bilibili.com/video/BV1cr4y1671t/?p=10)约13分钟；分次再看 [P12 Hash](https://www.bilibili.com/video/BV1cr4y1671t/?p=12)约12分钟、[P13 List](https://www.bilibili.com/video/BV1cr4y1671t/?p=13)约15分钟。学完在隔离环境用假数据练 `SET/GET/EXPIRE/TTL`、`HSET/HGETALL`、`RPUSH/LRANGE`，预测并观察过期。课程录于2022年，基础概念仍可参考；安装、客户端和版本以届时官方文档为准，不照搬Linux安装到Windows，也不需要现在安装。
+4. **Python函数/环境就绪后：Python访问Redis（R02）。** 看 [Python操作Redis P9](https://www.bilibili.com/video/BV16vFPevEt6/?p=9)约15分钟，随后参照[Redis官方redis-py入门](https://redis.io/docs/latest/develop/clients/redis-py/)完成假数据读写、过期、连接超时和错误处理；理解返回bytes与字符串的区别。服务暂不可用时记录错误，不把模拟结果算成真实连接。
+5. **有Java查询后：工单缓存（R03）。** 看黑马Redis课的 [P35「什么是缓存」](https://www.bilibili.com/video/BV1cr4y1671t/?p=35)约10分钟、[P36「添加商户缓存」](https://www.bilibili.com/video/BV1cr4y1671t/?p=36)约14分钟，再看 [P38「缓存更新策略」](https://www.bilibili.com/video/BV1cr4y1671t/?p=38)约26分钟。模仿思路给隔离的虚构设备查询加缓存：先读Redis，未命中读MySQL并设置TTL；更新MySQL后删除对应缓存；Redis故障回落数据库。按[官方Cache-Aside说明](https://redis.io/docs/latest/develop/use-cases/cache-aside/)说明并发时可能出现短暂不一致，TTL只是兜底，不声称强一致。真实私有工单需先认证授权，不能用公共缓存键绕过权限。
+6. **完成假数据Agent后：会话记忆（R04）。** 用Python的 `redis-py` 将虚构对话按session分开存入List、限制长度并设置TTL，验证对话顺序、会话隔离、过期和Redis不可用时的短暂内存降级或明确错误；这只是上下文记忆练习，不等于永久保存或已具备身份授权。初版模型调用和只读Agent可以先用内存完成，不必等Redis。
+7. **后续需要HTTP和Agent时。** FastAPI先看 [P3「第一个程序」](https://www.bilibili.com/video/BV1rgd3B6ErE/?p=3)约19分钟，再按需看[P7路径参数](https://www.bilibili.com/video/BV1rgd3B6ErE/?p=7)和[P11请求体](https://www.bilibili.com/video/BV1rgd3B6ErE/?p=11)，只做假工单查询接口。模型与工具先理解原生调用，再参考LangChain课的 [P6「模型调用」](https://www.bilibili.com/video/BV15jug6yEyM/?p=6)、[P13「结构化输出」](https://www.bilibili.com/video/BV15jug6yEyM/?p=13)、[P14「工具调用」](https://www.bilibili.com/video/BV15jug6yEyM/?p=14)；框架版本变化时查[官方Agent文档](https://docs.langchain.com/oss/python/langchain/agents)，不为了看课一次装完全部依赖。
+
+Redis先掌握上述基础和两个实际场景；集群、分布式锁、消息队列、底层源码与性能调优等在具体岗位或项目需要时再扩展，不与首个Agent串行绑定。
 
 ## Python从零学到什么程度
 
@@ -85,6 +100,6 @@ Python先调用本机、隔离数据上的只读接口，记录HTTP状态、超�
 
 ## 后续按需与求职
 
-Java基础、SQL、Git和常见数据结构继续训练；Redis在确有缓存/会话需求后学；MCP、SubAgent、模型路由、微服务和模型训练在单Agent可靠后按岗位补。Python项目要能独立开发和调试，不能只列框架名。Java方向岗位与Python Agent方向分别对照岗位真实要求；查看届别、到岗天数和实习期，不保证录用。
+Java基础、SQL、Git和常见数据结构继续训练；Redis基础及缓存、会话练习是计划内主线，基础可以在Python集合后穿插，缓存和会话跟随项目逐步实现。MCP、SubAgent、模型路由、微服务和模型训练在单Agent可靠后按岗位补。Python项目要能独立开发和调试，不能只列框架名。Java方向岗位与Python Agent方向分别对照岗位真实要求；查看届别、到岗天数和实习期，不保证录用。
 
 参考：[Python官方教程](https://docs.python.org/zh-cn/3/tutorial/) · [FastAPI入门](https://fastapi.tiangolo.com/zh/tutorial/first-steps/) · [LangChain Agents](https://docs.langchain.com/oss/python/langchain/agents) · [LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)。具体依赖版本在实际接入时确认兼容，不为了追新重装现有Java环境。

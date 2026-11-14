@@ -14,6 +14,10 @@
 
 先配置独立venv，练习list/dict、if/for、函数、异常、JSON与HTTP。用2—3条自己虚构的工单编写查ID/筛选状态函数，覆盖空列表、不存在、错误参数。完成后再做FastAPI的health与只读假数据接口。安装依赖前核对官方兼容版本，记录环境；无需改变Java/MySQL环境。
 
+## R：Redis课程与工单实践（待学）
+
+先用虚构数据学习String、Hash、List、TTL和Python连接；再给隔离设备查询做缓存，验证未命中回源、更新后失效和Redis异常；完成假数据Agent后用Redis保存限长、隔离、可过期的会话上下文。缓存与会话不能代替数据库、用户认证或资源授权。基础知识是本路线的一部分，但不妨碍用内存先完成初版Agent。具体分P、时长、顺序和验收见[阶段网课与练习](/learning/schedule/#按阶段看网课与做练习)和[R技能清单](/learning/checklists/#rredis核心与项目实践)。
+
 ## B：Python模型调用入门
 
 先在Python脚本中使用虚构工单，输出summary/category/missingInformation。可先做不连网的模拟客户端检查字段和异常，再用一个可用模型API完成真实调用；模拟结果不当成模型效果。模型名、key、预算从环境配置；设置超时、限制重试，记录错误类别与用量，未知成本写未知。

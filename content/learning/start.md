@@ -19,7 +19,7 @@
 | [阶段日程](/learning/schedule/) | 当前证据、保留/调整/延后项、阶段门槛、下一批小任务 |
 | [Java与数据库](/learning/java-sql/) | 已练 Java/SQL 的复习入口，以及 JDBC 查询与事务 |
 | [Web与权限](/learning/web-security/) | 最小接口、MyBatis、状态流、Session 权限、错误处理 |
-| [测试部署与AI验证](/learning/testing-delivery/) | Y Python基础、B模型API、G只读Agent、C知识检索、Java联调 |
+| [测试部署与AI验证](/learning/testing-delivery/) | Y Python基础、R Redis、B模型API、G只读Agent、C知识检索、Java联调 |
 | [投递与面试](/learning/spring-applications/) | 目标岗位核对和能力证据表达 |
 | [资料与排错](/learning/resources/) | 按当前步骤查官方文档与故障原因 |
 | [技能 To-do List 与验收模板](/learning/checklists/) | 分阶段技术栈、可勾选技能、已有证据与独立验收 |
@@ -37,7 +37,7 @@
 
 报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；能查自己的列表和详情，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。最小同源页面或 HTTP 客户端足以演示。
 
-Python基础和使用虚构数据的B/G实验可以与A2并行；连接真实工单前必须完成相应登录、资源授权和接口验证。不先做评论、退回、附件、设备后台大全、缓存、消息队列、微服务或 Kubernetes。
+Python基础和使用虚构数据的B/G实验可以与A2并行；Redis基础与工单缓存和会话练习已列为主线，在具备相应基础后穿插学习，不是首个假数据Agent的前置条件。连接真实工单前必须完成相应登录、资源授权和接口验证。评论、退回、附件、设备后台大全、消息队列、微服务和 Kubernetes按需后置。
 
 B先用Python和虚构工单做摘要/分类建议；真实工单场景须先授权读取，模型不能直接改状态或派单。没有 API key、模型名称、可访问端点或预算时，先完成客户端契约和本地故障测试；结果标注“真实调用待配置”，不能用模拟响应声称 AI 验收通过。
 

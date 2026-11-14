@@ -16,6 +16,12 @@
 - [FastAPI官方教程](https://fastapi.tiangolo.com/zh/tutorial/first-steps/)：在基础语法之后做一个本地只读假接口。
 - [LangChain Agent文档](https://docs.langchain.com/oss/python/langchain/agents) 和 [LangGraph概览](https://docs.langchain.com/oss/python/langgraph/overview)：先理解模型与工具调用，再按多步状态需要选用；具体版本到安装时核对。
 
+## 视频学习入口与Redis资料
+
+- [按阶段看网课与做练习](/learning/schedule/#按阶段看网课与做练习)：包含事务、Python、Redis、FastAPI和Agent的具体分P、时长与项目任务；每次只选当前需要的一两节。
+- Redis主课：[黑马Redis P4 认识Redis](https://www.bilibili.com/video/BV1cr4y1671t/?p=4)、[P9 通用命令](https://www.bilibili.com/video/BV1cr4y1671t/?p=9)、[P10 String](https://www.bilibili.com/video/BV1cr4y1671t/?p=10)，Hash/List与缓存分P见阶段计划。
+- Python实践：[Python操作Redis P9](https://www.bilibili.com/video/BV16vFPevEt6/?p=9)和[redis-py官方入门](https://redis.io/docs/latest/develop/clients/redis-py/)；缓存策略参考[Redis官方Cache-Aside](https://redis.io/docs/latest/develop/use-cases/cache-aside/)。旧课程只按章节学概念，安装和版本以官方文档为准。视频根据公开选集筛选，未逐段播放。
+
 ## 按阶段选择资料
 
 | 编号 | 资料 | 什么时候读什么 |
