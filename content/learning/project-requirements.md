@@ -2,7 +2,7 @@
   "title": "工单项目需求与开发计划",
   "description": "最小业务闭环、阶段验收与后续 AI、Agent 任务。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-14T00:00:00+08:00",
+  "lastmod": "2026-11-15T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
@@ -10,7 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-14；本次为计划调整和源码只读检查，未新增实现或运行测试。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层；11月9日完成`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`和`POST /api/db/tickets`，学习者自行POST得到真实自增id，助手运行合法201/非法400矩阵并核对数据库行。当前正式工单业务仍使用文件仓库；数据库派单/解决/验收、权限和AI尚未接入。11月13日助手补充数据库创建的事务保护和隔离自动测试，不能据此认定学习者已掌握事务。
+核对日期：2026-11-15；11月14日为计划调整和源码只读检查。11月15日数据库查询分层整理和隔离验证见本页末节。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层；11月9日完成`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`和`POST /api/db/tickets`，学习者自行POST得到真实自增id，助手运行合法201/非法400矩阵并核对数据库行。当前正式工单业务仍使用文件仓库；数据库派单练习接口已接通并在隔离环境走通成功路径，数据库解决/验收、权限和AI尚未接入。11月13日助手补充数据库创建的事务保护和隔离自动测试，不能据此认定学习者已掌握事务。
 
 ## 1. 项目背景与目标用户
 
@@ -22,7 +22,7 @@
 | 工程师 ENGINEER | 查看分给自己的工单、提交处理结果 |
 | 管理员 ADMIN | 查看工单、派单（首版设备使用初始化数据） |
 
-Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表，不能据此认定已实现认证。`assign` 接受正整数工程师编号，不会验证这个人是否存在或具有工程师角色。
+Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表，不能据此认定已实现认证。文件版 `Ticket.assign` 接受正整数工程师编号，不验证目标用户是否存在或具有工程师角色；数据库派单 SQL 会检查目标用户的工程师角色与启用状态，但尚无操作人认证授权。
 
 ## 2. 当前需求及验收口径
 
@@ -46,12 +46,13 @@ Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表�
 | R16 | 控制台交互 | 已实现创建、查看全部、改标题、派单、关键词查询、退出；数字或业务输入错误提示后返回菜单 |
 | R17 | 关键词查询 | 拒绝 null 和 trim 后空白；标题包含匹配，区分大小写；无结果返回空列表 |
 | R18 | 可执行 JAR | 已配置 ConsoleApp 入口；Java 21 构建，支持 java -jar；运行存档相对于工作目录 |
-| R19 | Web问候与查询参数 | Boot4.1.2启动；HelloController返回JSON，name缺失使用访客；学习者反馈参数场景通过 |
+| R19 | Web问候与查询参数 | 已作为入门练习完成；2026-11-15 按学习者要求移除 HelloController，历史学习记录保留 |
 | R20 | HTTP工单查询 | Web已接文件仓库；详情200/未知404、列表与可选关键词筛选；非法关键词400，课堂GET已验 |
 | R21 | HTTP创建工单 | DTO接JSON标题，Service校验与文件自动保存，成功201；空白标题400且数量不变由学习者反馈 |
 | R22 | 基础统一错误响应 | ErrorResponse与GlobalExceptionHandler已实现；请求体转换错误400、空白标题400、未知工单404和方法参数类型错误400均有学习者反馈，带message；尚未覆盖全部异常分支 |
 | R23 | MyBatis只读查询与对象映射 | 已接通单列、`TicketSummary`多列与列表、`assigneeId`自动映射、`Ticket.restore`领域转换；学习者反馈列表200与编号1/3 JSON。正式业务仍走文件仓库，领域接口以源码核对为主 |
-| R24 | 数据库创建 | `POST /api/db/tickets` 已接通 DTO、命令 Service、仓库与 MyBatis INSERT；学习者曾请求得到自增编号 9，助手另做请求矩阵。11 月 13 日补充创建事务保护；派单、完整状态流及独立验收仍待完成 |
+| R24 | 数据库创建 | `POST /api/db/tickets` 已接通 DTO、命令 Service、仓库与 MyBatis INSERT；学习者曾请求得到自增编号 9，助手另做请求矩阵。11 月 13 日补充创建事务保护；完整状态流及独立验收仍待完成，派单成功路径见 R25 |
+| R25 | 数据库派单 | Mapper、仓库/Service、请求 DTO 和 Controller 源码已写；SQL 含工程师角色及启用条件，0 行按工单存在性返回 404 或 409；学习者已在隔离 H2 验证成功路径，操作人权限、完整版本冲突和真实 MySQL 隔离集成验证待完成 |
 
 标题长度按 Java `String.length()` 的 UTF-16 代码单元计数，不按用户感知字符数计数。文件版自动编号面向单线程练习；数据库创建已有自增编号，但业务级并发和重复请求保护尚未完成。
 
@@ -178,3 +179,9 @@ POST /api/db/tickets
 本次修复数据库创建的插入与回查事务、拒绝 JSON 小数转整数编号、文件存档重复编号、两数之和整数溢出，以及加载 Demo 的空指针提示。详见[全面检查记录](/learning/project-verification/#20-2026-11-13-隔离审查验证)。
 
 先学习本次 `@Transactional` 为什么加在 `DatabaseTicketRepository.create`，自己沿 HTTP→Service→Repository→Mapper 解释一次成功与失败的路径，再继续数据库派单。助手写好的事务和测试不算个人验收。
+
+## 2026-11-15 数据库查询分层整理
+
+数据库查询统一经 `TicketQueryRepository → DatabaseTicketRepository → TicketMapper`；保留摘要 DTO 和领域对象两种已有形式，不删除练习接口或更改返回格式。摘要按原约定返回，领域对象仍经 `Ticket.restore` 校验。文件版和数据库版接口分别使用文件和 MySQL，不能因名称相近认定两者已可互换。
+
+当前数据库派单 SQL 按工单编号、OPEN 状态和目标用户的工程师角色及启用状态条件更新，并递增版本；Controller 已提供成功与 400/404/409 分支。学习者已在隔离 H2 验证成功路径；本人失败分支练习、expectedVersion 比较、登录授权与真实 MySQL 隔离集成验证仍待完成。

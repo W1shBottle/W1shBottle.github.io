@@ -67,7 +67,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </table></div>
 <p>项目目录：<code>JavaProject</code>（以下路径均相对项目根目录），包名 <code>cn.wishbottle.opsticket</code>。控制台和早期 Demo 保留为已完成成果；后续数据库版复用业务规则，必要时调整存储契约，不为了兼容文件编号生成方式写出错误数据库逻辑。</p>
 <h2 id="chapter-start-当前接续点">当前接续点</h2>
-<p>截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。 下一步：先用已看过的Python课程少量复习字典和函数，再用2—3条虚构工单写find_ticket查询和查无结果；根据实际卡点回看对应章节。随后复用或按需要搭建模型客户端，让模型请求只读工具、程序执行并回传结果。Java线继续理解数据库创建事务与派单，不接入真实敏感数据。</p>
+<p>截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。 下一步：先用已看过的Python课程少量复习字典和函数，再用2—3条虚构工单写find_ticket查询和查无结果；根据实际卡点回看对应章节。随后复用或按需要搭建模型客户端，让模型请求只读工具、程序执行并回传结果。Java线先在隔离环境练习派单失败分支，继续理解创建事务与影响行数，不接入真实敏感数据。</p>
 <p>学习者已看过Python+AI课程第1—119集，但很久没写，先少量复习，再把虚构工单查询接成只读Agent工具；Java数据库创建事务与派单可并行。看过课程不等同于项目已实现或已通过验收。</p>
 <h2 id="chapter-start-第一版只做这些">第一版只做这些</h2>
 <p>报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；能查自己的列表和详情，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。最小同源页面或 HTTP 客户端足以演示。</p>
@@ -90,7 +90,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </blockquote>
 <p>更新：2026-11-15。同一工单项目继续使用Java/Spring Boot/MySQL，Python作为后续Agent主语言，不重写已完成的业务。</p>
 <h2 id="chapter-project-实际起点">实际起点</h2>
-<p>截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。</p>
+<p>截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。</p>
 <h2 id="chapter-project-目标和阶段">目标和阶段</h2>
 <p>Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调。</p>
 <div class="table-scroll" tabindex="0"><table>
@@ -172,7 +172,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <p>后续Java只读业务接口经认证授权后，再使用Python HTTP客户端安全接入；验证跨用户拒绝、超时与空结果。模型不能拼任意SQL，也不能传入用户身份冒充授权。维护资料使用虚构内容并记录来源/版本与引用，真假模型结果和模拟失败分别记录。</p>
 <p>真实业务联调前，不公开当前无授权的开发接口，不上传真实敏感工单。Redis基础、虚构设备缓存和Agent会话记忆已纳入主线，分阶段学习，不阻挡内存版原型；MCP、自动派单、微服务和训练模型按需要后置。</p>
 <h2 id="chapter-project-技术与学习方式">技术与学习方式</h2>
-<p>沿用 Java 21、Maven；当前MySQL8.4.13与Connector/J26.10.0已经过独立恢复和连接验证。SQL、短JDBC和MyBatis查询/创建已有跟练；下一步理解创建事务与未完成的派单流程，同时少量复习已看过的Python课程并做假工单查询，不重复升级现有环境。框架版本到接入时按官方兼容表固定；认证仍优先Spring Security＋Session Cookie，保留CSRF并使用框架密码编码器。</p>
+<p>沿用 Java 21、Maven；当前MySQL8.4.13与Connector/J26.10.0已经过独立恢复和连接验证。SQL、短JDBC和MyBatis查询/创建已有跟练，派单成功路径已在隔离H2练习；下一步继续理解创建事务并验证派单失败分支，同时少量复习已看过的Python课程并做假工单查询，不重复升级现有环境。框架版本到接入时按官方兼容表固定；认证仍优先Spring Security＋Session Cookie，保留CSRF并使用框架密码编码器。</p>
 <p>两种 AI 学习分开：AI 辅助编程可用于解释/评审/排错，但每个模块要自己读调用链、独立改需求并验证；产品内 AI 功能则必须自己接入、测试真实 API 和失败路径。安排少量高价值测试，避免重复抄同类断言；数据库事务必须用真实 MySQL 验证，不能只看 Mock。</p>
 <p>每次约 3 小时是时间预算，不是作业定额：先回忆已有代码，再讲一个新概念、独立写一个小变更、验证并记录帮助和困难。每个阶段至少独立实现/修改一个功能、解释一次设计、排查一个故障。完整任务见 <a href="#chapter-schedule">阶段学习计划</a>。</p>
 <h2 id="chapter-project-求职匹配与信息边界">求职匹配与信息边界</h2>
@@ -181,9 +181,9 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <p>官方技术参考：<a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">结构化输出仍需校验</a> · <a href="https://docs.spring.io/spring-ai/reference/api/tools.html" rel="noopener noreferrer">工具调用由应用控制执行</a>。引用用于设计判断，不表示本项目已使用 Spring AI。</p></section><section id="chapter-schedule" class="chapter"><div class="chapter-meta"><span>03 / 14</span><a href="#top">回到目录</a></div><h1>Java工单与Python Agent阶段学习计划</h1><p>更新：2026-11-15。继续设备运维工单项目；不删除既有代码、不把Java整体改写为Python。每天约3小时、每周弹性安排；下列阶段和学习次数是拆分参考，不是完成期限。</p>
 <p><strong>Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调。</strong> A/Y并行；B/G使用假数据即可提前练习。真正连接受限的用户工单数据前，Java端和服务间必须完成身份、资源范围和接口授权。评测从第一次模型调用开始。</p>
 <h2 id="chapter-schedule-当前进度与证据">当前进度与证据</h2>
-<p>截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。</p>
+<p>截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。</p>
 <p>2026-11-15学习者反馈：已经看过黑马Python+AI课程第1—119集，但很久没有写，需要少量复习。课程目录涵盖Python基础、函数/异常、HTTP、模型调用、Streamlit与会话管理；观看不等于已跟练、独立掌握或本工单项目已实现。</p>
-<p><code>/api/tickets</code>仍使用文件仓库；<code>/api/db/tickets</code>是数据库练习接口。不要把Mapper里已有的派单SQL当成HTTP派单流程已经完成，也不把助手的隔离测试算为独立掌握。</p>
+<p><code>/api/tickets</code>仍使用文件仓库；<code>/api/db/tickets</code>是数据库练习接口。派单HTTP成功路径已由学习者在隔离H2练习；本人失败分支和真实MySQL隔离集成仍待验证，也不把助手的隔离测试算为独立掌握。</p>
 <h2 id="chapter-schedule-项目要做成什么样">项目要做成什么样</h2>
 <p>用户说：“查一下我的打印机工单，告诉我当前进度，并根据设备资料给出可参考的下一步。”</p>
 <ol>
@@ -260,19 +260,19 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </tr>
 <tr>
 <td>2</td>
-<td>阅读派单已有Mapper、Repository和Service，划出未完成部分</td>
+<td>回顾派单Controller、Service、Repository和Mapper，画出调用链</td>
 <td>把查询整理成 <code>find_ticket(ticket_id)</code> 只读工具，处理缺失与非法输入</td>
 <td>普通查询和无结果可复现，不访问真实工单</td>
 </tr>
 <tr>
 <td>3</td>
-<td>继续设计数据库派单接口与404/409</td>
+<td>在隔离环境练习派单失败分支，解释400/404/409</td>
 <td>复用已有模型调用代码或环境；必要时回看已看过的P98，用假工单生成摘要</td>
 <td>真调用、模拟结果或未配置分别标记，API失败可解释</td>
 </tr>
 <tr>
 <td>4</td>
-<td>用隔离数据继续验证Java派单，不影响真实库</td>
+<td>继续设计派单权限与版本冲突，保留真实库数据</td>
 <td>看工具调用视频，接入受限工具：模型请求→程序校验执行→结果反馈</td>
 <td>有模型发起的工具调用和最终答案，限制次数与超时</td>
 </tr>
@@ -290,7 +290,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </tr>
 </tbody>
 </table></div>
-<p><strong>下一次亲手做：</strong> 先用已看过的Python课程少量复习字典和函数，再用2—3条虚构工单写find_ticket查询和查无结果；根据实际卡点回看对应章节。随后复用或按需要搭建模型客户端，让模型请求只读工具、程序执行并回传结果。Java线继续理解数据库创建事务与派单，不接入真实敏感数据。</p>
+<p><strong>下一次亲手做：</strong> 先用已看过的Python课程少量复习字典和函数，再用2—3条虚构工单写find_ticket查询和查无结果；根据实际卡点回看对应章节。随后复用或按需要搭建模型客户端，让模型请求只读工具、程序执行并回传结果。Java线先在隔离环境练习派单失败分支，继续理解创建事务与影响行数，不接入真实敏感数据。</p>
 <h2 id="chapter-schedule-按阶段看网课与做练习">按阶段看网课与做练习</h2>
 <p>学习方式：每次只安排当前任务相关的1—2集，给出视频链接、分P、时长和要留意的问题；看完由学习者反馈、提问，再回到现有工单项目独立做小练习。下面时长约数仅为视频播放时长，不含暂停和练习；不要求从头看完大课。看过、跟练和能独立完成分开记录。以下是依据公开简介和选集目录筛选，当前环境受B站访问限制，未逐段播放；若选集顺序或时长变化，以标题为准。配套付费服务不作为学习前提，安装与API版本以官方文档和本机环境为准。</p>
 <ol>
@@ -1972,7 +1972,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>先关闭工具入口并修权限，模型提示词不能代替鉴权</td>
 </tr>
 </tbody>
-</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-11-15。截至2026-11-14核对源码与学习记录：文件版Web已有查询和创建；MyBatis数据库练习接口已有查询、创建和自增主键回填。学习者11月9日跟练并亲自POST得到id=9；11月13日助手为创建过程补事务，并在隔离H2环境运行25项JUnit与17个Demo，这不代表本人已独立掌握，也不等于真实MySQL复测。派单Mapper条件UPDATE、仓库和Service方法已有部分代码，但Controller派单接口、状态冲突与端到端验收未完成。认证授权、解决/验收、Python Agent与真实模型调用均未完成。 本次调整计划，没有新增验收勾选。</p>
+</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-11-15。截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。 本次调整计划，没有新增验收勾选。</p>
 <h2 id="chapter-checklists-怎样看这份清单">怎样看这份清单</h2>
 <ul>
 <li><code>[x]</code>：这一条明确的小练习或解释已有通过记录，不代表整门技术已经熟练。</li>
@@ -2107,7 +2107,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <li>□ <strong>S02【已练习】表设计与约束</strong>：画 device/app_user/ticket 关系；解释主键、自增、外键、唯一、NOT NULL、CHECK 和 NULL。能指出外键不检查 ENGINEER 角色、CHECK 不代替合法状态迁移。</li>
 <li>□ <strong>S03【已练习，独立解释待巩固】多表查询</strong>：JOIN/LEFT/RIGHT和别名已讲解；OPEN筛选得到打印机且处理人NULL，用户已反馈通过。继续在后续功能解释每个ON及NULL保留，不重抄整套查询。</li>
 <li>□ <strong>S04【已练习】统计和分页</strong>：COUNT为2/1，LEFT JOIN用COUNT(t.id)统计工单，HAVING=0筛出无工单设备；稳定分页、同筛选总数及偏移后空页已有反馈。下一业务变体验证独立解释，暂不标成全部熟练。</li>
-<li>□ <strong>S05【已练习】事务与影响行数</strong>：已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；正式业务尚无数据库并发保护。</li>
+<li>□ <strong>S05【已练习】事务与影响行数</strong>：已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；数据库派单已有OPEN前置条件，expectedVersion比较与完整并发控制仍待实现。</li>
 <li>□ <strong>S06【待学】索引与 EXPLAIN 入门</strong>：围绕一个列表查询说明索引作用、代价与执行计划；保留样本量和结果，不能靠很少数据声称高性能。基础可沿途学，深度调优不挡 B。</li>
 </ul>
 <h2 id="chapter-checklists-w把-sql-接成后端业务a1">W：把 SQL 接成后端业务（A1）</h2>
@@ -2115,10 +2115,10 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <ul>
 <li>□ <strong>W01【查询与更新事务已跟练】JDBC</strong>：Connection/PreparedStatement/ResultSet、参数绑定、wasNull与资源关闭；JdbcTicketUpdateDemo已实现版本查询、影响行数检查、提交/回滚与方法提取，用户反馈通过、助手核对源码。没有新增JDBC自动测试；独立改写与完整业务接库仍待验收。</li>
 <li>□ <strong>W02【已跟练，继续验收】数据库生成 ID 与映射</strong>：学习者跟写数据库 POST 并取得自增 id=9；独立解释主键回填和 add/create 差别，再逐步补映射字段。</li>
-<li>□ <strong>W03【已跟练，继续验收】HTTP 和 JSON</strong>：文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复、统一400/404响应及 GET abc 转换边界正确；数据库 POST 有本人运行反馈，独立解释继续验收。</li>
+<li>□ <strong>W03【已跟练，继续验收】HTTP 和 JSON</strong>：文件版GET/POST已有200/201/400/404证据；用断点观察setter/getter、缺字段与错误JSON。学习者反馈重启恢复及统一错误响应通过；另用Apifox在隔离H2完成派单POST和前后GET，独立解释与本人失败分支练习继续验收。</li>
 <li>□ <strong>W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入</strong>：已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版及数据库查询/创建 HTTP 已接通；独立解释对象/调用链、权限仍待验收。</li>
-<li>□ <strong>W05【已跟练，继续验收】MyBatis</strong>：<code>TicketMapper</code> 已做参数绑定、查询映射及创建主键回填；条件UPDATE已有部分源码，本人理解和端到端验证待完成。独立看 SQL，定位字段名或映射错误。</li>
-<li>□ <strong>W06【已跟练，继续验收】分层与核心状态流</strong>：已有数据库查询/创建分层链路；派单的Mapper/仓库/Service已有部分代码，但Controller与完整验收未完成，解决、验收与动作记录仍待实现。</li>
+<li>□ <strong>W05【已跟练，继续验收】MyBatis</strong>：<code>TicketMapper</code> 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。<code>version + 1</code> 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。</li>
+<li>□ <strong>W06【已跟练，继续验收】分层与核心状态流</strong>：已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。</li>
 </ul>
 <h2 id="chapter-checklists-e能运行能交付的工程能力a2">E：能运行、能交付的工程能力（A2）</h2>
 <p>Python基础与虚构数据上的B/G实验可与A2并行；真实数据联调前完成对应认证/授权。性能专题、完整后台和容器编排不作为原型门槛。</p>
@@ -2126,7 +2126,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <li>□ <strong>E01【已跟练，继续验收】参数校验与异常响应</strong>：ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误已跟练，Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。</li>
 <li>□ <strong>E02【待学】认证</strong>：使用 Spring Security＋Session Cookie 和框架 PasswordEncoder；理解登录、注销、CSRF。SQL里的 NOT_A_LOGIN_HASH 不是已配置的真实登录密码。</li>
 <li>□ <strong>E03【待学】角色与资源归属授权</strong>：用户A不能读用户B的工单；管理员派单、指定工程师处理、原报修人验收。身份从认证上下文取，客户端或模型传来的 actorId 不能充当授权。</li>
-<li>□ <strong>E04【待学】业务事务</strong>：助手已为数据库创建的仓库方法加事务并用 H2 测试回滚；本人需解释代理、传播和异常。未来再为状态变更＋ticket_action_log 划事务，在真实测试库验证。</li>
+<li>□ <strong>E04【正在学】业务事务</strong>：助手已为数据库创建的仓库方法加事务并用H2测试回滚；学习者结合回查讨论正常提交与异常回滚，事务代理、传播和异常的独立解释仍待巩固。未来为状态变更＋ticket_action_log划事务，并在真实测试库验证。</li>
 <li>□ <strong>E05【待学】重复请求和并发冲突</strong>：创建用 requestKey/hash＋唯一约束，同键同输入返回原 ticketId，不同输入409；状态操作用前置状态/expectedVersion，两个竞争请求只能一个成功，不能静默覆盖。</li>
 <li>□ <strong>E06【待学】有意义的测试</strong>：保留现有JUnit；补少量关键规则、接口权限和真实MySQL集成测试。能区分单元/集成测试、Mock/真实依赖，隔离测试库，不以断言数量衡量质量。</li>
 <li>□ <strong>E07【待学】日志与排错</strong>：用日志框架记录 requestId、业务结果和错误原因；能从异常链追到错误SQL/配置，不记录密码、Cookie和密钥；保存一次复现→根因→修复→回归记录。</li>

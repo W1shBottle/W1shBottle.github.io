@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "aeb3dea050ac3607cf4e760a1535508bc343f90062b9da351aaae86b6e2885e3",
+  "source_sha256": "15739e0002e46cc1a95edc57b7c6c154163a7bf61d1bed46cf21f36888cc59e7",
   "updated": "2026-11-15",
   "project": "设备运维工单",
-  "stage": "Python少量复习并衔接只读工单Agent；Java事务并行",
+  "stage": "Java数据库派单与事务复盘；Python少量复习并衔接只读工单Agent",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -18,26 +18,26 @@
       "title": "MyBatis",
       "status": "practicing",
       "optional": false,
-      "description": "`TicketMapper` 已做参数绑定、查询映射及创建主键回填；条件UPDATE已有部分源码，本人理解和端到端验证待完成。独立看 SQL，定位字段名或映射错误。"
+      "description": "`TicketMapper` 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。`version + 1` 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。"
     },
     {
       "id": "W06",
       "title": "分层与核心状态流",
       "status": "practicing",
       "optional": false,
-      "description": "已有数据库查询/创建分层链路；派单的Mapper/仓库/Service已有部分代码，但Controller与完整验收未完成，解决、验收与动作记录仍待实现。"
+      "description": "已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。"
     }
   ],
-  "next": "按需要回看Python字典P52与函数P58，用虚构工单写查询；随后接入模型工具调用。Java线继续理解数据库事务与派单。",
-  "note": null,
+  "next": "Java：在隔离环境亲手验证派单失败分支并解释400、404、409，再补操作人权限与版本冲突。Python：按需回顾已看课程的字典和函数，用虚构工单练只读查询，随后衔接模型工具调用。",
+  "note": "/posts/ops-ticket-20261115/",
   "stats": {
     "accepted": 6,
-    "practicing": 18,
-    "planned": 44,
+    "practicing": 19,
+    "planned": 43,
     "total": 68,
     "percent": 9,
     "accepted_width": 8.8235,
-    "practicing_width": 26.4706
+    "practicing_width": 27.9412
   },
   "groups": [
     {
@@ -173,7 +173,7 @@
           "title": "事务与影响行数",
           "status": "practicing",
           "optional": false,
-          "description": "已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；正式业务尚无数据库并发保护。"
+          "description": "已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；数据库派单已有OPEN前置条件，expectedVersion比较与完整并发控制仍待实现。"
         },
         {
           "id": "S06",
@@ -201,7 +201,7 @@
           "title": "HTTP 和 JSON",
           "status": "practicing",
           "optional": false,
-          "description": "文件版GET/POST已有200/201/400/404证据；本轮用断点观察setter/getter、{}缺字段与错误JSON。学习者反馈重启恢复、统一400/404响应及 GET abc 转换边界正确；数据库 POST 有本人运行反馈，独立解释继续验收。"
+          "description": "文件版GET/POST已有200/201/400/404证据；用断点观察setter/getter、缺字段与错误JSON。学习者反馈重启恢复及统一错误响应通过；另用Apifox在隔离H2完成派单POST和前后GET，独立解释与本人失败分支练习继续验收。"
         },
         {
           "id": "W04",
@@ -215,14 +215,14 @@
           "title": "MyBatis",
           "status": "practicing",
           "optional": false,
-          "description": "`TicketMapper` 已做参数绑定、查询映射及创建主键回填；条件UPDATE已有部分源码，本人理解和端到端验证待完成。独立看 SQL，定位字段名或映射错误。"
+          "description": "`TicketMapper` 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。`version + 1` 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。"
         },
         {
           "id": "W06",
           "title": "分层与核心状态流",
           "status": "practicing",
           "optional": false,
-          "description": "已有数据库查询/创建分层链路；派单的Mapper/仓库/Service已有部分代码，但Controller与完整验收未完成，解决、验收与动作记录仍待实现。"
+          "description": "已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。"
         }
       ],
       "stats": {
@@ -268,9 +268,9 @@
         {
           "id": "E04",
           "title": "业务事务",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "助手已为数据库创建的仓库方法加事务并用 H2 测试回滚；本人需解释代理、传播和异常。未来再为状态变更＋ticket_action_log 划事务，在真实测试库验证。"
+          "description": "助手已为数据库创建的仓库方法加事务并用H2测试回滚；学习者结合回查讨论正常提交与异常回滚，事务代理、传播和异常的独立解释仍待巩固。未来为状态变更＋ticket_action_log划事务，并在真实测试库验证。"
         },
         {
           "id": "E05",
@@ -317,12 +317,12 @@
       ],
       "stats": {
         "accepted": 0,
-        "practicing": 1,
-        "planned": 9,
+        "practicing": 2,
+        "planned": 8,
         "total": 10,
         "percent": 0,
         "accepted_width": 0.0,
-        "practicing_width": 10.0
+        "practicing_width": 20.0
       }
     },
     {

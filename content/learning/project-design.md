@@ -2,15 +2,17 @@
   "title": "工单项目设计与数据约定",
   "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-14T00:00:00+08:00",
+  "lastmod": "2026-11-15T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
 }
 
+> 2026-11-15：入门用的 HelloController 已按学习者要求移除；第 14、15 节保留当时的学习快照。
+
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-14；本次只读审查并调整计划，未新增功能。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层；第19节记录11月9日数据库创建POST、自增主键与约束错误处理。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供只读查询和创建POST，数据库派单/解决/验收尚未闭环。
+核对日期：2026-11-15；数据库查询分层整理见本页末节，11月14日的学习路线调整保留原记录。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层；第19节记录11月9日数据库创建POST、自增主键与约束错误处理。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供查询、创建和派单练习接口，派单成功路径已在隔离 H2 练习，数据库解决/验收及权限尚未闭环。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -370,3 +372,31 @@ HTTP Client
 创建时由 Spring 管理的 `DatabaseTicketRepository.create` 使用 `@Transactional`：同一事务内完成 INSERT、获取生成的主键和回查。回填主键缺失、回查失败抛出运行时异常时回滚。此保护依赖通过 Spring 创建的代理调用；直接 `new DatabaseTicketRepository(...)` 不会自动得到声明式事务。事务不能保证客户端重试不会创建两条，也不代替权限校验。
 
 `spring.jackson.deserialization.accept-float-as-int=false` 禁止 JSON 小数被截断为整数；该设置对所有 JSON 整数属性生效，例如 3.8 和 3.0 不再当作 long 编号。文件保存前检查重复工单编号，发现重复时尚未打开覆盖文件；IO 写入中断仍没有原子替换保证。
+
+## 2026-11-15 数据库查询分层整理
+
+```text
+HTTP 请求
+    ↓
+DatabaseTicketController
+    ↓
+DatabaseTicketQueryService
+    ↓ 通过 TicketQueryRepository 的约定
+DatabaseTicketRepository
+    ↓
+TicketMapper → MyBatis → MySQL
+```
+
+`DatabaseTicketQueryService` 只注入查询仓库接口，不再同时注入 Mapper。`TicketQueryRepository` 增加标题、摘要和摘要列表的查询约定；`DatabaseTicketRepository` 把这些查询委托给原有 Mapper。原来的领域对象查询仍调用 `TicketSummaryConverter` 和 `Ticket.restore`，以检查工单状态与处理人组合。
+
+为保持已有 HTTP 行为，单条标题和摘要未找到时仍返回 `null` 供 Controller 转 404；领域对象查询仍使用 `Optional`。列表为空时仍返回空列表。`TicketSummary` 是目前保留的数据库读摘要，后续收敛接口时可再评估数据模型；本次未把摘要查询改成领域查询，以免改变已有校验和响应行为。
+
+数据库创建的事务仍在 `DatabaseTicketRepository.create`，此次没有改变事务边界。文件仓库使用旧的 `TicketRepository`；数据库使用 `TicketQueryRepository` 和 `TicketWriteRepository`，不能直接互换。数据库派单 Controller 及目标用户的角色/启用 SQL 条件源码已写；学习者已在隔离 H2 验证成功路径，失败分支本人练习、操作人权限和完整版本冲突处理仍待完成。
+
+## 2026-11-15 数据库派单与 DTO 流转
+
+`POST /api/db/tickets/{id}/assign`：`AssignTicketRequest` 接收目标工程师编号；Controller 检查空值，`DatabaseTicketCommandService` 校验正数，通过 `TicketWriteRepository` 委托 `DatabaseTicketRepository` 调用 `TicketMapper.assignTicket`。
+
+一条条件 UPDATE 同时设置处理人、`IN_PROGRESS` 与版本加一；条件包括工单编号、`OPEN` 状态和目标用户为已启用工程师。影响行数为 1 返回 200；为 0 时另查工单，未找到返回 404，其余条件不满足返回 409。`version + 1` 未比较 `expectedVersion`；目标工程师条件也不等于操作人认证授权。更新和分类查询是不同操作，并发时错误分类仍需设计。
+
+数据库查询结果由 MyBatis 映射为 `TicketSummary`；摘要查询直接返回它，领域查询经 `TicketSummaryConverter` 和 `Ticket.restore` 构造 `Ticket`。`CreateDatabaseTicketRequest`、`TicketInsert`、`TicketSummary` 分别承载创建输入、待插入数据及生成主键、查询结果。

@@ -10,7 +10,7 @@ series_order: 15
 chapter_title: "数据库创建 POST 与自增主键"
 ---
 
-> 接续 [上一篇 多列对象映射与只读数据库分层](/posts/ops-ticket-20261108/)。上一篇已经把只读查询分层和写入组件准备好；今天把 `POST /api/db/tickets` 接通，验证 `@Options` 自增主键、回查 `Ticket`、201 JSON，以及外键/标题约束错误如何变成 400。数据库派单 UPDATE 还没做，留到明天。
+> 接续 [14 多列对象映射与只读数据库分层](/posts/ops-ticket-20261108/)。上一篇已经把只读查询分层和写入组件准备好；今天把 `POST /api/db/tickets` 接通，验证 `@Options` 自增主键、回查 `Ticket`、201 JSON，以及外键/标题约束错误如何变成 400。数据库派单 UPDATE 还没做，留到明天。
 
 ## 1 今天的目标
 
@@ -117,7 +117,7 @@ public class DatabaseTicketCommandService {
 ```
 
 - 命令服务不写 SQL，只负责校验和委托；
-- `trimmed` 和数据库 `CHECK (CHAR_LENGTH(TRIM(title)) BETWEEN 1 AND 50)` 保持一致；
+- Java 与数据库都在检查空白和长度，但规则并非完全相同：Java `trim()` 与 MySQL 默认 `TRIM()` 去除的字符范围不同；Java `String.length()` 按 UTF-16 代码单元计数，MySQL `CHAR_LENGTH()` 按字符计数。普通中文示例可能一致，特殊空白和部分字符需要单独验证；
 - 校验失败抛 `IllegalArgumentException`，Controller 转 400。
 
 ## 4 Controller：POST 与 201
@@ -194,7 +194,7 @@ int insertTicket(TicketInsert ticketInsert);
 - `keyProperty = "id"`：回填到 `TicketInsert.id`；
 - `keyColumn = "id"`：数据库列名。
 
-`TicketInsert.id` 必须是 `Long`，不能是 `long`，因为要用 `null` 表示「还没回填」。
+这里选择 `Long`，因为 `null` 能表示「还没回填」。`long` 也能接收生成的编号，但不能表示 `null`，需要另外约定尚未回填的标记。
 
 ## 6 回查 Ticket
 
@@ -236,13 +236,9 @@ return findById(insert.getId())
 
 一开始我看到 `id=9` 也疑惑：数据库里明明只有 1 和 3，为什么不是 4？
 
-原因是 `AUTO_INCREMENT` 不是「行数 + 1」，而是只增不减的计数器：
+`AUTO_INCREMENT` 不是「行数 + 1」。已分配的编号在插入失败或事务回滚时可能留下空缺；但不同失败可能发生在分配编号之前，不能说每次失败都消耗编号。删除记录通常不会自动降低下次编号；显式调整还受表中已有值等条件约束。
 
-1. 失败的 INSERT 也会消耗编号：InnoDB 在检查外键/CHECK 之前就分配了 id，失败后号码不还；
-2. 删除行不会回退计数器；
-3. 多次尝试或整份 `.http` 运行也会消耗。
-
-所以 4 和 9 之间缺的 5、6、7、8 是「分配了但没落库」的号，不是数据丢失。
+仅凭 4 和 9 之间的空缺，无法确定每个编号当时发生了什么；跳号本身也不能证明数据丢失。
 
 ## 8 约束错误：数据库才知道的错误
 
@@ -298,19 +294,19 @@ ALTER TABLE ticket AUTO_INCREMENT = 4;
 有一个容易误判的点：
 
 - `information_schema.TABLES.AUTO_INCREMENT` 和 `SHOW TABLE STATUS` 可能显示缓存值 10；
-- `SHOW CREATE TABLE ticket` 才是实际表定义，显示 `AUTO_INCREMENT=4`。
+- 当时 `SHOW CREATE TABLE ticket` 显示表定义中的 `AUTO_INCREMENT=4`；这是一条当时的观察，不应把任一元数据读数当成对以后下一次分配结果的绝对保证。
 
 临时表实验也确认了：设 10 → 插入得 10；删除后 `ALTER` 到 4 → 再插入得 4。
 
 ## 11 本次边界与下次接续
 
-今天完成的是**数据库创建 POST**。还没做：
+截至 2026-11-09，今天完成的是**数据库创建 POST**。当时还没做：
 
 - 数据库派单 / 解决 / 验收（UPDATE 状态流）；
 - 正式 `/api/tickets` 从文件仓库切到数据库仓库；
 - Web 自动测试、事务边界、权限、并发和幂等。
 
-下一次从数据库派单开始：
+2026-11-13 审查补充：助手已为数据库创建增加事务保护与隔离自动测试，并拒绝小数编号被截断。下一次先学习这些修复的含义，再从数据库派单继续：
 
 ```text
 POST /api/db/tickets/{id}/assign
@@ -322,4 +318,4 @@ POST /api/db/tickets/{id}/assign
 → 404 / 409
 ```
 
-继续对照 [学习栏目](https://wishbottle.cn/learning/)、[项目设计](https://wishbottle.cn/learning/project-design/) 和 [运行验收](https://wishbottle.cn/learning/project-verification/) 阅读。
+继续对照 [学习栏目](/learning/)、[项目设计](/learning/project-design/) 和 [运行验收](/learning/project-verification/) 阅读。
