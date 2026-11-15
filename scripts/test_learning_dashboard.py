@@ -13,6 +13,14 @@ class DashboardEvidenceTests(unittest.TestCase):
         stats = summarize([t for t in tasks if not t['optional']])
         self.assertEqual((stats['total'], stats['accepted'], stats['practicing'], stats['percent']), (3, 1, 1, 33))
 
+    def test_watched_course_stays_distinct_from_practice_and_acceptance(self):
+        row = '- [ ] **Y02【已看课，待复习】工单数据**：已看课程，项目实践未确认。'
+        task = parse_tasks(row, [])[0]
+        self.assertEqual(task['status'], 'planned')
+        self.assertEqual(task['display_label'], '已看课·待复习')
+        self.assertEqual(summarize([task])['accepted'], 0)
+        self.assertEqual(summarize([task])['practicing'], 0)
+
     def test_no_tasks_is_zero_and_all_accepted_is_100(self):
         self.assertEqual(summarize([])['percent'], 0)
         self.assertEqual(summarize([{'status':'accepted'}]*3)['percent'], 100)

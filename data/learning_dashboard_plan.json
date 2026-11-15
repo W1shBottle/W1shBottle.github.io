@@ -45,11 +45,11 @@
     {
       "id": "python",
       "code": "Y",
-      "title": "Python基础",
+      "title": "Python复习与应用",
       "prefixes": [
         "Y"
       ],
-      "description": "在虚构工单上练集合、函数、异常、JSON、HTTP和FastAPI。"
+      "description": "已看课程前119集但久未写，少量复习后衔接假工单与Agent。"
     },
     {
       "id": "redis",

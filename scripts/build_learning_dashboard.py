@@ -22,7 +22,7 @@ def parse_tasks(markdown, optional_ids):
         optional = task_id in optional_ids
         if checked == 'x':
             status = 'accepted'
-        elif label in ('按需', '更后置', '后置', '待学'):
+        elif label in ('按需', '更后置', '后置', '待学', '已看课，待复习'):
             status = 'planned'
         elif any(word in label for word in ('已练习', '已跟练', '实操通过', '正在学', '持续')):
             status = 'practicing'
@@ -30,8 +30,11 @@ def parse_tasks(markdown, optional_ids):
             raise ValueError('Unrecognized learning state: ' + task_id + ' / ' + label)
         if label in ('按需', '更后置', '后置') and not optional:
             raise ValueError('Optional task must be excluded from denominator: ' + task_id)
-        tasks.append(dict(id=task_id, title=title.strip(), status=status,
-                          optional=optional, description=description.strip()))
+        task = dict(id=task_id, title=title.strip(), status=status,
+                    optional=optional, description=description.strip())
+        if label == '已看课，待复习' and not checked == 'x':
+            task['display_label'] = '已看课·待复习'
+        tasks.append(task)
     candidates = re.findall(r'^- \[[ x]\] \*\*[A-Z]\d{2}', markdown, re.M)
     if not tasks or len(candidates) != len(tasks):
         raise ValueError('Checklist contains missing or unparseable task rows')

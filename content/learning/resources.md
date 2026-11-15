@@ -5,12 +5,14 @@
   "weight": 80,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-14T00:00:00+08:00"
+  "lastmod": "2026-11-15T00:00:00+08:00"
 }
 
 这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年11月14日调整为Java工单与Python Agent并行；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
 
-## Python与Agent入门资料
+## Python复习与Agent资料
+
+已看黑马Python+AI前119集但久未写；先回看[P52字典](https://www.bilibili.com/video/BV1sHU9BmEne/?p=52)、[P58函数](https://www.bilibili.com/video/BV1sHU9BmEne/?p=58)，结合虚构工单找回手感；其他基础章节遇到卡点再回看。
 
 - [Python官方教程](https://docs.python.org/zh-cn/3/tutorial/)：结合Java基础学习list/dict、函数、模块和异常；每节配虚构工单练习。
 - [FastAPI官方教程](https://fastapi.tiangolo.com/zh/tutorial/first-steps/)：在基础语法之后做一个本地只读假接口。

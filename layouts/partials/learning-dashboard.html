@@ -13,7 +13,7 @@
       <p class="journey-total-description">围绕同一个工单项目，逐步实现与验收。</p>
       <div class="journey-total-score"><div><strong>{{ .stats.percent }}<span>%</span></strong><span>整体任务验收</span></div><span><b>{{ .stats.accepted }}</b> / {{ .stats.total }} 项已完成</span></div>
       {{ partial "learning-meter.html" (dict "stats" .stats "label" "整体学习计划") }}
-      <dl class="journey-counts"><div><dt><span class="journey-mini-icon icon-accepted" aria-hidden="true">✓</span>已验收</dt><dd>{{ .stats.accepted }}<span>项</span></dd></div><div><dt><span class="journey-mini-icon icon-practicing" aria-hidden="true">◔</span>跟练待巩固</dt><dd>{{ .stats.practicing }}<span>项</span></dd></div><div><dt><span class="journey-mini-icon icon-planned" aria-hidden="true">○</span>尚待学习</dt><dd>{{ .stats.planned }}<span>项</span></dd></div></dl>
+      <dl class="journey-counts"><div><dt><span class="journey-mini-icon icon-accepted" aria-hidden="true">✓</span>已验收</dt><dd>{{ .stats.accepted }}<span>项</span></dd></div><div><dt><span class="journey-mini-icon icon-practicing" aria-hidden="true">◔</span>跟练待巩固</dt><dd>{{ .stats.practicing }}<span>项</span></dd></div><div><dt><span class="journey-mini-icon icon-planned" aria-hidden="true">○</span>待学习或实践</dt><dd>{{ .stats.planned }}<span>项</span></dd></div></dl>
       <div class="journey-total-footer"><span>只统计验收通过的任务</span><a href="#progress-method">计算方式 <span aria-hidden="true">↗</span></a></div>
     </article>
     <article class="journey-current" aria-labelledby="journey-current-title">
@@ -36,15 +36,16 @@
     {{ $active := eq .id $data.current_group }}
     {{ $complete := and (gt .stats.total 0) (eq .stats.accepted .stats.total) }}
     {{ $started := or (gt .stats.accepted 0) (gt .stats.practicing 0) $active }}
+    {{ $seenCourse := false }}{{ range .tasks }}{{ if .display_label }}{{ $seenCourse = true }}{{ end }}{{ end }}
     {{ $preview := first 2 .tasks }}{{ if $active }}{{ $preview = first 2 $data.focus_tasks }}{{ end }}
     <details class="journey-stage{{ if $active }} is-current{{ end }}" id="stage-{{ .id }}">
       <summary>
-        <span class="journey-stage-top"><span class="journey-stage-code">{{ .code }}</span><span class="journey-badge {{ if $complete }}badge-complete{{ else if $started }}badge-active{{ else }}badge-planned{{ end }}"><i aria-hidden="true"></i>{{ if $complete }}已完成{{ else if $active }}当前学习{{ else if $started }}进行中{{ else }}未开始{{ end }}</span></span>
+        <span class="journey-stage-top"><span class="journey-stage-code">{{ .code }}</span><span class="journey-badge {{ if $complete }}badge-complete{{ else if $started }}badge-active{{ else }}badge-planned{{ end }}"><i aria-hidden="true"></i>{{ if $complete }}已完成{{ else if $active }}当前学习{{ else if $started }}进行中{{ else if $seenCourse }}已看课{{ else }}未开始{{ end }}</span></span>
         <span class="journey-stage-title">{{ .title }}</span>
         <span class="journey-stage-description">{{ .description }}</span>
         <span class="journey-stage-progress-label"><span>{{ .stats.accepted }} / {{ .stats.total }} 项已验收</span><strong>{{ .stats.percent }}<small>%</small></strong></span>
         <span class="journey-stage-track" aria-hidden="true"><span class="journey-meter-accepted" style="{{ printf "width:%.4f%%" (float .stats.accepted_width) | safeCSS }}"></span></span>
-        <span class="journey-task-preview" aria-label="关键子任务">{{ range $preview }}<span><span class="journey-task-icon state-{{ .status }}" aria-hidden="true">{{ if eq .status "accepted" }}✓{{ else if eq .status "practicing" }}·{{ end }}</span><span>{{ .title }}</span><small>{{ if eq .status "accepted" }}已验收{{ else if eq .status "practicing" }}待巩固{{ else }}待学{{ end }}</small></span>{{ end }}</span>
+        <span class="journey-task-preview" aria-label="关键子任务">{{ range $preview }}<span><span class="journey-task-icon state-{{ .status }}" aria-hidden="true">{{ if eq .status "accepted" }}✓{{ else if eq .status "practicing" }}·{{ end }}</span><span>{{ .title }}</span><small>{{ if eq .status "accepted" }}已验收{{ else if eq .status "practicing" }}待巩固{{ else if .display_label }}{{ .display_label }}{{ else }}待学{{ end }}</small></span>{{ end }}</span>
         <span class="journey-stage-bottom"><span>{{ .stats.practicing }} 项跟练待巩固</span><span><span class="journey-stage-open-label">展开 {{ .stats.total }} 项任务</span><span class="journey-stage-close-label">收起任务</span><span class="journey-expand" aria-hidden="true">⌄</span></span></span>
       </summary>
       <ol class="journey-tasks" aria-label="{{ .title }}任务">{{ range .tasks }}{{ partial "learning-task.html" . }}{{ end }}</ol>
@@ -53,7 +54,7 @@
   </div>
   <details class="journey-optional"><summary><span>按需探索</span><span>MCP / SubAgent 等 {{ len .optional_tasks }} 项，不计入总进度</span><span class="journey-expand" aria-hidden="true">⌄</span></summary><p>遇到真实业务需求再选，不因为尚未学习而扣减主线进度。</p><ol class="journey-tasks">{{ range .optional_tasks }}{{ partial "learning-task.html" . }}{{ end }}</ol></details>
   <div class="journey-bottom-meta"><span>依据实际验收记录</span><span>更新于 <time datetime="{{ .updated }}">{{ time.Format "2006.01.02" .updated }}</time></span></div>
-  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需扩展不计入分母；其余 {{ .stats.total }} 项包含 Java 基础、A1/A2 后端、Y Python基础、R Redis、B模型调用、G只读Agent、C知识检索与评测，以及贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
+  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需扩展不计入分母；其余 {{ .stats.total }} 项包含 Java 基础、A1/A2 后端、Y Python复习、R Redis、B模型调用、G只读Agent、C知识检索与评测，以及贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
 </section>
 {{ $script := resources.Get "js/learning-dashboard.js" | minify | fingerprint }}<script defer src="{{ $script.RelPermalink }}"></script>
 {{ end }}
