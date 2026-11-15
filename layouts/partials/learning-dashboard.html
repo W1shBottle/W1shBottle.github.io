@@ -11,10 +11,11 @@
       <div class="journey-total-top"><span class="journey-project-label">{{ .project }} · Java + AI</span><span class="journey-badge {{ if eq .stats.accepted .stats.total }}badge-complete{{ else }}badge-active{{ end }}"><i aria-hidden="true"></i>{{ if eq .stats.accepted .stats.total }}已完成{{ else }}进行中{{ end }}</span></div>
       <h3 id="journey-total-title">Java 后端与 AI 应用</h3>
       <p class="journey-total-description">围绕同一个工单项目，逐步实现与验收。</p>
-      <div class="journey-total-score"><div><strong>{{ .stats.percent }}<span>%</span></strong><span>整体任务验收</span></div><span><b>{{ .stats.accepted }}</b> / {{ .stats.total }} 项已完成</span></div>
+      <div class="journey-total-score"><div><strong>{{ .stats.percent }}<span>%</span></strong><span>整体任务验收</span></div><span><b>{{ .stats.accepted }}</b> / {{ .stats.total }} 项已验收</span></div>
       {{ partial "learning-meter.html" (dict "stats" .stats "label" "整体学习计划") }}
+      <div class="journey-meter-key"><span class="key-accepted">已验收</span><span class="key-practicing">跟练中</span><span class="journey-started">{{ add .stats.accepted .stats.practicing }} / {{ .stats.total }} 项已开始</span></div>
       <dl class="journey-counts"><div><dt><span class="journey-mini-icon icon-accepted" aria-hidden="true">✓</span>已验收</dt><dd>{{ .stats.accepted }}<span>项</span></dd></div><div><dt><span class="journey-mini-icon icon-practicing" aria-hidden="true">◔</span>跟练待巩固</dt><dd>{{ .stats.practicing }}<span>项</span></dd></div><div><dt><span class="journey-mini-icon icon-planned" aria-hidden="true">○</span>待学习或实践</dt><dd>{{ .stats.planned }}<span>项</span></dd></div></dl>
-      <div class="journey-total-footer"><span>只统计验收通过的任务</span><a href="#progress-method">计算方式 <span aria-hidden="true">↗</span></a></div>
+      <div class="journey-total-footer"><span>已开始包括跟练，不代表整项完成</span><a href="#progress-method">计算方式 <span aria-hidden="true">↗</span></a></div>
     </article>
     <article class="journey-current" aria-labelledby="journey-current-title">
       <div class="journey-current-top"><span class="journey-eyebrow">CURRENT FOCUS</span><span class="journey-stage-code">{{ $current.code }}</span></div>
@@ -22,11 +23,26 @@
       <p class="journey-current-description">{{ $current.description }}</p>
       <div class="journey-current-score"><strong>{{ $current.stats.percent }}<span>%</span></strong><span>验收 {{ $current.stats.accepted }} / {{ $current.stats.total }}</span></div>
       {{ partial "learning-meter.html" (dict "stats" $current.stats "label" $current.title) }}
-      <p class="journey-current-note"><span>{{ $current.stats.practicing }} 项跟练中</span> · {{ $current.stats.planned }} 项待学</p>
+      <p class="journey-current-note"><span>{{ add $current.stats.accepted $current.stats.practicing }} / {{ $current.stats.total }} 项已开始</span> · {{ $current.stats.practicing }} 项跟练中 · {{ $current.stats.planned }} 项待学</p>
       <div class="journey-focus-tasks"><p>正在巩固</p>{{ range .focus_tasks }}<a href="#task-{{ .id }}"><span class="journey-focus-dot" aria-hidden="true"></span><span>{{ .title }}</span><span aria-hidden="true">↗</span></a>{{ end }}</div>
       <a class="journey-current-link" href="#stage-{{ .current_group }}">查看阶段任务 <span aria-hidden="true">→</span></a>
     </article>
   </div>
+  {{ $timeline := site.Data.learning_progress }}
+  {{ $recent := slice }}
+  {{ $noteCount := 0 }}
+  {{ range where (sort $timeline.entries "date" "desc") "project" $timeline.current_project }}
+    {{ $entry := . }}{{ with .note }}{{ $noteCount = add $noteCount 1 }}{{ if lt (len $recent) 3 }}{{ $recent = $recent | append $entry }}{{ end }}{{ end }}
+  {{ end }}
+  {{ with $recent }}
+  <section class="journey-recent" aria-labelledby="journey-recent-title">
+    <div class="journey-recent-heading"><div><p class="journey-eyebrow">RECENT LEARNING</p><h3 id="journey-recent-title">最近学过的内容</h3></div><a href="#progress">全部学习记录 ↗</a></div>
+    <p class="journey-recent-intro">工单项目已整理 {{ $noteCount }} 篇学习笔记；跟练过的内容仍需要继续巩固。</p>
+    <div class="journey-recent-grid">
+      {{ range . }}<a href="{{ .note }}"><time datetime="{{ .date }}">{{ time.Format "2006.01.02" .date }}</time><strong>{{ .title }}</strong><span>查看学习笔记 ↗</span></a>{{ end }}
+    </div>
+  </section>
+  {{ end }}
   <aside class="journey-next" aria-labelledby="journey-next-title">
     <span class="journey-next-icon" aria-hidden="true">↳</span><div><h3 id="journey-next-title">下一小步</h3><p>{{ .next }}</p>{{ with .note }}<a href="{{ . }}">回看最近笔记 <span aria-hidden="true">↗</span></a>{{ end }}</div>
   </aside>
@@ -44,7 +60,8 @@
         <span class="journey-stage-title">{{ .title }}</span>
         <span class="journey-stage-description">{{ .description }}</span>
         <span class="journey-stage-progress-label"><span>{{ .stats.accepted }} / {{ .stats.total }} 项已验收</span><strong>{{ .stats.percent }}<small>%</small></strong></span>
-        <span class="journey-stage-track" aria-hidden="true"><span class="journey-meter-accepted" style="{{ printf "width:%.4f%%" (float .stats.accepted_width) | safeCSS }}"></span></span>
+        <span class="journey-stage-track" aria-hidden="true"><span class="journey-meter-accepted" style="{{ printf "width:%.4f%%" (float .stats.accepted_width) | safeCSS }}"></span><span class="journey-meter-practicing" style="{{ printf "width:%.4f%%" (float .stats.practicing_width) | safeCSS }}"></span></span>
+        <span class="journey-stage-started">{{ add .stats.accepted .stats.practicing }} / {{ .stats.total }} 项已开始 · 其中 {{ .stats.practicing }} 项跟练中</span>
         <span class="journey-task-preview" aria-label="关键子任务">{{ range $preview }}<span><span class="journey-task-icon state-{{ .status }}" aria-hidden="true">{{ if eq .status "accepted" }}✓{{ else if eq .status "practicing" }}·{{ end }}</span><span>{{ .title }}</span><small>{{ if eq .status "accepted" }}已验收{{ else if eq .status "practicing" }}待巩固{{ else if .display_label }}{{ .display_label }}{{ else }}待学{{ end }}</small></span>{{ end }}</span>
         <span class="journey-stage-bottom"><span>{{ .stats.practicing }} 项跟练待巩固</span><span><span class="journey-stage-open-label">展开 {{ .stats.total }} 项任务</span><span class="journey-stage-close-label">收起任务</span><span class="journey-expand" aria-hidden="true">⌄</span></span></span>
       </summary>
@@ -54,7 +71,7 @@
   </div>
   <details class="journey-optional"><summary><span>按需探索</span><span>MCP / SubAgent 等 {{ len .optional_tasks }} 项，不计入总进度</span><span class="journey-expand" aria-hidden="true">⌄</span></summary><p>遇到真实业务需求再选，不因为尚未学习而扣减主线进度。</p><ol class="journey-tasks">{{ range .optional_tasks }}{{ partial "learning-task.html" . }}{{ end }}</ol></details>
   <div class="journey-bottom-meta"><span>依据实际验收记录</span><span>更新于 <time datetime="{{ .updated }}">{{ time.Format "2006.01.02" .updated }}</time></span></div>
-  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需扩展不计入分母；其余 {{ .stats.total }} 项包含 Java 基础、A1/A2 后端、Y Python复习、R Redis、B模型调用、G只读Agent、C知识检索与评测，以及贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
+  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需扩展不计入分母；其余 {{ .stats.total }} 项包含 Java 基础、A1/A2 后端、Y Python复习、R Redis、B模型调用、G只读Agent、C知识检索与评测，以及贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>进度条分为已验收与跟练两段。“已开始”是这两类任务的合计，表示涉及过，并不代表整项完成；同一任务持续多次练习时，数字可能不变，但学习笔记和时间线会记录具体变化。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
 </section>
 {{ $script := resources.Get "js/learning-dashboard.js" | minify | fingerprint }}<script defer src="{{ $script.RelPermalink }}"></script>
 {{ end }}
