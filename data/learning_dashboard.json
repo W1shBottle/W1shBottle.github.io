@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "570ec390f1c2c00581a7016f355d0687b1bc79d34dbf6cf76441d95cad083467",
+  "source_sha256": "405cadc296021672c192f464bcc34a03a3ce40812b87fadc3a5fc09382f8f588",
   "updated": "2026-11-24",
   "project": "设备运维工单",
-  "stage": "Python 复习与报修分诊工具起步，Java 并行复验派单分支",
+  "stage": "十二月分诊助手交付准备，先跑通 Python 真实工具调用",
   "current_group": "python",
   "focus_tasks": [
     {

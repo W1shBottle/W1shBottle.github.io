@@ -1,7 +1,7 @@
 {
   "version": 1,
   "updated": "2026-11-24",
-  "stage": "Python 复习与报修分诊工具起步，Java 并行复验派单分支",
+  "stage": "十二月分诊助手交付准备，先跑通 Python 真实工具调用",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -243,8 +243,8 @@
       "kind": "plan-update",
       "status": "in-progress",
       "title": "把现有工单项目做成设备报修分诊助手",
-      "summary": "把 Python 练习串成查单、检索资料、生成建议、人工确认的分诊流程，按失败案例学习执行边界和评测。",
-      "verification": "本次更新计划。最近实操为 11 月 15 日隔离 H2 派单跟练。Python 分诊链路待动手。",
+      "summary": "围绕报修分诊安排十二月底可演示版本，加入真实工具调用、资料检索、LangGraph 状态恢复、Java 人工确认与评测。",
+      "verification": "本次更新计划并只读核对源码，看到 Spring Security 练习配置，尚无新的登录或授权运行结果。最近有记录的实操为 11 月 15 日隔离 H2 派单跟练。",
       "next": "用三张虚构设备工单写 find_ticket(ticket_id)，分别传入已有编号、缺失编号和非法输入，核对三种结果。Java 线在隔离 H2 依次复验不存在的工单返回 404、重复派单返回 409，分别对照状态和受影响行数。"
     }
   ],
