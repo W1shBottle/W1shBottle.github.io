@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-15",
-  "stage": "Java数据库派单与事务复盘；Python少量复习并衔接只读工单Agent",
+  "updated": "2026-11-24",
+  "stage": "Python 复习与报修分诊工具起步，Java 并行复验派单分支",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -236,6 +236,16 @@
       "verification": "学习者按指导编写派单链路，并在独立H2内存库用Apifox查询虚构工单101、POST派给工程师2后再次GET，反馈成功及状态/处理人变化符合预期；编号0返回400亦有本人反馈。助手曾用其他虚构工单预检409/404；不计为本人独立复跑或真实MySQL派单验收。此前25项JUnit与事务代码由助手在隔离环境完成；Python看课为本人自报。",
       "next": "Java：在隔离环境亲手验证派单失败分支并解释400、404、409，再补操作人权限与版本冲突。Python：按需回顾已看课程的字典和函数，用虚构工单练只读查询，随后衔接模型工具调用。",
       "note": "/posts/ops-ticket-20261115/"
+    },
+    {
+      "date": "2026-11-24",
+      "project": "ops-ticket",
+      "kind": "plan-update",
+      "status": "in-progress",
+      "title": "把现有工单项目做成设备报修分诊助手",
+      "summary": "把 Python 练习串成查单、检索资料、生成建议、人工确认的分诊流程，按失败案例学习执行边界和评测。",
+      "verification": "本次更新计划。最近实操为 11 月 15 日隔离 H2 派单跟练。Python 分诊链路待动手。",
+      "next": "用三张虚构设备工单写 find_ticket(ticket_id)，分别传入已有编号、缺失编号和非法输入，核对三种结果。Java 线在隔离 H2 依次复验不存在的工单返回 404、重复派单返回 409，分别对照状态和受影响行数。"
     }
   ],
   "current_project": "ops-ticket"

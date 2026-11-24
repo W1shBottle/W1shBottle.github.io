@@ -1,10 +1,9 @@
 {
   "version": 1,
-  "current_group": "backend",
+  "current_group": "python",
   "focus_tasks": [
-    "W02",
-    "W05",
-    "W06"
+    "Y02",
+    "Y03"
   ],
   "optional_ids": [
     "P05",

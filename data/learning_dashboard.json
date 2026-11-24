@@ -1,35 +1,30 @@
 {
   "version": 1,
-  "source_sha256": "15739e0002e46cc1a95edc57b7c6c154163a7bf61d1bed46cf21f36888cc59e7",
-  "updated": "2026-11-15",
+  "source_sha256": "570ec390f1c2c00581a7016f355d0687b1bc79d34dbf6cf76441d95cad083467",
+  "updated": "2026-11-24",
   "project": "设备运维工单",
-  "stage": "Java数据库派单与事务复盘；Python少量复习并衔接只读工单Agent",
-  "current_group": "backend",
+  "stage": "Python 复习与报修分诊工具起步，Java 并行复验派单分支",
+  "current_group": "python",
   "focus_tasks": [
     {
-      "id": "W02",
-      "title": "数据库生成 ID 与映射",
-      "status": "practicing",
+      "id": "Y02",
+      "title": "工单数据与集合",
+      "status": "planned",
       "optional": false,
-      "description": "学习者跟写数据库 POST 并取得自增 id=9；独立解释主键回填和 add/create 差别，再逐步补映射字段。"
+      "description": "变量、字符串、if/for、list/dict；构造虚构工单列表，独立筛选OPEN并验证无结果。",
+      "display_label": "已看课·待复习"
     },
     {
-      "id": "W05",
-      "title": "MyBatis",
-      "status": "practicing",
+      "id": "Y03",
+      "title": "函数与异常",
+      "status": "planned",
       "optional": false,
-      "description": "`TicketMapper` 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。`version + 1` 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。"
-    },
-    {
-      "id": "W06",
-      "title": "分层与核心状态流",
-      "status": "practicing",
-      "optional": false,
-      "description": "已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。"
+      "description": "参数、返回值、None、异常与模块；编写假数据按ID查询，处理不存在与非法输入，自己调试一次。",
+      "display_label": "已看课·待复习"
     }
   ],
-  "next": "Java：在隔离环境亲手验证派单失败分支并解释400、404、409，再补操作人权限与版本冲突。Python：按需回顾已看课程的字典和函数，用虚构工单练只读查询，随后衔接模型工具调用。",
-  "note": "/posts/ops-ticket-20261115/",
+  "next": "用三张虚构设备工单写 find_ticket(ticket_id)，分别传入已有编号、缺失编号和非法输入，核对三种结果。Java 线在隔离 H2 依次复验不存在的工单返回 404、重复派单返回 409，分别对照状态和受影响行数。",
+  "note": null,
   "stats": {
     "accepted": 6,
     "practicing": 19,

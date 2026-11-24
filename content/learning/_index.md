@@ -1,17 +1,15 @@
 {
   "title": "学习",
-  "description": "继续Java设备工单项目，并行学习Python，逐步构建只读Agent、知识检索与评测。",
+  "description": "从 Java 设备工单到 Python 报修分诊助手，练习只读工具、资料检索、执行追踪与人工确认。",
   "date": "2026-10-12T12:00:00+08:00",
-  "lastmod": "2026-11-15T00:00:00+08:00",
+  "lastmod": "2026-11-24T00:00:00+08:00",
   "draft": false
 }
 
-继续设备运维工单项目：**Java工单业务与Python基础并行 → Python模型调用 → 只读Agent → 知识检索与评测 → 安全联调**。Java负责业务与授权，Python作为Agent主语言；先用虚构数据练习，再按条件连接业务接口。
+在现有 Java 工单系统上做一个**设备报修分诊助手**。管理员收到一张报修单，Python Agent 帮他查设备资料，给出处理建议、依据和需要追问的内容。管理员查看建议后决定如何处置。
 
-**2026-11-15方案更新；最近Java项目实操反馈为11月9日。** 文件版Web有查询/创建，MyBatis数据库练习接口有查询与创建，学习者自行POST得到自增id。11月13日助手补充创建事务并在隔离H2环境完成25项JUnit；不能将其写成本人独立掌握或真实MySQL复测。派单SQL/Service已有部分代码，HTTP派单及完整状态流、授权、Python Agent尚未完成。
+最近一次有记录的 Java 实操是 11 月 15 日。学习者按指导在隔离 H2 用 Apifox 查工单 101、派给工程师 2、再次查询，确认状态变为 IN_PROGRESS，也验证了工程师编号 0 返回 400。404 和 409 已由助手预检，留给本人复验。操作人授权、期望版本冲突、Python 工具与真实模型调用仍待实践。
 
-[阶段计划与分阶段网课](/learning/schedule/#按阶段看网课与做练习)说明近期任务与具体分P，[技能清单](/learning/checklists/)记录真实验收。新增4项Redis基础、缓存与会话任务后，必修从64项增加为68项；已验收仍为6项，比例四舍五入后仍为9%。跟练单独记录，百分比不代表熟练度或剩余工期。
+下一次先做 Python 查询。用三张虚构设备工单写 `find_ticket(ticket_id)`，分别传入已有编号、缺失编号和非法输入，核对三种结果。 卡在字典或函数时，阶段计划有对应的课程分 P。[六个学习单元](/learning/schedule/#接下来的六个学习单元) · [按卡点看网课](/learning/schedule/#按阶段看网课与做练习)
 
-学习者反馈已看Python+AI课程第1—119集，但很久没写；先少量回顾字典和函数，练习虚构工单查询，再衔接模型工具调用。Java事务与Redis基础可并行。课程观看不等于已完成工单Agent或独立验收。
-
-最近学习复盘：[数据库创建POST与自增主键](/posts/ops-ticket-20261109/)。实现与验收边界见[项目文档](/learning/project-docs/)；也可打开[连续阅读版](/learning/downloads/reader.html)或[下载自学包](/learning/downloads/java-internship-self-study.zip)。
+[技能清单](/learning/checklists/) · [11 月 15 日派单复盘](/posts/ops-ticket-20261115/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)
