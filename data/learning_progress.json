@@ -1,7 +1,7 @@
 {
   "version": 1,
   "updated": "2026-11-25",
-  "stage": "纯 Java 主线定稿（A1→A2→B01–B09→C01–C04 + 可选 D01–D02），继续后端收尾",
+  "stage": "纯 Java 主线定稿，已完成 MySQL 数据库登录与派单角色授权，待补派单 409 与乐观锁",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -250,12 +250,12 @@
     {
       "date": "2026-11-25",
       "project": "ops-ticket",
-      "kind": "plan-update",
-      "status": "in-progress",
-      "title": "纯 Java 主线与 B/C/D 阶段规划定稿",
-      "summary": "收口为纯 Java / Spring Boot / MyBatis / MySQL 唯一主线（A1→A2→B01–B09→C01–C04 + 可选 D01–D02）：新增 B08 事务后异步触发回写、B09 人工采纳与反馈闭环，修订 C02 纳入真实采纳率统计，新增可选进阶 D01 轻量 RAG 与 D02 外部 SOP；归档 Python/Y/R/G/C05–C06 条目。",
-      "verification": "纯规划定稿与文档同步，未改动业务代码，保留全部既有 6 项验收与 19 项跟练状态不变。",
-      "next": "核对 ops_ticket_dev.app_user 表记录与占位密码哈希以切入数据库登录（UserMapper.findByUsername），并补齐派单失败分支 404/409 本人复验与影响行数解释。"
+      "status": "reviewed",
+      "title": "Spring Security 数据库登录与接口角色授权",
+      "summary": "合并整理 11 月 15 日之后至 26 日凌晨的认证授权学习：引入 Spring Security 与方法级 @PreAuthorize，完成 PasswordEncoder 与内存账号过渡，编写 AppUser、UserMapper 与 DatabaseUserDetailsService 切到 MySQL app_user 表登录，并配置 SecurityFilterChain 排查 POST CSRF 拦截；同日定稿纯 Java 主线（A1→A2→B01–B09→C01–C04 + 可选 D01–D02）。",
+      "verification": "本人配置 IDEA 数据源核对 app_user，经提示修正 AppUser 与 UserMapper 后独立编写 DatabaseUserDetailsService，更新 admin_a/engineer_a 的 BCrypt 哈希并实测 GET 200/403/401，Debug 定位后实测 POST /assign 返回 admin_a 404 与 engineer_a 403。其余接口授权、资源归属、浏览器 Session/CSRF、派单 409 与 expectedVersion 乐观锁仍待补齐。",
+      "next": "亲手复验 POST /api/db/tickets/{id}/assign 的 409（重复派单/非工程师）失败分支并解释受影响行数，再为派单补上 expectedVersion 乐观锁校验。",
+      "note": "/posts/ops-ticket-20261125/"
     }
   ],
   "current_project": "ops-ticket"

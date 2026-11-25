@@ -80,8 +80,8 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前We
 真实数据接入 AI 前完成对应认证、角色与资源归属授权；性能专题、完整后台和容器编排不作为原型门槛。
 
 - [ ] **E01【已跟练，继续验收】参数校验与异常响应**：ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误已跟练，Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。
-- [ ] **E02【待学】认证**：使用 Spring Security＋Session Cookie 和框架 PasswordEncoder；理解登录、注销、CSRF。SQL里的 NOT_A_LOGIN_HASH 不是已配置的真实登录密码。
-- [ ] **E03【待学】角色与资源归属授权**：用户A不能读用户B的工单；管理员派单、指定工程师处理、原报修人验收。身份从认证上下文取，客户端或模型传来的 actorId 不能充当授权。
+- [ ] **E02【已跟练，继续验收】认证**：已完成 Spring Security 引入、`BCryptPasswordEncoder`、`DatabaseUserDetailsService`（MySQL `app_user` 表）、Basic Auth 实测（`200/403/401`）与 `POST` 的 CSRF 拦截排错；浏览器 Session Cookie 登录、注销及恢复 CSRF 校验仍待验收。SQL 里的 `NOT_A_LOGIN_HASH` 不能直接作为登录密码。
+- [ ] **E03【已跟练，继续验收】角色与资源归属授权**：已为 `findSummary` 与 `assign` 接入 `@EnableMethodSecurity` + `@PreAuthorize` 并实测 `admin_a`/`engineer_a` 的 `200/404/403`；其余接口权限、用户 A 不能读用户 B 工单的资源归属校验、以及指定工程师处理/原报修人验收仍待补齐。身份从认证上下文取，客户端传来的 `actorId` 不能充当授权。
 - [ ] **E04【正在学】业务事务**：助手已为数据库创建的仓库方法加事务并用H2测试回滚；学习者结合回查讨论正常提交与异常回滚，事务代理、传播和异常的独立解释仍待巩固。未来为状态变更＋ticket_action_log划事务，并在真实测试库验证。
 - [ ] **E05【待学】重复请求和并发冲突**：创建用 requestKey/hash＋唯一约束，同键同输入返回原 ticketId，不同输入409；状态操作用前置状态/expectedVersion，两个竞争请求只能一个成功，不能静默覆盖。
 - [ ] **E06【待学】有意义的测试**：保留现有JUnit；补少量关键规则、接口权限和真实MySQL集成测试。能区分单元/集成测试、Mock/真实依赖，隔离测试库，不以断言数量衡量质量。

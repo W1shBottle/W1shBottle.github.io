@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "f0cbd196eee7c3a61d59b46f7332d7e2147fa1817798240401c3f941c4a88a97",
+  "source_sha256": "50f6fa9bbe8d55184a3b0fcef94070a5dbd0fd7cf6cc89e3b7d04ca2147d5b1a",
   "updated": "2026-11-25",
   "project": "设备运维工单",
-  "stage": "纯 Java 主线定稿（A1→A2→B01–B09→C01–C04 + 可选 D01–D02），继续后端收尾",
+  "stage": "纯 Java 主线定稿，已完成 MySQL 数据库登录与派单角色授权，待补派单 409 与乐观锁",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -21,16 +21,16 @@
       "description": "已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。"
     }
   ],
-  "next": "核对 ops_ticket_dev.app_user 表记录与占位密码哈希以切入数据库登录（UserMapper.findByUsername），并补齐派单失败分支 404/409 本人复验与影响行数解释。",
-  "note": null,
+  "next": "亲手复验 POST /api/db/tickets/{id}/assign 的 409（重复派单/非工程师）失败分支并解释受影响行数，再为派单补上 expectedVersion 乐观锁校验。",
+  "note": "/posts/ops-ticket-20261125/",
   "stats": {
     "accepted": 6,
-    "practicing": 19,
-    "planned": 26,
+    "practicing": 21,
+    "planned": 24,
     "total": 51,
     "percent": 12,
     "accepted_width": 11.7647,
-    "practicing_width": 37.2549
+    "practicing_width": 41.1765
   },
   "groups": [
     {
@@ -247,16 +247,16 @@
         {
           "id": "E02",
           "title": "认证",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "使用 Spring Security＋Session Cookie 和框架 PasswordEncoder；理解登录、注销、CSRF。SQL里的 NOT_A_LOGIN_HASH 不是已配置的真实登录密码。"
+          "description": "已完成 Spring Security 引入、`BCryptPasswordEncoder`、`DatabaseUserDetailsService`（MySQL `app_user` 表）、Basic Auth 实测（`200/403/401`）与 `POST` 的 CSRF 拦截排错；浏览器 Session Cookie 登录、注销及恢复 CSRF 校验仍待验收。SQL 里的 `NOT_A_LOGIN_HASH` 不能直接作为登录密码。"
         },
         {
           "id": "E03",
           "title": "角色与资源归属授权",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "用户A不能读用户B的工单；管理员派单、指定工程师处理、原报修人验收。身份从认证上下文取，客户端或模型传来的 actorId 不能充当授权。"
+          "description": "已为 `findSummary` 与 `assign` 接入 `@EnableMethodSecurity` + `@PreAuthorize` 并实测 `admin_a`/`engineer_a` 的 `200/404/403`；其余接口权限、用户 A 不能读用户 B 工单的资源归属校验、以及指定工程师处理/原报修人验收仍待补齐。身份从认证上下文取，客户端传来的 `actorId` 不能充当授权。"
         },
         {
           "id": "E04",
@@ -310,12 +310,12 @@
       ],
       "stats": {
         "accepted": 0,
-        "practicing": 2,
-        "planned": 8,
+        "practicing": 4,
+        "planned": 6,
         "total": 10,
         "percent": 0,
         "accepted_width": 0.0,
-        "practicing_width": 20.0
+        "practicing_width": 40.0
       }
     },
     {

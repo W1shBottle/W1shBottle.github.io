@@ -10,6 +10,6 @@
 
 此前并行记录的 Python / Redis / Python Agent 条目已归档暂不执行，现有全部验收勾选与跟练状态保持不变。
 
-下一次先核对 `app_user` 表账号与占位密码哈希，准备切入数据库登录（`UserMapper.findByUsername()`），并补齐派单失败分支 404/409 的本人复验。
+下一次先亲手复验派单接口的 `409`（重复派单/非工程师）失败分支并解释受影响行数，再补上 `expectedVersion` 乐观锁校验。
 
-[技能清单](/learning/checklists/) · [11 月 15 日派单复盘](/posts/ops-ticket-20261115/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)
+[技能清单](/learning/checklists/) · [11 月 25 日数据库登录与角色授权复盘](/posts/ops-ticket-20261125/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)
