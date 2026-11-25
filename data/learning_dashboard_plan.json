@@ -1,12 +1,14 @@
 {
   "version": 1,
-  "current_group": "python",
+  "current_group": "backend",
   "focus_tasks": [
-    "Y02",
-    "Y03"
+    "W05",
+    "W06"
   ],
   "optional_ids": [
     "P05",
+    "D01",
+    "D02",
     "O04",
     "O05",
     "O06",
@@ -39,52 +41,25 @@
       "prefixes": [
         "E"
       ],
-      "description": "补齐权限、事务、测试与 Linux 部署，交付可靠的小版本。"
-    },
-    {
-      "id": "python",
-      "code": "Y",
-      "title": "Python复习与应用",
-      "prefixes": [
-        "Y"
-      ],
-      "description": "已看课程前119集但久未写，少量复习后衔接假工单与Agent。"
-    },
-    {
-      "id": "redis",
-      "code": "R",
-      "title": "Redis核心与实战",
-      "prefixes": [
-        "R"
-      ],
-      "description": "数据结构、TTL、Python访问、工单缓存与Agent会话；分阶段练习。"
+      "description": "补齐认证授权、事务、并发版本校验、测试与部署，交付可靠的小版本。"
     },
     {
       "id": "ai",
       "code": "B",
-      "title": "Python模型调用",
+      "title": "Java AI 业务功能",
       "prefixes": [
         "B"
       ],
-      "description": "先以虚构工单练Python模型API、结构校验、超时与故障处理。"
-    },
-    {
-      "id": "agent",
-      "code": "G",
-      "title": "Python只读运维Agent",
-      "prefixes": [
-        "G"
-      ],
-      "description": "先用假数据完成工具调用和任务流程，再安全接入工单接口。"
+      "description": "基于现有 Java / Spring Boot / MyBatis / MySQL 落地模型调用、结构校验、异步触发回写与人工采纳闭环。"
     },
     {
       "id": "evaluation",
       "code": "C",
-      "title": "知识检索与评测",
+      "title": "效果评估与回归",
       "prefixes": [
         "C"
       ],
-      "description": "加入运维资料引用，比较检索、工具和任务完成情况，记录失败与改进。"
+      "description": "结合固定案例集与 B09 人工反馈采纳率统计，记录成本、失败案例与单因子回归改进。"
     },
     {
       "id": "practice",
@@ -93,7 +68,7 @@
       "prefixes": [
         "P"
       ],
-      "description": "算法、运行原理与独立修改穿插进行，不阻挡进入 AI。"
+      "description": "算法、并发运行时（含 B08 线程池联动）与独立修改穿插进行，不阻挡主线推进。"
     }
   ]
 }

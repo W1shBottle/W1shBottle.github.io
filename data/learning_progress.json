@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-24",
-  "stage": "十二月分诊助手交付准备，先跑通 Python 真实工具调用",
+  "updated": "2026-11-25",
+  "stage": "纯 Java 主线定稿（A1→A2→B01–B09→C01–C04 + 可选 D01–D02），继续后端收尾",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -246,6 +246,16 @@
       "summary": "围绕报修分诊安排十二月底可演示版本，加入真实工具调用、资料检索、LangGraph 状态恢复、Java 人工确认与评测。",
       "verification": "本次更新计划并只读核对源码，看到 Spring Security 练习配置，尚无新的登录或授权运行结果。最近有记录的实操为 11 月 15 日隔离 H2 派单跟练。",
       "next": "用三张虚构设备工单写 find_ticket(ticket_id)，分别传入已有编号、缺失编号和非法输入，核对三种结果。Java 线在隔离 H2 依次复验不存在的工单返回 404、重复派单返回 409，分别对照状态和受影响行数。"
+    },
+    {
+      "date": "2026-11-25",
+      "project": "ops-ticket",
+      "kind": "plan-update",
+      "status": "in-progress",
+      "title": "纯 Java 主线与 B/C/D 阶段规划定稿",
+      "summary": "收口为纯 Java / Spring Boot / MyBatis / MySQL 唯一主线（A1→A2→B01–B09→C01–C04 + 可选 D01–D02）：新增 B08 事务后异步触发回写、B09 人工采纳与反馈闭环，修订 C02 纳入真实采纳率统计，新增可选进阶 D01 轻量 RAG 与 D02 外部 SOP；归档 Python/Y/R/G/C05–C06 条目。",
+      "verification": "纯规划定稿与文档同步，未改动业务代码，保留全部既有 6 项验收与 19 项跟练状态不变。",
+      "next": "核对 ops_ticket_dev.app_user 表记录与占位密码哈希以切入数据库登录（UserMapper.findByUsername），并补齐派单失败分支 404/409 本人复验与影响行数解释。"
     }
   ],
   "current_project": "ops-ticket"

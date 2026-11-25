@@ -1,38 +1,36 @@
 {
   "version": 1,
-  "source_sha256": "405cadc296021672c192f464bcc34a03a3ce40812b87fadc3a5fc09382f8f588",
-  "updated": "2026-11-24",
+  "source_sha256": "f0cbd196eee7c3a61d59b46f7332d7e2147fa1817798240401c3f941c4a88a97",
+  "updated": "2026-11-25",
   "project": "设备运维工单",
-  "stage": "十二月分诊助手交付准备，先跑通 Python 真实工具调用",
-  "current_group": "python",
+  "stage": "纯 Java 主线定稿（A1→A2→B01–B09→C01–C04 + 可选 D01–D02），继续后端收尾",
+  "current_group": "backend",
   "focus_tasks": [
     {
-      "id": "Y02",
-      "title": "工单数据与集合",
-      "status": "planned",
+      "id": "W05",
+      "title": "MyBatis",
+      "status": "practicing",
       "optional": false,
-      "description": "变量、字符串、if/for、list/dict；构造虚构工单列表，独立筛选OPEN并验证无结果。",
-      "display_label": "已看课·待复习"
+      "description": "`TicketMapper` 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。`version + 1` 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。"
     },
     {
-      "id": "Y03",
-      "title": "函数与异常",
-      "status": "planned",
+      "id": "W06",
+      "title": "分层与核心状态流",
+      "status": "practicing",
       "optional": false,
-      "description": "参数、返回值、None、异常与模块；编写假数据按ID查询，处理不存在与非法输入，自己调试一次。",
-      "display_label": "已看课·待复习"
+      "description": "已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。"
     }
   ],
-  "next": "用三张虚构设备工单写 find_ticket(ticket_id)，分别传入已有编号、缺失编号和非法输入，核对三种结果。Java 线在隔离 H2 依次复验不存在的工单返回 404、重复派单返回 409，分别对照状态和受影响行数。",
+  "next": "核对 ops_ticket_dev.app_user 表记录与占位密码哈希以切入数据库登录（UserMapper.findByUsername），并补齐派单失败分支 404/409 本人复验与影响行数解释。",
   "note": null,
   "stats": {
     "accepted": 6,
     "practicing": 19,
-    "planned": 43,
-    "total": 68,
-    "percent": 9,
-    "accepted_width": 8.8235,
-    "practicing_width": 27.9412
+    "planned": 26,
+    "total": 51,
+    "percent": 12,
+    "accepted_width": 11.7647,
+    "practicing_width": 37.2549
   },
   "groups": [
     {
@@ -237,7 +235,7 @@
       "prefixes": [
         "E"
       ],
-      "description": "补齐权限、事务、测试与 Linux 部署，交付可靠的小版本。",
+      "description": "补齐认证授权、事务、并发版本校验、测试与部署，交付可靠的小版本。",
       "tasks": [
         {
           "id": "E01",
@@ -321,107 +319,124 @@
       }
     },
     {
-      "id": "python",
-      "code": "Y",
-      "title": "Python复习与应用",
+      "id": "ai",
+      "code": "B",
+      "title": "Java AI 业务功能",
       "prefixes": [
-        "Y"
+        "B"
       ],
-      "description": "已看课程前119集但久未写，少量复习后衔接假工单与Agent。",
+      "description": "基于现有 Java / Spring Boot / MyBatis / MySQL 落地模型调用、结构校验、异步触发回写与人工采纳闭环。",
       "tasks": [
         {
-          "id": "Y01",
-          "title": "解释器与虚拟环境",
+          "id": "B01",
+          "title": "模型 API 基础",
           "status": "planned",
           "optional": false,
-          "description": "确认Python及venv位置，创建独立环境，理解pip和依赖隔离；运行hello并说明退出/重新进入。"
+          "description": "理解模型、提示词、上下文、token、输入/输出用量；知道 API 调用、轻量检索、Agent 和模型训练是不同工作。能够解释本功能为何需要模型及其限制。"
         },
         {
-          "id": "Y02",
-          "title": "工单数据与集合",
+          "id": "B02",
+          "title": "Java 模型客户端",
           "status": "planned",
           "optional": false,
-          "description": "变量、字符串、if/for、list/dict；构造虚构工单列表，独立筛选OPEN并验证无结果。",
-          "display_label": "已看课·待复习"
+          "description": "在现有 Spring Boot 项目中用 Java HTTP 客户端或官方 SDK 接一个真实模型提供方；端点、模型名与 key 仅从环境配置读取，明确设置连接与读取超时。先用虚构数据，未配置时标记真实调用未验证。"
         },
         {
-          "id": "Y03",
-          "title": "函数与异常",
+          "id": "B03",
+          "title": "结构化输出",
           "status": "planned",
           "optional": false,
-          "description": "参数、返回值、None、异常与模块；编写假数据按ID查询，处理不存在与非法输入，自己调试一次。",
-          "display_label": "已看课·待复习"
+          "description": "约定 `summary`/`category`/`missingInformation`，校验 JSON 类型、必填、枚举、长度和数量；分类只允许 `DISPLAY`/`PRINTING`/`HVAC`/`OTHER`/`UNKNOWN`。能解释合法 JSON 不保证内容正确。"
         },
         {
-          "id": "Y04",
-          "title": "JSON与基础测试",
+          "id": "B04",
+          "title": "提示与上下文设计",
           "status": "planned",
           "optional": false,
-          "description": "课程中已看JSON，项目测试经历尚待确认；从虚构JSON载入工单、处理缺字段/格式错误，写并解释一个正常和一个失败用例；不读取真实敏感数据。",
-          "display_label": "已看课·待复习"
+          "description": "先只给虚构工单；真实业务联调时只给有权读取且必要的内容，明确任务与输出格式；信息少则输出 `UNKNOWN`/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。"
         },
         {
-          "id": "Y05",
-          "title": "HTTP与接口调试",
+          "id": "B05",
+          "title": "超时、错误与降级",
           "status": "planned",
           "optional": false,
-          "description": "课程中已看HTTP/模型调用，工单接口实践尚待确认；理解请求方法、状态、JSON、超时，Python调用只读本地假接口；能定位端口错误与404。",
-          "display_label": "已看课·待复习"
+          "description": "处理超时、拒答、429/5xx、错误 JSON 和缺字段；有上限的总耗时、重试与调用次数。关闭 AI 后创建、派单、处理和验收仍能运行；模型网络调用必须放在数据库写事务外。"
         },
         {
-          "id": "Y06",
-          "title": "FastAPI最小服务",
+          "id": "B06",
+          "title": "调用记录与费用",
           "status": "planned",
           "optional": false,
-          "description": "完成health与假工单查询接口，Pydantic校验参数，验证成功、错误参数和无结果；记录如何启动与停止。"
+          "description": "记录模型/提示版本、耗时、错误类别、tokens 和重试次数；区分真实账单与估算，价格或用量未知就写未知；设置个人实验预算，不能默认无限调用。"
+        },
+        {
+          "id": "B07",
+          "title": "业务接入与验证",
+          "status": "planned",
+          "optional": false,
+          "description": "接入工单业务前，Java 端必须校验详情权限、操作人身份与资源范围，无权工单不发模型请求；真实模型调用证据与模拟故障证据分开记录。"
+        },
+        {
+          "id": "B08",
+          "title": "异步触发与状态回写",
+          "status": "planned",
+          "optional": false,
+          "description": "基于 Spring `@Async` + 自定义有界线程池（明确核心/最大线程数、队列上限与拒绝策略），配合任务表或状态字段（`PENDING`/`DONE`/`FAILED`），在工单写事务**提交之后**异步触发 AI 分析并回写结果；具备同工单同版本的防重/幂等保护，联动贯穿模块 P03。验收须给出事务回滚不误触发、`PENDING→DONE` 与 `PENDING→FAILED` 实测、同工单同版本重复触发幂等证据及有界线程池原理口述；不引入 Kafka/MQ，不宣称分布式可靠消息。"
+        },
+        {
+          "id": "B09",
+          "title": "人工采纳与反馈闭环",
+          "status": "planned",
+          "optional": false,
+          "description": "落地“AI 给建议、人保留确认权”，提供**直接采纳 / 修改后采纳 / 驳回**接口，并将 AI 原建议、人工最终决策、修改差异与驳回原因写入反馈日志。验收须覆盖三条动作路径、无权角色 403 拒绝、同一建议重复采纳幂等、以及工单版本变化后旧建议被 `expectedVersion` 拦截返回 409；AI 建议本身不具备自动写权限。"
         }
       ],
       "stats": {
         "accepted": 0,
         "practicing": 0,
-        "planned": 6,
-        "total": 6,
+        "planned": 9,
+        "total": 9,
         "percent": 0,
         "accepted_width": 0.0,
         "practicing_width": 0.0
       }
     },
     {
-      "id": "redis",
-      "code": "R",
-      "title": "Redis核心与实战",
+      "id": "evaluation",
+      "code": "C",
+      "title": "效果评估与回归",
       "prefixes": [
-        "R"
+        "C"
       ],
-      "description": "数据结构、TTL、Python访问、工单缓存与Agent会话；分阶段练习。",
+      "description": "结合固定案例集与 B09 人工反馈采纳率统计，记录成本、失败案例与单因子回归改进。",
       "tasks": [
         {
-          "id": "R01",
-          "title": "基础命令与TTL",
+          "id": "C01",
+          "title": "固定案例与基线",
           "status": "planned",
           "optional": false,
-          "description": "能解释Redis用途和String/Hash/List，使用虚构数据操作 `SET/GET/EXPIRE/TTL`、`HSET/HGETALL`、`RPUSH/LRANGE`，预测并验证键过期。按指定分P分次学习，不默认已安装Redis。"
+          "description": "准备约 12—20 个虚构案例，包含明确、模糊、无依据、长输入、诱导越权；开发集和留出集分开，先记录人工阅读整理摘要的基线。"
         },
         {
-          "id": "R02",
-          "title": "Python访问Redis",
+          "id": "C02",
+          "title": "效果评估",
           "status": "planned",
           "optional": false,
-          "description": "按官方redis-py文档连接隔离服务，对虚构数据读写、设置TTL，解释返回类型；设置连接超时并处理连接错误，记录真实运行与模拟错误。"
+          "description": "采用离线固定集与交互反馈双口径。① 离线固定案例（开发集/留出集分开）记录真实样本数、结构合法率、事实忠实度、建议可用性/修改次数，保留失败例和人工判定理由；② 纳入 B09 反馈日志的真实采纳率（直接采纳 / 修改后采纳 / 驳回占比）与修改次数分布统计，并抽样归因。两类指标分开列示并标明实际分母，不只挑成功截图，无真实模型调用不将模拟结果计为效果数据。"
         },
         {
-          "id": "R03",
-          "title": "虚构设备缓存",
+          "id": "C03",
+          "title": "延迟、用量与成本",
           "status": "planned",
           "optional": false,
-          "description": "先查Redis，缺失时读MySQL并写缓存；写数据库后删除对应缓存，设置TTL，Redis不可用回源数据库；验证命中、失效、异常，说明并发导致短暂陈旧的限制。真实用户工单先认证授权，不用公共键缓存私有信息。"
+          "description": "记录端到端耗时、失败/重试、输入输出 token 及计价依据；说明小样本限制，没有实测不写提升比例或并发规模。"
         },
         {
-          "id": "R04",
-          "title": "Agent会话记忆",
+          "id": "C04",
+          "title": "失败分析与回归",
           "status": "planned",
           "optional": false,
-          "description": "为虚构会话使用List、长度上限和TTL保存最近对话，验证顺序、不同会话隔离、过期与Redis异常；故障时明确临时内存降级或报错，不声称永久保存。接入真实数据前必须有身份与资源授权。"
+          "description": "选一个真实问题，只改提示、上下文或解析中的一项；重跑固定集和留出集，解释改善与退化，并证明 AI 失败仍不影响业务。"
         }
       ],
       "stats": {
@@ -435,213 +450,13 @@
       }
     },
     {
-      "id": "ai",
-      "code": "B",
-      "title": "Python模型调用",
-      "prefixes": [
-        "B"
-      ],
-      "description": "先以虚构工单练Python模型API、结构校验、超时与故障处理。",
-      "tasks": [
-        {
-          "id": "B01",
-          "title": "模型 API 基础",
-          "status": "planned",
-          "optional": false,
-          "description": "理解模型、提示词、上下文、token、输入/输出用量；知道API调用、RAG、Agent和模型训练是不同工作。能够解释本功能为何需要模型及其限制。"
-        },
-        {
-          "id": "B02",
-          "title": "Python模型客户端",
-          "status": "planned",
-          "optional": false,
-          "description": "已看课程中模型调用，是否跟练不详；在工单项目中用Python SDK或HTTP客户端接一个真实提供方；端点/模型/key从环境配置取，设置超时。使用虚构数据，未配置时标记真实调用未验证。"
-        },
-        {
-          "id": "B03",
-          "title": "结构化输出",
-          "status": "planned",
-          "optional": false,
-          "description": "约定 summary/category/missingInformation，校验JSON类型、必填、枚举、长度和数量；分类只允许DISPLAY/PRINTING/HVAC/OTHER/UNKNOWN。能解释合法JSON不保证内容正确。"
-        },
-        {
-          "id": "B04",
-          "title": "提示与上下文设计",
-          "status": "planned",
-          "optional": false,
-          "description": "先只给虚构工单；真实联调时只给有权读取且必要的内容，明确任务与输出格式；信息少则UNKNOWN/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。"
-        },
-        {
-          "id": "B05",
-          "title": "超时、错误与降级",
-          "status": "planned",
-          "optional": false,
-          "description": "处理超时、拒答、429/5xx、错误JSON和缺字段；有上限的总耗时/重试/调用次数。关闭AI后创建、派单、处理和验收仍能运行；网络调用放在写事务外。"
-        },
-        {
-          "id": "B06",
-          "title": "调用记录与费用",
-          "status": "planned",
-          "optional": false,
-          "description": "记录模型/提示版本、耗时、错误类别、tokens和重试；区分真实账单与估算，价格/用量未知就写未知；设置个人实验预算，不能默认无限调用。"
-        },
-        {
-          "id": "B07",
-          "title": "业务接入与验证",
-          "status": "planned",
-          "optional": false,
-          "description": "先用虚构数据验证Python服务；真实数据联调时Java必须校验详情授权、服务身份及资源范围，无权工单不发模型请求。真实模型与模拟故障证据分开。"
-        }
-      ],
-      "stats": {
-        "accepted": 0,
-        "practicing": 0,
-        "planned": 7,
-        "total": 7,
-        "percent": 0,
-        "accepted_width": 0.0,
-        "practicing_width": 0.0
-      }
-    },
-    {
-      "id": "agent",
-      "code": "G",
-      "title": "Python只读运维Agent",
-      "prefixes": [
-        "G"
-      ],
-      "description": "先用假数据完成工具调用和任务流程，再安全接入工单接口。",
-      "tasks": [
-        {
-          "id": "G01",
-          "title": "工具契约与授权",
-          "status": "planned",
-          "optional": false,
-          "description": "先封装Python假数据查询；真实联调时定义findVisibleTickets/getTicketDetail参数、结果上限和错误，Java端依据可信身份逐次授权，不允许任意SQL/命令或模型伪造userId。"
-        },
-        {
-          "id": "G02",
-          "title": "真实工具调用",
-          "status": "planned",
-          "optional": false,
-          "description": "保存模型请求工具、Python校验执行、结果回传和最终回答；错误参数不执行，模型和数据均用真实/模拟标签区分。"
-        },
-        {
-          "id": "G03",
-          "title": "有限任务编排",
-          "status": "planned",
-          "optional": false,
-          "description": "查询→详情→追问/整合，明确终止、步数/调用数/总耗时，处理重复调用、无结果、工具超时和失败。"
-        },
-        {
-          "id": "G04",
-          "title": "上下文管理",
-          "status": "planned",
-          "optional": false,
-          "description": "历史和工具结果按会话隔离，控制长度/摘要，旧状态重查；区分用户指令与检索内容；解释每次实际送入模型的信息。"
-        },
-        {
-          "id": "G05",
-          "title": "任务状态与持久化",
-          "status": "planned",
-          "optional": false,
-          "description": "保存taskId、PENDING/RUNNING/WAITING_INPUT/SUCCEEDED/FAILED与步骤；等待输入后继续，重启后恢复或明确中断，不能永远RUNNING。"
-        },
-        {
-          "id": "G06",
-          "title": "追踪与诊断",
-          "status": "planned",
-          "optional": false,
-          "description": "记录Prompt/模型版本、工具参数和结果摘要、耗时/用量/错误；复现并定位一次失败，日志不泄露密钥和无关内容。"
-        },
-        {
-          "id": "G07",
-          "title": "安全联调与独立修改",
-          "status": "planned",
-          "optional": false,
-          "description": "假数据阶段独立加查询条件；真实联调前补Java认证、用户/资源授权及服务身份传递。Python通过受控HTTP读Java接口，覆盖成功、空结果、无权、超时，不由模型自报权限或执行任意SQL。"
-        }
-      ],
-      "stats": {
-        "accepted": 0,
-        "practicing": 0,
-        "planned": 7,
-        "total": 7,
-        "percent": 0,
-        "accepted_width": 0.0,
-        "practicing_width": 0.0
-      }
-    },
-    {
-      "id": "evaluation",
-      "code": "C",
-      "title": "知识检索与评测",
-      "prefixes": [
-        "C"
-      ],
-      "description": "加入运维资料引用，比较检索、工具和任务完成情况，记录失败与改进。",
-      "tasks": [
-        {
-          "id": "C01",
-          "title": "固定案例与基线",
-          "status": "planned",
-          "optional": false,
-          "description": "准备约12—20个虚构案例，包含明确、模糊、无依据、长输入、诱导越权；开发集和留出集分开，先记录人工阅读整理摘要的基线。"
-        },
-        {
-          "id": "C02",
-          "title": "效果评估",
-          "status": "planned",
-          "optional": false,
-          "description": "记录真实样本数、结构合法率、事实忠实度、建议可用性/修改次数；保留失败例和人工判定理由，不只挑成功截图。"
-        },
-        {
-          "id": "C03",
-          "title": "延迟、用量与成本",
-          "status": "planned",
-          "optional": false,
-          "description": "记录端到端耗时、失败/重试、输入输出token及计价依据；说明小样本限制，没有实测不写提升比例或并发规模。"
-        },
-        {
-          "id": "C04",
-          "title": "失败分析与回归",
-          "status": "planned",
-          "optional": false,
-          "description": "选一个真实问题，只改提示、上下文或解析中的一项；重跑固定集和留出集，解释改善与退化，并证明AI失败仍不影响业务。"
-        },
-        {
-          "id": "C05",
-          "title": "运维知识检索与引用",
-          "status": "planned",
-          "optional": false,
-          "description": "准备10—20条有来源说明/版本/适用设备的虚构资料，接searchMaintenanceDocs；从关键词基线开始，需要时比较Embedding/向量检索。回答引用定位原段落，无依据明确不足；检索仍执行权限过滤。"
-        },
-        {
-          "id": "C06",
-          "title": "端到端Agent评测",
-          "status": "planned",
-          "optional": false,
-          "description": "B的摘要集扩展到约30条任务，覆盖追问、无结果、越权、工具失败/重复调用、上下文与重启中断；开发/留出分开，分别判定检索、工具选择/参数、任务完成和引用，记录实际分母、延迟与成本。"
-        }
-      ],
-      "stats": {
-        "accepted": 0,
-        "practicing": 0,
-        "planned": 6,
-        "total": 6,
-        "percent": 0,
-        "accepted_width": 0.0,
-        "practicing_width": 0.0
-      }
-    },
-    {
       "id": "practice",
       "code": "贯穿",
       "title": "基础与项目表达",
       "prefixes": [
         "P"
       ],
-      "description": "算法、运行原理与独立修改穿插进行，不阻挡进入 AI。",
+      "description": "算法、并发运行时（含 B08 线程池联动）与独立修改穿插进行，不阻挡主线推进。",
       "tasks": [
         {
           "id": "P01",
@@ -662,7 +477,7 @@
           "title": "并发与运行时入门",
           "status": "planned",
           "optional": false,
-          "description": "理解线程/进程、共享状态、竞态、锁和有界线程池；区分Java锁与数据库条件更新；会看基本JVM内存/GC现象。先支撑当前排错，深入JMM/JVM调优后置。"
+          "description": "理解线程/进程、共享状态、竞态、锁和有界线程池；区分Java锁与数据库条件更新；会看基本JVM内存/GC现象；联动 B08 的 `@Async` 与自定义有界线程池实践。先支撑当前排错，深入JMM/JVM调优后置。"
         },
         {
           "id": "P04",
@@ -699,6 +514,20 @@
   ],
   "optional_tasks": [
     {
+      "id": "D01",
+      "title": "历史工单轻量检索（轻量 RAG）",
+      "status": "planned",
+      "optional": true,
+      "description": "使用 MySQL 全文检索（`FULLTEXT`）或同设备/型号条件过滤，召回 Top 3 已解决（`RESOLVED`/`CLOSED`）且当前有权限查看的历史工单注入上下文，要求建议标明引用工单编号，查无依据则明确说明而非硬凑。验收须在 C 阶段同一批**留出集**上完成有/无检索对比回归，记录真实分母下的建议可用性、引用准确度、耗时与 token 增量变化，并保留至少 1 个误召回或无效召回样本分析。"
+    },
+    {
+      "id": "D02",
+      "title": "排查 SOP 与分类口径外置（轻量 Skill）",
+      "status": "planned",
+      "optional": true,
+      "description": "将各设备类别的排查规则（SOP）与分类口径从硬编码代码中抽离到外部 Markdown 文件或 MySQL 配置表（带版本标识），运行时按工单/设备类别动态加载拼装进 Prompt，未命中或配置异常时安全降级到默认兜底口径。验收须在不改核心业务 Java 代码的前提下修改一条外部规则并验证生效、记录命中版本，在固定集与留出集上做修改前后回归对比（含是否引发退化），不引入多 Agent 框架或模型微调。"
+    },
+    {
       "id": "P05",
       "title": "最小页面能力",
       "status": "planned",
@@ -717,7 +546,7 @@
       "title": "部署和性能扩展",
       "status": "planned",
       "optional": true,
-      "description": "需要可复现容器环境再学Docker/Compose；Redis基础、缓存和会话按R项学习；按需深入多级缓存和性能调优；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。"
+      "description": "需要可复现容器环境再学Docker/Compose；按需深入缓存和性能调优；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。"
     },
     {
       "id": "O06",
@@ -734,5 +563,5 @@
       "description": "在单Agent基线上定义一项独立子任务或按任务选模型/备用模型，比较完成率、交接错误、延迟和成本，保留无收益结果。"
     }
   ],
-  "total_items": 73
+  "total_items": 58
 }
