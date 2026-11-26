@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "50f6fa9bbe8d55184a3b0fcef94070a5dbd0fd7cf6cc89e3b7d04ca2147d5b1a",
-  "updated": "2026-11-25",
+  "source_sha256": "db0dc12173c8dfc6aefb9efc6fbdca5e03cc7bd15b86699c20c3b8cced36e7ca",
+  "updated": "2026-11-26",
   "project": "设备运维工单",
-  "stage": "纯 Java 主线定稿，已完成 MySQL 数据库登录与派单角色授权，待补派单 409 与乐观锁",
+  "stage": "四态乐观锁与资源归属闭环跑通，已清理旧代码并标准分包，待补查询归属隔离与操作日志",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -18,19 +18,19 @@
       "title": "分层与核心状态流",
       "status": "practicing",
       "optional": false,
-      "description": "已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。"
+      "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环，并按 `controller/service/repository/mapper/domain/dto` 分包整理（清理与分包由助手协助）；操作日志 `ticket_action_log` 与完整权限归属仍待补齐。"
     }
   ],
-  "next": "亲手复验 POST /api/db/tickets/{id}/assign 的 409（重复派单/非工程师）失败分支并解释受影响行数，再为派单补上 expectedVersion 乐观锁校验。",
-  "note": "/posts/ops-ticket-20261125/",
+  "next": "给 GET /api/db/tickets/{id} 补上查询归属隔离（报障人 A 不能读取报障人 B 的工单），并将创建工单的 reporterId 改为从登录身份自动读取。",
+  "note": "/posts/ops-ticket-20261126/",
   "stats": {
     "accepted": 6,
-    "practicing": 21,
-    "planned": 24,
+    "practicing": 22,
+    "planned": 23,
     "total": 51,
     "percent": 12,
     "accepted_width": 11.7647,
-    "practicing_width": 41.1765
+    "practicing_width": 43.1373
   },
   "groups": [
     {
@@ -215,7 +215,7 @@
           "title": "分层与核心状态流",
           "status": "practicing",
           "optional": false,
-          "description": "已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。"
+          "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环，并按 `controller/service/repository/mapper/domain/dto` 分包整理（清理与分包由助手协助）；操作日志 `ticket_action_log` 与完整权限归属仍待补齐。"
         }
       ],
       "stats": {
@@ -256,7 +256,7 @@
           "title": "角色与资源归属授权",
           "status": "practicing",
           "optional": false,
-          "description": "已为 `findSummary` 与 `assign` 接入 `@EnableMethodSecurity` + `@PreAuthorize` 并实测 `admin_a`/`engineer_a` 的 `200/404/403`；其余接口权限、用户 A 不能读用户 B 工单的资源归属校验、以及指定工程师处理/原报修人验收仍待补齐。身份从认证上下文取，客户端传来的 `actorId` 不能充当授权。"
+          "description": "已完成管理员派单、指定工程师解决（非指派单 `403`）、原报障人验收关闭（`reporter_a` 越权 `reporter_b` 单 `403`）实测，操作人身份均从 `Authentication` 读取；`GET` 查询归属隔离（用户 A 不能读用户 B 工单）与创建工单自动取登录人仍待补齐。"
         },
         {
           "id": "E04",
@@ -268,9 +268,9 @@
         {
           "id": "E05",
           "title": "重复请求和并发冲突",
-          "status": "planned",
+          "status": "practicing",
           "optional": false,
-          "description": "创建用 requestKey/hash＋唯一约束，同键同输入返回原 ticketId，不同输入409；状态操作用前置状态/expectedVersion，两个竞争请求只能一个成功，不能静默覆盖。"
+          "description": "已在 `assign`/`resolve`/`close` 三条状态操作上亲手接入并实测 `expectedVersion` 乐观锁（旧版本返回 `409`、成功递增版本）；创建防重 `requestKey`/唯一约束与双线程真实并发竞争测试仍待完成。"
         },
         {
           "id": "E06",
@@ -310,12 +310,12 @@
       ],
       "stats": {
         "accepted": 0,
-        "practicing": 4,
-        "planned": 6,
+        "practicing": 5,
+        "planned": 5,
         "total": 10,
         "percent": 0,
         "accepted_width": 0.0,
-        "practicing_width": 40.0
+        "practicing_width": 50.0
       }
     },
     {

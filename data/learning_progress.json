@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-25",
-  "stage": "纯 Java 主线定稿，已完成 MySQL 数据库登录与派单角色授权，待补派单 409 与乐观锁",
+  "updated": "2026-11-26",
+  "stage": "四态乐观锁与资源归属闭环跑通，已清理旧代码并标准分包，待补查询归属隔离与操作日志",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -256,6 +256,16 @@
       "verification": "本人配置 IDEA 数据源核对 app_user，经提示修正 AppUser 与 UserMapper 后独立编写 DatabaseUserDetailsService，更新 admin_a/engineer_a 的 BCrypt 哈希并实测 GET 200/403/401，Debug 定位后实测 POST /assign 返回 admin_a 404 与 engineer_a 403。其余接口授权、资源归属、浏览器 Session/CSRF、派单 409 与 expectedVersion 乐观锁仍待补齐。",
       "next": "亲手复验 POST /api/db/tickets/{id}/assign 的 409（重复派单/非工程师）失败分支并解释受影响行数，再为派单补上 expectedVersion 乐观锁校验。",
       "note": "/posts/ops-ticket-20261125/"
+    },
+    {
+      "date": "2026-11-26",
+      "project": "ops-ticket",
+      "status": "reviewed",
+      "title": "乐观锁、资源归属授权与四态闭环",
+      "summary": "复验派单 409 与影响行数分类，给派单/解决/验收接入 expectedVersion 乐观锁；从 Authentication 获取可信操作人，实现指定工程师 resolve 与原报障人 close 并在真实 MySQL 跑通四态闭环；先做 Git 存档，再由助手协助清理旧文件代码并按 Spring Boot 规范分包。",
+      "verification": "本人实测派单 409、4 号工单 assign（400/409/200→version 1）、resolve（admin 403/非指派单 403/旧版本 409/200→version 2）与 close（reporter_a 越权 403/旧版本 409/200→CLOSED version 3），并靠 Base64 定位登录空格问题。清理旧代码与分包由助手协助，Maven 离线编译与 TicketTest 6 项通过。查询归属隔离、创建自动取登录人、操作日志与并发测试仍待补齐。",
+      "next": "给 GET /api/db/tickets/{id} 补上查询归属隔离（报障人 A 不能读取报障人 B 的工单），并将创建工单的 reporterId 改为从登录身份自动读取。",
+      "note": "/posts/ops-ticket-20261126/"
     }
   ],
   "current_project": "ops-ticket"
