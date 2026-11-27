@@ -5,10 +5,10 @@
   "weight": 90,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-25T00:00:00+08:00"
+  "lastmod": "2026-11-27T00:00:00+08:00"
 }
 
-更新：2026-11-25（纯 Java 主线 B/C/D 规划定稿）。唯一主线定稿为 **A1 → A2 → B01–B09 → C01–C04（可选进阶 D01–D02）**，全部基于现有 Java / Spring Boot / MyBatis / MySQL 轻量落地，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署。此前记录的 Python（Y）、Redis（R）、Python Agent（G）及 C05–C06 条目已迁入文末历史归档区域（暂不执行），不再计入当前活跃清单与看板统计。原有全部验收勾选与跟练状态保持不变（J01–J06 已验收），本次调整不新增任何验收勾选。
+更新：2026-11-27（同步 A2 数据库登录、三角色归属隔离、乐观锁、操作日志与 H2 外键回滚测试实测进展；主线保持 2026-11-25 定稿的纯 Java 路线 **A1 → A2 → B01–B09 → C01–C04（可选进阶 D01–D02）**，全部基于现有 Java / Spring Boot / MyBatis / MySQL 轻量落地，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署）。此前记录的 Python（Y）、Redis（R）、Python Agent（G）及 C05–C06 条目已迁入文末历史归档区域（暂不执行），不再计入当前活跃清单与看板统计。主线 51 项中已验收保持 6 项（`J01–J06`），跟练中 22 项，待学 23 项。
 
 ## 怎样看这份清单
 
@@ -24,14 +24,13 @@
 | 所处位置 | 技术/工具 | 学到什么程度 | 当前状态 |
 | --- | --- | --- | --- |
 | 已有基础 | Java 21、IDEA | 对象/接口/集合/异常/IO，能调试自己的业务 | 已练习，具体证据见 J 项 |
-| 已有工具 | Git、Maven、JUnit Jupiter | 管理变更、依赖、构建和有意义的测试 | 已练习；25 项测试由本人和助手不同时期编写，不等于覆盖全业务 |
-| 当前 | MySQL、SQL | 三表关系、条件/关联查询、事务、约束 | JOIN筛选、统计/分页、事务与双连接版本竞争已有跟练反馈 |
-| A1 | JDBC → MyBatis | 先懂连接/参数/结果，再用 Mapper 执行自己写的 SQL | JDBC 查询/更新事务与 MyBatis 查询/创建已跟练，独立迁移继续验收 |
-| A1 | HTTP/JSON、Spring Boot、Spring MVC、依赖注入 | 从请求到数据库的一条完整调用链 | 文件版及数据库查询/创建已跟练；独立解释调用链与完整业务待验 |
-| A2 | Bean Validation、统一异常、Spring Security＋Session | 参数合法、身份可信、角色和资源归属正确 | 两类统一异常已跟练；Bean Validation、认证与授权待学 |
-| A2 | Spring 事务、条件更新、操作日志、SLF4J/日志实现 | 数据一致、冲突可解释、错误能定位 | 待学 |
-| A2 | JUnit、Spring 测试工具、真实 MySQL 测试库 | 用少量关键测试验证权限、回滚、并发与重试 | 待学；不能只用 Mock 证明数据库事务 |
-| A2 | Linux 基础、JAR、环境变量、HTTP 调试工具 | 在另一环境启动、看日志、排错和恢复数据 | 待学；工具选 curl/IDEA HTTP/Postman 中一种即可 |
+| 已有工具 | Git、Maven、JUnit Jupiter | 管理变更、依赖、构建和有意义的测试 | 已练习；已清理早期文件版演示，保留 `TicketTest` 与数据库事务/HTTP 测试 |
+| A1 | MySQL、SQL、JDBC → MyBatis | 三表 + `ticket_action_log`、Mapper 映射、条件更新与四态闭环 | 真实 MySQL 已跑通创建/派单/解决/验收关闭四态闭环与标准分包 |
+| A1 | HTTP/JSON、Spring Boot、Spring MVC、依赖注入 | 从请求到数据库的完整分层调用链 | 数据库查询/创建/派单/解决/关闭/日志接口均已接通；独立解释持续验收 |
+| A2（当前） | Bean Validation、统一异常、Spring Security | 参数合法、MySQL 登录认证、角色与资源归属隔离 | 已实测 MySQL `app_user` 登录、`@PreAuthorize`、单条/日志三角色归属与创建自动绑登录人；列表权限与 Session/CSRF 待收尾 |
+| A2（当前） | Spring 事务、`expectedVersion` 乐观锁、操作日志、SLF4J | 状态变更与审计日志同事务、版本冲突 409、日志排错 | 已实测三动作乐观锁 `409`、`ticket_action_log` 流水与 H2 外键失败回滚（4 项全绿）；SLF4J 与真实 MySQL 回滚验证待补 |
+| A2 | JUnit、Spring 测试工具、真实 MySQL 测试库 | 用少量关键测试验证权限、回滚、并发与重试 | 已有 H2 回滚测试；真实 MySQL 测试库与权限/并发测试待补 |
+| A2 | Linux 基础、JAR、环境变量、HTTP 调试工具 | 在另一环境启动、看日志、排错和恢复数据 | 待学；工具选 curl/IDEA HTTP/Apifox 中一种即可 |
 | B | Java 模型 HTTP/SDK 客户端、JSON/Schema 校验、`@Async` 线程池、人工采纳闭环 | 真实调用、结构化建议、超时降级、事务后异步回写与人工确认 | 未接入；先使用虚构数据，基于现有 Spring Boot/MyBatis/MySQL 落地 |
 | C | 固定案例集、人工对照、反馈日志统计、调用用量与成本记录 | 测离线效果与 B09 真实采纳率、解释失败、比较单因子回归 | 待做；无 API 不能把 Mock 当效果验证 |
 | D（可选） | MySQL 全文/条件轻量检索、外部 Markdown/配置表 SOP | 历史已解决工单 Top 3 轻量 RAG 与排查规则外置回归 | 按需进阶；不阻挡 A→B→C 结项 |
@@ -72,8 +71,8 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前We
 - [ ] **W02【已跟练，继续验收】数据库生成 ID 与映射**：学习者跟写数据库 POST 并取得自增 id=9；独立解释主键回填和 add/create 差别，再逐步补映射字段。
 - [ ] **W03【已跟练，继续验收】HTTP 和 JSON**：文件版GET/POST已有200/201/400/404证据；用断点观察setter/getter、缺字段与错误JSON。学习者反馈重启恢复及统一错误响应通过；另用Apifox在隔离H2完成派单POST和前后GET，独立解释与本人失败分支练习继续验收。
 - [ ] **W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入**：已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版及数据库查询/创建 HTTP 已接通；独立解释对象/调用链、权限仍待验收。
-- [ ] **W05【已跟练，继续验收】MyBatis**：`TicketMapper` 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。`version + 1` 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。
-- [ ] **W06【已跟练，继续验收】分层与核心状态流**：已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环，并按 `controller/service/repository/mapper/domain/dto` 分包整理（清理与分包由助手协助）；操作日志 `ticket_action_log` 与完整权限归属仍待补齐。
+- [ ] **W05【已跟练，继续验收】MyBatis**：`TicketMapper` 与 `UserMapper`、`TicketActionLogMapper` 已落地参数绑定、下划线转驼峰映射、创建主键回填、带 `expectedVersion` 条件更新的 `assign`/`resolve`/`close` 及审计日志插入，并在真实 MySQL 跑通全链路；独立编写新 SQL 与真实 MySQL 隔离集成测试继续验收。
+- [ ] **W06【已跟练，继续验收】分层与核心状态流**：已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环与 `ticket_action_log` 操作审计，并按 `controller/service/repository/mapper/domain/dto/config/exception` 规范分包（清理与分包由助手协助）；列表接口权限收尾与独立变体继续验收。
 
 ## E：能运行、能交付的工程能力（A2）
 
@@ -145,9 +144,9 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前We
 
 ## 今天只看这一小段
 
-1. **Java 主线（当前优先）**：先从 `app_user` 表核对现有用户记录与占位密码哈希，接着写用户对象与 `UserMapper.findByUsername()`，把 Spring Security 登录账号从内存切到 MySQL；并补齐派单失败分支（404/409）的本人复验与影响行数解释。
-2. **A2 工程收尾**：补足接口权限/资源归属校验与 `expectedVersion` 乐观锁保护，再按 B01–B09 → C01–C04 推进纯 Java AI 功能与评测。
-3. **可选进阶**：A→B→C 验收通过后，再按需选做 D01（MySQL 轻量 RAG）或 D02（外部 SOP 轻量 Skill）。
+1. **A2 收尾（当前优先）**：给 `GET /api/db/tickets` 列表接口补上三角色归属权限，接入 SLF4J 日志并补齐基础集成验证，完成 A2 最小工程闭环。
+2. **进入 B 阶段（Java AI 业务功能）**：按 `B01–B09` 推进真实模型调用、结构化输出校验、超时降级、`@Async` 事务后异步回写与人工采纳反馈闭环，再按 `C01–C04` 做效果评估与单因子回归。
+3. **可选进阶**：A→B→C 验收通过后，再按需选做 `D01`（MySQL 轻量 RAG）或 `D02`（外部 SOP 轻量 Skill）。
 
 不因更新计划更改任何已有验收勾选。
 
@@ -174,9 +173,9 @@ Git提交编号或本地版本备份：
 
 | 阶段检查 | 项目实现证据 | 本人能力证据 | 当前结论 |
 | --- | --- | --- | --- |
-| A0 SQL/JDBC | JOIN筛选、统计/分页、SQL事务/版本竞争、JDBC查询/更新回滚已有跟练反馈 | 独立解释与新业务变体继续巩固 | 不重做整套SQL；正式Web接库继续收尾 |
-| A1数据库/HTTP闭环 | 文件版与数据库版查询/创建、MyBatis 派单成功路径、两类统一异常已实现 | 断点与隔离H2成功路径有反馈，派单404/409失败分支与独立变体待验 | 当前阶段，补派单失败分支并衔接A2登录 |
-| A2工程门槛 | Spring Security 内存演示账号与多角色注解已跟练；数据库登录、归属授权、事务、版本冲突、关键测试、部署待补 | 解释授权、事务边界与乐观锁，复现排查一次故障 | 正在从 `app_user` 切入数据库登录 |
+| A0 SQL/JDBC | JOIN筛选、统计/分页、SQL事务/版本竞争、JDBC查询/更新回滚已有跟练反馈 | 独立解释与新业务变体继续巩固 | 已切入正式 Spring Boot + MyBatis 项目 |
+| A1 数据库/HTTP 闭环 | 真实 MySQL 已跑通创建、派单、解决、验收关闭四态闭环，清理早期文件代码并完成标准 8 子包分层 | 已实测 4 号/5 号工单全链路与 400/404/409 分支，独立变体继续验收 | 主流程已跑通，进入 A2 工程化 |
+| A2 工程门槛（当前） | 已落地 MySQL `app_user` 登录、`@PreAuthorize`、单条/日志三角色归属隔离、创建自动绑登录人、`expectedVersion` 乐观锁、`ticket_action_log` + `@Transactional` 与 H2 外键回滚测试（4 项全绿） | 已实测多角色 `200/401/403/409`、修复 `findLogs` 角色比对 bug 并手写外键回滚测试 | 当前阶段，收尾列表权限、SLF4J 日志与基础验证后进入 B |
 | B Java AI 功能（B01–B09） | 真实模型调用、结构化校验、故障降级、`@Async` 事务后异步回写、人工采纳与反馈闭环 | 自己改输出约束，验证异步幂等与过期建议 409 拦截 | 待学 |
 | C 效果评估与回归（C01–C04） | 固定集/留出集、B09 真实采纳率与修改次数统计、失败样本与单因子回归 | 解释收益与局限，复现一次单因子改进 | 待学 |
 | D 可选进阶（D01–D02） | MySQL Top 3 轻量检索留出集对比、外部 SOP/分类口径动态加载与回归 | 解释检索误召回与外部规则退化，不阻挡主线结项 | 按需 |

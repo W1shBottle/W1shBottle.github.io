@@ -1,14 +1,16 @@
 {
   "title": "工单项目需求与开发计划",
-  "description": "最小业务闭环、阶段验收与后续 AI、Agent 任务。",
+  "description": "最小业务闭环、A2 认证事务与纯 Java B/C/D 阶段验收计划。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-15T00:00:00+08:00",
+  "lastmod": "2026-11-27T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
 }
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
+
+> **2026-11-27 最新核对**：第一版核心状态闭环（创建 → 派单 → 解决 → 验收关闭）、MySQL `app_user` 登录、`@PreAuthorize`、单条工单与日志的三角色归属隔离、`expectedVersion` 乐观锁、`ticket_action_log` 操作审计与 `@Transactional` 回滚测试均已实测落地；早期文件版演示代码已清理。当前收尾 `GET /api/db/tickets` 列表接口权限与 SLF4J 日志后，按纯 Java 主线进入 **B01–B09 → C01–C04（可选 D01–D02）**。下方第 1–6 节保留 2026-11-15 需求基线快照作演进记录。
 
 核对日期：2026-11-15；11月14日为计划调整和源码只读检查。11月15日数据库查询分层整理和隔离验证见本页末节。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层；11月9日完成`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`和`POST /api/db/tickets`，学习者自行POST得到真实自增id，助手运行合法201/非法400矩阵并核对数据库行。当前正式工单业务仍使用文件仓库；数据库派单练习接口已接通并在隔离环境走通成功路径，数据库解决/验收、权限和AI尚未接入。11月13日助手补充数据库创建的事务保护和隔离自动测试，不能据此认定学习者已掌握事务。
 

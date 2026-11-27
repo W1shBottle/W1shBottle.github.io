@@ -1,52 +1,169 @@
 {{ define "main" }}
-{{ partial "interior-heading.html" (dict "number" "06" "eyebrow" "SEARCH / 搜索" "title" "找一篇需要的笔记。" "description" "搜索文章、课程与项目文档。多个关键词可以用空格分开。") }}
+{{ partial "interior-heading.html" (dict "number" "06" "eyebrow" "SEARCH / 搜索" "title" "找一篇需要的笔记。" "description" "搜索全部文章、课程与项目文档。支持多关键词空格组合，按 / 快速聚焦。") }}
 <section class="search-workbench" aria-label="搜索文章与课程">
-  <label for="search-input" class="search-field-label">你想找什么？</label>
-  <div class="search-field"><span class="search-field-icon" aria-hidden="true"></span><input class="search-box" id="search-input" type="search" placeholder="例如：Java、工单、内存" autocomplete="off"><button type="button" id="search-clear" hidden>清空</button></div>
-  <div class="search-suggestions" aria-label="快捷搜索" hidden><span>试着搜搜</span>{{ range slice "Java" "工单" "JDBC" "事务" "内存" }}<button type="button" data-search-query="{{ . }}">{{ . }}</button>{{ end }}</div>
+  <label for="search-input" class="sr-only">搜索文章与课程</label>
+  <div class="search-field">
+    <svg class="search-field-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+    <input class="search-box" id="search-input" type="search" placeholder="输入关键词，例如：Spring Security、乐观锁、事务…" autocomplete="off">
+    <kbd class="search-kbd" id="search-kbd" aria-hidden="true">/</kbd>
+    <button type="button" id="search-clear" hidden>清空</button>
+  </div>
+  <div class="search-suggestions" aria-label="快捷搜索" hidden>
+    <span>快捷词</span>
+    {{ range slice "Spring Security" "乐观锁" "事务" "MyBatis" "Java" "工单" }}
+    <button type="button" data-search-query="{{ . }}">{{ . }}</button>
+    {{ end }}
+  </div>
   <noscript><p>搜索需要启用 JavaScript，也可以<a href="/posts/">浏览文章</a>或<a href="/archives/">按时间查找</a>。</p></noscript>
 </section>
-<div class="search-results-heading"><h2>搜索结果</h2><p id="search-status" role="status">输入关键词开始搜索。</p></div><div id="search-results"></div>
+
+<div class="search-idle" id="search-idle">
+  <p class="search-idle-label">或者直接逛逛</p>
+  <div class="search-idle-links">
+    <a href="/posts/"><strong>最新笔记</strong><span>按学习系列与时间浏览</span><span class="search-idle-arrow" aria-hidden="true">↗</span></a>
+    <a href="/learning/#dashboard"><strong>学习看板</strong><span>查看当前进度与阶段任务</span><span class="search-idle-arrow" aria-hidden="true">↗</span></a>
+    <a href="/archives/"><strong>时间归档</strong><span>按年月回看每一步记录</span><span class="search-idle-arrow" aria-hidden="true">↗</span></a>
+  </div>
+</div>
+
+<div class="search-results-area" id="search-results-area" hidden>
+  <div class="search-results-heading"><h2>搜索结果</h2><p id="search-status" role="status"></p></div>
+  <div id="search-results"></div>
+</div>
+
 <script>
 (() => {
-  const input = document.getElementById('search-input'), results = document.getElementById('search-results'), status = document.getElementById('search-status');
-  let index, generation = 0;
-  const clear = document.getElementById("search-clear");
-  document.querySelector(".search-suggestions").hidden = false;
-  document.querySelectorAll("[data-search-query]").forEach(button => button.addEventListener("click", () => { input.value = button.dataset.searchQuery; input.dispatchEvent(new Event("input")); input.focus(); }));
-  clear.addEventListener("click", () => { input.value = ""; input.dispatchEvent(new Event("input")); input.focus(); });
-  const load = () => index || (index = fetch('{{ "/index.json" | relURL }}').then(response => { if (!response.ok) throw new Error(); return response.json(); }).catch(error => { index = null; throw error; }));
+  const input = document.getElementById('search-input');
+  const results = document.getElementById('search-results');
+  const status = document.getElementById('search-status');
+  const clear = document.getElementById('search-clear');
+  const kbd = document.getElementById('search-kbd');
+  const idle = document.getElementById('search-idle');
+  const area = document.getElementById('search-results-area');
+  let index = null;
+  let generation = 0;
+
+  document.querySelector('.search-suggestions').hidden = false;
+
+  document.querySelectorAll('[data-search-query]').forEach(button => {
+    button.addEventListener('click', () => {
+      input.value = button.dataset.searchQuery;
+      input.dispatchEvent(new Event('input'));
+      input.focus();
+    });
+  });
+
+  clear.addEventListener('click', () => {
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === '/' && document.activeElement !== input && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      if (tag !== 'input' && tag !== 'textarea') {
+        event.preventDefault();
+        input.focus();
+      }
+    } else if (event.key === 'Escape' && document.activeElement === input && input.value) {
+      input.value = '';
+      input.dispatchEvent(new Event('input'));
+    }
+  });
+
+  const load = () => index || (index = fetch('{{ "/index.json" | relURL }}')
+    .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+    .catch(error => { index = null; throw error; }));
+
+  function appendHighlighted(parent, text, words) {
+    if (!text) return;
+    const escaped = words.filter(Boolean).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    if (!escaped.length) { parent.append(document.createTextNode(text)); return; }
+    const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
+    const parts = text.split(regex);
+    for (const part of parts) {
+      if (!part) continue;
+      if (words.some(w => w.toLocaleLowerCase() === part.toLocaleLowerCase())) {
+        const mark = document.createElement('mark');
+        mark.textContent = part;
+        parent.append(mark);
+      } else {
+        parent.append(document.createTextNode(part));
+      }
+    }
+  }
+
   input.addEventListener('input', async () => {
     const token = ++generation;
-    const query = input.value.trim().toLocaleLowerCase(); results.replaceChildren(); clear.hidden = !input.value;
-    if (!query) { status.textContent = '输入关键词开始搜索。'; return; }
+    const query = input.value.trim().toLocaleLowerCase();
+    results.replaceChildren();
+    clear.hidden = !input.value;
+    if (kbd) kbd.hidden = Boolean(input.value);
+    if (!query) {
+      idle.hidden = false;
+      area.hidden = true;
+      status.textContent = '';
+      return;
+    }
+    idle.hidden = true;
+    area.hidden = false;
     status.textContent = '正在搜索…';
     try {
-      const posts = await load(); if (token !== generation) return;
-      const words = query.split(/\s+/);
-      const matches = posts.filter(post => words.every(word => [post.title,post.content,...(post.tags || [])].join(' ').toLocaleLowerCase().includes(word)));
-      status.textContent = matches.length ? `找到 ${matches.length} 项文章与课程` : '没有找到相关内容，试试其他关键词。';
+      const posts = await load();
+      if (token !== generation) return;
+      const words = query.split(/\s+/).filter(Boolean);
+      const matches = posts.filter(post =>
+        words.every(word => [post.title, post.description, post.content, ...(post.tags || [])].join(' ').toLocaleLowerCase().includes(word))
+      );
+      status.textContent = matches.length ? `找到 ${matches.length} 项匹配内容` : '没有找到相关内容，换个关键词试试。';
       for (const post of matches) {
-        const row = document.createElement('article'); row.className = 'note-entry';
-        const date = document.createElement('div'); date.className = 'note-date'; date.textContent = post.section === 'learning' ? '学习 · 课程' : post.date;
-        const body = document.createElement('div'), title = document.createElement('h3'), link = document.createElement('a'), text = document.createElement('p');
+        const row = document.createElement('article');
+        row.className = 'search-result-row';
+
+        const meta = document.createElement('div');
+        meta.className = 'search-result-meta';
+        const kind = document.createElement('span');
+        kind.className = 'search-result-kind';
+        kind.textContent = post.section === 'learning' ? '学习 · 课程' : '笔记';
+        const timeEl = document.createElement('time');
+        timeEl.textContent = post.date || '';
+        meta.append(kind, timeEl);
+
+        const body = document.createElement('div');
+        body.className = 'search-result-body';
+        const title = document.createElement('h3');
+        const link = document.createElement('a');
         link.href = post.url;
         if (post.seriesTitle && post.seriesOrder && post.chapterTitle) {
-          const span = (className, value) => {
-            const node = document.createElement('span');
-            node.className = className; node.textContent = value; return node;
-          };
-          const formatted = span('post-title', ''), prefix = span('post-title-prefix', ''), chapter = span('post-title-chapter', '');
-          prefix.append(span('post-title-series', post.seriesTitle));
-          chapter.append(span('post-title-number', post.seriesOrder), document.createTextNode(' ' + post.chapterTitle));
-          formatted.append(prefix, chapter); link.append(formatted);
+          const prefix = document.createElement('span');
+          prefix.className = 'post-title-prefix';
+          const series = document.createElement('span');
+          series.className = 'post-title-series';
+          series.textContent = post.seriesTitle;
+          prefix.append(series);
+          const chapter = document.createElement('span');
+          chapter.className = 'post-title-chapter';
+          const num = document.createElement('span');
+          num.className = 'post-title-number';
+          num.textContent = post.seriesOrder;
+          chapter.append(num, document.createTextNode(' '));
+          appendHighlighted(chapter, post.chapterTitle, words);
+          link.append(prefix, chapter);
         } else {
-          link.textContent = post.title;
+          appendHighlighted(link, post.title, words);
         }
-        text.textContent = post.description;
-        title.append(link); body.append(title,text); row.append(date,body); results.append(row);
+        title.append(link);
+
+        const desc = document.createElement('p');
+        appendHighlighted(desc, post.description, words);
+        body.append(title, desc);
+        row.append(meta, body);
+        results.append(row);
       }
-    } catch { if (token === generation) status.textContent = '搜索暂时无法加载，请重新输入或刷新页面。'; }
+    } catch {
+      if (token === generation) status.textContent = '搜索暂时无法加载，请稍后重试或刷新页面。';
+    }
   });
 })();
 </script>

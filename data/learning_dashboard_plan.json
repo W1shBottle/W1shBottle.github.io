@@ -1,9 +1,10 @@
 {
   "version": 1,
-  "current_group": "backend",
+  "current_group": "engineering",
   "focus_tasks": [
-    "W05",
-    "W06"
+    "E03",
+    "E04",
+    "E07"
   ],
   "optional_ids": [
     "P05",

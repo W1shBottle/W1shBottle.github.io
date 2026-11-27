@@ -12,8 +12,10 @@
 .discovery-card h3 a { display:block; }
 .discovery-owner { display:block; color:var(--muted); font-size:12px; font-weight:400; letter-spacing:0; margin-bottom:2px; }
 .discovery-link-arrow { color:var(--muted); font-size:15px; font-weight:400; }
-.discovery-description { color:var(--muted); font-size:13px; line-height:1.8; margin:14px 0 20px; overflow-wrap:anywhere; }
-.discovery-preview .discovery-description { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; }
+.discovery-description { color:var(--ink); font-size:14px; line-height:1.8; margin:14px 0 8px; overflow-wrap:anywhere; }
+.discovery-description-orig { color:var(--muted); font-size:12px; line-height:1.65; margin:0 0 18px; opacity:.78; overflow-wrap:anywhere; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+.discovery-preview .discovery-description { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; margin-bottom:18px; }
+.discovery-preview .discovery-description-orig { display:none; }
 .discovery-meta { margin-top:auto; display:flex; align-items:center; flex-wrap:wrap; column-gap:14px; row-gap:4px; color:var(--muted); font-size:11px; }
 .discovery-stars { white-space:nowrap; color:var(--accent); font-variant-numeric:tabular-nums; }
 .discovery-stars > span { font-size:15px; }

@@ -1,14 +1,16 @@
 {
   "title": "工单项目运行与验收",
-  "description": "实际运行证据、后端验收与模型效果评估标准。",
+  "description": "实际运行证据、事务回滚测试与纯 Java AI 效果评估标准。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-15T00:00:00+08:00",
+  "lastmod": "2026-11-27T00:00:00+08:00",
   "weight": 190,
   "group": "project-docs",
   "draft": false
 }
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
+
+> **2026-11-27 最新验收记录**：已实测 MySQL `app_user` 登录（`200/401/403`）、4 号与 5 号工单四态流转与 `expectedVersion` 乐观锁（`409`）、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离（`200/403`）、`POST /api/db/tickets` 自动绑登录人，以及隔离 H2 下 `DatabaseTicketTransactionTest` 外键失败自动回滚测试（4 项全绿）与 `TicketTest`（6 项全绿）。详情见 [11 月 25 日](/posts/ops-ticket-20261125/)、[11 月 26 日](/posts/ops-ticket-20261126/)、[11 月 27 日](/posts/ops-ticket-20261127/)三篇复盘；下方保留 2026-11-15 及之前的历史验证记录。
 
 核对日期：2026-11-15；11月14日学习方案调整时仅核对文本与源码，11月15日查询分层的隔离回归记录在本页末节。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节记录路线修订，第17节记录11月7日MyBatis单列查询，第18节记录11月8日多列DTO、领域对象与只读Repository，第19节记录11月9日数据库创建POST与自增主键。
 

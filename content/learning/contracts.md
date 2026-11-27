@@ -5,10 +5,10 @@
   "weight": 100,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-14T00:00:00+08:00"
+  "lastmod": "2026-11-27T00:00:00+08:00"
 }
 
-2026-11-14核对：正式`/api/tickets`仍用文件仓库；`/api/db/tickets`已有MyBatis查询和创建，派单SQL/Service存在部分代码但HTTP接口未完成。权限、完整状态流及Python Agent尚未实现；后续契约均为计划。
+2026-11-27 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 `POST /api/db/tickets`（自动取登录人）、`assign`/`resolve`/`close` 四态闭环 + `expectedVersion` 乐观锁、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离，以及 `ticket_action_log` + `@Transactional` 事务与 H2 外键失败回滚测试。当前待收尾 `GET /api/db/tickets` 列表接口权限与 SLF4J 日志，随后进入纯 Java **B 阶段（B01–B09）**。
 
 ## 当前样本和状态
 

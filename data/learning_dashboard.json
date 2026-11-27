@@ -1,24 +1,31 @@
 {
   "version": 1,
-  "source_sha256": "fbb972035490a3a30d6ca38ea345d765ff5d4228b4d71ee62e3b9ac2662d2aa0",
+  "source_sha256": "ddb1a73e486d3cedc080797656e212790590794938f384afcff2ffdf2f0d6700",
   "updated": "2026-11-27",
   "project": "设备运维工单",
   "stage": "查询归属隔离、操作审计日志与 @Transactional 回滚闭环完成，准备收尾 A2 进入 B 阶段",
-  "current_group": "backend",
+  "current_group": "engineering",
   "focus_tasks": [
     {
-      "id": "W05",
-      "title": "MyBatis",
+      "id": "E03",
+      "title": "角色与资源归属授权",
       "status": "practicing",
       "optional": false,
-      "description": "`TicketMapper` 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。`version + 1` 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。"
+      "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测，操作人身份均从 `Authentication` 读取；`GET /api/db/tickets` 列表接口权限与遗留调试读接口清理仍待补齐。"
     },
     {
-      "id": "W06",
-      "title": "分层与核心状态流",
+      "id": "E04",
+      "title": "业务事务",
       "status": "practicing",
       "optional": false,
-      "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环，并按 `controller/service/repository/mapper/domain/dto` 分包整理（清理与分包由助手协助）；操作日志 `ticket_action_log` 与完整权限归属仍待补齐。"
+      "description": "已亲手建出 `ticket_action_log` 表，在 `assign`/`resolve`/`close` 上用 `@Transactional` 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；真实 MySQL 测试库回滚验证与事务传播深入仍待补齐。"
+    },
+    {
+      "id": "E07",
+      "title": "日志与排错",
+      "status": "planned",
+      "optional": false,
+      "description": "用日志框架记录 requestId、业务结果和错误原因；能从异常链追到错误SQL/配置，不记录密码、Cookie和密钥；保存一次复现→根因→修复→回归记录。"
     }
   ],
   "next": "收尾 A2 剩余小边界（列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 B 阶段 Java AI 业务功能（B01–B09）。",
@@ -208,14 +215,14 @@
           "title": "MyBatis",
           "status": "practicing",
           "optional": false,
-          "description": "`TicketMapper` 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。`version + 1` 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。"
+          "description": "`TicketMapper` 与 `UserMapper`、`TicketActionLogMapper` 已落地参数绑定、下划线转驼峰映射、创建主键回填、带 `expectedVersion` 条件更新的 `assign`/`resolve`/`close` 及审计日志插入，并在真实 MySQL 跑通全链路；独立编写新 SQL 与真实 MySQL 隔离集成测试继续验收。"
         },
         {
           "id": "W06",
           "title": "分层与核心状态流",
           "status": "practicing",
           "optional": false,
-          "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环，并按 `controller/service/repository/mapper/domain/dto` 分包整理（清理与分包由助手协助）；操作日志 `ticket_action_log` 与完整权限归属仍待补齐。"
+          "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环与 `ticket_action_log` 操作审计，并按 `controller/service/repository/mapper/domain/dto/config/exception` 规范分包（清理与分包由助手协助）；列表接口权限收尾与独立变体继续验收。"
         }
       ],
       "stats": {

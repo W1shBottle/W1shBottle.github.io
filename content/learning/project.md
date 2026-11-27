@@ -1,40 +1,34 @@
 {
   "title": "设备运维工单平台项目说明",
-  "description": "同一个Java工单项目：Python基础、模型调用、Agent、资料检索与安全联调。",
+  "description": "同一个纯 Java / Spring Boot / MyBatis / MySQL 工单项目：A1 业务闭环、A2 工程化、B 轻量 AI、C 效果评估与 D 可选进阶。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 15,
   "group": "start",
   "draft": false,
-  "lastmod": "2026-11-24T00:00:00+08:00"
+  "lastmod": "2026-11-27T00:00:00+08:00"
 }
 
-> 本页说明项目路线；当前实现与验收请配合[项目文档](/learning/project-docs/)阅读。计划中的能力不代表已经实现或掌握。
+> 本页说明项目整体路线；具体代码现状与验收记录请配合[项目文档](/learning/project-docs/)和[学习时间线](/learning/#progress)阅读。计划中的能力不代表已经实现或掌握。
 
-更新于 2026-11-24。项目沿用 Java/Spring Boot/MySQL 管理工单，Python 负责报修分诊。
+更新于 2026-11-27。项目统一采用 **Java 21 / Spring Boot 4.1.2 / MyBatis 4.1.0 / MySQL 8.4**，先交付可靠后端业务与工程保护，再在同一工程内轻量落地 AI 业务功能与效果评估，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署。
 
-## 实际起点
+## 当前实测进展（2026-11-27）
 
-截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。
+- **A1 核心业务**：已在真实 MySQL 跑通创建、派单（`assign`）、解决（`resolve`）、验收关闭（`close`）四态闭环，完成早期控制台/文件版旧代码清理并整理为标准 Spring Boot 8 子包分层。
+- **A2 工程化（当前阶段）**：已实测 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权、`GET` 单条与日志的三角色归属隔离、`POST` 创建自动取登录人、`expectedVersion` 乐观锁（`409`）、`ticket_action_log` 审计表 + `@Transactional` 事务绑定与 H2 外键失败回滚测试（4 项全绿）。当前收尾列表权限、SLF4J 日志与基础验证后进入 B 阶段。
+- **B / C / D**：尚未开始编码，按计划逐步推进。
 
-## 十二月交付目标
+## 目标与阶段
 
-在 12 月 27 日前争取交付设备报修分诊的可演示版本，随后整理申请材料。Python 模型工具调用、资料检索和 LangGraph 状态编排进入这一轮主线，Java 负责结果、权限和版本校验。完整日期与收缩条件见[月底交付安排](/learning/schedule/#十二月底的可投递版本)。
-
-## 目标和阶段
-
-Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调。
+**A1（数据库与 HTTP 闭环）→ A2（认证授权、事务、并发与交付）→ B（Java AI 业务功能 B01–B09）→ C（效果评估与回归 C01–C04）→ 可选进阶 D（D01 MySQL 轻量 RAG / D02 外部 SOP 轻量 Skill）。**
 
 | 阶段 | 亲手交付 | 达标证据 |
 | --- | --- | --- |
-| A Java工单业务 | 读懂现有事务与数据库创建；逐步完成派单、状态与必要鉴权 | 能独立画请求链并解释回滚；派单接口、失败分支及授权按实际结果记录 |
-| Y Python复习与应用 | 已看课程前119集、久未写；少量回顾字典和函数，使用虚构工单写查询 | 恢复编程手感，卡住时有针对性复习，不重刷基础 |
-| B Python模型调用 | 先用虚构数据请求一个模型，返回摘要和待补充信息；模拟错误 | 保存真实调用与模拟测试各一份证据，校验结构、超时与错误；没有API时仅标契约测试 |
-| G Python只读Agent | 先对假数据接查询工具，完成查找→追问/详情→回答，记录步骤 | 真实模型发出工具调用、Python执行；无结果、坏参数、超时和步数限制可复现 |
-| C 资料与评测 | 维护少量自编设备资料，检索并引用；用固定任务集改进 | 引用可定位；区分检索、工具、生成错误，记录真实样本数、耗时与用量 |
-| L 安全联调 | Java提供经授权的只读工单接口，Python通过HTTP调用 | 隔离演示数据、真实身份与授权已验证；无权请求不能读取；超时/故障可解释 |
-
-
-在现有 Java 工单系统上做一个**设备报修分诊助手**。管理员收到一张报修单，Python Agent 帮他查设备资料，给出处理建议、依据和需要追问的内容。管理员查看建议后决定如何处置。 首版验收包含有据可查、缺资料需追问、无依据转人工三个案例。后续再把人工采纳和已解决经验接回同一张工单。详见[阶段日程](/learning/schedule/)。
+| A1 后端业务闭环 | MySQL 建表、MyBatis 映射、创建/查询/派单/解决/关闭四态接口与规范分层 | 真实 MySQL 跑通四态流转与 400/404/409 分支，能独立画出调用链 |
+| A2 工程与交付（当前） | MySQL 登录认证、三角色资源归属、乐观锁、操作日志与 `@Transactional` 回滚、SLF4J 日志与核心测试 | 多角色 `200/401/403/409` 实测、事务回滚测试通过、可复现启动与排错 |
+| B Java AI 功能（B01–B09） | Java 模型客户端、结构化校验、超时降级、`@Async` 事务后异步回写、人工采纳/修改/驳回反馈闭环 | 真实模型调用与故障降级分开记录；事务回滚不误触发异步；过期建议被 `expectedVersion` 返回 409 |
+| C 效果评估与回归（C01–C04） | 12–20 条固定案例（开发/留出集分离）、B09 真实采纳率统计、延迟/token/成本与单因子回归 | 两类指标分开列示真实分母，保留失败样本与回归前后对比 |
+| D 可选进阶（D01–D02） | MySQL 全文/同设备 Top 3 轻量检索（轻量 RAG）、外部 Markdown/配置表排查 SOP（轻量 Skill） | 留出集有无检索对比与误召回分析；改外部规则无需改 Java 业务代码并做回归 |
 
 ## 第一版业务边界
 
@@ -42,38 +36,29 @@ Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B�
 
 | 角色 | 首版职责 | 不可越过的边界 |
 | --- | --- | --- |
-| REPORTER 报修人 | 选启用设备、创建、查自己的工单、验收 | 不能冒充别人报修、查询别人记录或自行派单 |
-| ENGINEER 工程师 | 查分给自己的工单、提交非空处理说明 | 不能处理别人名下工单或代报修人验收 |
-| ADMIN 管理员 | 查询、给 OPEN 工单指定启用工程师 | 不能随意设置状态或代报修人验收 |
+| REPORTER 报修人 | 选启用设备、创建、查自己的工单与日志、验收关闭 | 不能冒充别人报修、查询别人记录或自行派单 |
+| ENGINEER 工程师 | 查分给自己的工单与日志、提交处理结果 | 不能处理别人名下工单或代报修人验收 |
+| ADMIN 管理员 | 查询全部工单与日志、给 OPEN 工单指定启用工程师 | 不能随意跳状态或代报修人验收 |
 
-流程为 OPEN→IN_PROGRESS→RESOLVED→CLOSED。首版不做验收退回、评论、公开注册、全套设备/用户后台、统计大屏。演示先用接口工具，随后可加简洁页面；不要求先学大型前端框架。
+流程为 `OPEN → IN_PROGRESS → RESOLVED → CLOSED`。首版不做验收退回、评论、公开注册、全套设备/用户后台、统计大屏。数据库包含 `device`、`app_user`、`ticket` 与 `ticket_action_log` 四张表；状态更新与写审计日志在同一 `@Transactional` 事务内执行，状态变更通过前置状态与 `expectedVersion` 乐观锁保护。
 
-现有三表保留，A 阶段再加 ticket_action_log；处理说明存 resolve 动作 note，状态与日志同事务。暂不建 ticket_comment/ticket_resolution。创建重试用请求键，状态操作用前置状态＋期望版本；SQL 中 version 字段存在并不代表这些保护已实现。
+具体实现与验收细节见[项目文档](/learning/project-docs/)、[需求](/learning/project-requirements/)、[设计](/learning/project-design/)、[验收](/learning/project-verification/)。
 
-具体规则、接口与验收不在本页重复维护，以项目 [需求](/learning/project-requirements/)、[设计](/learning/project-design/)、[验收](/learning/project-verification/) 为准。
+## Java 轻量 AI 功能边界（B 阶段）
 
-## 首个Python模型功能与Agent
+在现有 Spring Boot 项目中用 Java HTTP 客户端或官方 SDK 接入真实模型提供方：
 
-用自造工单产生summary/category/missingInformation；先Python脚本加模拟数据和模拟故障，再尝试真实模型API。输出只展示，不自动写库或派单；模型调用失败不影响Java业务。
-
-做一个查询假工单的Python工具，让模型请求调用、程序校验并执行、把结果反馈给模型；再增加多步查询/追问、限步、超时、日志。根据需要学习LangChain、LangGraph，先不要求多Agent。
-
-后续Java只读业务接口经认证授权后，再使用Python HTTP客户端安全接入；验证跨用户拒绝、超时与空结果。模型不能拼任意SQL，也不能传入用户身份冒充授权。维护资料使用虚构内容并记录来源/版本与引用，真假模型结果和模拟失败分别记录。
-
-真实业务联调前，不公开当前无授权的开发接口，不上传真实敏感工单。Redis基础、虚构设备缓存和Agent会话记忆已纳入主线，分阶段学习，不阻挡内存版原型；MCP、自动派单、微服务和训练模型按需要后置。
+1. 对工单生成结构化的 `summary` / `category` / `missingInformation` 建议，程序严格校验字段类型、枚举与长度。
+2. 模型网络调用严格放在数据库写事务外，设置连接/读取超时与重试上限；关闭 AI 或模型故障时工单核心流程完全不受影响。
+3. 使用 Spring `@Async` + 自定义有界线程池在工单写事务**提交后**异步触发分析并回写状态（`PENDING` / `DONE` / `FAILED`），做好同工单同版本幂等。
+4. 提供**直接采纳 / 修改后采纳 / 驳回**接口并记录反馈差异日志；任何写回均重新校验 Java 角色权限、前置状态与 `expectedVersion`。
 
 ## 技术与学习方式
 
-沿用 Java 21、Maven；当前MySQL8.4.13与Connector/J26.10.0已经过独立恢复和连接验证。SQL、短JDBC和MyBatis查询/创建已有跟练，派单成功路径已在隔离H2练习；下一步继续理解创建事务并验证派单失败分支，同时少量复习已看过的Python课程并做假工单查询，不重复升级现有环境。框架版本到接入时按官方兼容表固定；认证仍优先Spring Security＋Session Cookie，保留CSRF并使用框架密码编码器。
-
-两种 AI 学习分开：AI 辅助编程可用于解释/评审/排错，但每个模块要自己读调用链、独立改需求并验证；产品内 AI 功能则必须自己接入、测试真实 API 和失败路径。安排少量高价值测试，避免重复抄同类断言；数据库事务必须用真实 MySQL 验证，不能只看 Mock。
-
-每次约 3 小时是时间预算，不是作业定额：先回忆已有代码，再讲一个新概念、独立写一个小变更、验证并记录帮助和困难。每个阶段至少独立实现/修改一个功能、解释一次设计、排查一个故障。完整任务见 [阶段学习计划](/learning/schedule/)。
+沿用 **Java 21 / Spring Boot 4.1.2 / MyBatis 4.1.0 / MySQL 8.4.13**。将“AI 辅助编程”和“项目内 AI 业务功能”严格分开记录；每次约 3 小时按最小可验证任务推进，完整阶段安排见[阶段学习计划](/learning/schedule/)。
 
 ## 求职匹配与信息边界
 
-后端能力仍是 AI 应用的基础，不能从技术热度判断“纯后端已落后”。2026-10-26 核查的[海康 Java 实习岗位](https://talent.hikvision.com/home/socity/position?postId=3DBC4346A3391150639BCB4895723F64)仍覆盖 Java、Spring、MyBatis、SQL、测试与部署；[质量管理软件实习](https://talent.hikvision.com/home/socity/position?postId=80E877130AFCA23529A8391F624FA447)也要求后端框架和 SQL，并提 AI 辅助开发。[大华 AI 应用开发岗位](https://dahua1.zhiye.com/campus/detail?jobAdId=cc425147-ec13-45d8-b704-f4c6632f0f89)可作 Java/AI 工程能力参照，但该岗位明确限定 2027 届，申请时须核对自己的毕业届别；详情信息来自官网搜索索引。
+简历与面试只写实际运行验证过的功能、真实分母下的指标与个人独立贡献，不编造未测出的并发规模或提升比例；每次投递按目标岗位的学历、毕业届别、城市、出勤天数与连续实习月数逐项核对。
 
-上述不是 2027 暑期岗位保证。每次投递核对本科门槛、毕业届别、杭州地点、每周出勤与连续实习时长。简历分别写已实现业务、真实 AI 验证、个人独立贡献和限制；没有测出的性能/成本不能编造。第二个项目等第一项目完成及岗位缺口明确后再决定。
-
-官方技术参考：[结构化输出仍需校验](https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html) · [工具调用由应用控制执行](https://docs.spring.io/spring-ai/reference/api/tools.html)。引用用于设计判断，不表示本项目已使用 Spring AI。
+官方技术参考：[结构化输出仍需校验](https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html) · [工具调用由应用控制执行](https://docs.spring.io/spring-ai/reference/api/tools.html)。

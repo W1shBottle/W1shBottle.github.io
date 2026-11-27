@@ -1,14 +1,14 @@
 {
   "title": "工单项目设计与数据约定",
-  "description": "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。",
+  "description": "Spring Boot 标准分层、四表模型与事务设计，及早期演进快照。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-15T00:00:00+08:00",
+  "lastmod": "2026-11-27T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
 }
 
-> 2026-11-15：入门用的 HelloController 已按学习者要求移除；第 14、15 节保留当时的学习快照。
+> **2026-11-27 最新核对**：早期控制台与文件仓库类已清理，现统一为 Spring Boot 8 子包结构（`config`/`controller`/`domain`/`dto`/`exception`/`mapper`/`repository`/`service`）；数据表新增 `ticket_action_log`，`assign`/`resolve`/`close` 在同一 `@Transactional` 事务内执行 `expectedVersion` 条件更新与审计日志插入，身份与角色归属均从 `Authentication` 读取。下方第 1 节起保留早期文件/控制台及阶段接线快照。
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 

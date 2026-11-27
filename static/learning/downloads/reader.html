@@ -17,13 +17,14 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 @media(max-width:760px){.layout{display:block;padding:14px}aside{position:static;height:auto;overflow:visible;padding:10px 6px 16px}.brand{font-size:19px}aside nav,aside details{display:none}.sidebar-note{font-size:13px}.hero,.chapter{padding:22px 18px;border-radius:8px}.hero h1{font-size:29px}h1{font-size:25px}h2{font-size:21px}.chapter-meta{font-size:11px}body{font-size:15px}pre{font-size:12px;padding:14px}th,td{padding:9px 11px}table{font-size:13px}.mobile-nav{display:block;margin-bottom:20px;padding:12px 18px;background:white;border:1px solid var(--line);border-radius:8px}.mobile-nav ul{list-style:none;padding:0;margin:12px 0}.mobile-nav li{padding:3px 0}.mobile-nav details{padding-top:12px;border-top:1px solid var(--line)}}
 @media print{body{background:white;font-size:10pt;line-height:1.65}.layout{display:block;padding:0;max-width:none}aside,.mobile-nav,.chapter-meta,.backtop,.download{display:none!important}.hero{background:white;color:#172c3b;padding:0 0 20px;border-radius:0}.hero h1,.hero p,.eyebrow{color:#172c3b}.meta span{background:#eee;color:#172c3b}.chapter{padding:0;margin:0;border:0;border-radius:0;break-before:page}h1{font-size:20pt}h2{font-size:15pt;break-after:avoid}h3{break-after:avoid}tr{break-inside:avoid}.table-scroll{overflow:visible;border-radius:0}table{min-width:0;font-size:9pt}pre{white-space:pre-wrap;background:#f3f3f3;color:#111;font-size:8pt;overflow:visible;break-inside:auto}pre code{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#164d48;text-decoration:none}@page{size:A4;margin:16mm}}
 </style></head>
-<body id="top"><div class="layout"><aside><div class="brand">Java＋AI 项目学习计划</div><div class="sidebar-note">Java工单 + Python基础 → 模型与Agent → 检索评测<br>阶段验收 / 连续阅读版</div><a class="site-return" href="https://wishbottle.cn/learning/">返回博客学习板块 ↗</a><nav aria-label="章节目录"><ul><li><a href="#chapter-start">Java＋AI 项目自学路线</a></li><li><a href="#chapter-project">设备运维工单平台项目说明</a></li><li><a href="#chapter-schedule">Java工单与Python Agent阶段学习计划</a></li><li><a href="#chapter-first-ticket">第 01 课 工单对象与封装</a></li><li><a href="#chapter-java-sql">第 1 至 6 周 Java 与数据库</a></li><li><a href="#chapter-web-security">第7至13周 Web接口与登录权限</a></li><li><a href="#chapter-testing-delivery">Python Agent实践、测试与项目交付</a></li><li><a href="#chapter-spring-applications">2027年春季投递与暑期实习准备</a></li><li><a href="#chapter-resources">资料索引与排错手册</a></li><li><a href="#chapter-checklists">技能 To-do List 与验收记录</a></li><li><a href="#chapter-contracts">设备工单的数据与接口约定</a></li><li><a href="#chapter-answers-java-sql">第 1 至 6 周自测答案与关键示例</a></li><li><a href="#chapter-answers-web-security">第7至13周自测答案与关键实现提示</a></li><li><a href="#chapter-answers-testing-delivery">第14至20周 自测答案与排错示例</a></li></ul></nav><details><summary>按教材单元查找</summary><nav aria-label="教材单元目录"><ul><li><a href="#chapter-java-sql-第-1-周-创建一个始终合法的工单对象">第 1 周 创建一个始终合法的工单对象</a></li><li><a href="#chapter-java-sql-第-2-周-管理多张工单并保存到文件">第 2 周 管理多张工单并保存到文件</a></li><li><a href="#chapter-java-sql-第-3-周-拆分职责并用-maven-构建">第 3 周 拆分职责并用 Maven 构建</a></li><li><a href="#chapter-java-sql-第-4-周-建立用户-设备与工单三张表">第 4 周 建立用户 设备与工单三张表</a></li><li><a href="#chapter-java-sql-第-5-周-关联-统计-事务与索引">第 5 周 关联 统计 事务与索引</a></li><li><a href="#chapter-java-sql-第-6-周-用-jdbc-连接-java-与数据库">第 6 周 用 JDBC 连接 Java 与数据库</a></li><li><a href="#chapter-web-security-第7周-建立http接口">第7周 建立HTTP接口</a></li><li><a href="#chapter-web-security-第8周-用mybatis连接数据库">第8周 用MyBatis连接数据库</a></li><li><a href="#chapter-web-security-第9周-实现业务流转和事务">第9周 实现业务流转和事务</a></li><li><a href="#chapter-web-security-第10周-校验参数和分页评论">第10周 校验参数和分页评论</a></li><li><a href="#chapter-web-security-第11周-做一个能够演示的页面">第11周 做一个能够演示的页面</a></li><li><a href="#chapter-web-security-第12周-登录退出与会话">第12周 登录退出与会话</a></li><li><a href="#chapter-web-security-第13周-限制资源范围和业务操作">第13周 限制资源范围和业务操作</a></li><li><a href="#chapter-testing-delivery-第14单元原日期参考-1月11日至17日-并发派单">第14单元（原日期参考） 1月11日至17日 并发派单</a></li><li><a href="#chapter-testing-delivery-第15单元原日期参考-1月18日至24日-自动测试与缺陷复盘">第15单元（原日期参考） 1月18日至24日 自动测试与缺陷复盘</a></li><li><a href="#chapter-testing-delivery-第16单元原日期参考-1月25日至31日-可以交付的第一版">第16单元（原日期参考） 1月25日至31日 可以交付的第一版</a></li><li><a href="#chapter-testing-delivery-第17单元原日期参考-2月1日至7日-部署与备份恢复">第17单元（原日期参考） 2月1日至7日 部署与备份恢复</a></li><li><a href="#chapter-testing-delivery-第18单元原日期参考-2月8日至14日-查询性能与线程池">第18单元（原日期参考） 2月8日至14日 查询性能与线程池</a></li><li><a href="#chapter-testing-delivery-第19单元原日期参考-2月15日至21日-补短板或小扩展">第19单元（原日期参考） 2月15日至21日 补短板或小扩展</a></li><li><a href="#chapter-testing-delivery-第20单元原日期参考-2月22日至28日-项目表达与模拟面试">第20单元（原日期参考） 2月22日至28日 项目表达与模拟面试</a></li></ul></nav></details><p class="sidebar-note">Ctrl+F 查找 · Ctrl+P 打印<br>保存这一份 HTML 即可离线阅读<br>正文无需加载外部资源</p></aside>
-<main><header class="hero"><div class="eyebrow">WISHBOTTLE / 学习板块</div><h1>Java＋AI 项目学习计划</h1><p>在 Java 工单上学习 Python 报修分诊。先查单、查资料，再让管理员看到建议、依据和执行记录。</p><div class="meta"><span>A ∥ Y + R → B → G → C</span><span>73 项技能清单</span><span>14 篇课程与参考资料</span><span>按实际进度验收</span></div><a class="download" href="https://wishbottle.cn/learning/downloads/java-internship-self-study.zip">下载完整自学包（HTML + Markdown）↗</a></header>
-<details class="mobile-nav"><summary>打开课程目录</summary><nav aria-label="手机章节目录"><ul><li><a href="#chapter-start">Java＋AI 项目自学路线</a></li><li><a href="#chapter-project">设备运维工单平台项目说明</a></li><li><a href="#chapter-schedule">Java工单与Python Agent阶段学习计划</a></li><li><a href="#chapter-first-ticket">第 01 课 工单对象与封装</a></li><li><a href="#chapter-java-sql">第 1 至 6 周 Java 与数据库</a></li><li><a href="#chapter-web-security">第7至13周 Web接口与登录权限</a></li><li><a href="#chapter-testing-delivery">Python Agent实践、测试与项目交付</a></li><li><a href="#chapter-spring-applications">2027年春季投递与暑期实习准备</a></li><li><a href="#chapter-resources">资料索引与排错手册</a></li><li><a href="#chapter-checklists">技能 To-do List 与验收记录</a></li><li><a href="#chapter-contracts">设备工单的数据与接口约定</a></li><li><a href="#chapter-answers-java-sql">第 1 至 6 周自测答案与关键示例</a></li><li><a href="#chapter-answers-web-security">第7至13周自测答案与关键实现提示</a></li><li><a href="#chapter-answers-testing-delivery">第14至20周 自测答案与排错示例</a></li></ul></nav><details><summary>按教材单元查找</summary><nav aria-label="手机教材单元目录"><ul><li><a href="#chapter-java-sql-第-1-周-创建一个始终合法的工单对象">第 1 周 创建一个始终合法的工单对象</a></li><li><a href="#chapter-java-sql-第-2-周-管理多张工单并保存到文件">第 2 周 管理多张工单并保存到文件</a></li><li><a href="#chapter-java-sql-第-3-周-拆分职责并用-maven-构建">第 3 周 拆分职责并用 Maven 构建</a></li><li><a href="#chapter-java-sql-第-4-周-建立用户-设备与工单三张表">第 4 周 建立用户 设备与工单三张表</a></li><li><a href="#chapter-java-sql-第-5-周-关联-统计-事务与索引">第 5 周 关联 统计 事务与索引</a></li><li><a href="#chapter-java-sql-第-6-周-用-jdbc-连接-java-与数据库">第 6 周 用 JDBC 连接 Java 与数据库</a></li><li><a href="#chapter-web-security-第7周-建立http接口">第7周 建立HTTP接口</a></li><li><a href="#chapter-web-security-第8周-用mybatis连接数据库">第8周 用MyBatis连接数据库</a></li><li><a href="#chapter-web-security-第9周-实现业务流转和事务">第9周 实现业务流转和事务</a></li><li><a href="#chapter-web-security-第10周-校验参数和分页评论">第10周 校验参数和分页评论</a></li><li><a href="#chapter-web-security-第11周-做一个能够演示的页面">第11周 做一个能够演示的页面</a></li><li><a href="#chapter-web-security-第12周-登录退出与会话">第12周 登录退出与会话</a></li><li><a href="#chapter-web-security-第13周-限制资源范围和业务操作">第13周 限制资源范围和业务操作</a></li><li><a href="#chapter-testing-delivery-第14单元原日期参考-1月11日至17日-并发派单">第14单元（原日期参考） 1月11日至17日 并发派单</a></li><li><a href="#chapter-testing-delivery-第15单元原日期参考-1月18日至24日-自动测试与缺陷复盘">第15单元（原日期参考） 1月18日至24日 自动测试与缺陷复盘</a></li><li><a href="#chapter-testing-delivery-第16单元原日期参考-1月25日至31日-可以交付的第一版">第16单元（原日期参考） 1月25日至31日 可以交付的第一版</a></li><li><a href="#chapter-testing-delivery-第17单元原日期参考-2月1日至7日-部署与备份恢复">第17单元（原日期参考） 2月1日至7日 部署与备份恢复</a></li><li><a href="#chapter-testing-delivery-第18单元原日期参考-2月8日至14日-查询性能与线程池">第18单元（原日期参考） 2月8日至14日 查询性能与线程池</a></li><li><a href="#chapter-testing-delivery-第19单元原日期参考-2月15日至21日-补短板或小扩展">第19单元（原日期参考） 2月15日至21日 补短板或小扩展</a></li><li><a href="#chapter-testing-delivery-第20单元原日期参考-2月22日至28日-项目表达与模拟面试">第20单元（原日期参考） 2月22日至28日 项目表达与模拟面试</a></li></ul></nav></details></details>
-<section id="chapter-start" class="chapter"><div class="chapter-meta"><span>01 / 14</span><a href="#top">回到目录</a></div><h1>Java＋AI 项目自学路线</h1><p>2026-11-24 调整。在现有 Java 工单系统上做一个<strong>设备报修分诊助手</strong>。管理员收到一张报修单，Python Agent 帮他查设备资料，给出处理建议、依据和需要追问的内容。管理员查看建议后决定如何处置。 先做虚构工单的只读原型，再接 Java 业务。六个练习与验收方式见<a href="#chapter-schedule">阶段日程</a>。</p>
-<p>每周以成果为目标，周内有弹性，每天约 3 小时；不承诺 20 周掌握全部内容。文件名中的“第几周”保留为旧教材索引，时间与实施顺序以新版<a href="#chapter-schedule">阶段日程</a>为准。课后答案是局部参考，不能把生成的代码视为已学会。</p>
-<h2 id="chapter-start-十二月交付目标">十二月交付目标</h2>
-<p>按<a href="#chapter-schedule-十二月底的可投递版本">月底交付安排</a>争取在十二月底前形成可演示、可解释、有评测记录的 Agent 项目版本。LangGraph 的状态分支与恢复进入计划内实践。</p>
+<body id="top"><div class="layout"><aside><div class="brand">Java＋AI 项目学习计划</div><div class="sidebar-note">A1 业务闭环 → A2 工程交付 → B 轻量 AI → C 效果评估<br>阶段验收 / 连续阅读版</div><a class="site-return" href="https://wishbottle.cn/learning/">返回博客学习板块 ↗</a><nav aria-label="章节目录"><ul><li><a href="#chapter-start">Java＋AI 项目自学路线</a></li><li><a href="#chapter-project">设备运维工单平台项目说明</a></li><li><a href="#chapter-schedule">Java 设备运维工单与轻量 AI 阶段学习计划</a></li><li><a href="#chapter-first-ticket">第 01 课 工单对象与封装</a></li><li><a href="#chapter-java-sql">第 1 至 6 周 Java 与数据库</a></li><li><a href="#chapter-web-security">第7至13周 Web接口与登录权限</a></li><li><a href="#chapter-testing-delivery">Java 轻量 AI 功能、效果评测与项目交付</a></li><li><a href="#chapter-spring-applications">2027年春季投递与暑期实习准备</a></li><li><a href="#chapter-resources">资料索引与排错手册</a></li><li><a href="#chapter-checklists">技能 To-do List 与验收记录</a></li><li><a href="#chapter-contracts">设备工单的数据与接口约定</a></li><li><a href="#chapter-answers-java-sql">第 1 至 6 周自测答案与关键示例</a></li><li><a href="#chapter-answers-web-security">第7至13周自测答案与关键实现提示</a></li><li><a href="#chapter-answers-testing-delivery">第14至20周 自测答案与排错示例</a></li></ul></nav><details><summary>按教材单元查找</summary><nav aria-label="教材单元目录"><ul><li><a href="#chapter-java-sql-第-1-周-创建一个始终合法的工单对象">第 1 周 创建一个始终合法的工单对象</a></li><li><a href="#chapter-java-sql-第-2-周-管理多张工单并保存到文件">第 2 周 管理多张工单并保存到文件</a></li><li><a href="#chapter-java-sql-第-3-周-拆分职责并用-maven-构建">第 3 周 拆分职责并用 Maven 构建</a></li><li><a href="#chapter-java-sql-第-4-周-建立用户-设备与工单三张表">第 4 周 建立用户 设备与工单三张表</a></li><li><a href="#chapter-java-sql-第-5-周-关联-统计-事务与索引">第 5 周 关联 统计 事务与索引</a></li><li><a href="#chapter-java-sql-第-6-周-用-jdbc-连接-java-与数据库">第 6 周 用 JDBC 连接 Java 与数据库</a></li><li><a href="#chapter-web-security-第7周-建立http接口">第7周 建立HTTP接口</a></li><li><a href="#chapter-web-security-第8周-用mybatis连接数据库">第8周 用MyBatis连接数据库</a></li><li><a href="#chapter-web-security-第9周-实现业务流转和事务">第9周 实现业务流转和事务</a></li><li><a href="#chapter-web-security-第10周-校验参数和分页评论">第10周 校验参数和分页评论</a></li><li><a href="#chapter-web-security-第11周-做一个能够演示的页面">第11周 做一个能够演示的页面</a></li><li><a href="#chapter-web-security-第12周-登录退出与会话">第12周 登录退出与会话</a></li><li><a href="#chapter-web-security-第13周-限制资源范围和业务操作">第13周 限制资源范围和业务操作</a></li><li><a href="#chapter-testing-delivery-第14单元原日期参考-1月11日至17日-并发派单">第14单元（原日期参考） 1月11日至17日 并发派单</a></li><li><a href="#chapter-testing-delivery-第15单元原日期参考-1月18日至24日-自动测试与缺陷复盘">第15单元（原日期参考） 1月18日至24日 自动测试与缺陷复盘</a></li><li><a href="#chapter-testing-delivery-第16单元原日期参考-1月25日至31日-可以交付的第一版">第16单元（原日期参考） 1月25日至31日 可以交付的第一版</a></li><li><a href="#chapter-testing-delivery-第17单元原日期参考-2月1日至7日-部署与备份恢复">第17单元（原日期参考） 2月1日至7日 部署与备份恢复</a></li><li><a href="#chapter-testing-delivery-第18单元原日期参考-2月8日至14日-查询性能与线程池">第18单元（原日期参考） 2月8日至14日 查询性能与线程池</a></li><li><a href="#chapter-testing-delivery-第19单元原日期参考-2月15日至21日-补短板或小扩展">第19单元（原日期参考） 2月15日至21日 补短板或小扩展</a></li><li><a href="#chapter-testing-delivery-第20单元原日期参考-2月22日至28日-项目表达与模拟面试">第20单元（原日期参考） 2月22日至28日 项目表达与模拟面试</a></li></ul></nav></details><p class="sidebar-note">Ctrl+F 查找 · Ctrl+P 打印<br>保存这一份 HTML 即可离线阅读<br>正文无需加载外部资源</p></aside>
+<main><header class="hero"><div class="eyebrow">WISHBOTTLE / 学习板块</div><h1>Java＋AI 项目学习计划</h1><p>围绕同一个 Java / Spring Boot / MyBatis / MySQL 设备运维工单项目，完成后端工程闭环、轻量 AI 功能与效果评估回归。</p><div class="meta"><span>A1 → A2 → B → C (+ D)</span><span>58 项技能清单（51 主线）</span><span>14 篇课程与参考资料</span><span>按实际进度验收</span></div><a class="download" href="https://wishbottle.cn/learning/downloads/java-internship-self-study.zip">下载完整自学包（HTML + Markdown）↗</a></header>
+<details class="mobile-nav"><summary>打开课程目录</summary><nav aria-label="手机章节目录"><ul><li><a href="#chapter-start">Java＋AI 项目自学路线</a></li><li><a href="#chapter-project">设备运维工单平台项目说明</a></li><li><a href="#chapter-schedule">Java 设备运维工单与轻量 AI 阶段学习计划</a></li><li><a href="#chapter-first-ticket">第 01 课 工单对象与封装</a></li><li><a href="#chapter-java-sql">第 1 至 6 周 Java 与数据库</a></li><li><a href="#chapter-web-security">第7至13周 Web接口与登录权限</a></li><li><a href="#chapter-testing-delivery">Java 轻量 AI 功能、效果评测与项目交付</a></li><li><a href="#chapter-spring-applications">2027年春季投递与暑期实习准备</a></li><li><a href="#chapter-resources">资料索引与排错手册</a></li><li><a href="#chapter-checklists">技能 To-do List 与验收记录</a></li><li><a href="#chapter-contracts">设备工单的数据与接口约定</a></li><li><a href="#chapter-answers-java-sql">第 1 至 6 周自测答案与关键示例</a></li><li><a href="#chapter-answers-web-security">第7至13周自测答案与关键实现提示</a></li><li><a href="#chapter-answers-testing-delivery">第14至20周 自测答案与排错示例</a></li></ul></nav><details><summary>按教材单元查找</summary><nav aria-label="手机教材单元目录"><ul><li><a href="#chapter-java-sql-第-1-周-创建一个始终合法的工单对象">第 1 周 创建一个始终合法的工单对象</a></li><li><a href="#chapter-java-sql-第-2-周-管理多张工单并保存到文件">第 2 周 管理多张工单并保存到文件</a></li><li><a href="#chapter-java-sql-第-3-周-拆分职责并用-maven-构建">第 3 周 拆分职责并用 Maven 构建</a></li><li><a href="#chapter-java-sql-第-4-周-建立用户-设备与工单三张表">第 4 周 建立用户 设备与工单三张表</a></li><li><a href="#chapter-java-sql-第-5-周-关联-统计-事务与索引">第 5 周 关联 统计 事务与索引</a></li><li><a href="#chapter-java-sql-第-6-周-用-jdbc-连接-java-与数据库">第 6 周 用 JDBC 连接 Java 与数据库</a></li><li><a href="#chapter-web-security-第7周-建立http接口">第7周 建立HTTP接口</a></li><li><a href="#chapter-web-security-第8周-用mybatis连接数据库">第8周 用MyBatis连接数据库</a></li><li><a href="#chapter-web-security-第9周-实现业务流转和事务">第9周 实现业务流转和事务</a></li><li><a href="#chapter-web-security-第10周-校验参数和分页评论">第10周 校验参数和分页评论</a></li><li><a href="#chapter-web-security-第11周-做一个能够演示的页面">第11周 做一个能够演示的页面</a></li><li><a href="#chapter-web-security-第12周-登录退出与会话">第12周 登录退出与会话</a></li><li><a href="#chapter-web-security-第13周-限制资源范围和业务操作">第13周 限制资源范围和业务操作</a></li><li><a href="#chapter-testing-delivery-第14单元原日期参考-1月11日至17日-并发派单">第14单元（原日期参考） 1月11日至17日 并发派单</a></li><li><a href="#chapter-testing-delivery-第15单元原日期参考-1月18日至24日-自动测试与缺陷复盘">第15单元（原日期参考） 1月18日至24日 自动测试与缺陷复盘</a></li><li><a href="#chapter-testing-delivery-第16单元原日期参考-1月25日至31日-可以交付的第一版">第16单元（原日期参考） 1月25日至31日 可以交付的第一版</a></li><li><a href="#chapter-testing-delivery-第17单元原日期参考-2月1日至7日-部署与备份恢复">第17单元（原日期参考） 2月1日至7日 部署与备份恢复</a></li><li><a href="#chapter-testing-delivery-第18单元原日期参考-2月8日至14日-查询性能与线程池">第18单元（原日期参考） 2月8日至14日 查询性能与线程池</a></li><li><a href="#chapter-testing-delivery-第19单元原日期参考-2月15日至21日-补短板或小扩展">第19单元（原日期参考） 2月15日至21日 补短板或小扩展</a></li><li><a href="#chapter-testing-delivery-第20单元原日期参考-2月22日至28日-项目表达与模拟面试">第20单元（原日期参考） 2月22日至28日 项目表达与模拟面试</a></li></ul></nav></details></details>
+<section id="chapter-start" class="chapter"><div class="chapter-meta"><span>01 / 14</span><a href="#top">回到目录</a></div><h1>Java＋AI 项目自学路线</h1><p>更新于 2026-11-27（唯一主线已于 2026-11-25 定稿为纯 Java 路线）。围绕同一个<strong>设备运维工单平台</strong>，基于现有 <strong>Java 21 / Spring Boot / MyBatis / MySQL</strong> 推进 <strong>A1 → A2 → B01–B09 → C01–C04（可选进阶 D01–D02）</strong>，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署。完整阶段任务见<a href="#chapter-schedule">阶段日程</a>与<a href="#chapter-checklists">技能清单</a>。</p>
+<p>每周以可验证的小成果为目标，每天约 3 小时；旧教材中的“第几周”仅保留为章节索引，实际顺序以新版<a href="#chapter-schedule">阶段日程</a>为准。课后答案是局部参考，不把看过或生成的代码计为已掌握。</p>
+<h2 id="chapter-start-路线总览">路线总览</h2>
+<p><strong>A1（数据库与 HTTP 业务闭环）→ A2（认证授权、事务、乐观锁与工程交付）→ B（Java AI 业务功能 B01–B09）→ C（效果评估与单因子回归 C01–C04）→ 可选进阶 D（D01 MySQL 轻量 RAG / D02 外部 SOP 轻量 Skill）。</strong></p>
+<p>此前记录的 Python（Y）、Redis（R）、LangGraph / Python 只读 Agent（G）规划已归档暂不执行，不再计入当前主线进度。</p>
 <h2 id="chapter-start-阅读入口">阅读入口</h2>
 <div class="table-scroll" tabindex="0"><table>
 <thead>
@@ -35,46 +36,48 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <tbody>
 <tr>
 <td><a href="#chapter-schedule">阶段日程</a></td>
-<td>当前证据、保留/调整/延后项、阶段门槛、下一批小任务</td>
+<td>纯 Java 主线定稿、当前实测进度、阶段门槛与下一步</td>
 </tr>
 <tr>
 <td><a href="#chapter-java-sql">Java与数据库</a></td>
-<td>已练 Java/SQL 的复习入口，以及 JDBC 查询与事务</td>
+<td>Java/SQL 基础与 JDBC 查询、事务参考</td>
 </tr>
 <tr>
 <td><a href="#chapter-web-security">Web与权限</a></td>
-<td>最小接口、MyBatis、状态流、Session 权限、错误处理</td>
+<td>HTTP 接口、MyBatis、四态流转、认证授权与错误处理</td>
 </tr>
 <tr>
-<td><a href="#chapter-testing-delivery">测试部署与AI验证</a></td>
-<td>Y Python基础、R Redis、B模型API、G只读Agent、C知识检索、Java联调</td>
+<td><a href="#chapter-testing-delivery">Java AI 功能与工程交付</a></td>
+<td>B01–B09、C01–C04、D01–D02 验收要求与并发/测试参考</td>
 </tr>
 <tr>
 <td><a href="#chapter-spring-applications">投递与面试</a></td>
-<td>目标岗位核对和能力证据表达</td>
+<td>岗位核对、能力证据表达与求职节奏</td>
 </tr>
 <tr>
 <td><a href="#chapter-resources">资料与排错</a></td>
-<td>按当前步骤查官方文档与故障原因</td>
+<td>按阶段查官方文档与常见故障定位</td>
 </tr>
 <tr>
 <td><a href="#chapter-checklists">技能 To-do List 与验收模板</a></td>
-<td>分阶段技术栈、可勾选技能、已有证据与独立验收</td>
+<td>分阶段技术栈、主线 51 项与按需 7 项验收状态</td>
 </tr>
 <tr>
 <td><a href="#chapter-contracts">数据接口约定</a></td>
-<td>当前数据与未来接口边界，不重复定义业务</td>
+<td>四表结构、最小接口、角色归属与 AI 建议边界</td>
 </tr>
 </tbody>
 </table></div>
-<p>项目目录：<code>JavaProject</code>（以下路径均相对项目根目录），包名 <code>cn.wishbottle.opsticket</code>。控制台和早期 Demo 保留为已完成成果；后续数据库版复用业务规则，必要时调整存储契约，不为了兼容文件编号生成方式写出错误数据库逻辑。</p>
-<h2 id="chapter-start-当前接续点">当前接续点</h2>
-<p>截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。 下一步：先用已看过的Python课程少量复习字典和函数，再用2—3条虚构工单写find_ticket查询和查无结果；根据实际卡点回看对应章节。随后复用或按需要搭建模型客户端，让模型请求只读工具、程序执行并回传结果。Java线先在隔离环境练习派单失败分支，继续理解创建事务与影响行数，不接入真实敏感数据。</p>
-<p>学习者已看过Python+AI课程第1—119集，但很久没写，先少量复习，再把虚构工单查询接成只读Agent工具；Java数据库创建事务与派单可并行。看过课程不等同于项目已实现或已通过验收。</p>
+<p>项目目录：<code>JavaProject</code>，包名 <code>cn.wishbottle.opsticket</code>，已清理早期控制台/文件演示代码并按标准 8 子包（<code>config</code>/<code>controller</code>/<code>domain</code>/<code>dto</code>/<code>exception</code>/<code>mapper</code>/<code>repository</code>/<code>service</code>）组织。</p>
+<h2 id="chapter-start-当前接续点2026-11-27">当前接续点（2026-11-27）</h2>
+<ul>
+<li><strong>已完成跟练与实测</strong>：真实 MySQL 跑通创建、派单（<code>assign</code>）、指定工程师解决（<code>resolve</code>）、原报障人验收关闭（<code>close</code>）四态闭环；落地 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权、<code>GET</code> 单条与日志的三角色归属隔离、<code>POST</code> 创建自动取登录人；在三条状态操作上实测 <code>expectedVersion</code> 乐观锁（<code>409</code>）；新建 <code>ticket_action_log</code> 表并用 <code>@Transactional</code> 绑定状态变更与审计日志，在隔离 H2 中编写外键失败回滚测试（4 项全绿）。</li>
+<li><strong>主线验收口径</strong>：主线 51 项中已正式验收保持 6 项（<code>J01–J06</code>），跟练待巩固 22 项，待学 23 项。</li>
+<li><strong>下一步</strong>：收尾 A2 剩余小边界（补齐 <code>GET /api/db/tickets</code> 列表接口权限、接入 SLF4J 日志与基础集成验证），随后正式进入 <strong>B 阶段：Java AI 业务功能（B01–B09）</strong>。</li>
+</ul>
 <h2 id="chapter-start-第一版只做这些">第一版只做这些</h2>
-<p>报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；能查自己的列表和详情，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。最小同源页面或 HTTP 客户端足以演示。</p>
-<p>Python基础和使用虚构数据的B/G实验可以与A2并行；Redis基础与工单缓存和会话练习已列为主线，在具备相应基础后穿插学习，不是首个假数据Agent的前置条件。连接真实工单前必须完成相应登录、资源授权和接口验证。评论、退回、附件、设备后台大全、消息队列、微服务和 Kubernetes按需后置。</p>
-<p>B先用Python和虚构工单做摘要/分类建议；真实工单场景须先授权读取，模型不能直接改状态或派单。没有 API key、模型名称、可访问端点或预算时，先完成客户端契约和本地故障测试；结果标注“真实调用待配置”，不能用模拟响应声称 AI 验收通过。</p>
+<p>报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；各角色按归属查看工单与操作流水，管理员看全部。由 Java 判断角色、归属、状态、版本和字段；MySQL 持久化并提供约束。</p>
+<p>B 阶段直接在现有 Spring Boot 项目中落地模型客户端、结构化输出校验、超时降级、<code>@Async</code> 有界线程池事务后异步触发回写，以及人工采纳 / 修改后采纳 / 驳回反馈闭环。AI 只给建议，人保留最终确认权；关闭 AI 后工单主业务不受影响。</p>
 <h2 id="chapter-start-每次学习的四件事">每次学习的四件事</h2>
 <ol>
 <li>说清这条业务需求需要什么知识，先读对应一两个类或 SQL。</li>
@@ -82,21 +85,20 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <li>运行一个正常场景和一个有价值的失败场景，记录预期与实际；已掌握的同质练习可跳过。</li>
 <li>关掉答案解释输入、调用链、数据库变化和失败路径，再做一个变体。</li>
 </ol>
-<p>AI 辅助编程记录“工具帮了什么、我怎样确认”；项目 AI 记录“模型请求、结构化输出、失败降级、质量和成本”。两者不混为同一能力。</p>
+<p>AI 辅助编程记录“工具帮了什么、我怎样确认”；项目 AI 功能记录“模型请求、结构化输出、失败降级、人工采纳率、质量和成本”。两者不混为同一能力。</p>
 <h2 id="chapter-start-离线阅读与准备">离线阅读与准备</h2>
-<p>可打开<a href="#top">连续阅读版</a>，或<a href="https://wishbottle.cn/learning/downloads/java-internship-self-study.zip" rel="noopener noreferrer">下载完整自学包</a>后解压，用浏览器打开 <code>reader.html</code>；包内Markdown可以独立阅读与记录。公开下载内容随课程同步更新，实际学习进度见<a href="https://wishbottle.cn/learning/#progress" rel="noopener noreferrer">时间线</a>。</p>
-<p>首次准备工具和依赖仍需网络；B阶段的真实模型调用需可用提供方、凭据与调用预算。未配置时可继续后端和本地契约测试，但明确记录“真实模型验证未完成”。遇到卡点先缩小为一条SQL、一个方法或一个请求，再查排错手册；按可投入时间调整选修范围。</p>
-<h2 id="chapter-start-首版建议的使用边界">首版建议的使用边界</h2>
-<p>B首版只展示/复制参考，不提供直接回写按钮。现有rename只在控制台，不能视为已有HTTP修改接口；以后若加入人工采纳改标题，须单独定义报修人归属、允许状态、expectedVersion和日志同事务的HTTP接口，再实施并验收。</p></section><section id="chapter-project" class="chapter"><div class="chapter-meta"><span>02 / 14</span><a href="#top">回到目录</a></div><h1>设备运维工单平台项目说明</h1><blockquote>
-<p>本页说明项目路线；当前实现与验收请配合<a href="https://wishbottle.cn/learning/project-docs/" rel="noopener noreferrer">项目文档</a>阅读。计划中的能力不代表已经实现或掌握。</p>
+<p>可打开<a href="#top">连续阅读版</a>，或<a href="https://wishbottle.cn/learning/downloads/java-internship-self-study.zip" rel="noopener noreferrer">下载完整自学包</a>后解压，用浏览器打开 <code>reader.html</code>；包内 Markdown 可独立阅读与记录。实际逐日进度以<a href="https://wishbottle.cn/learning/#progress" rel="noopener noreferrer">学习看板与时间线</a>为准。</p></section><section id="chapter-project" class="chapter"><div class="chapter-meta"><span>02 / 14</span><a href="#top">回到目录</a></div><h1>设备运维工单平台项目说明</h1><blockquote>
+<p>本页说明项目整体路线；具体代码现状与验收记录请配合<a href="https://wishbottle.cn/learning/project-docs/" rel="noopener noreferrer">项目文档</a>和<a href="https://wishbottle.cn/learning/#progress" rel="noopener noreferrer">学习时间线</a>阅读。计划中的能力不代表已经实现或掌握。</p>
 </blockquote>
-<p>更新于 2026-11-24。项目沿用 Java/Spring Boot/MySQL 管理工单，Python 负责报修分诊。</p>
-<h2 id="chapter-project-实际起点">实际起点</h2>
-<p>截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。</p>
-<h2 id="chapter-project-十二月交付目标">十二月交付目标</h2>
-<p>在 12 月 27 日前争取交付设备报修分诊的可演示版本，随后整理申请材料。Python 模型工具调用、资料检索和 LangGraph 状态编排进入这一轮主线，Java 负责结果、权限和版本校验。完整日期与收缩条件见<a href="#chapter-schedule-十二月底的可投递版本">月底交付安排</a>。</p>
-<h2 id="chapter-project-目标和阶段">目标和阶段</h2>
-<p>Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调。</p>
+<p>更新于 2026-11-27。项目统一采用 <strong>Java 21 / Spring Boot 4.1.2 / MyBatis 4.1.0 / MySQL 8.4</strong>，先交付可靠后端业务与工程保护，再在同一工程内轻量落地 AI 业务功能与效果评估，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署。</p>
+<h2 id="chapter-project-当前实测进展2026-11-27">当前实测进展（2026-11-27）</h2>
+<ul>
+<li><strong>A1 核心业务</strong>：已在真实 MySQL 跑通创建、派单（<code>assign</code>）、解决（<code>resolve</code>）、验收关闭（<code>close</code>）四态闭环，完成早期控制台/文件版旧代码清理并整理为标准 Spring Boot 8 子包分层。</li>
+<li><strong>A2 工程化（当前阶段）</strong>：已实测 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权、<code>GET</code> 单条与日志的三角色归属隔离、<code>POST</code> 创建自动取登录人、<code>expectedVersion</code> 乐观锁（<code>409</code>）、<code>ticket_action_log</code> 审计表 + <code>@Transactional</code> 事务绑定与 H2 外键失败回滚测试（4 项全绿）。当前收尾列表权限、SLF4J 日志与基础验证后进入 B 阶段。</li>
+<li><strong>B / C / D</strong>：尚未开始编码，按计划逐步推进。</li>
+</ul>
+<h2 id="chapter-project-目标与阶段">目标与阶段</h2>
+<p><strong>A1（数据库与 HTTP 闭环）→ A2（认证授权、事务、并发与交付）→ B（Java AI 业务功能 B01–B09）→ C（效果评估与回归 C01–C04）→ 可选进阶 D（D01 MySQL 轻量 RAG / D02 外部 SOP 轻量 Skill）。</strong></p>
 <div class="table-scroll" tabindex="0"><table>
 <thead>
 <tr>
@@ -107,38 +109,32 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </thead>
 <tbody>
 <tr>
-<td>A Java工单业务</td>
-<td>读懂现有事务与数据库创建；逐步完成派单、状态与必要鉴权</td>
-<td>能独立画请求链并解释回滚；派单接口、失败分支及授权按实际结果记录</td>
+<td>A1 后端业务闭环</td>
+<td>MySQL 建表、MyBatis 映射、创建/查询/派单/解决/关闭四态接口与规范分层</td>
+<td>真实 MySQL 跑通四态流转与 400/404/409 分支，能独立画出调用链</td>
 </tr>
 <tr>
-<td>Y Python复习与应用</td>
-<td>已看课程前119集、久未写；少量回顾字典和函数，使用虚构工单写查询</td>
-<td>恢复编程手感，卡住时有针对性复习，不重刷基础</td>
+<td>A2 工程与交付（当前）</td>
+<td>MySQL 登录认证、三角色资源归属、乐观锁、操作日志与 <code>@Transactional</code> 回滚、SLF4J 日志与核心测试</td>
+<td>多角色 <code>200/401/403/409</code> 实测、事务回滚测试通过、可复现启动与排错</td>
 </tr>
 <tr>
-<td>B Python模型调用</td>
-<td>先用虚构数据请求一个模型，返回摘要和待补充信息；模拟错误</td>
-<td>保存真实调用与模拟测试各一份证据，校验结构、超时与错误；没有API时仅标契约测试</td>
+<td>B Java AI 功能（B01–B09）</td>
+<td>Java 模型客户端、结构化校验、超时降级、<code>@Async</code> 事务后异步回写、人工采纳/修改/驳回反馈闭环</td>
+<td>真实模型调用与故障降级分开记录；事务回滚不误触发异步；过期建议被 <code>expectedVersion</code> 返回 409</td>
 </tr>
 <tr>
-<td>G Python只读Agent</td>
-<td>先对假数据接查询工具，完成查找→追问/详情→回答，记录步骤</td>
-<td>真实模型发出工具调用、Python执行；无结果、坏参数、超时和步数限制可复现</td>
+<td>C 效果评估与回归（C01–C04）</td>
+<td>12–20 条固定案例（开发/留出集分离）、B09 真实采纳率统计、延迟/token/成本与单因子回归</td>
+<td>两类指标分开列示真实分母，保留失败样本与回归前后对比</td>
 </tr>
 <tr>
-<td>C 资料与评测</td>
-<td>维护少量自编设备资料，检索并引用；用固定任务集改进</td>
-<td>引用可定位；区分检索、工具、生成错误，记录真实样本数、耗时与用量</td>
-</tr>
-<tr>
-<td>L 安全联调</td>
-<td>Java提供经授权的只读工单接口，Python通过HTTP调用</td>
-<td>隔离演示数据、真实身份与授权已验证；无权请求不能读取；超时/故障可解释</td>
+<td>D 可选进阶（D01–D02）</td>
+<td>MySQL 全文/同设备 Top 3 轻量检索（轻量 RAG）、外部 Markdown/配置表排查 SOP（轻量 Skill）</td>
+<td>留出集有无检索对比与误召回分析；改外部规则无需改 Java 业务代码并做回归</td>
 </tr>
 </tbody>
 </table></div>
-<p>在现有 Java 工单系统上做一个<strong>设备报修分诊助手</strong>。管理员收到一张报修单，Python Agent 帮他查设备资料，给出处理建议、依据和需要追问的内容。管理员查看建议后决定如何处置。 首版验收包含有据可查、缺资料需追问、无依据转人工三个案例。后续再把人工采纳和已解决经验接回同一张工单。详见<a href="#chapter-schedule">阶段日程</a>。</p>
 <h2 id="chapter-project-第一版业务边界">第一版业务边界</h2>
 <p>设备来自虚构园区/实验室记录，无真实硬件连接。只保留三种角色：</p>
 <div class="table-scroll" tabindex="0"><table>
@@ -152,228 +148,109 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <tbody>
 <tr>
 <td>REPORTER 报修人</td>
-<td>选启用设备、创建、查自己的工单、验收</td>
+<td>选启用设备、创建、查自己的工单与日志、验收关闭</td>
 <td>不能冒充别人报修、查询别人记录或自行派单</td>
 </tr>
 <tr>
 <td>ENGINEER 工程师</td>
-<td>查分给自己的工单、提交非空处理说明</td>
+<td>查分给自己的工单与日志、提交处理结果</td>
 <td>不能处理别人名下工单或代报修人验收</td>
 </tr>
 <tr>
 <td>ADMIN 管理员</td>
-<td>查询、给 OPEN 工单指定启用工程师</td>
-<td>不能随意设置状态或代报修人验收</td>
+<td>查询全部工单与日志、给 OPEN 工单指定启用工程师</td>
+<td>不能随意跳状态或代报修人验收</td>
 </tr>
 </tbody>
 </table></div>
-<p>流程为 OPEN→IN_PROGRESS→RESOLVED→CLOSED。首版不做验收退回、评论、公开注册、全套设备/用户后台、统计大屏。演示先用接口工具，随后可加简洁页面；不要求先学大型前端框架。</p>
-<p>现有三表保留，A 阶段再加 ticket_action_log；处理说明存 resolve 动作 note，状态与日志同事务。暂不建 ticket_comment/ticket_resolution。创建重试用请求键，状态操作用前置状态＋期望版本；SQL 中 version 字段存在并不代表这些保护已实现。</p>
-<p>具体规则、接口与验收不在本页重复维护，以项目 <a href="https://wishbottle.cn/learning/project-requirements/" rel="noopener noreferrer">需求</a>、<a href="https://wishbottle.cn/learning/project-design/" rel="noopener noreferrer">设计</a>、<a href="https://wishbottle.cn/learning/project-verification/" rel="noopener noreferrer">验收</a> 为准。</p>
-<h2 id="chapter-project-首个python模型功能与agent">首个Python模型功能与Agent</h2>
-<p>用自造工单产生summary/category/missingInformation；先Python脚本加模拟数据和模拟故障，再尝试真实模型API。输出只展示，不自动写库或派单；模型调用失败不影响Java业务。</p>
-<p>做一个查询假工单的Python工具，让模型请求调用、程序校验并执行、把结果反馈给模型；再增加多步查询/追问、限步、超时、日志。根据需要学习LangChain、LangGraph，先不要求多Agent。</p>
-<p>后续Java只读业务接口经认证授权后，再使用Python HTTP客户端安全接入；验证跨用户拒绝、超时与空结果。模型不能拼任意SQL，也不能传入用户身份冒充授权。维护资料使用虚构内容并记录来源/版本与引用，真假模型结果和模拟失败分别记录。</p>
-<p>真实业务联调前，不公开当前无授权的开发接口，不上传真实敏感工单。Redis基础、虚构设备缓存和Agent会话记忆已纳入主线，分阶段学习，不阻挡内存版原型；MCP、自动派单、微服务和训练模型按需要后置。</p>
+<p>流程为 <code>OPEN → IN_PROGRESS → RESOLVED → CLOSED</code>。首版不做验收退回、评论、公开注册、全套设备/用户后台、统计大屏。数据库包含 <code>device</code>、<code>app_user</code>、<code>ticket</code> 与 <code>ticket_action_log</code> 四张表；状态更新与写审计日志在同一 <code>@Transactional</code> 事务内执行，状态变更通过前置状态与 <code>expectedVersion</code> 乐观锁保护。</p>
+<p>具体实现与验收细节见<a href="https://wishbottle.cn/learning/project-docs/" rel="noopener noreferrer">项目文档</a>、<a href="https://wishbottle.cn/learning/project-requirements/" rel="noopener noreferrer">需求</a>、<a href="https://wishbottle.cn/learning/project-design/" rel="noopener noreferrer">设计</a>、<a href="https://wishbottle.cn/learning/project-verification/" rel="noopener noreferrer">验收</a>。</p>
+<h2 id="chapter-project-java-轻量-ai-功能边界b-阶段">Java 轻量 AI 功能边界（B 阶段）</h2>
+<p>在现有 Spring Boot 项目中用 Java HTTP 客户端或官方 SDK 接入真实模型提供方：</p>
+<ol>
+<li>对工单生成结构化的 <code>summary</code> / <code>category</code> / <code>missingInformation</code> 建议，程序严格校验字段类型、枚举与长度。</li>
+<li>模型网络调用严格放在数据库写事务外，设置连接/读取超时与重试上限；关闭 AI 或模型故障时工单核心流程完全不受影响。</li>
+<li>使用 Spring <code>@Async</code> + 自定义有界线程池在工单写事务<strong>提交后</strong>异步触发分析并回写状态（<code>PENDING</code> / <code>DONE</code> / <code>FAILED</code>），做好同工单同版本幂等。</li>
+<li>提供<strong>直接采纳 / 修改后采纳 / 驳回</strong>接口并记录反馈差异日志；任何写回均重新校验 Java 角色权限、前置状态与 <code>expectedVersion</code>。</li>
+</ol>
 <h2 id="chapter-project-技术与学习方式">技术与学习方式</h2>
-<p>沿用 Java 21、Maven；当前MySQL8.4.13与Connector/J26.10.0已经过独立恢复和连接验证。SQL、短JDBC和MyBatis查询/创建已有跟练，派单成功路径已在隔离H2练习；下一步继续理解创建事务并验证派单失败分支，同时少量复习已看过的Python课程并做假工单查询，不重复升级现有环境。框架版本到接入时按官方兼容表固定；认证仍优先Spring Security＋Session Cookie，保留CSRF并使用框架密码编码器。</p>
-<p>两种 AI 学习分开：AI 辅助编程可用于解释/评审/排错，但每个模块要自己读调用链、独立改需求并验证；产品内 AI 功能则必须自己接入、测试真实 API 和失败路径。安排少量高价值测试，避免重复抄同类断言；数据库事务必须用真实 MySQL 验证，不能只看 Mock。</p>
-<p>每次约 3 小时是时间预算，不是作业定额：先回忆已有代码，再讲一个新概念、独立写一个小变更、验证并记录帮助和困难。每个阶段至少独立实现/修改一个功能、解释一次设计、排查一个故障。完整任务见 <a href="#chapter-schedule">阶段学习计划</a>。</p>
+<p>沿用 <strong>Java 21 / Spring Boot 4.1.2 / MyBatis 4.1.0 / MySQL 8.4.13</strong>。将“AI 辅助编程”和“项目内 AI 业务功能”严格分开记录；每次约 3 小时按最小可验证任务推进，完整阶段安排见<a href="#chapter-schedule">阶段学习计划</a>。</p>
 <h2 id="chapter-project-求职匹配与信息边界">求职匹配与信息边界</h2>
-<p>后端能力仍是 AI 应用的基础，不能从技术热度判断“纯后端已落后”。2026-10-26 核查的<a href="https://talent.hikvision.com/home/socity/position?postId=3DBC4346A3391150639BCB4895723F64" rel="noopener noreferrer">海康 Java 实习岗位</a>仍覆盖 Java、Spring、MyBatis、SQL、测试与部署；<a href="https://talent.hikvision.com/home/socity/position?postId=80E877130AFCA23529A8391F624FA447" rel="noopener noreferrer">质量管理软件实习</a>也要求后端框架和 SQL，并提 AI 辅助开发。<a href="https://dahua1.zhiye.com/campus/detail?jobAdId=cc425147-ec13-45d8-b704-f4c6632f0f89" rel="noopener noreferrer">大华 AI 应用开发岗位</a>可作 Java/AI 工程能力参照，但该岗位明确限定 2027 届，申请时须核对自己的毕业届别；详情信息来自官网搜索索引。</p>
-<p>上述不是 2027 暑期岗位保证。每次投递核对本科门槛、毕业届别、杭州地点、每周出勤与连续实习时长。简历分别写已实现业务、真实 AI 验证、个人独立贡献和限制；没有测出的性能/成本不能编造。第二个项目等第一项目完成及岗位缺口明确后再决定。</p>
-<p>官方技术参考：<a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">结构化输出仍需校验</a> · <a href="https://docs.spring.io/spring-ai/reference/api/tools.html" rel="noopener noreferrer">工具调用由应用控制执行</a>。引用用于设计判断，不表示本项目已使用 Spring AI。</p></section><section id="chapter-schedule" class="chapter"><div class="chapter-meta"><span>03 / 14</span><a href="#top">回到目录</a></div><h1>Java工单与Python Agent阶段学习计划</h1><p>更新于 2026-11-24。每天约 3 小时，按能演示的结果推进，每个单元可以拆成几次练习。</p>
-<p><strong>Java工单后端（A）与Python基础（Y）并行 → Python模型调用（B）→ 只读Agent（G）→ 知识检索与评测（C）→ 按条件与Java联调。</strong> A/Y并行；B/G使用假数据即可提前练习。真正连接受限的用户工单数据前，Java端和服务间必须完成身份、资源范围和接口授权。评测从第一次模型调用开始。</p>
-<h2 id="chapter-schedule-当前进度与证据">当前进度与证据</h2>
-<p>本次静态核对源码还看到 Spring Security 的内存练习账号与 BCrypt 配置。当前记录尚无该配置的登录、角色和工单归属的运行结果，下一阶段对联调路径逐项验证。</p>
-<p>截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。</p>
-<p>2026-11-15学习者反馈：已经看过黑马Python+AI课程第1—119集，但很久没有写，需要少量复习。课程目录涵盖Python基础、函数/异常、HTTP、模型调用、Streamlit与会话管理；观看不等于已跟练、独立掌握或本工单项目已实现。</p>
-<p><code>/api/tickets</code>仍使用文件仓库；<code>/api/db/tickets</code>是数据库练习接口。派单HTTP成功路径已由学习者在隔离H2练习；本人失败分支和真实MySQL隔离集成仍待验证，也不把助手的隔离测试算为独立掌握。</p>
-<h2 id="chapter-schedule-十二月底的可投递版本">十二月底的可投递版本</h2>
-<p>2026-11-24 新增目标。在 12 月 27 日前争取完成一个能独立演示和解释的 Agent 项目版本，12 月 28—31 日整理材料并开始按岗位条件投递。按每天约 3 小时、每周 6 天估算，余下学习预算约 90—100 小时。以下为冲刺目标，每周按实际验收调整。</p>
-<p>借鉴黑马文章的工单分析、证据检索、人工确认和结果回流设计。当前材料是文章说明，源码能否直接复用需要看到代码后再判断。本文记录独立适配现有 Java 业务的实现安排。</p>
-<h3 id="chapter-schedule-这一版的技术取舍">这一版的技术取舍</h3>
-<p>Java / MySQL 保存工单、分析结果和采纳记录，校验操作人、状态与版本。Python / FastAPI 提供分析服务。模型先通过普通函数完成一次查单和检索，再将分支迁入 LangGraph。Redis 先用于有 TTL 的隔离会话缓存。第一次联调由管理员点击“分析”发起。</p>
-<p>LangGraph 在十二月进入计划内实践，用来表示“查单 → 检索 → 建议／等待补充／转人工”，并练习保存和恢复任务。工具循环负责参数检查、最大调用次数、超时和每步追踪。本地练习可用 SQLite checkpointer 保存执行状态，业务结果仍由 Java / MySQL 管理。<a href="https://docs.langchain.com/oss/python/langgraph/overview" rel="noopener noreferrer">LangGraph 概览</a> · <a href="https://docs.langchain.com/oss/python/langgraph/persistence" rel="noopener noreferrer">状态保存</a> · <a href="https://docs.langchain.com/oss/python/langgraph/interrupts" rel="noopener noreferrer">等待与恢复</a></p>
-<div class="table-scroll" tabindex="0"><table>
-<thead>
-<tr>
-<th>目标日期</th>
-<th>优先交付</th>
-<th>验收时亲手展示</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>11 月 24—29 日</td>
-<td>少量复习 Python，查假工单，完成一次真实模型工具调用。并行复验 Java 派单失败分支</td>
-<td>模型发起查单，程序执行，模型根据查到的记录回答。不存在的编号和非法参数有可解释结果</td>
-</tr>
-<tr>
-<td>11 月 30 日—12 月 6 日</td>
-<td>编写或整理约 20 条带型号与版本的维修资料，约定来源。先关键词检索，再用一个本地向量索引对比语义召回</td>
-<td>同一批问题换说法后仍能找到适用段落，型号不符时会追问或转人工。保存两种检索的实际结果</td>
-</tr>
-<tr>
-<td>12 月 7—13 日</td>
-<td>FastAPI 接口、LangGraph 状态分支、等待补充与恢复、有限工具循环、Redis 会话</td>
-<td>一次正常处理、一次追问后继续、一次工具超时都能沿日志解释。重启后的状态恢复使用持久化存储</td>
-</tr>
-<tr>
-<td>12 月 14—20 日</td>
-<td>接 Java 隔离演示数据，在工单详情或简单接口页面展示 AI 建议，保存采纳和驳回。补足该路径实际用到的身份、授权和版本校验</td>
-<td>普通用户不能采纳管理员建议。重复采纳只产生一次操作。工单变化后，旧分析结果提示失效</td>
-</tr>
-<tr>
-<td>12 月 21—27 日</td>
-<td>修复联调问题，用约 30 个有预期结果的案例评测，分开开发样本与留出样本。完成 README、启动说明和演示录像</td>
-<td>用可重复的步骤演示成功、追问、无依据、工具失败、无权和过期结果，报告实际分母、耗时与用量</td>
-</tr>
-<tr>
-<td>12 月 28—31 日</td>
-<td>简历写已验收的功能，整理取舍与失败复盘，开始按最新岗位条件申请</td>
-<td>能解释一次工具调用、一次错误定位和一次亲手做的修改。到岗时间、出勤天数和可实习月数按本人课表填写</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="chapter-schedule-用什么体现自己的设计">用什么体现自己的设计</h3>
-<p>优先做两处能现场验证的细节。其一，设备型号和固件版本参与检索过滤，避免拿其他设备的经验给当前设备建议。其二，建议关联工单版本，分析期间有人改了工单，旧建议就失效，管理员重复点击也不会重复派单。</p>
-<p>从首次真实调用开始保存案例和过程记录。比较“仅提示词”“加入资料检索”后的实际效果，记录改好了哪些题、哪些题仍失败。简历使用实际测得的数据。已解决案例经过人工确认再进入知识库，可在主线跑通后扩展。</p>
-<p>这一轮的加分项按剩余时间选择一项即可，版本化设备排查 SOP、重排序或后台异步任务。Kafka、多 Agent、Neo4j / GraphRAG 和 SFT / DPO / vLLM 留待首版之后评估。</p>
-<p>如果 12 月 6 日尚未跑通真实工具调用与一条带来源的建议，下一周优先补这条路径。月底交付按实际完成范围命名，写清演示数据和已知问题，继续准备匹配岗位。课程上线日期作为个人计划的参考，项目差异由自己的业务规则、代码演进和评测体现。</p>
-<h2 id="chapter-schedule-项目要做成什么样">项目要做成什么样</h2>
-<p>在现有 Java 工单系统上做一个<strong>设备报修分诊助手</strong>。管理员收到一张报修单，Python Agent 帮他查设备资料，给出处理建议、依据和需要追问的内容。管理员查看建议后决定如何处置。</p>
-<p>例如工单 101 写着“打印机换过纸后仍提示缺纸”。助手先查这张单，拿到型号，再去设备手册找对应段落。查到依据就给排查步骤并标注出处。只写“打印机坏了”时先问型号和报错。需要派给谁、能否派单，由管理员和 Java 的权限、状态规则决定。</p>
-<p>第一版用虚构数据交付“查单 → 检索 → 建议或追问”的单 Agent 演示。第二版在工单详情保存人工采纳或驳回的理由。关单后，只有经确认有效、适用设备清楚的处置经验才进入可检索案例。文章里的待处理和已关单双链路，在这里分别解决“这单怎么处理”和“哪些经验值得下次复用”。</p>
-<p>设计参考来自黑马的智能工单案例。<a href="https://mp.weixin.qq.com/s/QuWxhz8wfpK-sziTApnKlg" rel="noopener noreferrer">课程文章</a></p>
-<h2 id="chapter-schedule-阶段与验收">阶段与验收</h2>
+<p>简历与面试只写实际运行验证过的功能、真实分母下的指标与个人独立贡献，不编造未测出的并发规模或提升比例；每次投递按目标岗位的学历、毕业届别、城市、出勤天数与连续实习月数逐项核对。</p>
+<p>官方技术参考：<a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">结构化输出仍需校验</a> · <a href="https://docs.spring.io/spring-ai/reference/api/tools.html" rel="noopener noreferrer">工具调用由应用控制执行</a>。</p></section><section id="chapter-schedule" class="chapter"><div class="chapter-meta"><span>03 / 14</span><a href="#top">回到目录</a></div><h1>Java 设备运维工单与轻量 AI 阶段学习计划</h1><p>更新于 2026-11-27（纯 Java 主线定稿于 2026-11-25）。每天约 3 小时，按可验收的最小任务推进。</p>
+<p><strong>唯一主线：A1（数据库与 HTTP 业务闭环）→ A2（认证授权、事务、并发与交付）→ B（Java AI 业务功能 B01–B09）→ C（效果评估与回归 C01–C04）→ 可选进阶 D（D01 MySQL 轻量 RAG / D02 外部 SOP 轻量 Skill）。</strong></p>
+<h2 id="chapter-schedule-定稿边界与克制原则">定稿边界与克制原则</h2>
+<ul>
+<li><strong>技术栈收口</strong>：全部基于现有 <strong>Java 21 / Spring Boot 4.1.2 / MyBatis 4.1.0 / MySQL 8.4</strong> 轻量落地，<strong>不引入 Kafka、Milvus、Neo4j，不做微调与本地推理部署</strong>。</li>
+<li><strong>B 阶段定稿（B01–B09）</strong>：在原有模型接入、结构校验、降级与调用记录（<code>B01–B07</code>）基础上，加入 <strong>B08（Spring <code>@Async</code> + 自定义有界线程池的事务后异步触发、状态回写与同工单同版本幂等，联动 P03）</strong> 和 <strong>B09（直接采纳 / 修改后采纳 / 驳回接口与反馈差异日志，保留人工确认权与权限/版本校验）</strong>。</li>
+<li><strong>C 阶段定稿（C01–C04）</strong>：修订 <strong>C02（效果评估）</strong>，采用离线固定案例集（开发集/留出集分离）与 B09 交互反馈日志真实采纳率双口径统计，分开列示并写清真实分母。</li>
+<li><strong>可选进阶 D（不阻挡 A→B→C 结项）</strong>：<strong>D01（MySQL 全文/同设备过滤 Top 3 已解决工单轻量 RAG + 留出集对比回归）</strong>、<strong>D02（外部 Markdown/配置表排查 SOP 与分类口径动态拼装 + 回归对比）</strong>。完整验收口径见<a href="#chapter-checklists">技能 To-do List 与验收记录</a>。</li>
+</ul>
+<h2 id="chapter-schedule-当前进度与实测证据2026-11-27">当前进度与实测证据（2026-11-27）</h2>
+<ul>
+<li><strong>A1 已跑通主流程</strong>：真实 MySQL 跑通创建、派单（<code>assign</code>）、指定工程师解决（<code>resolve</code>）、原报障人验收关闭（<code>close</code>）四态闭环；已清理早期文件/控制台演示代码，统一为标准 Spring Boot 8 子包分层。</li>
+<li><strong>A2 当前正在收尾</strong>：已亲手落地并实测 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权、<code>GET /api/db/tickets/{id}</code> 与 <code>GET /api/db/tickets/{id}/logs</code> 三角色归属隔离、<code>POST /api/db/tickets</code> 自动取登录人、<code>expectedVersion</code> 乐观锁（<code>409</code>）、<code>ticket_action_log</code> 审计表 + <code>@Transactional</code> 事务绑定与 H2 外键失败回滚测试（4 项全绿）。</li>
+<li><strong>验收口径</strong>：主线 51 项中已正式验收保持 6 项（<code>J01–J06</code>），跟练待巩固 22 项，待学 23 项。</li>
+<li><strong>下一步</strong>：收尾 A2 剩余小边界（<code>GET /api/db/tickets</code> 列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 <strong>B 阶段：Java AI 业务功能（B01–B09）</strong>。</li>
+</ul>
+<h2 id="chapter-schedule-阶段与验收总表">阶段与验收总表</h2>
 <div class="table-scroll" tabindex="0"><table>
 <thead>
 <tr>
 <th>阶段</th>
-<th>亲手交付</th>
+<th>核心内容</th>
 <th>达标证据</th>
+<th>当前状态</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>A Java工单业务</td>
-<td>读懂现有事务与数据库创建；逐步完成派单、状态与必要鉴权</td>
-<td>能独立画请求链并解释回滚；派单接口、失败分支及授权按实际结果记录</td>
+<td>起步（J01–J10）</td>
+<td>Java 语法、集合、异常、Git、Maven、JUnit</td>
+<td>口述边界判断、独立小改与可复现测试</td>
+<td>6 项已验收，4 项沿途巩固</td>
 </tr>
 <tr>
-<td>Y Python复习与应用</td>
-<td>课程已看到119集；选择字典/函数等少量复习，并用虚构工单写查询</td>
-<td>恢复编码手感、能修改查询；基础不熟时再回看，不重刷整个课程</td>
+<td>A1 后端业务闭环（S/W）</td>
+<td>MySQL 三表、SQL、JDBC、MyBatis 映射与四态闭环</td>
+<td>真实 MySQL 跑通创建/派单/解决/关闭及 400/404/409 分支</td>
+<td>主流程已跑通，跟练待巩固</td>
 </tr>
 <tr>
-<td>R Redis核心与项目实践</td>
-<td>学数据结构、过期、Python连接；逐步加虚构工单缓存和Agent会话记忆</td>
-<td>自己解释命中/失效、回源与会话隔离，验证过期与Redis不可用的处理</td>
+<td>A2 工程与交付（E01–E10）</td>
+<td>MySQL 登录、角色与资源归属、乐观锁、操作日志与事务回滚、SLF4J、测试与运行</td>
+<td>多角色 <code>200/401/403/409</code> 实测、回滚测试通过、可复现启动与排错</td>
+<td><strong>当前阶段（收尾中）</strong></td>
 </tr>
 <tr>
-<td>B Python模型调用</td>
-<td>先用虚构数据请求一个模型，返回摘要和待补充信息；模拟错误</td>
-<td>保存真实调用与模拟测试各一份证据，校验结构、超时与错误；没有API时仅标契约测试</td>
+<td>B Java AI 功能（B01–B09）</td>
+<td>模型 API、结构化校验、降级、用量记录、<code>@Async</code> 异步回写、人工采纳闭环</td>
+<td>真实调用与模拟故障分开记录；事务回滚不误触发异步；过期建议 409</td>
+<td>待开始</td>
 </tr>
 <tr>
-<td>G Python只读Agent</td>
-<td>先对假数据接查询工具，完成查找→追问/详情→回答，记录步骤</td>
-<td>真实模型发出工具调用、Python执行；无结果、坏参数、超时和步数限制可复现</td>
+<td>C 效果评估与回归（C01–C04）</td>
+<td>固定案例集、双口径评估、延迟/token/成本记录、单因子回归</td>
+<td>标注真实分母与失败归因，无真实调用不以 Mock 充当效果</td>
+<td>待开始</td>
 </tr>
 <tr>
-<td>C 资料与评测</td>
-<td>维护少量自编设备资料，检索并引用；用固定任务集改进</td>
-<td>引用可定位；区分检索、工具、生成错误，记录真实样本数、耗时与用量</td>
-</tr>
-<tr>
-<td>L 安全联调</td>
-<td>Java提供经授权的只读工单接口，Python通过HTTP调用</td>
-<td>隔离演示数据、真实身份与授权已验证；无权请求不能读取；超时/故障可解释</td>
+<td>D 可选进阶（D01–D02）</td>
+<td>MySQL Top 3 轻量 RAG、外部 SOP 轻量 Skill</td>
+<td>留出集对照与误召回/退化分析，不阻挡主线结项</td>
+<td>按需</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="chapter-schedule-接下来的六个学习单元">接下来的六个学习单元</h2>
-<p>每个单元交付一个可以单独演示的结果。能自己改一个输入、解释输出时，再往后走。</p>
-<div class="table-scroll" tabindex="0"><table>
-<thead>
-<tr>
-<th>单元</th>
-<th>动手任务</th>
-<th>怎么知道做对了</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1 · 恢复 Python 手感</td>
-<td>编三张工单，每张写编号、设备、状态、故障描述。用列表、字典和函数实现 <code>find_ticket(ticket_id)</code></td>
-<td>传 101 找到原记录，传 999 得到空结果，传字符串得到参数错误。再换一张工单独立重跑</td>
-</tr>
-<tr>
-<td>2 · 分诊建议的样子</td>
-<td>用一张假工单调一次模型。用 Python 校验故障类别、建议、待补信息、依据编号和是否转人工</td>
-<td>“设备坏了”应追问型号或现象。缺字段或返回未知类别时，程序能解释失败。模拟和真调用分别记录</td>
-</tr>
-<tr>
-<td>3 · 让模型查工单</td>
-<td>把第一步的函数注册为只读工具。让模型根据用户问题选工具，Python 执行并把结果交回模型</td>
-<td>保存一次完整调用记录。用不存在的编号再试一次，回答应明确查无工单</td>
-</tr>
-<tr>
-<td>4 · 给建议找依据</td>
-<td>加资料检索工具。先搜维修手册和已确认解决的历史工单，按设备型号、版本筛选。把本次报修人的补充描述作为查询线索</td>
-<td>为一张报修单标出支持建议的资料编号和段落，再用型号不匹配的资料验证会追问或转人工</td>
-</tr>
-<tr>
-<td>5 · 让执行过程可查</td>
-<td>用普通 Python 包住工具调用循环，校验工具参数，限制步数和超时，记录每步的工具、结果和结束原因。这一层就是本项目的 Agent Harness</td>
-<td>让工具超时一次，再让模型重复请求同一工具。两次任务都应在边界内结束，并给管理员留下可读的原因</td>
-</tr>
-<tr>
-<td>6 · 把建议交给人</td>
-<td>在隔离工单详情展示建议和证据，先允许人工采纳或驳回。需要真实派单时，由已授权管理员通过 Java 接口提交</td>
-<td>演示采纳、驳回两条路径。同一建议重复提交只产生一次操作，旧版本建议不能覆盖新的工单状态</td>
-</tr>
-</tbody>
-</table></div>
-<p>从单元 2 开始收集测试题。Java 并行练派单的 404、409，随后补管理员授权及期望版本校验。Redis 穿插学 TTL、缓存失效与会话隔离，课程分 P 见下节。</p>
-<p><strong>下一次练习</strong>　先做单元 1。卡在取字段时回看 P52 字典，卡在传参或返回值时回看 P58 函数，看完立刻回脚本改一个输入。</p>
 <h2 id="chapter-schedule-按阶段看网课与做练习">按阶段看网课与做练习</h2>
-<p>学习方式：每次只安排当前任务相关的1—2集，给出视频链接、分P、时长和要留意的问题；看完由学习者反馈、提问，再回到现有工单项目独立做小练习。下面时长约数仅为视频播放时长，不含暂停和练习；不要求从头看完大课。看过、跟练和能独立完成分开记录。以下是依据公开简介和选集目录筛选，当前环境受B站访问限制，未逐段播放；若选集顺序或时长变化，以标题为准。配套付费服务不作为学习前提，安装与API版本以官方文档和本机环境为准。</p>
+<p>学习方式：遇到卡点再针对性看 1–2 集短视频并对照官方文档，看完立刻回到工单项目写最小变体并验证，不刷完大课再动手。</p>
 <ol>
-<li><strong>Java 并行复盘，解释不了回滚时再看。</strong> 黑马JavaWeb <a href="https://www.bilibili.com/video/BV1yGydYEE3H/?p=101" rel="noopener noreferrer">P101「事务管理-介绍与操作」</a>约20分钟；接着看 <a href="https://www.bilibili.com/video/BV1yGydYEE3H/?p=102" rel="noopener noreferrer">P102「Spring事务管理-介绍」</a>约16分钟。看后对照 <code>DatabaseTicketRepository.create</code>，画POST→Service→Repository→Mapper→MySQL调用链，说出出错时为什么需要回滚；结合<a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html" rel="noopener noreferrer">Spring事务官方说明</a>核对代理和异常规则。先理解，不操作真实业务数据。</li>
-<li><strong>现在少量复习：Python字典和函数。</strong> 学习者已看过<a href="https://www.bilibili.com/video/BV1sHU9BmEne/" rel="noopener noreferrer">黑马Python+AI课程</a>前119集，但很久没有写。可以先回看 <a href="https://www.bilibili.com/video/BV1sHU9BmEne/?p=52" rel="noopener noreferrer">P52「字典介绍」</a>约20分钟、<a href="https://www.bilibili.com/video/BV1sHU9BmEne/?p=58" rel="noopener noreferrer">P58「函数定义」</a>约13分钟，分次观看；P37列表、P59参数与返回值、P86异常、P112 JSON按实际卡点再查。用2—3条虚构工单写 <code>find_ticket(ticket_id)</code>，能返回结果和查无结果即可。若已有课程代码或可用环境，优先复用；虚拟环境在需要隔离依赖时参考<a href="https://docs.python.org/zh-cn/3/library/venv.html" rel="noopener noreferrer">官方venv文档</a>，不要求重装Python。模型调用P98也已看过，做摘要时需要再回看。</li>
-<li><strong>可与Python复习并行：Redis基础（R01）。</strong> 选择黑马Redis课的 <a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=4" rel="noopener noreferrer">P4「认识Redis」</a>约7分钟、<a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=9" rel="noopener noreferrer">P9「通用命令」</a>约12分钟、<a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=10" rel="noopener noreferrer">P10「String类型」</a>约13分钟；分次再看 <a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=12" rel="noopener noreferrer">P12 Hash</a>约12分钟、<a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=13" rel="noopener noreferrer">P13 List</a>约15分钟。学完在隔离环境用假数据练 <code>SET/GET/EXPIRE/TTL</code>、<code>HSET/HGETALL</code>、<code>RPUSH/LRANGE</code>，预测并观察过期。课程录于2022年，基础概念仍可参考；安装、客户端和版本以届时官方文档为准，不照搬Linux安装到Windows，也不需要现在安装。</li>
-<li><strong>准备连接服务时：Python访问Redis（R02）。</strong> 看 <a href="https://www.bilibili.com/video/BV16vFPevEt6/?p=9" rel="noopener noreferrer">Python操作Redis P9</a>约15分钟，随后参照<a href="https://redis.io/docs/latest/develop/clients/redis-py/" rel="noopener noreferrer">Redis官方redis-py入门</a>完成假数据读写、过期、连接超时和错误处理；理解返回bytes与字符串的区别。服务暂不可用时记录错误，不把模拟结果算成真实连接。</li>
-<li><strong>有Java查询后：工单缓存（R03）。</strong> 看黑马Redis课的 <a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=35" rel="noopener noreferrer">P35「什么是缓存」</a>约10分钟、<a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=36" rel="noopener noreferrer">P36「添加商户缓存」</a>约14分钟，再看 <a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=38" rel="noopener noreferrer">P38「缓存更新策略」</a>约26分钟。模仿思路给隔离的虚构设备查询加缓存：先读Redis，未命中读MySQL并设置TTL；更新MySQL后删除对应缓存；Redis故障回落数据库。按<a href="https://redis.io/docs/latest/develop/use-cases/cache-aside/" rel="noopener noreferrer">官方Cache-Aside说明</a>说明并发时可能出现短暂不一致，TTL只是兜底，不声称强一致。真实私有工单需先认证授权，不能用公共缓存键绕过权限。</li>
-<li><strong>完成假数据Agent后：会话记忆（R04）。</strong> 用Python的 <code>redis-py</code> 将虚构对话按session分开存入List、限制长度并设置TTL，验证对话顺序、会话隔离、过期和Redis不可用时的短暂内存降级或明确错误；这只是上下文记忆练习，不等于永久保存或已具备身份授权。初版模型调用和只读Agent可以先用内存完成，不必等Redis。</li>
-<li><strong>后续需要HTTP和Agent时。</strong> FastAPI先看 <a href="https://www.bilibili.com/video/BV1rgd3B6ErE/?p=3" rel="noopener noreferrer">P3「第一个程序」</a>约19分钟，再按需看<a href="https://www.bilibili.com/video/BV1rgd3B6ErE/?p=7" rel="noopener noreferrer">P7路径参数</a>和<a href="https://www.bilibili.com/video/BV1rgd3B6ErE/?p=11" rel="noopener noreferrer">P11请求体</a>，只做假工单查询接口。模型调用已在课程中看过，结合已有代码按需回顾；工具调用可参考LangChain课的 <a href="https://www.bilibili.com/video/BV15jug6yEyM/?p=6" rel="noopener noreferrer">P6「模型调用」</a>、<a href="https://www.bilibili.com/video/BV15jug6yEyM/?p=13" rel="noopener noreferrer">P13「结构化输出」</a>、<a href="https://www.bilibili.com/video/BV15jug6yEyM/?p=14" rel="noopener noreferrer">P14「工具调用」</a>；框架版本变化时查<a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer">官方Agent文档</a>，不为了看课一次装完全部依赖。</li>
+<li><strong>事务与代理边界复盘</strong>：若对 <code>@Transactional</code> 代理、异常回滚条件存疑，可对照 <a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html" rel="noopener noreferrer">Spring 事务官方文档</a> 及黑马 JavaWeb <a href="https://www.bilibili.com/video/BV1yGydYEE3H/?p=101" rel="noopener noreferrer">P101 事务管理</a> / <a href="https://www.bilibili.com/video/BV1yGydYEE3H/?p=102" rel="noopener noreferrer">P102 Spring 事务</a> 核对自己的 <code>assign</code>/<code>resolve</code>/<code>close</code> 链路。</li>
+<li><strong>A2 收尾（列表权限、SLF4J 与集成测试）</strong>：结合 <a href="https://docs.spring.io/spring-security/reference/index.html" rel="noopener noreferrer">Spring Security 官方文档</a> 与 <a href="https://docs.spring.io/spring-boot/reference/testing/index.html" rel="noopener noreferrer">Spring Boot 测试文档</a> 补齐列表接口三角色权限过滤、结构化日志与关键回归测试。</li>
+<li><strong>进入 B 阶段（模型调用与异步回写）</strong>：先以虚构工单跑通 Java HTTP/SDK 调用与 JSON Schema 校验，再参考 <a href="https://docs.spring.io/spring-framework/reference/integration/scheduling.html" rel="noopener noreferrer">Spring 异步执行文档</a> 配置自定义有界线程池与事务提交后事件触发（<code>B08</code>），最后完成人工采纳与反馈差异日志（<code>B09</code>）。</li>
 </ol>
-<p>Redis先掌握上述基础和两个实际场景；集群、分布式锁、消息队列、底层源码与性能调优等在具体岗位或项目需要时再扩展，不与首个Agent串行绑定。</p>
-<h2 id="chapter-schedule-python复习与衔接agent">Python复习与衔接Agent</h2>
-<p>已看过课程第1—119集，距上次编码较久；先复习实际要用到的字典、列表、函数与异常，在假工单查询里恢复手感。别为凑时长重复看变量、循环等基础，遗忘时再查对应章节或直接提问。</p>
-<p>用现有代码或环境回顾模型请求/响应和JSON，然后做一个查询工具，让模型通过工具调用获取虚构工单。Python项目中的独立实践、真实调用和课程观看分开记录。FastAPI、依赖隔离等在实际需要时补，不阻挡第一个只读Agent。</p>
-<h2 id="chapter-schedule-bg先做可运行的小agent">B/G：先做可运行的小Agent</h2>
-<ol>
-<li>Python内存里构造假工单，写 <code>find_ticket(ticket_id)</code> 和 <code>list_tickets(status)</code>，正常、无数据、非法参数均能处理。</li>
-<li>调用一个模型API：先让它理解用户问题并输出摘要，再让它实际请求一个工具；由Python按工具名/参数调用函数，把结果送回模型。</li>
-<li>加入有限步数、超时、失败提示和过程记录。先完成一个 Agent 的真实只读工具调用，十二月再按上方日程迁入 LangGraph，练习等待补充与恢复。</li>
-<li>对话歧义时追问，能展示实际工具调用记录和任务结果。模型输出不是数据库事实，也不自动获得业务权限。</li>
-</ol>
-<p>先用假数据不要求真实用户登录；这只是学习原型，不宣传为有权限的业务系统。模型服务能看到发送给它的内容，因此只用虚构样本，key从环境变量获取，不写入代码或日志。</p>
-<h2 id="chapter-schedule-与java联调和权限边界">与Java联调和权限边界</h2>
-<p>Python先调用本机、隔离数据上的只读接口，记录HTTP状态、超时及错误，不先做写入。真实多用户场景必须先有Java认证和资源归属校验，以及服务间身份传递；服务端从可信会话或明确设计的服务凭据取得身份，不能信任模型生成的userId。认证缺失时只做假数据实验，不对公网开放开发接口。</p>
-<p>需要时再由Java请求Python提供的Agent接口；两个进程带来启动、配置、依赖版本、超时、日志和联调成本，先分别调通，再连接。工具禁止模型拼任意SQL、执行系统命令或任意URL；写工具留到人工确认、重新鉴权、状态和幂等均能验证后。</p>
-<h2 id="chapter-schedule-知识检索与评测">知识检索与评测</h2>
-<p>准备10—20条自编虚构维护资料，记录资料ID、版本、设备范围、段落。先做关键词检索并给出处，语义效果不足时再试Embedding与向量库；查无依据就说明不足。资料本身不授予权限。</p>
-<p>从约12—20条正常、模糊、无结果和错误输入开始，逐步扩展约30条Agent任务，区分开发集与留出集。分别记录检索命中、工具选择和参数、任务完成、引用依据、失败原因、延迟和真实用量/费用；缺费用写未知。先定判断标准，再比较修改前后，不能只保留成功截图。</p>
-<h3 id="chapter-schedule-什么时候引入文章里的进阶技术">什么时候引入文章里的进阶技术</h3>
-<ul>
-<li><strong>Skill。</strong> 当同一排查流程已在多个案例中复用，可把“打印机缺纸”写成一份带版本的操作指南（SOP），只在型号匹配时加载。拿同一批案例比较改 SOP 前后的引用与转人工结果。LangGraph 已列入十二月冲刺主线。</li>
-</ul>
-<h2 id="chapter-schedule-后续按需与求职">后续按需与求职</h2>
-<p>Java基础、SQL、Git和常见数据结构继续训练；Redis基础及缓存、会话练习是计划内主线，基础可以与Python复习并行，缓存和会话跟随项目逐步实现。MCP、SubAgent、模型路由、微服务和模型训练在单Agent可靠后按岗位补。Python项目要能独立开发和调试，不能只列框架名。Java方向岗位与Python Agent方向分别对照岗位真实要求；查看届别、到岗天数和实习期，不保证录用。</p>
-<p>参考：<a href="https://docs.python.org/zh-cn/3/tutorial/" rel="noopener noreferrer">Python官方教程</a> · <a href="https://fastapi.tiangolo.com/zh/tutorial/first-steps/" rel="noopener noreferrer">FastAPI入门</a> · <a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer">LangChain Agents</a> · <a href="https://docs.langchain.com/oss/python/langgraph/overview" rel="noopener noreferrer">LangGraph</a>。具体依赖版本在实际接入时确认兼容，不为了追新重装现有Java环境。</p></section><section id="chapter-first-ticket" class="chapter"><div class="chapter-meta"><span>04 / 14</span><a href="#top">回到目录</a></div><h1>第 01 课 工单对象与封装</h1><p>这节课开始做设备运维工单平台，为你以 2028 届学生身份申请 2027 年暑期 Java 实习积累项目能力。我们先把一张工单变成 Java 对象，再逐步加入业务规则。</p>
+<h2 id="chapter-schedule-历史路线归档说明">历史路线归档说明</h2>
+<p>2026-11-14 至 11-24 曾短暂规划“Python（Y）+ Redis（R）+ LangGraph / Python 只读 Agent（G）”双栈并行方案；2026-11-25 复盘工程复杂度与实习求职聚焦后，已正式收口为单一纯 Java / Spring Boot / MyBatis / MySQL 主线，上述旧分支已归档备查，不再作为当前执行计划。</p></section><section id="chapter-first-ticket" class="chapter"><div class="chapter-meta"><span>04 / 14</span><a href="#top">回到目录</a></div><h1>第 01 课 工单对象与封装</h1><p>这节课开始做设备运维工单平台，为你以 2028 届学生身份申请 2027 年暑期 Java 实习积累项目能力。我们先把一张工单变成 Java 对象，再逐步加入业务规则。</p>
 <p>全课预计60—90分钟，可以分两次完成。首次先完成起点问题和 A 步，再继续 B、C；先自己尝试，卡住时记录具体疑问。</p>
 <h2 id="chapter-first-ticket-先确认三个概念">先确认三个概念</h2>
 <p>用约10分钟回答，不用背术语。暂时答不清可以带着问题完成本课。</p>
@@ -1048,57 +925,27 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <p>提示：准备第二名工程师时使用新的虚构账号并保存同样格式的密码哈希；不要通过修改账号角色来冒充另一个会话。课程采用明确403展示越权错误；产品若选择把无权资源也返回404，应全局一致且测试说明。<a href="https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html" rel="noopener noreferrer">Spring请求授权</a>。</p>
 <h2 id="chapter-web-security-进入下一阶段的门槛">进入下一阶段的门槛</h2>
 <p>首版用三个账号完成报修→派单→解决→验收；不要求退回或评论。能沿具体代码解释Controller→Service→Mapper→MySQL、Session身份和授权检查，独立增加一个筛选并保持可见范围约束。保存可重复HTTP请求、角色/状态错误场景、事务回滚和一次排错记录。</p>
-<p>随后完成<a href="#chapter-testing-delivery">测试部署与AI验证</a>的A2必要检查即可接AI；不再等待全部旧第14—20周扩展。尚无真实权限或数据库事务验证时不要把项目写成已完成后端平台。</p></section><section id="chapter-testing-delivery" class="chapter"><div class="chapter-meta"><span>07 / 14</span><a href="#top">回到目录</a></div><h1>Python Agent实践、测试与项目交付</h1><p>2026-11-24 调整。练习围绕设备报修分诊展开。各阶段对应<a href="#chapter-schedule-接下来的六个学习单元">六个学习单元</a>，旧周号保留作后端工程参考。</p>
-<h2 id="chapter-testing-delivery-ypython少量复习与假工单">Y：Python少量复习与假工单</h2>
-<p>学习者已看过Python+AI课程第1—119集，但很久没写，先按<a href="#chapter-schedule-按阶段看网课与做练习">阶段计划</a>回顾字典、函数；用虚构工单写 <code>find_ticket(ticket_id)</code>，查不到时明确返回空结果。遇到列表、异常或JSON卡点再回看对应章节；复用已有环境或课程代码，环境隔离在有需要时再设置。接着实现模型请求工具→Python执行→模型回答，不要求把Python课程重头学习。</p>
-<h2 id="chapter-testing-delivery-rredis课程与工单实践待学">R：Redis课程与工单实践（待学）</h2>
-<p>先用虚构数据学习String、Hash、List、TTL和Python连接；再给隔离设备查询做缓存，验证未命中回源、更新后失效和Redis异常；完成假数据Agent后用Redis保存限长、隔离、可过期的会话上下文。缓存与会话不能代替数据库、用户认证或资源授权。基础知识是本路线的一部分，但不妨碍用内存先完成初版Agent。具体分P、时长、顺序和验收见<a href="#chapter-schedule-按阶段看网课与做练习">阶段网课与练习</a>和<a href="#chapter-checklists-rredis核心与项目实践">R技能清单</a>。</p>
-<h2 id="chapter-testing-delivery-bpython模型调用入门">B：Python模型调用入门</h2>
-<p>课程中已看过模型调用；先复用现有模型调用代码（如有），在Python脚本中使用虚构工单输出summary/category/missingInformation。可先做不连网的模拟客户端检查字段和异常，再用一个可用模型API完成真实调用；模拟结果不当成模型效果。模型名、key、预算从环境配置；设置超时、限制重试，记录错误类别与用量，未知成本写未知。</p>
-<p>模型的JSON仍需程序校验类型、必填和枚举；没有依据时应明确缺失信息。不要把真实用户信息、凭据或未经允许的资料发送给模型服务。使用模型生成摘要只是AI功能，还不是已完成Agent。</p>
-<h2 id="chapter-testing-delivery-gpython只读agent">G：Python只读Agent</h2>
-<p>先让模型在虚构数据上选择 <code>list_tickets</code> / <code>find_ticket</code> 一类受控工具，Python校验参数并执行，再返回工具结果；记录模型请求、工具名、结果摘要、最终回答。先单次，再加入多步骤、歧义追问、最大步数、超时和上下文隔离；日志不保存密钥或不必要原文。</p>
-<p>十二月冲刺版按<a href="#chapter-schedule-十二月底的可投递版本">月底交付安排</a>引入 LangGraph。先做真实工具调用，再把查单、检索、追问和结束表示为节点与分支。保存 taskId、输入工单版本和每步结果，练习补充信息后继续。持久化 checkpointer 负责恢复执行，Redis 会话缓存用于上下文读取和过期。</p>
-<h2 id="chapter-testing-delivery-l与java工单服务联调">L：与Java工单服务联调</h2>
-<p>先让Python用HTTP访问本机、隔离演示数据的只读Java接口，约定参数、JSON、404、超时及失败。源码已有内存练习账号与 BCrypt 配置，本轮尚未核验登录和资源授权的实际行为。联调时使用隔离演示数据，先验证该路径需要的身份和权限。连接真实工单前，先实现用户身份、资源归属和服务间身份传递，Java每次检查授权；模型给出的userId不是身份。模型不能执行任意SQL/命令，也不能直接派单或关闭。</p>
-<p>将来如果要从Java页面启动Python助手，再增加明确的服务调用、超时和错误处理。两个服务意味着独立环境、启动、日志和部署成本，不强制提前引入微服务、中间件或容器编排。</p>
-<h2 id="chapter-testing-delivery-c资料检索与评测">C：资料检索与评测</h2>
-<p>制作10—20条虚构设备维护资料，记录来源说明、版本、适用型号和段落。先做关键词检索与可定位引用；按失败样本再考虑Embedding和向量库。查无依据就说明不足。</p>
-<p>从约12—20条测试起步并逐步增加，覆盖正常查询、歧义追问、无结果、坏参数、工具失败、超限、越权和重复调用。分开记录工具选择/参数、检索依据、结果质量、耗时、调用量与成本；真实模型与模拟故障分开。改动一次因素后回归，并保留失败案例。</p>
-<h2 id="chapter-testing-delivery-怎样验收一次分诊">怎样验收一次分诊</h2>
-<p>先写预期，再运行模型。每种情形留一条“输入、期望操作、实际工具轨迹、引用、人工判断”。以下是待做的测试题。</p>
-<div class="table-scroll" tabindex="0"><table>
-<thead>
-<tr>
-<th>虚构输入</th>
-<th>预期表现</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>工单 101 的打印机持续报缺纸，手册有匹配型号的故障说明</td>
-<td>查单和手册后给出可操作的建议，引用能定位到适用型号和段落</td>
-</tr>
-<tr>
-<td>工单只写“坏了”</td>
-<td>询问设备型号和具体现象，保存等待补充的状态</td>
-</tr>
-<tr>
-<td>搜到另一型号的维修经验</td>
-<td>说明现有资料不适用，转人工，记录原因</td>
-</tr>
-<tr>
-<td>同一建议已采纳，或管理员打开建议后工单被别人修改</td>
-<td>后续 Java 联调中验证重复操作只执行一次，过期建议提示刷新</td>
-</tr>
-</tbody>
-</table></div>
-<p>先用关键词检索跑一轮，记录命中正确段落的题数/可回答题数、正确追问或转人工的题数/应回退题数。改提示词或检索策略后复跑同一批题，另留几张相似但未参与调试的工单。演示时带一例失败，沿着日志指出哪一步需要修改。</p>
-<h2 id="chapter-testing-delivery-ai辅助编程与本人验收">AI辅助编程与本人验收</h2>
-<p>工具可用于解释与审阅，但每项要自行改出一个变体、运行并解释；AI帮写代码不等于完成产品Agent。已有25项JUnit、17个Demo是11月13日助手隔离环境的历史证据；不算本人独立掌握，也不代表本次重跑了真实MySQL。</p>
-<p>参考：<a href="https://docs.python.org/zh-cn/3/tutorial/" rel="noopener noreferrer">Python</a> · <a href="https://fastapi.tiangolo.com/zh/tutorial/first-steps/" rel="noopener noreferrer">FastAPI</a> · <a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer">LangChain Agents</a> · <a href="https://docs.langchain.com/oss/python/langgraph/overview" rel="noopener noreferrer">LangGraph</a>。</p>
+<p>随后完成<a href="#chapter-testing-delivery">测试部署与AI验证</a>的A2必要检查即可接AI；不再等待全部旧第14—20周扩展。尚无真实权限或数据库事务验证时不要把项目写成已完成后端平台。</p></section><section id="chapter-testing-delivery" class="chapter"><div class="chapter-meta"><span>07 / 14</span><a href="#top">回到目录</a></div><h1>Java 轻量 AI 功能、效果评测与项目交付</h1><p>更新于 2026-11-27（2026-11-25 纯 Java 主线定稿）。当前唯一主线为纯 <strong>Java 21 / Spring Boot / MyBatis / MySQL</strong> 路线（<strong>A1 → A2 → B01–B09 → C01–C04 + 可选进阶 D01–D02</strong>），不引入 Kafka、Milvus、Neo4j、微调或本地推理部署。旧周号（第 14–20 单元）保留作后端工程参考；原 Python / Redis / LangGraph / Agent（Y/R/G/C05–C06）规划已归档暂不执行。</p>
+<h2 id="chapter-testing-delivery-bjava-业务中的-ai-应用功能b01b09">B：Java 业务中的 AI 应用功能（B01–B09）</h2>
+<ul>
+<li><strong>B01–B07（模型接入与业务保护）</strong>：在现有 Spring Boot 项目中接入真实模型提供方，端点、模型名与 key 仅从环境配置读取；对 <code>summary</code> / <code>category</code> / <code>missingInformation</code> 做严格 JSON / 枚举 / 长度校验；模型调用放数据库写事务外并设超时/重试上限，关闭 AI 不影响主业务；真实联调前由 Java 校验身份与工单访问权限。</li>
+<li><strong>B08（异步触发与状态回写，联动 P03）</strong>：用 Spring <code>@Async</code> + 自定义有界线程池，配合任务表或状态字段（<code>PENDING</code> / <code>DONE</code> / <code>FAILED</code>），在工单写事务<strong>提交后</strong>异步触发分析与结果回写，并做好同工单同版本防重/幂等保护。具体表结构与代码留到进入 B 阶段时再结合当时工程实现。</li>
+<li><strong>B09（人工采纳与反馈闭环）</strong>：落地“AI 给建议、人保留确认权”，提供<strong>直接采纳 / 修改后采纳 / 驳回</strong>接口，落库记录 AI 原建议与人工决策差异；任何工单写回均重新走 Java 角色权限、前置状态与 <code>expectedVersion</code> 乐观锁校验，防重复采纳与过期建议覆盖。</li>
+</ul>
+<h2 id="chapter-testing-delivery-c效果评估成本与回归改进c01c04">C：效果评估、成本与回归改进（C01–C04）</h2>
+<ul>
+<li><strong>C01–C04</strong>：维护约 12–20 条固定虚构案例（开发集/留出集分开），记录端到端延迟、失败重试、token 用量与计价依据，每次只改提示词、上下文或解析中的一项并做前后回归。</li>
+<li><strong>C02（效果评估修订口径）</strong>：同时统计<strong>离线固定案例集指标</strong>（样本数、结构合法率、事实忠实度、可用性/修改次数、失败原因）与 <strong>B09 交互反馈日志指标</strong>（直接采纳率、修改后采纳率、驳回率、修改次数分布与抽样归因），两类口径分开列示并写明实际分母，不拿模拟响应充当模型效果。</li>
+</ul>
+<h2 id="chapter-testing-delivery-d可选进阶模块不阻挡-abc-结项">D：可选进阶模块（不阻挡 A→B→C 结项）</h2>
+<ul>
+<li><strong>D01（历史工单轻量检索 / 轻量 RAG）</strong>：用 MySQL 全文检索（<code>FULLTEXT</code>）或同设备/型号过滤召回 Top 3 已解决且有权限查看的历史工单注入上下文；在 C 阶段留出集做有/无检索对比回归，并保留至少 1 个误召回样本分析。</li>
+<li><strong>D02（排查 SOP 与分类口径外置 / 轻量 Skill）</strong>：将各设备类别排查规则与分类口径从代码抽离到外部 Markdown 或 MySQL 配置表（带版本），按类别动态拼装进 Prompt 并支持兜底降级；在不改核心业务代码前提下改规则并跑前后回归对比。</li>
+</ul>
+<h2 id="chapter-testing-delivery-ai-辅助编程与本人验收">AI 辅助编程与本人验收</h2>
+<p>工具可用于解释与审阅，但每项要自行改出一个变体、运行并解释；AI 帮写代码不等于完成产品 AI 功能。具体任务验收口径与实时进度见<a href="#chapter-checklists">技能清单与验收模板</a>与<a href="#chapter-schedule">阶段学习计划</a>。</p>
 <h2 id="chapter-testing-delivery-原第1420单元按需深入参考">原第14—20单元：按需深入参考</h2>
-<p>以下保留并发、测试、交付、部署、性能和面试教材。旧日期仅为历史规划；A2只按本文首节与现行最小范围验收。涉及评论、退回、ticket_resolution、设备维护和六表样本的例子是延后扩展，不要求现在补齐。Python与虚构数据的AI实验可与后端并行，真实工单联调前完成认证与授权。</p>
+<p>以下保留并发、测试、交付、部署、性能和面试教材。旧日期仅为历史规划；A2 只按现行最小范围验收。涉及评论、退回、<code>ticket_resolution</code>、设备维护和六表样本的例子是延后扩展，不要求现在补齐。</p>
 <h2 id="chapter-testing-delivery-第14单元原日期参考-1月11日至17日-并发派单">第14单元（原日期参考） 1月11日至17日 并发派单</h2>
 <p><strong>目标：同一张 OPEN 工单被两次同时派单时，只允许一个请求成功，失败者得到明确冲突。</strong> 先确认上周的角色与数据权限已经通过检查。</p>
 <div class="table-scroll" tabindex="0"><table>
@@ -1457,15 +1304,14 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <p>网络资料只用于查询补充，课程正文与自测答案可以离线阅读。项目首次下载 JDK、依赖或数据库仍需要可用的软件来源；已装好、依赖已缓存后，可以继续离线编码、测试和复盘。</p>
 <h2 id="chapter-testing-delivery-首版建议的使用边界">首版建议的使用边界</h2>
 <p>B首版只展示/复制参考，不提供直接回写按钮。现有rename只在控制台，不能视为已有HTTP修改接口；以后若加入人工采纳改标题，须单独定义报修人归属、允许状态、expectedVersion和日志同事务的HTTP接口，再实施并验收。</p></section><section id="chapter-spring-applications" class="chapter"><div class="chapter-meta"><span>08 / 14</span><a href="#top">回到目录</a></div><h1>2027年春季投递与暑期实习准备</h1><blockquote>
-<p>2026-11-14：以Java工单基础与Python Agent的真实成果准备投递。Python基础可与Java并行；模型调用、工具Agent和评测必须分别有证据，不能把AI辅助写代码当成Agent项目。逐条核对岗位学历、本人届别、地点、到岗天数和实习时长。</p>
+<p>2026-11-27：以纯 <strong>Java 后端 + 轻量 AI 应用（A1 → A2 → B01–B09 → C01–C04）</strong> 的真实成果准备投递。后端权限/事务/并发与 AI 调用/人工采纳/效果评估均须分别留证据，不能把 AI 辅助写代码当成项目内 AI 功能。逐条核对岗位学历、本人届别、地点、到岗天数和实习时长。</p>
 </blockquote>
-<p>这份材料以Java后端、平台开发和AI应用方向的实习准备为例，提供从项目交付到申请和面试的参考安排。这份安排从完成项目主线后接到暑期，按每周目标保留弹性。你可以在项目达到可投递标准时提前申请，不必等待 20 周全部结束；也不必等缓存、AI 或漂亮页面完成。</p>
+<p>这份材料以Java后端、平台开发和AI应用方向的实习准备为例，提供从项目交付到申请和面试的参考安排。这份安排从完成项目主线后接到暑期，按每周目标保留弹性。你可以在项目达到可投递标准时提前申请，不必等待全部扩展结束。</p>
 <p>下面日期是学习和申请节奏示例，<strong>不是任何企业的招聘日历或录用承诺</strong>。编制计划时参考的岗位资料是 2026 年 10 月的快照，能指导能力准备；2027 年是否开放、接受哪届学生以及出勤要求，必须按投递时的企业正式职位说明确认。</p>
 <p>申请前先按实际情况填写毕业届别和可用时间；<strong>最早到岗日期、每周可到岗天数、连续可实习月数</strong>仍需结合课表和学校安排填写。学习时间不能自动当作可到岗时间。暑期两个月也不能直接当成满足“连续至少三个月”。先写真实范围，再筛岗位。</p>
-<h2 id="chapter-spring-applications-十二月提前申请安排">十二月提前申请安排</h2>
-<p>2026-11-24 增加十二月底前的项目目标，争取 12 月 27 日形成可演示版本，12 月 28—31 日开始匹配申请。范围和检查点见<a href="#chapter-schedule-十二月底的可投递版本">月底交付安排</a>。</p>
-<p>投递 Agent / AI 应用研发时，准备真实工具调用、检索引用、状态分支、人工采纳和失败日志的演示。固定案例保留输入、预期和实际结果，至少能解释一个失败如何修改。演示数据为虚构时，README 和面试均明确说明。申请材料写已验收的功能。</p>
-<p>下面完整业务闭环清单用于 Java 后端完整业务版的验收。十二月的 Agent 版按自身已实现范围申请，仍需核对岗位的实际要求和本人到岗条件。</p>
+<h2 id="chapter-spring-applications-阶段交付与投递准备">阶段交付与投递准备</h2>
+<p>按<a href="#chapter-schedule">阶段学习计划</a>推进：先完成 A2 工程闭环（权限、乐观锁、事务日志与核心测试），再交付 B01–B09（模型调用、结构校验、<code>@Async</code> 异步回写与人工采纳闭环）与 C01–C04（固定案例集与真实采纳率评估）。</p>
+<p>准备展示真实调用、结构化校验、故障降级、人工采纳与失败日志的演示。固定案例保留输入、预期和实际结果，至少能解释一个失败案例如何定位与改进。演示数据为虚构时，README 和面试均明确说明；简历只写已实测验证的功能。</p>
 <h2 id="chapter-spring-applications-什么时候可以开始投递">什么时候可以开始投递</h2>
 <p>当你能按下面清单实际演示，就可以开始匹配申请。某一岗位要求明显超出时，判断能否在到岗前补齐，不要把所有岗位都等到完全熟练才看。</p>
 <ul>
@@ -1747,19 +1593,13 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <p>每周只保留两个最重要的补缺目标。你的核心成果是自己写出的程序、可复现的验证记录和能解释的理解；课程正文、自测答案与项目设计均有离线版，可结合官方文档继续学习。</p>
 <h2 id="chapter-spring-applications-java工单python-agent项目怎样据实表达">Java工单＋Python Agent项目怎样据实表达</h2>
 <p>A阶段：展示一条请求链、权限/事务/重复请求证据和一次自己定位的故障。B阶段：解释为什么用摘要/分类、谁决定采纳、模型失败时人工流程如何继续。C阶段：给出真实案例数量、质量判定、延迟/用量/成本来源、一次改进和剩余失败；未真实接入写“待验证”，不填模拟数字。G阶段展示真实工具调用、追问、任务记录和失败退出；C展示检索/引用与端到端评测。计划列为主线不等于已实现，只有实际做过并验收才写。</p>
-<p>先把第一项目做完整、可解释；第二项目只在面试反馈出现首项目难覆盖的明确能力缺口时再讨论。</p></section><section id="chapter-resources" class="chapter"><div class="chapter-meta"><span>09 / 14</span><a href="#top">回到目录</a></div><h1>资料索引与排错手册</h1><p>这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年11月14日调整为Java工单与Python Agent并行；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。</p>
-<h2 id="chapter-resources-python复习与agent资料">Python复习与Agent资料</h2>
-<p>已看黑马Python+AI前119集但久未写；先回看<a href="https://www.bilibili.com/video/BV1sHU9BmEne/?p=52" rel="noopener noreferrer">P52字典</a>、<a href="https://www.bilibili.com/video/BV1sHU9BmEne/?p=58" rel="noopener noreferrer">P58函数</a>，结合虚构工单找回手感；其他基础章节遇到卡点再回看。</p>
+<p>先把第一项目做完整、可解释；第二项目只在面试反馈出现首项目难覆盖的明确能力缺口时再讨论。</p></section><section id="chapter-resources" class="chapter"><div class="chapter-meta"><span>09 / 14</span><a href="#top">回到目录</a></div><h1>资料索引与排错手册</h1><p>这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于 2026 年 10 月 12 日，2026 年 11 月 25 日已定稿为纯 <strong>Java 21 / Spring Boot / MyBatis / MySQL</strong> 主线（<code>A1 → A2 → B01–B09 → C01–C04</code>，可选 <code>D01–D02</code>）；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。</p>
+<h2 id="chapter-resources-当前主线参考与视频入口">当前主线参考与视频入口</h2>
 <ul>
-<li><a href="https://docs.python.org/zh-cn/3/tutorial/" rel="noopener noreferrer">Python官方教程</a>：结合Java基础学习list/dict、函数、模块和异常；每节配虚构工单练习。</li>
-<li><a href="https://fastapi.tiangolo.com/zh/tutorial/first-steps/" rel="noopener noreferrer">FastAPI官方教程</a>：在基础语法之后做一个本地只读假接口。</li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents" rel="noopener noreferrer">LangChain Agent文档</a> 和 <a href="https://docs.langchain.com/oss/python/langgraph/overview" rel="noopener noreferrer">LangGraph概览</a>：先理解模型与工具调用，再按多步状态需要选用；具体版本到安装时核对。</li>
-</ul>
-<h2 id="chapter-resources-视频学习入口与redis资料">视频学习入口与Redis资料</h2>
-<ul>
-<li><a href="#chapter-schedule-按阶段看网课与做练习">按阶段看网课与做练习</a>：包含事务、Python、Redis、FastAPI和Agent的具体分P、时长与项目任务；每次只选当前需要的一两节。</li>
-<li>Redis主课：<a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=4" rel="noopener noreferrer">黑马Redis P4 认识Redis</a>、<a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=9" rel="noopener noreferrer">P9 通用命令</a>、<a href="https://www.bilibili.com/video/BV1cr4y1671t/?p=10" rel="noopener noreferrer">P10 String</a>，Hash/List与缓存分P见阶段计划。</li>
-<li>Python实践：<a href="https://www.bilibili.com/video/BV16vFPevEt6/?p=9" rel="noopener noreferrer">Python操作Redis P9</a>和<a href="https://redis.io/docs/latest/develop/clients/redis-py/" rel="noopener noreferrer">redis-py官方入门</a>；缓存策略参考<a href="https://redis.io/docs/latest/develop/use-cases/cache-aside/" rel="noopener noreferrer">Redis官方Cache-Aside</a>。旧课程只按章节学概念，安装和版本以官方文档为准。视频根据公开选集筛选，未逐段播放。</li>
+<li><a href="#chapter-schedule-按阶段看网课与做练习">按阶段看网课与做练习</a>：按当前卡点挑选 1–2 节事务、安全、异步与测试参考，不要求刷完大课。</li>
+<li><a href="https://docs.spring.io/spring-security/reference/index.html" rel="noopener noreferrer">Spring Security 官方参考</a>：核对 <code>UserDetailsService</code>、<code>BCryptPasswordEncoder</code>、<code>@PreAuthorize</code> 与 CSRF 边界。</li>
+<li><a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html" rel="noopener noreferrer">Spring 事务与异步执行参考</a>：对照 <code>@Transactional</code> 代理规则及 B08 <code>@Async</code> 有界线程池配置。</li>
+<li><a href="https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html" rel="noopener noreferrer">Spring AI 结构化输出与工具边界参考</a>：作为 B 阶段结构化校验与降级设计参照（不代表必须引入完整框架）。</li>
 </ul>
 <h2 id="chapter-resources-按阶段选择资料">按阶段选择资料</h2>
 <div class="table-scroll" tabindex="0"><table>
@@ -2056,7 +1896,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>先关闭工具入口并修权限，模型提示词不能代替鉴权</td>
 </tr>
 </tbody>
-</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-11-15。截至2026-11-15：文件版Web已有查询和创建；数据库练习接口已有查询、创建及派单。学习者11月9日跟练创建POST并得到id=9；11月13日助手补充创建事务，隔离H2运行25项JUnit与17个Demo，不代表本人独立掌握或真实MySQL复测。11月15日学习者按指导完成派单链路，并在隔离H2用Apifox反馈成功派单和回查符合预期；失败分支本人练习、操作人认证授权、完整版本冲突、解决/验收、Python Agent与真实模型调用仍待完成。 本次调整计划，没有新增验收勾选。</p>
+</table></div></section><section id="chapter-checklists" class="chapter"><div class="chapter-meta"><span>10 / 14</span><a href="#top">回到目录</a></div><h1>技能 To-do List 与验收记录</h1><p>更新：2026-11-27（同步 A2 数据库登录、三角色归属隔离、乐观锁、操作日志与 H2 外键回滚测试实测进展；主线保持 2026-11-25 定稿的纯 Java 路线 <strong>A1 → A2 → B01–B09 → C01–C04（可选进阶 D01–D02）</strong>，全部基于现有 Java / Spring Boot / MyBatis / MySQL 轻量落地，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署）。此前记录的 Python（Y）、Redis（R）、Python Agent（G）及 C05–C06 条目已迁入文末历史归档区域（暂不执行），不再计入当前活跃清单与看板统计。主线 51 项中已验收保持 6 项（<code>J01–J06</code>），跟练中 22 项，待学 23 项。</p>
 <h2 id="chapter-checklists-怎样看这份清单">怎样看这份清单</h2>
 <ul>
 <li><code>[x]</code>：这一条明确的小练习或解释已有通过记录，不代表整门技术已经熟练。</li>
@@ -2087,85 +1927,61 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <td>已有工具</td>
 <td>Git、Maven、JUnit Jupiter</td>
 <td>管理变更、依赖、构建和有意义的测试</td>
-<td>已练习；25 项测试由本人和助手不同时期编写，不等于覆盖全业务</td>
-</tr>
-<tr>
-<td>当前</td>
-<td>MySQL、SQL</td>
-<td>三表关系、条件/关联查询、事务、约束</td>
-<td>JOIN筛选、统计/分页、事务与双连接版本竞争已有跟练反馈</td>
+<td>已练习；已清理早期文件版演示，保留 <code>TicketTest</code> 与数据库事务/HTTP 测试</td>
 </tr>
 <tr>
 <td>A1</td>
-<td>JDBC → MyBatis</td>
-<td>先懂连接/参数/结果，再用 Mapper 执行自己写的 SQL</td>
-<td>JDBC 查询/更新事务与 MyBatis 查询/创建已跟练，独立迁移继续验收</td>
+<td>MySQL、SQL、JDBC → MyBatis</td>
+<td>三表 + <code>ticket_action_log</code>、Mapper 映射、条件更新与四态闭环</td>
+<td>真实 MySQL 已跑通创建/派单/解决/验收关闭四态闭环与标准分包</td>
 </tr>
 <tr>
 <td>A1</td>
 <td>HTTP/JSON、Spring Boot、Spring MVC、依赖注入</td>
-<td>从请求到数据库的一条完整调用链</td>
-<td>文件版及数据库查询/创建已跟练；独立解释调用链与完整业务待验</td>
+<td>从请求到数据库的完整分层调用链</td>
+<td>数据库查询/创建/派单/解决/关闭/日志接口均已接通；独立解释持续验收</td>
 </tr>
 <tr>
-<td>A2</td>
-<td>Bean Validation、统一异常、Spring Security＋Session</td>
-<td>参数合法、身份可信、角色和资源归属正确</td>
-<td>两类统一异常已跟练；Bean Validation、认证与授权待学</td>
+<td>A2（当前）</td>
+<td>Bean Validation、统一异常、Spring Security</td>
+<td>参数合法、MySQL 登录认证、角色与资源归属隔离</td>
+<td>已实测 MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code>、单条/日志三角色归属与创建自动绑登录人；列表权限与 Session/CSRF 待收尾</td>
 </tr>
 <tr>
-<td>A2</td>
-<td>Spring 事务、条件更新、操作日志、SLF4J/日志实现</td>
-<td>数据一致、冲突可解释、错误能定位</td>
-<td>待学</td>
+<td>A2（当前）</td>
+<td>Spring 事务、<code>expectedVersion</code> 乐观锁、操作日志、SLF4J</td>
+<td>状态变更与审计日志同事务、版本冲突 409、日志排错</td>
+<td>已实测三动作乐观锁 <code>409</code>、<code>ticket_action_log</code> 流水与 H2 外键失败回滚（4 项全绿）；SLF4J 与真实 MySQL 回滚验证待补</td>
 </tr>
 <tr>
 <td>A2</td>
 <td>JUnit、Spring 测试工具、真实 MySQL 测试库</td>
 <td>用少量关键测试验证权限、回滚、并发与重试</td>
-<td>待学；不能只用 Mock 证明数据库事务</td>
+<td>已有 H2 回滚测试；真实 MySQL 测试库与权限/并发测试待补</td>
 </tr>
 <tr>
 <td>A2</td>
 <td>Linux 基础、JAR、环境变量、HTTP 调试工具</td>
 <td>在另一环境启动、看日志、排错和恢复数据</td>
-<td>待学；工具选 curl/IDEA HTTP/Postman 中一种即可</td>
-</tr>
-<tr>
-<td>Y</td>
-<td>Python、venv、list/dict、函数、异常、JSON/HTTP、FastAPI</td>
-<td>少量复习后在假工单中查询与调试</td>
-<td>已看前119集课程、久未写；项目实践进度按实际记录</td>
-</tr>
-<tr>
-<td>R</td>
-<td>Redis String/Hash/List、TTL、Python客户端、工单缓存与会话记忆</td>
-<td>理解缓存失效、会话隔离及故障处理</td>
-<td>待学；按项目阶段逐步实践</td>
+<td>待学；工具选 curl/IDEA HTTP/Apifox 中一种即可</td>
 </tr>
 <tr>
 <td>B</td>
-<td>Python模型SDK、模型API、JSON/Schema校验</td>
-<td>真实调用、结构化建议、超时与失败降级</td>
-<td>未接入；先使用虚构数据</td>
+<td>Java 模型 HTTP/SDK 客户端、JSON/Schema 校验、<code>@Async</code> 线程池、人工采纳闭环</td>
+<td>真实调用、结构化建议、超时降级、事务后异步回写与人工确认</td>
+<td>未接入；先使用虚构数据，基于现有 Spring Boot/MyBatis/MySQL 落地</td>
 </tr>
 <tr>
 <td>C</td>
-<td>固定案例、人工对照、调用用量与成本记录</td>
-<td>测效果、解释失败、比较改进</td>
+<td>固定案例集、人工对照、反馈日志统计、调用用量与成本记录</td>
+<td>测离线效果与 B09 真实采纳率、解释失败、比较单因子回归</td>
 <td>待做；无 API 不能把 Mock 当效果验证</td>
 </tr>
 <tr>
-<td>G 主线</td>
-<td>工具调用、有限编排、上下文、任务持久化</td>
-<td>真模型选择工具，Python执行；真实数据访问由Java授权；任务可追踪、可继续</td>
-<td>待实现；B达标后进入</td>
-</tr>
-<tr>
-<td>C 主线</td>
-<td>运维资料检索、引用与Agent评测</td>
-<td>关键词基线，按需向量检索；分开检索/工具/生成错误</td>
-<td>待实现；从B/G积累案例</td>
+<td>D（可选）</td>
+<td>MySQL 全文/条件轻量检索、外部 Markdown/配置表 SOP</td>
+<td>历史已解决工单 Top 3 轻量 RAG 与排查规则外置回归</td>
+<td>按需进阶；不阻挡 A→B→C 结项</td>
 </tr>
 </tbody>
 </table></div>
@@ -2201,17 +2017,17 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <li>□ <strong>W02【已跟练，继续验收】数据库生成 ID 与映射</strong>：学习者跟写数据库 POST 并取得自增 id=9；独立解释主键回填和 add/create 差别，再逐步补映射字段。</li>
 <li>□ <strong>W03【已跟练，继续验收】HTTP 和 JSON</strong>：文件版GET/POST已有200/201/400/404证据；用断点观察setter/getter、缺字段与错误JSON。学习者反馈重启恢复及统一错误响应通过；另用Apifox在隔离H2完成派单POST和前后GET，独立解释与本人失败分支练习继续验收。</li>
 <li>□ <strong>W04【已跟练，继续验收】Spring Boot/MVC 与依赖注入</strong>：已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版及数据库查询/创建 HTTP 已接通；独立解释对象/调用链、权限仍待验收。</li>
-<li>□ <strong>W05【已跟练，继续验收】MyBatis</strong>：<code>TicketMapper</code> 已做参数绑定、查询映射、创建主键回填和带OPEN/工程师条件的派单UPDATE；学习者在隔离H2反馈成功派单及回查通过。<code>version + 1</code> 尚未比较expectedVersion，独立看SQL与真实MySQL隔离集成待验收。</li>
-<li>□ <strong>W06【已跟练，继续验收】分层与核心状态流</strong>：已有数据库查询/创建分层链路，派单Controller→Service→仓库→Mapper已接通；学习者在隔离H2完成成功路径并回查。失败分支本人练习、解决/验收、动作记录与授权仍待完成。</li>
+<li>□ <strong>W05【已跟练，继续验收】MyBatis</strong>：<code>TicketMapper</code> 与 <code>UserMapper</code>、<code>TicketActionLogMapper</code> 已落地参数绑定、下划线转驼峰映射、创建主键回填、带 <code>expectedVersion</code> 条件更新的 <code>assign</code>/<code>resolve</code>/<code>close</code> 及审计日志插入，并在真实 MySQL 跑通全链路；独立编写新 SQL 与真实 MySQL 隔离集成测试继续验收。</li>
+<li>□ <strong>W06【已跟练，继续验收】分层与核心状态流</strong>：已在真实 MySQL 跑通创建、派单（<code>assign</code>）、指定工程师解决（<code>resolve</code>）、原报障人验收关闭（<code>close</code>）四态闭环与 <code>ticket_action_log</code> 操作审计，并按 <code>controller/service/repository/mapper/domain/dto/config/exception</code> 规范分包（清理与分包由助手协助）；列表接口权限收尾与独立变体继续验收。</li>
 </ul>
 <h2 id="chapter-checklists-e能运行能交付的工程能力a2">E：能运行、能交付的工程能力（A2）</h2>
-<p>Python基础与虚构数据上的B/G实验可与A2并行；真实数据联调前完成对应认证/授权。性能专题、完整后台和容器编排不作为原型门槛。</p>
+<p>真实数据接入 AI 前完成对应认证、角色与资源归属授权；性能专题、完整后台和容器编排不作为原型门槛。</p>
 <ul>
 <li>□ <strong>E01【已跟练，继续验收】参数校验与异常响应</strong>：ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误已跟练，Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。</li>
-<li>□ <strong>E02【待学】认证</strong>：使用 Spring Security＋Session Cookie 和框架 PasswordEncoder；理解登录、注销、CSRF。SQL里的 NOT_A_LOGIN_HASH 不是已配置的真实登录密码。</li>
-<li>□ <strong>E03【待学】角色与资源归属授权</strong>：用户A不能读用户B的工单；管理员派单、指定工程师处理、原报修人验收。身份从认证上下文取，客户端或模型传来的 actorId 不能充当授权。</li>
-<li>□ <strong>E04【正在学】业务事务</strong>：助手已为数据库创建的仓库方法加事务并用H2测试回滚；学习者结合回查讨论正常提交与异常回滚，事务代理、传播和异常的独立解释仍待巩固。未来为状态变更＋ticket_action_log划事务，并在真实测试库验证。</li>
-<li>□ <strong>E05【待学】重复请求和并发冲突</strong>：创建用 requestKey/hash＋唯一约束，同键同输入返回原 ticketId，不同输入409；状态操作用前置状态/expectedVersion，两个竞争请求只能一个成功，不能静默覆盖。</li>
+<li>□ <strong>E02【已跟练，继续验收】认证</strong>：已完成 Spring Security 引入、<code>BCryptPasswordEncoder</code>、<code>DatabaseUserDetailsService</code>（MySQL <code>app_user</code> 表）、Basic Auth 实测（<code>200/403/401</code>）与 <code>POST</code> 的 CSRF 拦截排错；浏览器 Session Cookie 登录、注销及恢复 CSRF 校验仍待验收。SQL 里的 <code>NOT_A_LOGIN_HASH</code> 不能直接作为登录密码。</li>
+<li>□ <strong>E03【已跟练，继续验收】角色与资源归属授权</strong>：已完成 <code>GET</code> 单条工单与日志查询的三角色归属隔离、<code>POST</code> 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测，操作人身份均从 <code>Authentication</code> 读取；<code>GET /api/db/tickets</code> 列表接口权限与遗留调试读接口清理仍待补齐。</li>
+<li>□ <strong>E04【已跟练，继续验收】业务事务</strong>：已亲手建出 <code>ticket_action_log</code> 表，在 <code>assign</code>/<code>resolve</code>/<code>close</code> 上用 <code>@Transactional</code> 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；真实 MySQL 测试库回滚验证与事务传播深入仍待补齐。</li>
+<li>□ <strong>E05【已跟练，继续验收】重复请求和并发冲突</strong>：已在 <code>assign</code>/<code>resolve</code>/<code>close</code> 三条状态操作上亲手接入并实测 <code>expectedVersion</code> 乐观锁（旧版本返回 <code>409</code>、成功递增版本）；创建防重 <code>requestKey</code>/唯一约束与双线程真实并发竞争测试仍待完成。</li>
 <li>□ <strong>E06【待学】有意义的测试</strong>：保留现有JUnit；补少量关键规则、接口权限和真实MySQL集成测试。能区分单元/集成测试、Mock/真实依赖，隔离测试库，不以断言数量衡量质量。</li>
 <li>□ <strong>E07【待学】日志与排错</strong>：用日志框架记录 requestId、业务结果和错误原因；能从异常链追到错误SQL/配置，不记录密码、Cookie和密钥；保存一次复现→根因→修复→回归记录。</li>
 <li>□ <strong>E08【待学】配置、Linux与运行环境</strong>：用环境变量区分开发/测试配置；掌握目录、进程、端口、文件权限、日志查看、启动/停止；在另一环境运行JAR、重启读回数据并排查一次连接/端口错误。</li>
@@ -2219,93 +2035,59 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <li>□ <strong>E10【待学】Git协作基本流程</strong>：在练习分支完成一项修改，检查diff，处理一次受控合并冲突；会区分工作区/暂存区/提交并保留有意义记录，不盲目回退未提交成果。</li>
 </ul>
 <p><strong>A阶段总验收：</strong> 一条真实持久化的闭环＋关键权限/事务/重复请求验证＋可复现启动；本人能独立改一个完整小功能并解释设计。只完成勾选文档不能算验收。</p>
-<h2 id="chapter-checklists-ypython复习与项目应用与java项目并行">Y：Python复习与项目应用（与Java项目并行）</h2>
-<p>学习者反馈已看Python+AI课程第1—119集，但很久没写。先用少量复习和假工单恢复手感；下列项目任务保留原状态，不要求每一项先验收才能进入Agent。看过课程不等于已跟练、独立完成或工单项目已实现。</p>
+<h2 id="chapter-checklists-bjava-业务中的-ai-应用功能b01b09">B：Java 业务中的 AI 应用功能（B01–B09）</h2>
+<p>全部基于现有 Java / Spring Boot / MyBatis / MySQL 轻量落地，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署；先对虚构工单完成真实模型调用与校验，再补事务后异步触发与人工采纳闭环。AI 只给建议，人保留最终确认权。</p>
 <ul>
-<li>□ <strong>Y01【待学】解释器与虚拟环境</strong>：确认Python及venv位置，创建独立环境，理解pip和依赖隔离；运行hello并说明退出/重新进入。</li>
-<li>□ <strong>Y02【已看课，待复习】工单数据与集合</strong>：变量、字符串、if/for、list/dict；构造虚构工单列表，独立筛选OPEN并验证无结果。</li>
-<li>□ <strong>Y03【已看课，待复习】函数与异常</strong>：参数、返回值、None、异常与模块；编写假数据按ID查询，处理不存在与非法输入，自己调试一次。</li>
-<li>□ <strong>Y04【已看课，待复习】JSON与基础测试</strong>：课程中已看JSON，项目测试经历尚待确认；从虚构JSON载入工单、处理缺字段/格式错误，写并解释一个正常和一个失败用例；不读取真实敏感数据。</li>
-<li>□ <strong>Y05【已看课，待复习】HTTP与接口调试</strong>：课程中已看HTTP/模型调用，工单接口实践尚待确认；理解请求方法、状态、JSON、超时，Python调用只读本地假接口；能定位端口错误与404。</li>
-<li>□ <strong>Y06【待学】FastAPI最小服务</strong>：完成health与假工单查询接口，Pydantic校验参数，验证成功、错误参数和无结果；记录如何启动与停止。</li>
+<li>□ <strong>B01【待学】模型 API 基础</strong>：理解模型、提示词、上下文、token、输入/输出用量；知道 API 调用、轻量检索、Agent 和模型训练是不同工作。能够解释本功能为何需要模型及其限制。</li>
+<li>□ <strong>B02【待学】Java 模型客户端</strong>：在现有 Spring Boot 项目中用 Java HTTP 客户端或官方 SDK 接一个真实模型提供方；端点、模型名与 key 仅从环境配置读取，明确设置连接与读取超时。先用虚构数据，未配置时标记真实调用未验证。</li>
+<li>□ <strong>B03【待学】结构化输出</strong>：约定 <code>summary</code>/<code>category</code>/<code>missingInformation</code>，校验 JSON 类型、必填、枚举、长度和数量；分类只允许 <code>DISPLAY</code>/<code>PRINTING</code>/<code>HVAC</code>/<code>OTHER</code>/<code>UNKNOWN</code>。能解释合法 JSON 不保证内容正确。</li>
+<li>□ <strong>B04【待学】提示与上下文设计</strong>：先只给虚构工单；真实业务联调时只给有权读取且必要的内容，明确任务与输出格式；信息少则输出 <code>UNKNOWN</code>/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。</li>
+<li>□ <strong>B05【待学】超时、错误与降级</strong>：处理超时、拒答、429/5xx、错误 JSON 和缺字段；有上限的总耗时、重试与调用次数。关闭 AI 后创建、派单、处理和验收仍能运行；模型网络调用必须放在数据库写事务外。</li>
+<li>□ <strong>B06【待学】调用记录与费用</strong>：记录模型/提示版本、耗时、错误类别、tokens 和重试次数；区分真实账单与估算，价格或用量未知就写未知；设置个人实验预算，不能默认无限调用。</li>
+<li>□ <strong>B07【待学】业务接入与验证</strong>：接入工单业务前，Java 端必须校验详情权限、操作人身份与资源范围，无权工单不发模型请求；真实模型调用证据与模拟故障证据分开记录。</li>
+<li>□ <strong>B08【待学】异步触发与状态回写</strong>：基于 Spring <code>@Async</code> + 自定义有界线程池（明确核心/最大线程数、队列上限与拒绝策略），配合任务表或状态字段（<code>PENDING</code>/<code>DONE</code>/<code>FAILED</code>），在工单写事务<strong>提交之后</strong>异步触发 AI 分析并回写结果；具备同工单同版本的防重/幂等保护，联动贯穿模块 P03。验收须给出事务回滚不误触发、<code>PENDING→DONE</code> 与 <code>PENDING→FAILED</code> 实测、同工单同版本重复触发幂等证据及有界线程池原理口述；不引入 Kafka/MQ，不宣称分布式可靠消息。</li>
+<li>□ <strong>B09【待学】人工采纳与反馈闭环</strong>：落地“AI 给建议、人保留确认权”，提供<strong>直接采纳 / 修改后采纳 / 驳回</strong>接口，并将 AI 原建议、人工最终决策、修改差异与驳回原因写入反馈日志。验收须覆盖三条动作路径、无权角色 403 拒绝、同一建议重复采纳幂等、以及工单版本变化后旧建议被 <code>expectedVersion</code> 拦截返回 409；AI 建议本身不具备自动写权限。</li>
 </ul>
-<h2 id="chapter-checklists-rredis核心与项目实践">R：Redis核心与项目实践</h2>
-<p>R01可与Python复习并行，R02在需要连接Redis时安排，R03在有数据库查询后做，R04在假数据Agent之后做；不把Redis作为初版Agent的前置。推荐视频分P、时长和对应练习见<a href="#chapter-schedule-按阶段看网课与做练习">阶段网课与练习</a>。</p>
+<h2 id="chapter-checklists-c效果评估成本与回归改进c01c04">C：效果评估、成本与回归改进（C01–C04）</h2>
 <ul>
-<li>□ <strong>R01【待学】基础命令与TTL</strong>：能解释Redis用途和String/Hash/List，使用虚构数据操作 <code>SET/GET/EXPIRE/TTL</code>、<code>HSET/HGETALL</code>、<code>RPUSH/LRANGE</code>，预测并验证键过期。按指定分P分次学习，不默认已安装Redis。</li>
-<li>□ <strong>R02【待学】Python访问Redis</strong>：按官方redis-py文档连接隔离服务，对虚构数据读写、设置TTL，解释返回类型；设置连接超时并处理连接错误，记录真实运行与模拟错误。</li>
-<li>□ <strong>R03【待学】虚构设备缓存</strong>：先查Redis，缺失时读MySQL并写缓存；写数据库后删除对应缓存，设置TTL，Redis不可用回源数据库；验证命中、失效、异常，说明并发导致短暂陈旧的限制。真实用户工单先认证授权，不用公共键缓存私有信息。</li>
-<li>□ <strong>R04【待学】Agent会话记忆</strong>：为虚构会话使用List、长度上限和TTL保存最近对话，验证顺序、不同会话隔离、过期与Redis异常；故障时明确临时内存降级或报错，不声称永久保存。接入真实数据前必须有身份与资源授权。</li>
+<li>□ <strong>C01【待学】固定案例与基线</strong>：准备约 12—20 个虚构案例，包含明确、模糊、无依据、长输入、诱导越权；开发集和留出集分开，先记录人工阅读整理摘要的基线。</li>
+<li>□ <strong>C02【待学】效果评估</strong>：采用离线固定集与交互反馈双口径。① 离线固定案例（开发集/留出集分开）记录真实样本数、结构合法率、事实忠实度、建议可用性/修改次数，保留失败例和人工判定理由；② 纳入 B09 反馈日志的真实采纳率（直接采纳 / 修改后采纳 / 驳回占比）与修改次数分布统计，并抽样归因。两类指标分开列示并标明实际分母，不只挑成功截图，无真实模型调用不将模拟结果计为效果数据。</li>
+<li>□ <strong>C03【待学】延迟、用量与成本</strong>：记录端到端耗时、失败/重试、输入输出 token 及计价依据；说明小样本限制，没有实测不写提升比例或并发规模。</li>
+<li>□ <strong>C04【待学】失败分析与回归</strong>：选一个真实问题，只改提示、上下文或解析中的一项；重跑固定集和留出集，解释改善与退化，并证明 AI 失败仍不影响业务。</li>
 </ul>
-<h2 id="chapter-checklists-bpython中的第一个ai应用功能">B：Python中的第一个AI应用功能</h2>
-<p>先对虚构工单完成Python模型调用；真实联调时再设计授权接口。返回摘要、分类建议和待补充信息，只展示，不直接写回。</p>
+<h2 id="chapter-checklists-d可选进阶模块不阻挡-abc-结项">D：可选进阶模块（不阻挡 A→B→C 结项）</h2>
+<p>以下两项为按需进阶任务，不计入 A→B→C 结项门槛与主线完成率分母，均基于现有 Java / Spring Boot / MyBatis / MySQL 轻量实现，不引入 Milvus、Neo4j、微调或本地推理部署。</p>
 <ul>
-<li>□ <strong>B01【待学】模型 API 基础</strong>：理解模型、提示词、上下文、token、输入/输出用量；知道API调用、RAG、Agent和模型训练是不同工作。能够解释本功能为何需要模型及其限制。</li>
-<li>□ <strong>B02【待学】Python模型客户端</strong>：已看课程中模型调用，是否跟练不详；在工单项目中用Python SDK或HTTP客户端接一个真实提供方；端点/模型/key从环境配置取，设置超时。使用虚构数据，未配置时标记真实调用未验证。</li>
-<li>□ <strong>B03【待学】结构化输出</strong>：约定 summary/category/missingInformation，校验JSON类型、必填、枚举、长度和数量；分类只允许DISPLAY/PRINTING/HVAC/OTHER/UNKNOWN。能解释合法JSON不保证内容正确。</li>
-<li>□ <strong>B04【待学】提示与上下文设计</strong>：先只给虚构工单；真实联调时只给有权读取且必要的内容，明确任务与输出格式；信息少则UNKNOWN/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。</li>
-<li>□ <strong>B05【待学】超时、错误与降级</strong>：处理超时、拒答、429/5xx、错误JSON和缺字段；有上限的总耗时/重试/调用次数。关闭AI后创建、派单、处理和验收仍能运行；网络调用放在写事务外。</li>
-<li>□ <strong>B06【待学】调用记录与费用</strong>：记录模型/提示版本、耗时、错误类别、tokens和重试；区分真实账单与估算，价格/用量未知就写未知；设置个人实验预算，不能默认无限调用。</li>
-<li>□ <strong>B07【待学】业务接入与验证</strong>：先用虚构数据验证Python服务；真实数据联调时Java必须校验详情授权、服务身份及资源范围，无权工单不发模型请求。真实模型与模拟故障证据分开。</li>
-</ul>
-<p>B先用Python脚本或最小服务与虚构数据，真实调用和失败降级达标后进入G；不要求先完成整个Java系统，也不强制同时使用多个Agent框架。</p>
-<h2 id="chapter-checklists-g只读运维agentb之后的主线">G：只读运维Agent（B之后的主线）</h2>
-<p>本次只新增待学项，不新增完成勾选。原O02/O03的工具与多步任务迁入G，原O01知识检索迁入C05，避免重复验收。</p>
-<ul>
-<li>□ <strong>G01【待学】工具契约与授权</strong>：先封装Python假数据查询；真实联调时定义findVisibleTickets/getTicketDetail参数、结果上限和错误，Java端依据可信身份逐次授权，不允许任意SQL/命令或模型伪造userId。</li>
-<li>□ <strong>G02【待学】真实工具调用</strong>：保存模型请求工具、Python校验执行、结果回传和最终回答；错误参数不执行，模型和数据均用真实/模拟标签区分。</li>
-<li>□ <strong>G03【待学】有限任务编排</strong>：查询→详情→追问/整合，明确终止、步数/调用数/总耗时，处理重复调用、无结果、工具超时和失败。</li>
-<li>□ <strong>G04【待学】上下文管理</strong>：历史和工具结果按会话隔离，控制长度/摘要，旧状态重查；区分用户指令与检索内容；解释每次实际送入模型的信息。</li>
-<li>□ <strong>G05【待学】任务状态与持久化</strong>：保存taskId、PENDING/RUNNING/WAITING_INPUT/SUCCEEDED/FAILED与步骤；等待输入后继续，重启后恢复或明确中断，不能永远RUNNING。</li>
-<li>□ <strong>G06【待学】追踪与诊断</strong>：记录Prompt/模型版本、工具参数和结果摘要、耗时/用量/错误；复现并定位一次失败，日志不泄露密钥和无关内容。</li>
-<li>□ <strong>G07【待学】安全联调与独立修改</strong>：假数据阶段独立加查询条件；真实联调前补Java认证、用户/资源授权及服务身份传递。Python通过受控HTTP读Java接口，覆盖成功、空结果、无权、超时，不由模型自报权限或执行任意SQL。</li>
-</ul>
-<p>G先用Python函数与模型SDK实现单工具串行流程，再按需求学习LangChain/LangGraph；真实Java联调之前可用本机虚构数据。任务恢复先覆盖单进程可解释行为，评测从第一个工具开始。</p>
-<h2 id="chapter-checklists-c知识检索证明ai有用并持续改进">C：知识检索、证明AI有用并持续改进</h2>
-<ul>
-<li>□ <strong>C01【待学】固定案例与基线</strong>：准备约12—20个虚构案例，包含明确、模糊、无依据、长输入、诱导越权；开发集和留出集分开，先记录人工阅读整理摘要的基线。</li>
-<li>□ <strong>C02【待学】效果评估</strong>：记录真实样本数、结构合法率、事实忠实度、建议可用性/修改次数；保留失败例和人工判定理由，不只挑成功截图。</li>
-<li>□ <strong>C03【待学】延迟、用量与成本</strong>：记录端到端耗时、失败/重试、输入输出token及计价依据；说明小样本限制，没有实测不写提升比例或并发规模。</li>
-<li>
-<p>[ ] <strong>C04【待学】失败分析与回归</strong>：选一个真实问题，只改提示、上下文或解析中的一项；重跑固定集和留出集，解释改善与退化，并证明AI失败仍不影响业务。</p>
-</li>
-<li>
-<p>[ ] <strong>C05【待学】运维知识检索与引用</strong>：准备10—20条有来源说明/版本/适用设备的虚构资料，接searchMaintenanceDocs；从关键词基线开始，需要时比较Embedding/向量检索。回答引用定位原段落，无依据明确不足；检索仍执行权限过滤。</p>
-</li>
-<li>□ <strong>C06【待学】端到端Agent评测</strong>：B的摘要集扩展到约30条任务，覆盖追问、无结果、越权、工具失败/重复调用、上下文与重启中断；开发/留出分开，分别判定检索、工具选择/参数、任务完成和引用，记录实际分母、延迟与成本。</li>
+<li>□ <strong>D01【按需】历史工单轻量检索（轻量 RAG）</strong>：使用 MySQL 全文检索（<code>FULLTEXT</code>）或同设备/型号条件过滤，召回 Top 3 已解决（<code>RESOLVED</code>/<code>CLOSED</code>）且当前有权限查看的历史工单注入上下文，要求建议标明引用工单编号，查无依据则明确说明而非硬凑。验收须在 C 阶段同一批<strong>留出集</strong>上完成有/无检索对比回归，记录真实分母下的建议可用性、引用准确度、耗时与 token 增量变化，并保留至少 1 个误召回或无效召回样本分析。</li>
+<li>□ <strong>D02【按需】排查 SOP 与分类口径外置（轻量 Skill）</strong>：将各设备类别的排查规则（SOP）与分类口径从硬编码代码中抽离到外部 Markdown 文件或 MySQL 配置表（带版本标识），运行时按工单/设备类别动态加载拼装进 Prompt，未命中或配置异常时安全降级到默认兜底口径。验收须在不改核心业务 Java 代码的前提下修改一条外部规则并验证生效、记录命中版本，在固定集与留出集上做修改前后回归对比（含是否引发退化），不引入多 Agent 框架或模型微调。</li>
 </ul>
 <h2 id="chapter-checklists-p沿途补充的基础与求职能力">P：沿途补充的基础与求职能力</h2>
 <p>穿插短练习，不在接AI前一次性学完所有原理。已有成果可作为起点，不重复刷同类题。</p>
 <ul>
 <li>□ <strong>P01【已练习】数据结构与算法</strong>：已有数组/次数统计/两数之和；补复杂度解释、字符串、哈希、栈队列、二分的常见场景，能独立写一个变体而不只背答案。</li>
 <li>□ <strong>P02【待学】Java基础查漏</strong>：equals/hashCode、不可变性、继承与组合、常用泛型/注解；对应集合键、DTO和业务对象解释使用原因，不为背设计模式增加层数。</li>
-<li>□ <strong>P03【待学】并发与运行时入门</strong>：理解线程/进程、共享状态、竞态、锁和有界线程池；区分Java锁与数据库条件更新；会看基本JVM内存/GC现象。先支撑当前排错，深入JMM/JVM调优后置。</li>
+<li>□ <strong>P03【待学】并发与运行时入门</strong>：理解线程/进程、共享状态、竞态、锁和有界线程池；区分Java锁与数据库条件更新；会看基本JVM内存/GC现象；联动 B08 的 <code>@Async</code> 与自定义有界线程池实践。先支撑当前排错，深入JMM/JVM调优后置。</li>
 <li>□ <strong>P04【待学】网络与操作系统基础</strong>：用一次请求解释DNS、TCP、HTTP/HTTPS、Cookie、端口、超时；理解文件路径/权限、进程资源，不背脱离项目的大段术语。</li>
 <li>□ <strong>P05【按需】最小页面能力</strong>：学够HTML/CSS/JavaScript/fetch，展示登录、列表/详情、操作与AI建议，能看浏览器网络请求和错误；使用页面骨架可注明来源，不要求现在转全栈框架。</li>
 <li>□ <strong>P06【持续】AI辅助编程能力</strong>：每次记录助手给了什么；自己读调用链、改一处需求并验证、定位一个错误；能脱离答案解释。使用AI写代码不等于开发了产品AI功能。</li>
 <li>□ <strong>P07【待学】项目表达与岗位匹配</strong>：用5—8分钟讲清业务、自己的贡献、事务/权限、AI效果与限制；整理一个故障案例。投递核对杭州、本科、毕业届别/实习资格、出勤与连续月数。</li>
 </ul>
 <h2 id="chapter-checklists-o有业务需要才选的扩展">O：有业务需要才选的扩展</h2>
-<p>这些不计入A→B→G→C门槛。原O01已迁入C05；原O02/O03已迁入G01—G07，其要求改为主线且当前均待实现。</p>
+<p>这些不计入 A→B→C 结项门槛。</p>
 <ul>
 <li>□ <strong>O04【更后置】写工具与用户确认</strong>：展示具体动作/参数/版本，确认后重新验证权限与状态、防重复；不能把模型建议或一句宽泛同意当成永久写权限。</li>
-<li>
-<p>[ ] <strong>O05【按需】部署和性能扩展</strong>：需要可复现容器环境再学Docker/Compose；Redis基础、缓存和会话按R项学习；按需深入多级缓存和性能调优；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。</p>
-</li>
-<li>
-<p>[ ] <strong>O06【后置】MCP</strong>：把一个已有受控工具通过MCP暴露，验证发现/调用和错误；理解MCP是接入协议，鉴权仍由应用执行。</p>
-</li>
+<li>□ <strong>O05【按需】部署和性能扩展</strong>：需要可复现容器环境再学Docker/Compose；按需深入缓存和性能调优；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。</li>
+<li>□ <strong>O06【后置】MCP</strong>：把一个已有受控工具通过MCP暴露，验证发现/调用和错误；理解MCP是接入协议，鉴权仍由应用执行。</li>
 <li>□ <strong>O07【后置】SubAgent与模型路由</strong>：在单Agent基线上定义一项独立子任务或按任务选模型/备用模型，比较完成率、交接错误、延迟和成本，保留无收益结果。</li>
 </ul>
-<p>微服务、Kubernetes、模型训练、本地模型部署按缺口选择；Python Agent为本路线主线，O06/O07在G/C稳定后再做。</p>
+<p>微服务、Kubernetes、Kafka、Milvus、Neo4j、模型微调与本地推理部署均不在当前主线范围内。</p>
 <h2 id="chapter-checklists-今天只看这一小段">今天只看这一小段</h2>
 <ol>
-<li>Python：按需要回看P52字典和P58函数，用2—3条虚构工单做 <code>find_ticket(ticket_id)</code>；查到和查无结果分别运行。想不起语法就看视频或提问，不要求独立默写。</li>
-<li>Agent衔接：下一步复用已有模型调用代码（如有），把上述查询作为只读工具，按模型请求执行并反馈结果；还没配置模型时先完成工具部分。</li>
-<li>Java并行：解释 <code>DatabaseTicketRepository.create</code> 与事务，随后继续数据库派单；不在真实数据库上做未隔离的写入实验。</li>
-<li>Redis：可以与Python复习并行从P4/P9开始；缓存和会话练习随项目推进。</li>
+<li><strong>A2 收尾（当前优先）</strong>：给 <code>GET /api/db/tickets</code> 列表接口补上三角色归属权限，接入 SLF4J 日志并补齐基础集成验证，完成 A2 最小工程闭环。</li>
+<li><strong>进入 B 阶段（Java AI 业务功能）</strong>：按 <code>B01–B09</code> 推进真实模型调用、结构化输出校验、超时降级、<code>@Async</code> 事务后异步回写与人工采纳反馈闭环，再按 <code>C01–C04</code> 做效果评估与单因子回归。</li>
+<li><strong>可选进阶</strong>：A→B→C 验收通过后，再按需选做 <code>D01</code>（MySQL 轻量 RAG）或 <code>D02</code>（外部 SOP 轻量 Skill）。</li>
 </ol>
-<p>课程观看与本项目实现分别记录，不因更新计划更改已验收勾选。</p>
+<p>不因更新计划更改任何已有验收勾选。</p>
 <h2 id="chapter-checklists-每周记录">每周记录</h2>
 <pre><code class="language-text">第__周，实际日期：____至____，实际投入：__小时
 本周目标：
@@ -2321,7 +2103,7 @@ Git提交编号或本地版本备份：
 下周第一个小任务：
 </code></pre>
 <h2 id="chapter-checklists-阶段进度与能力证据">阶段进度与能力证据</h2>
-<p>2026-11-07起按A→B→G→C执行；原C评测编号保留，新增G，旧周号仅为教材索引，不用日历替你勾完成。每项填写“项目有没有实现”和“本人如何证明理解”两列。看过、跟写、独立完成和运行验证分别记录，AI生成不自动计入掌握。</p>
+<p>2026-11-25 定稿按纯 Java 主线 <strong>A1 → A2 → B01–B09 → C01–C04（可选进阶 D01–D02）</strong> 执行；旧周号仅为教材索引，不用日历替你勾完成。每项填写“项目有没有实现”和“本人如何证明理解”两列。看过、跟写、独立完成和运行验证分别记录，AI 生成不自动计入掌握。</p>
 <div class="table-scroll" tabindex="0"><table>
 <thead>
 <tr>
@@ -2336,53 +2118,43 @@ Git提交编号或本地版本备份：
 <td>A0 SQL/JDBC</td>
 <td>JOIN筛选、统计/分页、SQL事务/版本竞争、JDBC查询/更新回滚已有跟练反馈</td>
 <td>独立解释与新业务变体继续巩固</td>
-<td>不重做整套SQL；正式Web接库待完成</td>
+<td>已切入正式 Spring Boot + MyBatis 项目</td>
 </tr>
 <tr>
-<td>A1数据库/HTTP闭环</td>
-<td>文件版HTTP查询/创建、DI和两类错误响应已实现；MyBatis/完整状态流未完成</td>
-<td>断点跟练有反馈，独立变体待验</td>
-<td>当前阶段，先错误响应再接库</td>
+<td>A1 数据库/HTTP 闭环</td>
+<td>真实 MySQL 已跑通创建、派单、解决、验收关闭四态闭环，清理早期文件代码并完成标准 8 子包分层</td>
+<td>已实测 4 号/5 号工单全链路与 400/404/409 分支，独立变体继续验收</td>
+<td>主流程已跑通，进入 A2 工程化</td>
 </tr>
 <tr>
-<td>A2工程门槛</td>
-<td>权限、事务、重复请求、关键测试、部署</td>
-<td>解释授权和事务边界，复现排查一次故障</td>
-<td>待填写</td>
+<td>A2 工程门槛（当前）</td>
+<td>已落地 MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code>、单条/日志三角色归属隔离、创建自动绑登录人、<code>expectedVersion</code> 乐观锁、<code>ticket_action_log</code> + <code>@Transactional</code> 与 H2 外键回滚测试（4 项全绿）</td>
+<td>已实测多角色 <code>200/401/403/409</code>、修复 <code>findLogs</code> 角色比对 bug 并手写外键回滚测试</td>
+<td>当前阶段，收尾列表权限、SLF4J 日志与基础验证后进入 B</td>
 </tr>
 <tr>
-<td>Y Python基础</td>
-<td>假工单脚本、函数、HTTP与最小接口</td>
-<td>独立改一个筛选并排错</td>
+<td>B Java AI 功能（B01–B09）</td>
+<td>真实模型调用、结构化校验、故障降级、<code>@Async</code> 事务后异步回写、人工采纳与反馈闭环</td>
+<td>自己改输出约束，验证异步幂等与过期建议 409 拦截</td>
 <td>待学</td>
 </tr>
 <tr>
-<td>B模型功能</td>
-<td>真实模型调用与建议接口、故障降级</td>
-<td>自己改输出约束，区分结构与语义验证</td>
-<td>待填写</td>
+<td>C 效果评估与回归（C01–C04）</td>
+<td>固定集/留出集、B09 真实采纳率与修改次数统计、失败样本与单因子回归</td>
+<td>解释收益与局限，复现一次单因子改进</td>
+<td>待学</td>
 </tr>
 <tr>
-<td>C效果与改进</td>
-<td>固定集/留出集、对照指标、失败样本</td>
-<td>解释收益与局限，复现一次改进</td>
-<td>待填写</td>
-</tr>
-<tr>
-<td>G只读Agent（主线）</td>
-<td>工具调用、任务/步骤持久化、追问/恢复、失败退出</td>
-<td>独立增加工具查询条件并定位失败</td>
-<td>待实现</td>
-</tr>
-<tr>
-<td>C知识检索与Agent评测</td>
-<td>资料版本/引用、检索基线、固定任务集和比较记录</td>
-<td>解释检索/工具/生成各类失败及改进</td>
-<td>待实现</td>
+<td>D 可选进阶（D01–D02）</td>
+<td>MySQL Top 3 轻量检索留出集对比、外部 SOP/分类口径动态加载与回归</td>
+<td>解释检索误召回与外部规则退化，不阻挡主线结项</td>
+<td>按需</td>
 </tr>
 </tbody>
 </table></div>
 <p>已有Java/Maven/文件仓库成果不要求重复做完；若某概念无法解释，只补对应小练习。跳过同质断言可以记录已理解，但不能将未执行的关键事务或模型验证写成通过。</p>
+<h2 id="chapter-checklists-历史归档暂不执行">历史归档（暂不执行）</h2>
+<p>2026-11-25 路线收口为纯 Java / Spring Boot / MyBatis / MySQL 主线后，原并行记录的 <strong>Python（Y01–Y06）</strong>、<strong>Redis（R01–R04）</strong>、<strong>Python 只读 Agent（G01–G07）</strong> 以及 <strong>C05–C06</strong> 已归档保存（暂不执行），不再留在当前活跃清单与进度看板统计中。</p>
 <h2 id="chapter-checklists-两类ai使用记录">两类AI使用记录</h2>
 <pre><code class="language-text">AI辅助编程：
 工具给了哪些提示/代码：
@@ -2502,7 +2274,7 @@ caseId、输入事实、预期范围、实际建议：
 </tr>
 </tbody>
 </table></div>
-<p>状态可用未投递、已投、笔试、面试、等待结果、录用、结束。每周选择一次统一更新，依据实际反馈改简历或补知识，不用每天反复刷新。</p></section><section id="chapter-contracts" class="chapter"><div class="chapter-meta"><span>11 / 14</span><a href="#top">回到目录</a></div><h1>设备工单的数据与接口约定</h1><p>2026-11-14核对：正式<code>/api/tickets</code>仍用文件仓库；<code>/api/db/tickets</code>已有MyBatis查询和创建，派单SQL/Service存在部分代码但HTTP接口未完成。权限、完整状态流及Python Agent尚未实现；后续契约均为计划。</p>
+<p>状态可用未投递、已投、笔试、面试、等待结果、录用、结束。每周选择一次统一更新，依据实际反馈改简历或补知识，不用每天反复刷新。</p></section><section id="chapter-contracts" class="chapter"><div class="chapter-meta"><span>11 / 14</span><a href="#top">回到目录</a></div><h1>设备工单的数据与接口约定</h1><p>2026-11-27 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 <code>POST /api/db/tickets</code>（自动取登录人）、<code>assign</code>/<code>resolve</code>/<code>close</code> 四态闭环 + <code>expectedVersion</code> 乐观锁、<code>GET /api/db/tickets/{id}</code> 与 <code>GET /api/db/tickets/{id}/logs</code> 三角色归属隔离，以及 <code>ticket_action_log</code> + <code>@Transactional</code> 事务与 H2 外键失败回滚测试。当前待收尾 <code>GET /api/db/tickets</code> 列表接口权限与 SLF4J 日志，随后进入纯 Java <strong>B 阶段（B01–B09）</strong>。</p>
 <h2 id="chapter-contracts-当前样本和状态">当前样本和状态</h2>
 <p><code>ops_ticket_dev</code> 已有 <code>device</code>、<code>app_user</code>、<code>ticket</code>；建表依据项目 <code>sql/01_schema.sql</code>。用户/设备实际编号为1至4、1至3：reporter_a=1、engineer_a=2、admin_a=3、reporter_b=4；投影仪=1且已停用，空调=2，打印机=3。学习记录确认工单1“空调不制冷”已派给2，状态IN_PROGRESS。之后的插入和查询以实际 SELECT 为准，不能假定打印机工单一定是2或已插入。</p>
 <p>旧教材中的工单101/102/103是另设的教学样本，<strong>不是当前库的现状</strong>。需要时在隔离测试库创建，不覆盖开发数据来凑教材输出；自增编号允许有空洞。</p>
@@ -4035,4 +3807,4 @@ public class PoolDemo {
 <p>用既有样本验证尤其直接：reporter_a 是用户 1，reporter_b 是用户 4；101 和 103 都关联设备 1，但报修人不同。用户 1 按设备 1 筛选时能看到 101，不应该因为设备相同就看到 103；管理员在合法权限下可以看见两者。</p>
 <p><strong>本周诊断：</strong> 讲不清就顺着一条真实请求解释；现场小改先画影响范围再动手；总数和列表不一致先查两个 SQL 条件；问题没做过就承认范围，不编测量结果。</p>
 <h2 id="chapter-answers-testing-delivery-自评分方法">自评分方法</h2>
-<p>每题给自己 0—2 分：0 分是答不出或结论错误，1 分是看答案后能解释，2 分是不看答案能解释并在项目中验证。每周 6 分满分，至少 4 分且关键验收通过再继续；14、15 周的并发和事务即使其他题得分高，也必须亲自验证。自评分帮助安排补课，不是招聘通过率预测。</p></section><footer class="footer">初版：2026年10月12日；路线更新于2026年11月24日。按阶段验收推进。<br>这是学习路线与局部参考示例，完整项目需随课程实现和验证。<br><a href="https://wishbottle.cn/learning/">返回 WishBottle 学习板块 ↗</a> · <a href="#top">回到顶部</a></footer></main></div></body></html>
+<p>每题给自己 0—2 分：0 分是答不出或结论错误，1 分是看答案后能解释，2 分是不看答案能解释并在项目中验证。每周 6 分满分，至少 4 分且关键验收通过再继续；14、15 周的并发和事务即使其他题得分高，也必须亲自验证。自评分帮助安排补课，不是招聘通过率预测。</p></section><footer class="footer">初版：2026年10月12日；进度与路线更新于2026年11月27日。按阶段验收推进。<br>这是学习路线与局部参考示例，完整项目需随课程实现和验证。<br><a href="https://wishbottle.cn/learning/">返回 WishBottle 学习板块 ↗</a> · <a href="#top">回到顶部</a></footer></main></div></body></html>

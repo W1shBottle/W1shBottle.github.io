@@ -1,14 +1,29 @@
 {
   "title": "设备运维工单项目文档",
-  "description": "当前控制台、JDBC与Web练习进度，Java＋AI路线和运行入口。",
+  "description": "当前 Spring Boot / MyBatis / MySQL 四态闭环、认证授权与事务进度，纯 Java＋AI 路线与运行入口。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-15T00:00:00+08:00",
+  "lastmod": "2026-11-27T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
 }
 
-> 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。后续功能以各页的实现状态为准。
+> 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。最新实测进度见下方 **2026-11-27 最新状态** 与[学习时间线](/learning/#progress)。
+
+## 2026-11-27 最新状态核对
+
+- **唯一主线（2026-11-25 定稿）**：纯 **Java 21 / Spring Boot 4.1.2 / MyBatis 4.1.0 / MySQL 8.4**（`A1 → A2 → B01–B09 → C01–C04`，可选 `D01–D02`），原 Python / Redis / Agent 规划已归档暂不执行。
+- **代码结构**：已完成早期控制台与文件版旧代码清理（原 `ConsoleApp` / `FileTicketRepository` 等仅保留在历史笔记与快照中），统一按 Spring Boot 标准 8 子包组织：`config`、`controller`、`domain`、`dto`、`exception`、`mapper`、`repository`、`service`，主启动类为 `cn.wishbottle.opsticket.OpsTicketApplication`。
+- **已跑通并实测的核心能力**：
+  - **MySQL 认证与角色授权**：`AppUser` + `UserMapper.findByUsername` + `DatabaseUserDetailsService` + `BCryptPasswordEncoder` + `@PreAuthorize`，实测 `200/401/403`。
+  - **四态闭环与乐观锁**：真实 MySQL 跑通创建（`OPEN`，自动从 `Authentication` 取 `reporterId`）→ 管理员派单（`assign`，`IN_PROGRESS`）→ 指定工程师解决（`resolve`，`RESOLVED`）→ 原报障人验收关闭（`close`，`CLOSED`），三条状态操作均接入 `expectedVersion` 乐观锁（旧版本返回 `409`）。
+  - **资源归属隔离**：`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 完成三角色（`ADMIN` / `ENGINEER` / `REPORTER`）归属隔离实测。
+  - **操作日志与事务回滚**：新建 `ticket_action_log` 表与 `TicketActionLogMapper`，在 `assign`/`resolve`/`close` 上通过 `@Transactional` 绑定状态更新与写流水，并在隔离 H2 中编写外键失败回滚测试 `DatabaseTicketTransactionTest`（4 项全绿）。
+- **下一步**：收尾 A2 剩余小边界（`GET /api/db/tickets` 列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 **B 阶段（B01–B09）**。
+
+---
+
+> 以下正文保留 **2026-11-15** 阶段的历史架构与命令快照，供回看早期控制台 → 文件仓库 → MyBatis 演进过程。
 
 围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**。现有v0.1控制台包含内存/文件仓库、自动保存和恢复；SQL与独立JDBC已有跟练成果。现已加入 **Spring Boot 工单查询、创建与基础统一错误响应**，通过 Bean 配置和构造器注入复用原有 Service/文件仓库。2026-11-09 完成数据库创建 POST：`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`POST /api/db/tickets`、`@Options` 自增主键回填、回查 `Ticket` 和 201 JSON；外键/标题 CHECK 错误统一转 400。正式工单业务仍使用文件仓库；数据库派单接口已实现并由学习者完成一次隔离成功路径练习，数据库解决/验收、登录权限、AI与Agent仍待实现。
 

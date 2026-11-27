@@ -145,6 +145,35 @@ class PersistenceTests(unittest.TestCase):
         feed.write_snapshot(self.cache, data)
         self.assertIsNone(feed.read_snapshot(self.cache, NOW.date()))
 
+    def test_chinese_descriptions_are_attached_and_validated(self):
+        self.assertEqual(
+            'updated',
+            feed.refresh(
+                self.root,
+                NOW + timedelta(days=1),
+                payload,
+                translator=lambda text: '中文简介：' + text,
+            ),
+        )
+        data = json.loads(self.output.read_text(encoding='utf-8'))
+        self.assertTrue(all(p['description_zh'].startswith('中文简介：') for p in data['projects']))
+        self.assertTrue(feed.validate_snapshot(data))
+        broken = copy.deepcopy(data)
+        broken['projects'][0]['description_zh'] = 123
+        self.assertFalse(feed.validate_snapshot(broken))
+
+    def test_translator_failure_degrades_gracefully(self):
+        def failing(_):
+            raise TimeoutError('translate timeout')
+
+        self.assertEqual(
+            'updated',
+            feed.refresh(self.root, NOW + timedelta(days=2), payload, translator=failing),
+        )
+        data = json.loads(self.output.read_text(encoding='utf-8'))
+        self.assertEqual(10, len(data['projects']))
+        self.assertTrue(feed.validate_snapshot(data))
+
 
 if __name__ == '__main__':
     unittest.main()

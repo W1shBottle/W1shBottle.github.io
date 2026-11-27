@@ -5,24 +5,17 @@
   "weight": 80,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-15T00:00:00+08:00"
+  "lastmod": "2026-11-27T00:00:00+08:00"
 }
 
-这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于2026年10月12日，路线于2026年11月14日调整为Java工单与Python Agent并行；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
+这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于 2026 年 10 月 12 日，2026 年 11 月 25 日已定稿为纯 **Java 21 / Spring Boot / MyBatis / MySQL** 主线（`A1 → A2 → B01–B09 → C01–C04`，可选 `D01–D02`）；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
 
-## Python复习与Agent资料
+## 当前主线参考与视频入口
 
-已看黑马Python+AI前119集但久未写；先回看[P52字典](https://www.bilibili.com/video/BV1sHU9BmEne/?p=52)、[P58函数](https://www.bilibili.com/video/BV1sHU9BmEne/?p=58)，结合虚构工单找回手感；其他基础章节遇到卡点再回看。
-
-- [Python官方教程](https://docs.python.org/zh-cn/3/tutorial/)：结合Java基础学习list/dict、函数、模块和异常；每节配虚构工单练习。
-- [FastAPI官方教程](https://fastapi.tiangolo.com/zh/tutorial/first-steps/)：在基础语法之后做一个本地只读假接口。
-- [LangChain Agent文档](https://docs.langchain.com/oss/python/langchain/agents) 和 [LangGraph概览](https://docs.langchain.com/oss/python/langgraph/overview)：先理解模型与工具调用，再按多步状态需要选用；具体版本到安装时核对。
-
-## 视频学习入口与Redis资料
-
-- [按阶段看网课与做练习](/learning/schedule/#按阶段看网课与做练习)：包含事务、Python、Redis、FastAPI和Agent的具体分P、时长与项目任务；每次只选当前需要的一两节。
-- Redis主课：[黑马Redis P4 认识Redis](https://www.bilibili.com/video/BV1cr4y1671t/?p=4)、[P9 通用命令](https://www.bilibili.com/video/BV1cr4y1671t/?p=9)、[P10 String](https://www.bilibili.com/video/BV1cr4y1671t/?p=10)，Hash/List与缓存分P见阶段计划。
-- Python实践：[Python操作Redis P9](https://www.bilibili.com/video/BV16vFPevEt6/?p=9)和[redis-py官方入门](https://redis.io/docs/latest/develop/clients/redis-py/)；缓存策略参考[Redis官方Cache-Aside](https://redis.io/docs/latest/develop/use-cases/cache-aside/)。旧课程只按章节学概念，安装和版本以官方文档为准。视频根据公开选集筛选，未逐段播放。
+- [按阶段看网课与做练习](/learning/schedule/#按阶段看网课与做练习)：按当前卡点挑选 1–2 节事务、安全、异步与测试参考，不要求刷完大课。
+- [Spring Security 官方参考](https://docs.spring.io/spring-security/reference/index.html)：核对 `UserDetailsService`、`BCryptPasswordEncoder`、`@PreAuthorize` 与 CSRF 边界。
+- [Spring 事务与异步执行参考](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)：对照 `@Transactional` 代理规则及 B08 `@Async` 有界线程池配置。
+- [Spring AI 结构化输出与工具边界参考](https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html)：作为 B 阶段结构化校验与降级设计参照（不代表必须引入完整框架）。
 
 ## 按阶段选择资料
 
