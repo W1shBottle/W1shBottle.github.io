@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "db0dc12173c8dfc6aefb9efc6fbdca5e03cc7bd15b86699c20c3b8cced36e7ca",
-  "updated": "2026-11-26",
+  "source_sha256": "fbb972035490a3a30d6ca38ea345d765ff5d4228b4d71ee62e3b9ac2662d2aa0",
+  "updated": "2026-11-27",
   "project": "设备运维工单",
-  "stage": "四态乐观锁与资源归属闭环跑通，已清理旧代码并标准分包，待补查询归属隔离与操作日志",
+  "stage": "查询归属隔离、操作审计日志与 @Transactional 回滚闭环完成，准备收尾 A2 进入 B 阶段",
   "current_group": "backend",
   "focus_tasks": [
     {
@@ -21,8 +21,8 @@
       "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环，并按 `controller/service/repository/mapper/domain/dto` 分包整理（清理与分包由助手协助）；操作日志 `ticket_action_log` 与完整权限归属仍待补齐。"
     }
   ],
-  "next": "给 GET /api/db/tickets/{id} 补上查询归属隔离（报障人 A 不能读取报障人 B 的工单），并将创建工单的 reporterId 改为从登录身份自动读取。",
-  "note": "/posts/ops-ticket-20261126/",
+  "next": "收尾 A2 剩余小边界（列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 B 阶段 Java AI 业务功能（B01–B09）。",
+  "note": "/posts/ops-ticket-20261127/",
   "stats": {
     "accepted": 6,
     "practicing": 22,
@@ -256,14 +256,14 @@
           "title": "角色与资源归属授权",
           "status": "practicing",
           "optional": false,
-          "description": "已完成管理员派单、指定工程师解决（非指派单 `403`）、原报障人验收关闭（`reporter_a` 越权 `reporter_b` 单 `403`）实测，操作人身份均从 `Authentication` 读取；`GET` 查询归属隔离（用户 A 不能读用户 B 工单）与创建工单自动取登录人仍待补齐。"
+          "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测，操作人身份均从 `Authentication` 读取；`GET /api/db/tickets` 列表接口权限与遗留调试读接口清理仍待补齐。"
         },
         {
           "id": "E04",
           "title": "业务事务",
           "status": "practicing",
           "optional": false,
-          "description": "助手已为数据库创建的仓库方法加事务并用H2测试回滚；学习者结合回查讨论正常提交与异常回滚，事务代理、传播和异常的独立解释仍待巩固。未来为状态变更＋ticket_action_log划事务，并在真实测试库验证。"
+          "description": "已亲手建出 `ticket_action_log` 表，在 `assign`/`resolve`/`close` 上用 `@Transactional` 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；真实 MySQL 测试库回滚验证与事务传播深入仍待补齐。"
         },
         {
           "id": "E05",

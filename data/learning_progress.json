@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated": "2026-11-26",
-  "stage": "四态乐观锁与资源归属闭环跑通，已清理旧代码并标准分包，待补查询归属隔离与操作日志",
+  "updated": "2026-11-27",
+  "stage": "查询归属隔离、操作审计日志与 @Transactional 回滚闭环完成，准备收尾 A2 进入 B 阶段",
   "projects": {
     "ops-ticket": "设备运维工单",
     "student-management": "学生管理系统"
@@ -266,6 +266,16 @@
       "verification": "本人实测派单 409、4 号工单 assign（400/409/200→version 1）、resolve（admin 403/非指派单 403/旧版本 409/200→version 2）与 close（reporter_a 越权 403/旧版本 409/200→CLOSED version 3），并靠 Base64 定位登录空格问题。清理旧代码与分包由助手协助，Maven 离线编译与 TicketTest 6 项通过。查询归属隔离、创建自动取登录人、操作日志与并发测试仍待补齐。",
       "next": "给 GET /api/db/tickets/{id} 补上查询归属隔离（报障人 A 不能读取报障人 B 的工单），并将创建工单的 reporterId 改为从登录身份自动读取。",
       "note": "/posts/ops-ticket-20261126/"
+    },
+    {
+      "date": "2026-11-27",
+      "project": "ops-ticket",
+      "status": "reviewed",
+      "title": "查询归属隔离、操作日志与事务回滚验证",
+      "summary": "复盘标准 Spring Boot 分包规范，补齐单条查询归属隔离与创建工单自动绑定登录人；新建 ticket_action_log 审计表并在 assign/resolve/close 用 @Transactional 绑定状态变更与写日志，编写 H2 外键失败回滚测试，实现三角色归属隔离的日志查询接口。",
+      "verification": "本人实测 GET 详情归属（admin 200/本人 200/他人 403）、POST 创建（engineer 403/reporter 201 自动绑 reporterId/他人查 403）、5 号工单 409 不写假日志与 3 条完整流水、H2 外键失败回滚测试 4 项全绿，并修复 findLogs 误用 authentication.getName() 后实测两条 403。列表接口权限、真实 MySQL 测试库回滚与 SLF4J 日志仍待补齐。",
+      "next": "收尾 A2 剩余小边界（列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 B 阶段 Java AI 业务功能（B01–B09）。",
+      "note": "/posts/ops-ticket-20261127/"
     }
   ],
   "current_project": "ops-ticket"
