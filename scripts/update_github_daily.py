@@ -1,8 +1,8 @@
-"""Build a daily, public GitHub discovery edition with Chinese descriptions; no secrets required.
+"""Build a daily, public GitHub discovery edition with Chinese descriptions; no paid secrets required.
 
-Only public GitHub REST API and public translation endpoints are used. Stars are totals,
-not daily growth. An edition is committed atomically after all six searches succeed;
-translation failures degrade gracefully to the original description.
+Uses the GitHub REST API for repository discovery and GitHub Models (via GITHUB_TOKEN with
+models: read) as the primary batch Chinese translator, with public translation APIs as fallback.
+Stars are totals, not daily growth. Translation failures degrade gracefully without blocking deploy.
 """
 import argparse
 from datetime import datetime, timedelta, timezone, date
@@ -25,6 +25,7 @@ SEARCHES = [('ai', 'llm'), ('ai', 'rag'), ('dev', 'developer-tools'),
 REPO_NAME = re.compile(r'[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}\Z')
 EXCLUDE = {'awesome-list', 'awesome', 'tutorial', 'tutorials', 'interview', 'course', 'courses'}
 CJK = re.compile(r'[\u4e00-\u9fff]')
+LEADING_ENGLISH = re.compile(r'^[A-Za-z][A-Za-z0-9\s,.:;/+\-]{18,}')
 _AUTO = object()
 
 
@@ -44,15 +45,77 @@ def contains_cjk(text):
     return isinstance(text, str) and bool(CJK.search(text))
 
 
+def is_mostly_chinese(text):
+    """Return True only when text is already predominantly Chinese (not English-led bilingual)."""
+    if not isinstance(text, str):
+        return False
+    stripped = text.strip()
+    if not stripped or LEADING_ENGLISH.match(stripped):
+        return False
+    non_space = [ch for ch in stripped if not ch.isspace()]
+    if not non_space:
+        return False
+    cjk_count = len(CJK.findall(stripped))
+    return cjk_count >= 6 and (cjk_count / len(non_space)) >= 0.32
+
+
+def translate_batch_github_models(projects):
+    """Batch-translate repo descriptions to concise Chinese using GitHub Models (GITHUB_TOKEN)."""
+    token = os.environ.get('GITHUB_TOKEN')
+    if not token or not projects:
+        return {}
+    items = [{'name': p['name'], 'description': p['description']} for p in projects]
+    prompt = (
+        '请将以下 GitHub 开源项目的英文或中英混杂简介，逐条改写为自然、准确、简洁的纯中文简介（每条 20-65 字，'
+        '保留常见技术专有名词如 Git/CLI/MCP/LLM/Rust/Claude Code，去掉 Discord 广告链接与冗余符号）。'
+        '只返回一个 JSON 对象，键为原样的 name，值为对应的中文简介字符串，不要输出任何额外文字或代码块。'
+    )
+    body = json.dumps({
+        'model': os.environ.get('GITHUB_MODELS_TRANSLATOR', 'openai/gpt-4o-mini'),
+        'temperature': 0.2,
+        'response_format': {'type': 'json_object'},
+        'messages': [
+            {'role': 'system', 'content': prompt},
+            {'role': 'user', 'content': json.dumps(items, ensure_ascii=False)},
+        ],
+    }).encode('utf-8')
+    headers = {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'User-Agent': 'WishBottle-Daily-Discovery/1.0',
+    }
+    try:
+        req = urllib.request.Request('https://models.github.ai/inference/chat/completions', data=body, headers=headers)
+        with urllib.request.urlopen(req, timeout=25) as response:
+            if response.status != 200:
+                return {}
+            payload = json.loads(response.read(500_000))
+        content = (((payload.get('choices') or [{}])[0]).get('message') or {}).get('content', '')
+        content = content.strip()
+        if content.startswith('```'):
+            content = re.sub(r'^```[a-zA-Z]*\s*|\s*```$', '', content).strip()
+        parsed = json.loads(content)
+        if not isinstance(parsed, dict):
+            return {}
+        return {
+            name: clean_text(val, 360)
+            for name, val in parsed.items()
+            if isinstance(name, str) and isinstance(val, str) and contains_cjk(val)
+        }
+    except Exception:
+        return {}
+
+
 def translate_to_zh(text):
-    """Translate an English repo description to concise Chinese via public endpoints."""
+    """Fallback single-item translator via public endpoints when GitHub Models is unavailable."""
     source = clean_text(text, 320)
     if not source:
         return ''
-    if contains_cjk(source):
+    if is_mostly_chinese(source):
         return source
-    headers = {'User-Agent': 'WishBottle-Daily-Discovery/1.0'}
-    # Primary: Google Translate public client endpoint (works reliably on GitHub Actions).
+    headers = {'User-Agent': 'Mozilla/5.0 (compatible; WishBottle-Daily-Discovery/1.0)'}
+    # Fallback 1: Google Translate public endpoint.
     try:
         query = urllib.parse.urlencode({'client': 'gtx', 'sl': 'auto', 'tl': 'zh-CN', 'dt': 't', 'q': source})
         url = 'https://translate.googleapis.com/translate_a/single?' + query
@@ -66,7 +129,7 @@ def translate_to_zh(text):
                         return translated
     except Exception:
         pass
-    # Fallback: MyMemory public translation API.
+    # Fallback 2: MyMemory public translation API.
     try:
         query = urllib.parse.urlencode({'q': source, 'langpair': 'en|zh-CN'})
         url = 'https://api.mymemory.translated.net/get?' + query
@@ -81,19 +144,37 @@ def translate_to_zh(text):
     return ''
 
 
-def enrich_chinese_descriptions(projects, translator):
-    """Attach description_zh to each project; failures leave existing or empty value."""
+def enrich_chinese_descriptions(projects, translator, batch_translator=None):
+    """Attach pure-Chinese description_zh to each project; failures degrade gracefully."""
+    need = []
+    for project in projects:
+        existing_zh = clean_text(project.get('description_zh', ''), 360)
+        if not (existing_zh and is_mostly_chinese(existing_zh)):
+            need.append(project)
+
+    batch_map = {}
+    if need and batch_translator is not None:
+        try:
+            batch_map = batch_translator(need) or {}
+        except Exception:
+            batch_map = {}
+
     updated = False
     result = []
     for project in projects:
         item = dict(project)
         existing_zh = clean_text(item.get('description_zh', ''), 360)
-        if existing_zh:
+        if existing_zh and is_mostly_chinese(existing_zh):
             item['description_zh'] = existing_zh
             result.append(item)
             continue
+
         desc = clean_text(item.get('description', ''), 320)
-        if contains_cjk(desc):
+        candidate = clean_text(batch_map.get(item['name'], ''), 360)
+        if candidate and contains_cjk(candidate):
+            item['description_zh'] = candidate
+            updated = True
+        elif is_mostly_chinese(desc):
             item['description_zh'] = desc
             updated = True
         elif translator is not None:
@@ -101,7 +182,7 @@ def enrich_chinese_descriptions(projects, translator):
                 translated = clean_text(translator(desc), 360)
             except Exception:
                 translated = ''
-            if translated:
+            if translated and contains_cjk(translated):
                 item['description_zh'] = translated
                 updated = True
         result.append(item)
@@ -268,17 +349,19 @@ def write_snapshot(path, data):
     temp.replace(path)
 
 
-def refresh(root=ROOT, now=None, fetcher=request_json, force=False, translator=_AUTO):
+def refresh(root=ROOT, now=None, fetcher=request_json, force=False, translator=_AUTO, batch_translator=_AUTO):
     now = now or datetime.now(timezone.utc)
     day = edition_date(now)
     if translator is _AUTO:
         translator = translate_to_zh if fetcher is request_json else None
+    if batch_translator is _AUTO:
+        batch_translator = translate_batch_github_models if fetcher is request_json else None
     output = root / 'data/github_daily.json'
     cache = root / '.cache/github-daily.json'
     snapshots = [x for x in (read_snapshot(output, day), read_snapshot(cache, day)) if x]
     previous = max(snapshots, key=lambda x: (x['date'], x['generated_at'])) if snapshots else None
     if previous and previous['date'] == day.isoformat() and not force:
-        enriched, changed = enrich_chinese_descriptions(previous['projects'], translator)
+        enriched, changed = enrich_chinese_descriptions(previous['projects'], translator, batch_translator)
         data = dict(previous, projects=enriched) if changed else previous
         status = 'unchanged'
     else:
@@ -289,7 +372,7 @@ def refresh(root=ROOT, now=None, fetcher=request_json, force=False, translator=_
                 history = [h for h in history if h['date'] != previous['date']]
                 history += [{'date': previous['date'], 'ids': [p['id'] for p in previous['projects']]}]
             projects = choose(collect(now, fetcher), day, history)
-            projects, _ = enrich_chinese_descriptions(projects, translator)
+            projects, _ = enrich_chinese_descriptions(projects, translator, batch_translator)
             history = [h for h in history if 0 < (day - date.fromisoformat(h['date'])).days <= 13]
             history += [{'date': day.isoformat(), 'ids': [p['id'] for p in projects]}]
             data = {'schema': 1, 'date': day.isoformat(), 'generated_at': now.isoformat(timespec='seconds'),
@@ -302,12 +385,13 @@ def refresh(root=ROOT, now=None, fetcher=request_json, force=False, translator=_
             print(f'GitHub refresh unavailable ({type(error).__name__}); keeping last successful edition.', file=sys.stderr)
             if not previous:
                 raise RuntimeError('No valid GitHub edition available; stop deployment') from None
-            enriched, changed = enrich_chinese_descriptions(previous['projects'], translator)
+            enriched, changed = enrich_chinese_descriptions(previous['projects'], translator, batch_translator)
             data = dict(previous, projects=enriched) if changed else previous
             status = 'fallback'
     write_snapshot(output, data)
     write_snapshot(cache, data)
-    print(f'GitHub daily: {status}; edition={data["date"]}; projects={len(data["projects"])}')
+    zh_count = sum(1 for p in data['projects'] if p.get('description_zh'))
+    print(f'GitHub daily: {status}; edition={data["date"]}; projects={len(data["projects"])}; zh={zh_count}/{len(data["projects"])}')
     return status
 
 

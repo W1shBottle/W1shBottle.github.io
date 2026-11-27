@@ -57,7 +57,10 @@
   border-color: rgba(246,160,100,.52);
 }
 [data-theme=dark] .home-main :is(.discovery-card,.series-item) {
-  background: var(--surface);
+  background: transparent;
+}
+[data-theme=dark] .home-main :is(.discovery-card,.series-item):hover {
+  background: rgba(255,255,255,.035);
 }
 [data-theme=dark] :is(.project-panel,.series-item,.post-series-summary)::after {
   background: radial-gradient(260px circle at var(--shine-x,70%) var(--shine-y,10%), rgba(246,160,100,.035), transparent 70%);

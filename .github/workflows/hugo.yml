@@ -12,6 +12,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  models: read
 
 concurrency:
   group: pages
@@ -41,8 +42,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .cache/github-daily.json
-          key: github-daily-v2-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: github-daily-v2-
+          key: github-daily-v3-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: github-daily-v3-
       - name: Check feed filtering and fallback
         run: |
           python -m unittest discover -s scripts -p 'test_*.py'
@@ -64,7 +65,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .cache/github-daily.json
-          key: github-daily-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          key: github-daily-v3-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/setup-go@v5
         with:
           go-version: '1.25'

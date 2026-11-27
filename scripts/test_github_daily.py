@@ -168,11 +168,26 @@ class PersistenceTests(unittest.TestCase):
 
         self.assertEqual(
             'updated',
-            feed.refresh(self.root, NOW + timedelta(days=2), payload, translator=failing),
+            feed.refresh(self.root, NOW + timedelta(days=2), payload, translator=failing, batch_translator=failing),
         )
         data = json.loads(self.output.read_text(encoding='utf-8'))
         self.assertEqual(10, len(data['projects']))
         self.assertTrue(feed.validate_snapshot(data))
+
+    def test_batch_translator_and_bilingual_cleanup(self):
+        self.assertFalse(feed.is_mostly_chinese('Production-grade platform for building agentic IM bots - 生产级平台'))
+        self.assertTrue(feed.is_mostly_chinese('开源的智能体框架，用于构建多角色 AI 应用。'))
+        self.assertEqual(
+            'updated',
+            feed.refresh(
+                self.root,
+                NOW + timedelta(days=3),
+                payload,
+                batch_translator=lambda items: {item['name']: '纯中文介绍：' + item['name'] for item in items},
+            ),
+        )
+        data = json.loads(self.output.read_text(encoding='utf-8'))
+        self.assertTrue(all(p['description_zh'].startswith('纯中文介绍：') for p in data['projects']))
 
 
 if __name__ == '__main__':
