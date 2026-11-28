@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source_sha256": "42df7839ee0471165b13985bcec840419edb82aec9799a24dc745a83091b97a0",
+  "source_sha256": "20572acf14ef8861bc0c40157dfd5eb8ade9973f8d96a382854e4991685ee0d7",
   "updated": "2026-11-28",
   "project": "设备运维工单",
   "stage": "统一第 1–17 周纯 Java 后端路线：当前第 14 周 A2 工程收口，第 15–17 周推进 Redis、RabbitMQ 与并发部署",
@@ -11,7 +11,7 @@
       "title": "角色与资源归属授权",
       "status": "practicing",
       "optional": false,
-      "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步收口 `/api/v1/tickets` 列表三角色隔离分页、补 `/api/v1/devices` 并清理无权限 `/api/db` 调试接口。"
+      "description": "已收口 `/api/v1/tickets` 并下线 3 个无权限 `/api/db` 调试读接口，完成单条工单详情、列表查询（SQL `WHERE`）与操作日志的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步补齐动态条件分页与 `/api/v1/devices`。"
     },
     {
       "id": "E07",
@@ -28,8 +28,8 @@
       "description": "接入 SpringDoc OpenAPI 3 / Knife4j 自动生成在线接口文档，编写《系统架构与接口设计文档》（含 ER 图、四态图、错误码与微服务演进设计），规范 SQL 与 README。"
     }
   ],
-  "next": "启动第 14 周 A2 工程规范收口：将 /api/db/tickets 收口为 /api/v1/tickets 并补齐列表三角色归属隔离与动态分页、/api/v1/devices 与联合索引 EXPLAIN，同时推进 @Valid、LoginUser、Result<T>、OpenAPI 文档与 SLF4J 日志。",
-  "note": null,
+  "next": "开启 mybatis.mapper-locations=classpath:mapper/*.xml，新建 PageResult<T> 与 TicketMapper.xml，实现 GET /api/v1/tickets 的 status、keyword、page、size 动态筛选与分页并完成 Apifox 实测。",
+  "note": "/posts/ops-ticket-20261128/",
   "stats": {
     "accepted": 6,
     "practicing": 22,
@@ -263,7 +263,7 @@
           "title": "角色与资源归属授权",
           "status": "practicing",
           "optional": false,
-          "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步收口 `/api/v1/tickets` 列表三角色隔离分页、补 `/api/v1/devices` 并清理无权限 `/api/db` 调试接口。"
+          "description": "已收口 `/api/v1/tickets` 并下线 3 个无权限 `/api/db` 调试读接口，完成单条工单详情、列表查询（SQL `WHERE`）与操作日志的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步补齐动态条件分页与 `/api/v1/devices`。"
         },
         {
           "id": "E04",

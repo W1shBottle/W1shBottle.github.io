@@ -10,6 +10,6 @@
 
 此前 11-25 草案中的 Java 侧 AI 条目（`B01–B09`、`C01–C04`、`D01–D02`）已归档暂不执行，既有全部验收勾选（`J01–J06`）与跟练记录保持不变。
 
-下一次先启动 **第 14 周（A2 工程规范收口）**：收口 `/api/v1/tickets` 列表三角色归属隔离与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`，瘦身 Controller 并接入 OpenAPI 接口文档与 SLF4J 日志。
+下一次继续 **第 14 周（A2 工程规范收口）**：`/api/v1/tickets` 路径收口、下线调试读接口与列表三角色隔离已实测通过；下一步通过 MyBatis XML 实现 `GET /api/v1/tickets` 的 `status`/`keyword`/`page`/`size` 动态筛选与 `PageResult<T>` 分页，随后推进 `/api/v1/devices`、联合索引 `EXPLAIN`、Controller 瘦身与 OpenAPI/SLF4J。
 
-[技能清单](/learning/checklists/) · [第 1–17 周学习计划](/learning/schedule/) · [11 月 27 日操作日志与事务回滚复盘](/posts/ops-ticket-20261127/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)
+[技能清单](/learning/checklists/) · [第 1–17 周学习计划](/learning/schedule/) · [11 月 28 日接口路径收口与列表三角色隔离](/posts/ops-ticket-20261128/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)

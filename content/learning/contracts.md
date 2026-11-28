@@ -8,7 +8,7 @@
   "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-2026-11-28 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 `POST /api/db/tickets`（自动取登录人）、`assign`/`resolve`/`close` 四态闭环 + `expectedVersion` 乐观锁、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离，以及 `ticket_action_log` + `@Transactional` 事务与 H2 外键失败回滚测试。当前按统一第 14–17 周推进：**第 14 周收口 `/api/v1` 规范接口与联合索引 → 第 15 周 M1 Redis → 第 16 周 M2 RabbitMQ → 第 17 周并发测试与 Docker 部署**，二期再以独立 Python 服务对接 Agent 能力。
+2026-11-28 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；已将工单接口收口为 `/api/v1/tickets` 并下线 3 个无权限调试读接口，在真实 MySQL 跑通 `POST /api/v1/tickets`（自动取登录人）、`assign`/`resolve`/`close` 四态闭环 + `expectedVersion` 乐观锁、`GET /api/v1/tickets` 列表 / `GET /api/v1/tickets/{id}` 详情 / `GET /api/v1/tickets/{id}/logs` 三角色归属隔离，以及 `ticket_action_log` + `@Transactional` 事务与 H2 外键失败回滚测试。当前按统一第 14–17 周推进：**第 14 周继续动态分页、`/api/v1/devices` 与联合索引 → 第 15 周 M1 Redis → 第 16 周 M2 RabbitMQ → 第 17 周并发测试与 Docker 部署**，二期再以独立 Python 服务对接 Agent 能力。
 
 ## 当前样本和状态
 

@@ -414,7 +414,7 @@ HTTP Client → Spring Security (DatabaseUserDetailsService + BCrypt + @PreAutho
   → MySQL (device / app_user / ticket / ticket_action_log)
 ```
 
-- **认证与三角色归属隔离**：登录走 `app_user` 表 BCrypt 校验；操作人一律由服务端 `Authentication` 确定；`findSummary`、`findLogs`、`resolve`、`close` 均已落实按 `reporterId`/`assigneeId` 的归属拦截，`create` 自动绑定登录人为 `reporterId`。
+- **认证与三角色归属隔离**：登录走 `app_user` 表 BCrypt 校验；操作人一律由服务端 `Authentication` 确定；路径已统一收口至 `/api/v1/tickets` 并下线 3 个无权限调试读接口；`findAllSummaries`（SQL `WHERE` 过滤 + `ORDER BY id DESC`）、`findSummary`、`findLogs`、`resolve`、`close` 均已落实按 `reporterId`/`assigneeId` 的归属拦截，`create` 自动绑定登录人为 `reporterId`。
 - **乐观锁与审计日志事务**：`assign`/`resolve`/`close` 在 SQL `WHERE` 中同时校验 `id`、前置状态、归属/工程师资格与 `version = #{expectedVersion}`，并在 `Service` 层通过 `@Transactional` 与 `TicketActionLogMapper.insertLog` 同事务执行（H2 外键失败回滚单测已验证自动回滚）。
 
 ### 2026-11-28 演进设计（第 14–17 周纯 Java 后端 + 二期 Python Agent 预留）

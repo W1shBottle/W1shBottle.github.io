@@ -71,9 +71,9 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <p>项目目录：<code>JavaProject</code>，包名 <code>cn.wishbottle.opsticket</code>，已清理早期控制台/文件演示代码并按标准 8 子包（<code>config</code>/<code>controller</code>/<code>domain</code>/<code>dto</code>/<code>exception</code>/<code>mapper</code>/<code>repository</code>/<code>service</code>）组织。</p>
 <h2 id="chapter-start-当前接续点2026-11-28">当前接续点（2026-11-28）</h2>
 <ul>
-<li><strong>已完成跟练与实测</strong>：真实 MySQL 跑通创建、派单（<code>assign</code>）、指定工程师解决（<code>resolve</code>）、原报障人验收关闭（<code>close</code>）四态闭环；落地 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权、<code>GET</code> 单条与日志的三角色归属隔离、<code>POST</code> 创建自动取登录人；在三条状态操作上实测 <code>expectedVersion</code> 乐观锁（<code>409</code>）；新建 <code>ticket_action_log</code> 表并用 <code>@Transactional</code> 绑定状态变更与审计日志，在隔离 H2 中编写外键失败回滚测试（4 项全绿）。</li>
+<li><strong>已完成跟练与实测</strong>：真实 MySQL 跑通创建、派单（<code>assign</code>）、指定工程师解决（<code>resolve</code>）、原报障人验收关闭（<code>close</code>）四态闭环；落地 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权，完成 <code>/api/v1/tickets</code> 路径收口、下线 3 个无权限调试读接口，以及列表/单条详情/日志三角色归属隔离与 <code>POST</code> 创建自动取登录人实测；在三条状态操作上实测 <code>expectedVersion</code> 乐观锁（<code>409</code>）；新建 <code>ticket_action_log</code> 表并用 <code>@Transactional</code> 绑定状态变更与审计日志，在隔离 H2 中编写外键失败回滚测试（4 项全绿）。</li>
 <li><strong>主线验收口径</strong>：主线 46 项中已正式验收保持 <strong>6 项（<code>J01–J06</code>）</strong>，跟练待巩固保持 <strong>22 项</strong>，待学 <strong>18 项</strong>。</li>
-<li><strong>下一步（第 14 周优先）</strong>：收口 <code>/api/v1/tickets</code> 列表三角色归属隔离与动态分页、补 <code>/api/v1/devices</code> 与联合索引 <code>EXPLAIN</code>；引入 <code>@Valid</code>、自定义 <code>LoginUser</code>、统一返回体 <code>Result&lt;T&gt;</code>、OpenAPI 接口文档、SLF4J + MDC 日志及可执行 Fat JAR / Tomcat 参数配置，随后按第 15–17 周依次完成 Redis、RabbitMQ 与并发部署交付。</li>
+<li><strong>下一步（第 14 周继续）</strong>：用 MyBatis XML 实现 <code>GET /api/v1/tickets</code> 的 <code>status</code>/<code>keyword</code>/<code>page</code>/<code>size</code> 动态筛选与 <code>PageResult&lt;T&gt;</code> 分页，随后补 <code>/api/v1/devices</code> 与联合索引 <code>EXPLAIN</code>；引入 <code>@Valid</code>、自定义 <code>LoginUser</code>、统一返回体 <code>Result&lt;T&gt;</code>、OpenAPI 接口文档、SLF4J + MDC 日志及可执行 Fat JAR / Tomcat 参数配置，随后按第 15–17 周依次完成 Redis、RabbitMQ 与并发部署交付。</li>
 </ul>
 <h2 id="chapter-start-纯-java-后端核心交付边界">纯 Java 后端核心交付边界</h2>
 <p>报修人选择启用设备并填写报修 → 管理员派给启用工程师 → 该工程师提交处理说明 → 原报修人验收关闭；各角色按归属查看工单与操作流水，管理员看全部。在此之上补齐三大生产级能力：</p>
@@ -97,7 +97,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 <h2 id="chapter-project-当前实测进展2026-11-28">当前实测进展（2026-11-28）</h2>
 <ul>
 <li><strong>A1 核心业务</strong>：已在真实 MySQL 跑通创建、派单（<code>assign</code>）、解决（<code>resolve</code>）、验收关闭（<code>close</code>）四态闭环，完成早期控制台/文件版旧代码清理并整理为标准 Spring Boot 8 子包分层。</li>
-<li><strong>A2 工程化（当前阶段）</strong>：已实测 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权、<code>GET</code> 单条与日志的三角色归属隔离、<code>POST</code> 创建自动取登录人、<code>expectedVersion</code> 乐观锁（<code>409</code>）、<code>ticket_action_log</code> 审计表 + <code>@Transactional</code> 事务绑定与 H2 外键失败回滚测试（4 项全绿）。当前收尾列表分页权限、Controller 瘦身、OpenAPI 文档、SLF4J 日志与 Fat JAR 后进入 M1/M2。</li>
+<li><strong>A2 工程化（当前阶段）</strong>：已实测 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权，完成 <code>/api/v1/tickets</code> 路径收口、下线 3 个无权限调试读接口，以及列表/单条详情/日志三角色归属隔离与 <code>POST</code> 创建自动取登录人；已实测 <code>expectedVersion</code> 乐观锁（<code>409</code>）、<code>ticket_action_log</code> 审计表 + <code>@Transactional</code> 事务绑定与 H2 外键失败回滚测试（4 项全绿）。下一步推进 MyBatis XML 动态分页、Controller 瘦身、OpenAPI 文档、SLF4J 日志与 Fat JAR 后进入 M1/M2。</li>
 <li><strong>M1 Redis / M2 RabbitMQ / 二期 Python Agent</strong>：尚未开始编码，按第 14–17 周统一计划逐步推进。</li>
 </ul>
 <h2 id="chapter-project-目标与阶段">目标与阶段</h2>
@@ -185,7 +185,7 @@ code{font-family:Consolas,"Cascadia Code",monospace;font-size:.9em;background:#e
 </ul>
 <h2 id="chapter-schedule-当前进度与实测证据2026-11-28">当前进度与实测证据（2026-11-28）</h2>
 <ul>
-<li><strong>第 1–13 周已完成主体</strong>：真实 MySQL 已跑通创建（自动绑定登录人）、派单（<code>assign</code>）、指定工程师解决（<code>resolve</code>）、原报障人验收关闭（<code>close</code>）四态闭环；已清理早期文件/控制台旧代码并统一为标准 Spring Boot 8 子包分层；已实测 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权、单条详情与日志三角色归属隔离、<code>expectedVersion</code> 乐观锁（<code>409</code>），以及 <code>ticket_action_log</code> 审计表 + <code>@Transactional</code> 事务绑定与 H2 外键失败回滚测试（4 项全绿）。</li>
+<li><strong>第 1–13 周已完成主体，第 14 周已启动</strong>：真实 MySQL 已跑通创建（自动绑定登录人）、派单（<code>assign</code>）、指定工程师解决（<code>resolve</code>）、原报障人验收关闭（<code>close</code>）四态闭环；已清理早期文件/控制台旧代码并统一为标准 Spring Boot 8 子包分层；已实测 Spring Security + MySQL <code>app_user</code> 登录、<code>@PreAuthorize</code> 角色授权、<code>expectedVersion</code> 乐观锁（<code>409</code>）以及 <code>ticket_action_log</code> 审计表 + <code>@Transactional</code> 与 H2 外键失败回滚测试（4 项全绿）。11 月 28 日已完成 <code>/api/v1/tickets</code> 路径收口、下线 3 个无权限调试读接口、补齐单条详情 <code>ENGINEER</code> 权限及列表 SQL <code>WHERE</code> 三角色隔离实测。</li>
 <li><strong>验收口径</strong>：主线 46 项中已正式验收保持 <strong>6 项（<code>J01–J06</code>）</strong>，跟练待巩固保持 <strong>22 项</strong>，待学 <strong>18 项</strong>（另设 5 项按需/后置不计入分母）。本次纯方案与周号统一不新增任何验收勾选。</li>
 </ul>
 <h2 id="chapter-schedule-统一周次总览第-117-周">统一周次总览（第 1–17 周）</h2>
@@ -1789,7 +1789,7 @@ ON ticket (reporter_id, status, created_at DESC, id DESC);
 <ul>
 <li>□ <strong>E01【已跟练，继续验收】参数校验与统一响应</strong>：已有 <code>ErrorResponse</code> 与 <code>GlobalExceptionHandler</code>；待接入 <code>spring-boot-starter-validation</code>（<code>@Valid</code>）、统一包装响应体 <code>Result&lt;T&gt;(code, message, data, requestId)</code>，并将 404/403/409 语义异常分类下沉到 Service 层。</li>
 <li>□ <strong>E02【已跟练，继续验收】认证与登录态</strong>：已完成 Spring Security 引入、<code>BCryptPasswordEncoder</code>、<code>DatabaseUserDetailsService</code>（MySQL <code>app_user</code> 表）、Basic Auth 实测（<code>200/403/401</code>）与 <code>POST</code> 的 CSRF 排错；下一步引入自定义 <code>LoginUser</code>（去掉 Controller 越层查 <code>UserMapper</code>）并升级为 JWT + Redis 登录态管理。</li>
-<li>□ <strong>E03【已跟练，继续验收】角色与资源归属授权</strong>：已完成 <code>GET</code> 单条工单与日志查询的三角色归属隔离、<code>POST</code> 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步收口 <code>/api/v1/tickets</code> 列表三角色隔离分页、补 <code>/api/v1/devices</code> 并清理无权限 <code>/api/db</code> 调试接口。</li>
+<li>□ <strong>E03【已跟练，继续验收】角色与资源归属授权</strong>：已收口 <code>/api/v1/tickets</code> 并下线 3 个无权限 <code>/api/db</code> 调试读接口，完成单条工单详情、列表查询（SQL <code>WHERE</code>）与操作日志的三角色归属隔离、<code>POST</code> 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步补齐动态条件分页与 <code>/api/v1/devices</code>。</li>
 <li>□ <strong>E04【已跟练，继续验收】业务事务与审计日志</strong>：已亲手建出 <code>ticket_action_log</code> 表，在 <code>assign</code>/<code>resolve</code>/<code>close</code> 上用 <code>@Transactional</code> 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；下一步补 <code>note</code> 处理说明列与真实 MySQL 隔离测试库回滚验证。</li>
 <li>□ <strong>E05【已跟练，继续验收】乐观锁、防重幂等与并发冲突</strong>：已在 <code>assign</code>/<code>resolve</code>/<code>close</code> 三条状态操作上亲手接入并实测 <code>expectedVersion</code> 乐观锁（旧版本返回 <code>409</code>、成功递增版本）；下一步结合 <code>X-Request-Id</code> 与数据库唯一约束/Redis 实现创建幂等防重，并补真实多线程并发竞争测试。</li>
 <li>□ <strong>E06【待学】集成测试与并发测试</strong>：保留现有 JUnit；基于真实 MySQL 隔离测试库补齐权限、事务回滚与多线程并发派单测试（验证并发竞争仅 1 次成功其余 409），区分单元/集成测试与 Mock/真实依赖。</li>
@@ -2027,7 +2027,7 @@ caseId、输入事实、预期范围、实际建议：
 </tr>
 </tbody>
 </table></div>
-<p>状态可用未投递、已投、笔试、面试、等待结果、录用、结束。每周选择一次统一更新，依据实际反馈改简历或补知识，不用每天反复刷新。</p></section><section id="chapter-contracts" class="chapter"><div class="chapter-meta"><span>11 / 14</span><a href="#top">回到目录</a></div><h1>设备工单的数据与接口约定</h1><p>2026-11-28 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 <code>POST /api/db/tickets</code>（自动取登录人）、<code>assign</code>/<code>resolve</code>/<code>close</code> 四态闭环 + <code>expectedVersion</code> 乐观锁、<code>GET /api/db/tickets/{id}</code> 与 <code>GET /api/db/tickets/{id}/logs</code> 三角色归属隔离，以及 <code>ticket_action_log</code> + <code>@Transactional</code> 事务与 H2 外键失败回滚测试。当前按统一第 14–17 周推进：<strong>第 14 周收口 <code>/api/v1</code> 规范接口与联合索引 → 第 15 周 M1 Redis → 第 16 周 M2 RabbitMQ → 第 17 周并发测试与 Docker 部署</strong>，二期再以独立 Python 服务对接 Agent 能力。</p>
+<p>状态可用未投递、已投、笔试、面试、等待结果、录用、结束。每周选择一次统一更新，依据实际反馈改简历或补知识，不用每天反复刷新。</p></section><section id="chapter-contracts" class="chapter"><div class="chapter-meta"><span>11 / 14</span><a href="#top">回到目录</a></div><h1>设备工单的数据与接口约定</h1><p>2026-11-28 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；已将工单接口收口为 <code>/api/v1/tickets</code> 并下线 3 个无权限调试读接口，在真实 MySQL 跑通 <code>POST /api/v1/tickets</code>（自动取登录人）、<code>assign</code>/<code>resolve</code>/<code>close</code> 四态闭环 + <code>expectedVersion</code> 乐观锁、<code>GET /api/v1/tickets</code> 列表 / <code>GET /api/v1/tickets/{id}</code> 详情 / <code>GET /api/v1/tickets/{id}/logs</code> 三角色归属隔离，以及 <code>ticket_action_log</code> + <code>@Transactional</code> 事务与 H2 外键失败回滚测试。当前按统一第 14–17 周推进：<strong>第 14 周继续动态分页、<code>/api/v1/devices</code> 与联合索引 → 第 15 周 M1 Redis → 第 16 周 M2 RabbitMQ → 第 17 周并发测试与 Docker 部署</strong>，二期再以独立 Python 服务对接 Agent 能力。</p>
 <h2 id="chapter-contracts-当前样本和状态">当前样本和状态</h2>
 <p><code>ops_ticket_dev</code> 已有 <code>device</code>、<code>app_user</code>、<code>ticket</code>、<code>ticket_action_log</code> 四张表；建表依据项目 <code>sql/01_schema.sql</code>。用户/设备实际编号为 1 至 4、1 至 3：<code>reporter_a=1</code>、<code>engineer_a=2</code>、<code>admin_a=3</code>、<code>reporter_b=4</code>；投影仪=1（已停用）、空调=2、打印机=3。所有实测均以真实 <code>SELECT</code> 为准，旧教材中的 101/102/103 仅作隔离教学样本。</p>
 <h2 id="chapter-contracts-第一版的角色与流程">第一版的角色与流程</h2>

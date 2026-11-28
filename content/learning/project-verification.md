@@ -521,7 +521,11 @@ G待验：真实工具调用、歧义追问、无结果、无权、错误参数�
 - **乐观锁与真实 MySQL 四态闭环（11-26）**：学习者复验派单 `409` 并贯通 `expectedVersion`，在真实 MySQL 4 号工单实测 `assign`（400/409/200→v1）、指定工程师 `resolve`（非指派单 403/旧版本 409/200→v2）与原报障人 `close`（他人 403/旧版本 409/200→`CLOSED` v3）；先做 Git 检查点提交（`82daf90`），再由助手协助清理旧文件/控制台代码并归位标准 8 子包，Maven 离线编译与 `TicketTest` 6 项通过。
 - **查询归属隔离、操作日志与 H2 外键回滚测试（11-27）**：学习者实测单条详情归属（`admin_a` 200、`reporter_b` 200、`reporter_a` 403）、`POST` 创建自动绑登录人（`engineer_a` 403、`reporter_a` 201、他人查 403）；亲手建表 `ticket_action_log` 并实测 5 号工单传错版本 409 不写假日志、正常流转产出 3 条完整审计流水；修复并扩充 `DatabaseTicketTransactionTest` 新增 `assignRollsBackWhenActionLogInsertFails`，以 H2 外键失败验证自动回滚（4 项全绿）；修复 `findLogs` 角色比对 bug 后实测三角色归属隔离两条 403。
 
-## 23. 2026-11-28 纯 Java 后端（Redis + RabbitMQ）路线定稿核对
+## 23. 2026-11-28 纯 Java 后端路线定稿与 `/api/v1/tickets` 列表三角色隔离验收
 
-- 本次仅更新学习计划、项目文档与博客看板/时间线，未修改 Java 业务源码，未新增任何技能验收或自动化测试结果。
-- 后续待验重点按统一第 14–17 周推进：第 14 周列表三角色隔离分页与联合索引 `EXPLAIN`、OpenAPI/SLF4J/Fat JAR；第 15 周 Redis 缓存/JWT/幂等实测；第 16 周 RabbitMQ `AFTER_COMMIT` 通知、TTL+DLX 超时告警与手动 ACK 消费幂等实测；第 17 周真实 MySQL 多线程并发派单测试、Docker Compose 编排与缓存压测对比。
+- **路线定稿**：全站统一第 1–17 周纯 Java 后端路线（A2 收口 → M1 Redis → M2 RabbitMQ → 并发测试与 Docker 部署），不新增技能验收勾选（已验收保持 6 项 `J01–J06`）。
+- **第 14 周 Step 1 实测（学习者反馈）**：
+  - 将 `DatabaseTicketController` 收口至 `@RequestMapping("/api/v1/tickets")`，删除 3 个无权限调试读接口（`/title`、`/{id}/domain`、`/api/db/domain/tickets`），补齐 `GET /api/v1/tickets/{id}` 的 `ENGINEER` 权限，在 `TicketMapper` → `Repository` → `Service` → `Controller` 落地列表 SQL `WHERE` 三角色隔离并按 `id DESC` 排序；
+  - 经代码复核修正 `close` 路径前缀遗漏、4 层返回类型误写成单个 `TicketSummary`（改为 `List<TicketSummary>`）、`DatabaseTicketQueryService` 方法名重复以及 `findAllSummaries` 判空与常量左置问题；
+  - 学习者重启应用在 Apifox 实测：`GET /api/v1/tickets` 下 `admin_a`/`reporter_a`/`reporter_b`/`engineer_a` 各自可见范围符合预期，`GET /api/v1/tickets/{id}` 下 `engineer_a` 查自己 `200` / 查他人 `403`，旧路径 `GET /api/db/tickets` 返回 `404`。
+- **边界与下一步**：动态筛选与分页（`PageResult<T>` + `TicketMapper.xml`）已完成前置设计，尚未编写代码；早期 `DatabaseTicketHttpTest` 仍指向 `/api/db` 路径，留待后续统一重构测试。

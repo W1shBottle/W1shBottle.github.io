@@ -35,9 +35,9 @@
 
 ## 当前接续点（2026-11-28）
 
-- **已完成跟练与实测**：真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环；落地 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权、`GET` 单条与日志的三角色归属隔离、`POST` 创建自动取登录人；在三条状态操作上实测 `expectedVersion` 乐观锁（`409`）；新建 `ticket_action_log` 表并用 `@Transactional` 绑定状态变更与审计日志，在隔离 H2 中编写外键失败回滚测试（4 项全绿）。
+- **已完成跟练与实测**：真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环；落地 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权，完成 `/api/v1/tickets` 路径收口、下线 3 个无权限调试读接口，以及列表/单条详情/日志三角色归属隔离与 `POST` 创建自动取登录人实测；在三条状态操作上实测 `expectedVersion` 乐观锁（`409`）；新建 `ticket_action_log` 表并用 `@Transactional` 绑定状态变更与审计日志，在隔离 H2 中编写外键失败回滚测试（4 项全绿）。
 - **主线验收口径**：主线 46 项中已正式验收保持 **6 项（`J01–J06`）**，跟练待巩固保持 **22 项**，待学 **18 项**。
-- **下一步（第 14 周优先）**：收口 `/api/v1/tickets` 列表三角色归属隔离与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`；引入 `@Valid`、自定义 `LoginUser`、统一返回体 `Result<T>`、OpenAPI 接口文档、SLF4J + MDC 日志及可执行 Fat JAR / Tomcat 参数配置，随后按第 15–17 周依次完成 Redis、RabbitMQ 与并发部署交付。
+- **下一步（第 14 周继续）**：用 MyBatis XML 实现 `GET /api/v1/tickets` 的 `status`/`keyword`/`page`/`size` 动态筛选与 `PageResult<T>` 分页，随后补 `/api/v1/devices` 与联合索引 `EXPLAIN`；引入 `@Valid`、自定义 `LoginUser`、统一返回体 `Result<T>`、OpenAPI 接口文档、SLF4J + MDC 日志及可执行 Fat JAR / Tomcat 参数配置，随后按第 15–17 周依次完成 Redis、RabbitMQ 与并发部署交付。
 
 ## 纯 Java 后端核心交付边界
 

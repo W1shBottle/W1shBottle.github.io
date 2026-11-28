@@ -38,17 +38,19 @@
 - `dto/`：`CreateDatabaseTicketRequest`、`AssignTicketRequest`、`ResolveTicketRequest`、`CloseTicketRequest`、`TicketInsert`、`TicketSummary`、`TicketActionLogItem`、`AppUser`、`ErrorResponse`。
 - `exception/`：`GlobalExceptionHandler` 统一处理不可读请求体（400）、参数类型不匹配（400）、`ResponseStatusException`（保留原状态码）及数据库约束冲突（400）。
 
-## 当前已接通的 HTTP 接口（截至 2026-11-27）
+## 当前已接通的 HTTP 接口（截至 2026-11-28）
 
 | 请求 | 权限与核心行为 | 实测证据 |
 | --- | --- | --- |
-| `POST /api/db/tickets` | `REPORTER` / `ADMIN`；从 `Authentication` 自动取 `reporterId`，MyBatis INSERT + `@Options` 回填自增主键并返回 201 | `engineer_a` 403、`reporter_a` 201 自动绑 `reporterId=1`、`reporter_b` 查该单 403 |
-| `GET /api/db/tickets/{id}` | `ADMIN` / `REPORTER`；返回 `TicketSummary`（含 `version`、`reporterId`、`assigneeId`），`REPORTER` 仅可读自己的工单 | `admin_a` 200、`reporter_b` 200、`reporter_a` 越权 403、未知 404 |
-| `POST /api/db/tickets/{id}/assign` | `ADMIN`；校验 `OPEN`、目标启用工程师与 `expectedVersion`，成功转为 `IN_PROGRESS`、版本 +1 并同事务写 `ASSIGN` 日志 | 4 号/5 号工单实测 400/403/404/409/200，错版本不写假日志 |
-| `POST /api/db/tickets/{id}/resolve` | `ENGINEER`；校验当前登录工程师为工单指派人、`IN_PROGRESS` 与 `expectedVersion`，成功转为 `RESOLVED`、版本 +1 并写 `RESOLVE` 日志 | `admin_a` 403、非指派单 403、旧版本 409、正确版本 200 |
-| `POST /api/db/tickets/{id}/close` | `REPORTER`；校验当前登录人为原报障人、`RESOLVED` 与 `expectedVersion`，成功转为 `CLOSED`、版本 +1 并写 `CLOSE` 日志 | 他人越权 403、旧版本 409、正确版本 200（真实 MySQL 跑通四态闭环） |
-| `GET /api/db/tickets/{id}/logs` | `ADMIN` / `REPORTER` / `ENGINEER`；三角色归属隔离返回按时间排序的审计流水 | `admin_a` 200、指派工程师 200、非本人报障人 403、非指派工程师 403 |
-| `GET /api/db/tickets` 及遗留调试读接口 | 列表接口尚未补齐角色隔离与动态分页；`/title`、`/domain` 等调试读接口待第 14 周收口清理 | 列入第 14 周 A2 收口优先项 |
+| `POST /api/v1/tickets` | `REPORTER` / `ADMIN`；从 `Authentication` 自动取 `reporterId`，MyBatis INSERT + `@Options` 回填自增主键并返回 201 | `engineer_a` 403、`reporter_a` 201 自动绑 `reporterId=1`、`reporter_b` 查该单 403 |
+| `GET /api/v1/tickets` | `ADMIN` / `REPORTER` / `ENGINEER`；SQL `WHERE` 三角色归属隔离（`ADMIN` 看全部、`REPORTER` 按 `reporter_id`、`ENGINEER` 按 `assignee_id`），按 `id DESC` 排序 | `admin_a` / `reporter_a` / `reporter_b` / `engineer_a` 各自范围正确，旧路径 `/api/db/tickets` 已 404 |
+| `GET /api/v1/tickets/{id}` | `ADMIN` / `REPORTER` / `ENGINEER`；返回 `TicketSummary`（含 `version`、`reporterId`、`assigneeId`），三角色归属隔离 | `admin_a` 200、`reporter_b` 200、`reporter_a` 越权 403、`engineer_a` 自己 200 / 他人 403、未知 404 |
+| `POST /api/v1/tickets/{id}/assign` | `ADMIN`；校验 `OPEN`、目标启用工程师与 `expectedVersion`，成功转为 `IN_PROGRESS`、版本 +1 并同事务写 `ASSIGN` 日志 | 4 号/5 号工单实测 400/403/404/409/200，错版本不写假日志 |
+| `POST /api/v1/tickets/{id}/resolve` | `ENGINEER`；校验当前登录工程师为工单指派人、`IN_PROGRESS` 与 `expectedVersion`，成功转为 `RESOLVED`、版本 +1 并写 `RESOLVE` 日志 | `admin_a` 403、非指派单 403、旧版本 409、正确版本 200 |
+| `POST /api/v1/tickets/{id}/close` | `REPORTER`；校验当前登录人为原报障人、`RESOLVED` 与 `expectedVersion`，成功转为 `CLOSED`、版本 +1 并写 `CLOSE` 日志 | 他人越权 403、旧版本 409、正确版本 200（真实 MySQL 跑通四态闭环） |
+| `GET /api/v1/tickets/{id}/logs` | `ADMIN` / `REPORTER` / `ENGINEER`；三角色归属隔离返回按时间排序的审计流水 | `admin_a` 200、指派工程师 200、非本人报障人 403、非指派工程师 403 |
+
+> 注：早期无权限调试读接口（`/title`、`/{id}/domain`、`/api/db/domain/tickets`）已于 2026-11-28 清理下线。
 
 ## 环境与运行
 
@@ -97,7 +99,7 @@ JavaProject/
 
 ## 已知限制（当前待收口项）
 
-- `GET /api/db/tickets` 列表接口尚未补齐三角色归属隔离与动态分页；`/api/db` 路径前缀及遗留无权限调试读接口待收口为标准 `/api/v1/tickets` 与 `/api/v1/devices`。
+- `GET /api/v1/tickets` 已完成三角色归属隔离，下一步通过 MyBatis XML 补齐 `status`/`keyword`/`page`/`size` 动态筛选与 `PageResult<T>` 分页，并补齐 `/api/v1/devices`。
 - `DatabaseTicketController` 目前直接注入 `UserMapper` 并存在较多手动判空与回查分支，待引入 `@Valid`、自定义 `LoginUser`、统一返回体 `Result<T>` 并将异常分类下沉到 `Service`。
 - 认证目前为 HTTP Basic + 临时关闭 CSRF，待第 15 周升级为 Spring Security + JWT + Redis 登录态管理。
 - `ticket` 联合索引、`ticket_action_log.note` 处理说明列、创建 `X-Request-Id` 幂等防重、OpenAPI 接口文档、SLF4J + MDC 日志、可执行 Fat JAR、Redis 缓存与 RabbitMQ 异步通知/死信超时告警均列入下方第 14–17 周计划逐步落地。
@@ -115,4 +117,4 @@ JavaProject/
 | 并发测试、部署与压测交付 | 第 17 周 | 真实 MySQL 隔离回滚与多线程并发派单测试、Docker Compose 一键编排与 Linux 排错、缓存前后压测对比、《架构与接口设计文档》（含微服务演进方案） | 多线程并发派单仅 1 次成功其余 409、一键拉起全套服务与真实压测记录 |
 | 二期独立 Python Agent（后置 O02–O04） | 二期按需 | 另起独立 `ops-agent-py`（FastAPI + LangGraph），复用本项目 OpenAPI / JWT / 乐观锁 / Redis / RabbitMQ | 不阻挡纯 Java 后端交付，二期完成后形成双栈能力 |
 
-**下一项亲手任务（第 14 周起步）**：收口 `/api/v1/tickets` 列表接口的三角色归属隔离与动态条件分页，清理无权限 `/api/db` 调试读接口，并补齐 `/api/v1/devices` 与 `ticket` 高频联合索引 `EXPLAIN` 验证。
+**下一项亲手任务（第 14 周 · Step 2）**：开启 `mybatis.mapper-locations=classpath:mapper/*.xml`，新建 `PageResult<T>` 与 `TicketMapper.xml`，为 `GET /api/v1/tickets` 实现 `status`/`keyword`/`page`/`size` 动态筛选与分页，随后补齐 `/api/v1/devices` 与 `ticket` 高频联合索引 `EXPLAIN` 验证。

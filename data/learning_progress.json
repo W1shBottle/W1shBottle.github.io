@@ -219,12 +219,12 @@
     {
       "date": "2026-11-28",
       "project": "ops-ticket",
-      "kind": "plan-update",
-      "status": "in-progress",
-      "title": "路线调整：聚焦纯 Java 后端（补齐 Redis 与 RabbitMQ），AI 留待二期 Python 独立服务",
-      "summary": "结合杭州 Java 后端日常与暑期实习招聘要求，取消原 Java 侧大模型与重度评测计划（不采用 Spring AI），全站统一采用第 1–17 周编号（不再区分新旧周号）：第 14 周 A2 工程收口（接口规范/分页/索引/OpenAPI/SLF4J/Tomcat）→ 第 15 周 M1 Redis 缓存与幂等 → 第 16 周 M2 RabbitMQ 异步通知与死信队列超时告警 → 第 17 周并发测试与 Docker 部署；Python Agent 与微服务拆分设计列为二期后置扩展。",
-      "verification": "本次仅调整学习方案、统一周号、更新技能清单与看板分组，未改动 Java 项目源码、未新增学习打卡或技能验收；主线必修由 51 项调整为 46 项（另有 5 项按需/后置），既有 6 项已验收（J01–J06）与 22 项跟练中均保持不变。",
-      "next": "启动第 14 周 A2 工程规范收口：将 /api/db/tickets 收口为 /api/v1/tickets 并补齐列表三角色归属隔离与动态分页、/api/v1/devices 与联合索引 EXPLAIN，同时推进 @Valid、LoginUser、Result<T>、OpenAPI 文档与 SLF4J 日志。"
+      "status": "reviewed",
+      "title": "纯 Java 后端路线定稿与 /api/v1/tickets 列表三角色隔离",
+      "summary": "定稿统一第 1–17 周纯 Java 后端路线（补齐 Redis 与 RabbitMQ，AI 留待二期独立 Python 服务），随即启动第 14 周 A2 工程收口：将工单接口统一收口至 /api/v1/tickets 并下线 3 个无权限调试读接口，补齐单条详情的 ENGINEER 归属隔离，落地列表查询的 SQL WHERE 三角色隔离（按 id DESC 排序），并完成动态分页的前置设计。",
+      "verification": "本人修正 close 路径漏改、4 层返回类型 List<TicketSummary>、Service 方法重名及判空防空指针问题后，在 Apifox 实测通过：GET /api/v1/tickets 三角色按归属隔离返回、GET /api/v1/tickets/{id} 工程师看自己 200 / 看他人 403、旧路径 GET /api/db/tickets 返回 404。动态分页 XML 代码尚未编写；既有 6 项已验收（J01–J06）与 22 项跟练中保持不变。",
+      "next": "开启 mybatis.mapper-locations=classpath:mapper/*.xml，新建 PageResult<T> 与 TicketMapper.xml，实现 GET /api/v1/tickets 的 status、keyword、page、size 动态筛选与分页并完成 Apifox 实测。",
+      "note": "/posts/ops-ticket-20261128/"
     }
   ],
   "current_project": "ops-ticket"

@@ -20,7 +20,7 @@
 
 ## 当前进度与实测证据（2026-11-28）
 
-- **第 1–13 周已完成主体**：真实 MySQL 已跑通创建（自动绑定登录人）、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环；已清理早期文件/控制台旧代码并统一为标准 Spring Boot 8 子包分层；已实测 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权、单条详情与日志三角色归属隔离、`expectedVersion` 乐观锁（`409`），以及 `ticket_action_log` 审计表 + `@Transactional` 事务绑定与 H2 外键失败回滚测试（4 项全绿）。
+- **第 1–13 周已完成主体，第 14 周已启动**：真实 MySQL 已跑通创建（自动绑定登录人）、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环；已清理早期文件/控制台旧代码并统一为标准 Spring Boot 8 子包分层；已实测 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权、`expectedVersion` 乐观锁（`409`）以及 `ticket_action_log` 审计表 + `@Transactional` 与 H2 外键失败回滚测试（4 项全绿）。11 月 28 日已完成 `/api/v1/tickets` 路径收口、下线 3 个无权限调试读接口、补齐单条详情 `ENGINEER` 权限及列表 SQL `WHERE` 三角色隔离实测。
 - **验收口径**：主线 46 项中已正式验收保持 **6 项（`J01–J06`）**，跟练待巩固保持 **22 项**，待学 **18 项**（另设 5 项按需/后置不计入分母）。本次纯方案与周号统一不新增任何验收勾选。
 
 ## 统一周次总览（第 1–17 周）

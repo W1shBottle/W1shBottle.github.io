@@ -79,7 +79,7 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前We
 
 - [ ] **E01【已跟练，继续验收】参数校验与统一响应**：已有 `ErrorResponse` 与 `GlobalExceptionHandler`；待接入 `spring-boot-starter-validation`（`@Valid`）、统一包装响应体 `Result<T>(code, message, data, requestId)`，并将 404/403/409 语义异常分类下沉到 Service 层。
 - [ ] **E02【已跟练，继续验收】认证与登录态**：已完成 Spring Security 引入、`BCryptPasswordEncoder`、`DatabaseUserDetailsService`（MySQL `app_user` 表）、Basic Auth 实测（`200/403/401`）与 `POST` 的 CSRF 排错；下一步引入自定义 `LoginUser`（去掉 Controller 越层查 `UserMapper`）并升级为 JWT + Redis 登录态管理。
-- [ ] **E03【已跟练，继续验收】角色与资源归属授权**：已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步收口 `/api/v1/tickets` 列表三角色隔离分页、补 `/api/v1/devices` 并清理无权限 `/api/db` 调试接口。
+- [ ] **E03【已跟练，继续验收】角色与资源归属授权**：已收口 `/api/v1/tickets` 并下线 3 个无权限 `/api/db` 调试读接口，完成单条工单详情、列表查询（SQL `WHERE`）与操作日志的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步补齐动态条件分页与 `/api/v1/devices`。
 - [ ] **E04【已跟练，继续验收】业务事务与审计日志**：已亲手建出 `ticket_action_log` 表，在 `assign`/`resolve`/`close` 上用 `@Transactional` 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；下一步补 `note` 处理说明列与真实 MySQL 隔离测试库回滚验证。
 - [ ] **E05【已跟练，继续验收】乐观锁、防重幂等与并发冲突**：已在 `assign`/`resolve`/`close` 三条状态操作上亲手接入并实测 `expectedVersion` 乐观锁（旧版本返回 `409`、成功递增版本）；下一步结合 `X-Request-Id` 与数据库唯一约束/Redis 实现创建幂等防重，并补真实多线程并发竞争测试。
 - [ ] **E06【待学】集成测试与并发测试**：保留现有 JUnit；基于真实 MySQL 隔离测试库补齐权限、事务回滚与多线程并发派单测试（验证并发竞争仅 1 次成功其余 409），区分单元/集成测试与 Mock/真实依赖。
