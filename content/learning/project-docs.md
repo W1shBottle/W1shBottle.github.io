@@ -1,208 +1,118 @@
 {
   "title": "设备运维工单项目文档",
-  "description": "当前 Spring Boot / MyBatis / MySQL 四态闭环、认证授权与事务进度，纯 Java＋AI 路线与运行入口。",
+  "description": "纯 Java 后端（Spring Boot + MyBatis + MySQL + Redis + RabbitMQ）当前实现、接口与 4 周冲刺进度。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-27T00:00:00+08:00",
+  "lastmod": "2026-11-28T00:00:00+08:00",
   "weight": 160,
   "group": "project-docs",
   "draft": false
 }
 
-> 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。最新实测进度见下方 **2026-11-27 最新状态** 与[学习时间线](/learning/#progress)。
+> 本组文档对应项目当前实现，与[总体规划](/learning/project/)配合阅读。后续功能以各页的实现状态为准。
 
-## 2026-11-27 最新状态核对
+围绕“设备报修 → 派单 → 处理 → 验收”持续演进的 **纯 Java 后端实战项目**（Spring Boot + MyBatis + MySQL，规划接入 Redis 与 RabbitMQ）。项目已完成从早期内存/文件控制台原型向真实数据库 Web 后端的完整切换，并清理旧文件仓库与控制台演示代码，按标准 Spring Boot 8 子包组织。
 
-- **唯一主线（2026-11-25 定稿）**：纯 **Java 21 / Spring Boot 4.1.2 / MyBatis 4.1.0 / MySQL 8.4**（`A1 → A2 → B01–B09 → C01–C04`，可选 `D01–D02`），原 Python / Redis / Agent 规划已归档暂不执行。
-- **代码结构**：已完成早期控制台与文件版旧代码清理（原 `ConsoleApp` / `FileTicketRepository` 等仅保留在历史笔记与快照中），统一按 Spring Boot 标准 8 子包组织：`config`、`controller`、`domain`、`dto`、`exception`、`mapper`、`repository`、`service`，主启动类为 `cn.wishbottle.opsticket.OpsTicketApplication`。
-- **已跑通并实测的核心能力**：
-  - **MySQL 认证与角色授权**：`AppUser` + `UserMapper.findByUsername` + `DatabaseUserDetailsService` + `BCryptPasswordEncoder` + `@PreAuthorize`，实测 `200/401/403`。
-  - **四态闭环与乐观锁**：真实 MySQL 跑通创建（`OPEN`，自动从 `Authentication` 取 `reporterId`）→ 管理员派单（`assign`，`IN_PROGRESS`）→ 指定工程师解决（`resolve`，`RESOLVED`）→ 原报障人验收关闭（`close`，`CLOSED`），三条状态操作均接入 `expectedVersion` 乐观锁（旧版本返回 `409`）。
-  - **资源归属隔离**：`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 完成三角色（`ADMIN` / `ENGINEER` / `REPORTER`）归属隔离实测。
-  - **操作日志与事务回滚**：新建 `ticket_action_log` 表与 `TicketActionLogMapper`，在 `assign`/`resolve`/`close` 上通过 `@Transactional` 绑定状态更新与写流水，并在隔离 H2 中编写外键失败回滚测试 `DatabaseTicketTransactionTest`（4 项全绿）。
-- **下一步**：收尾 A2 剩余小边界（`GET /api/db/tickets` 列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 **B 阶段（B01–B09）**。
-
----
-
-> 以下正文保留 **2026-11-15** 阶段的历史架构与命令快照，供回看早期控制台 → 文件仓库 → MyBatis 演进过程。
-
-围绕“设备报修 → 派单 → 处理 → 验收”逐步开发的 **Java＋AI 学习项目**。现有v0.1控制台包含内存/文件仓库、自动保存和恢复；SQL与独立JDBC已有跟练成果。现已加入 **Spring Boot 工单查询、创建与基础统一错误响应**，通过 Bean 配置和构造器注入复用原有 Service/文件仓库。2026-11-09 完成数据库创建 POST：`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`POST /api/db/tickets`、`@Options` 自增主键回填、回查 `Ticket` 和 201 JSON；外键/标题 CHECK 错误统一转 400。正式工单业务仍使用文件仓库；数据库派单接口已实现并由学习者完成一次隔离成功路径练习，数据库解决/验收、登录权限、AI与Agent仍待实现。
-
-文档核对日期：2026-11-15；11月9日的学习记录：学习者编写数据库创建 POST 四块代码并自行请求，得到真实自增id=9；助手编译并验证合法201、GET列表、外键/标题/编号错误400和数据库行，随后按学习者要求删除测试行并把自增重置为4。路线改为Java工单业务与Python基础并行，随后完成Python模型调用、只读Agent、资料检索与评测，最后按权限条件与Java联调。数据库查询、创建与派单接口已接通；派单成功路径已按学习者反馈在隔离 H2 验证，正式业务切换、数据库解决/验收、权限与AI仍待实现；历史笔记保留当时进度。
+文档核对日期：2026-11-28。截至 2026-11-27，真实 MySQL 已跑通 `OPEN → IN_PROGRESS → RESOLVED → CLOSED` 四态闭环、Spring Security 数据库登录（MySQL `app_user` + BCrypt）、`@PreAuthorize` 角色授权、单条详情与操作日志三角色归属隔离、创建工单自动绑定登录人、`expectedVersion` 乐观锁（`409`），以及 `ticket_action_log` 操作审计表 + `@Transactional` 事务绑定与 H2 外键失败自动回滚测试（4 项全绿）。2026-11-28 已将后续主线定稿为 **4 周纯 Java 后端冲刺（A2 工程规范收口 → M1 Redis → M2 RabbitMQ → 并发测试与 Docker 部署）**，不采用 Spring AI，AI / Agent 能力留待二期以独立 Python（FastAPI + LangGraph）服务对接本项目。
 
 ## 项目文档
 
 | 文档 | 解决的问题 |
 | --- | --- |
-| [需求与开发计划](/learning/project-requirements/) | 业务规则、已实现功能和待完成任务 |
-| [设计与数据约定](/learning/project-design/) | 类的分工、方法契约、状态和存档格式 |
-| [运行与验收](/learning/project-verification/) | 环境、运行命令、测试证据和验收边界 |
-| [2026-11-13 全面检查记录](/learning/project-verification/#20-2026-11-13-隔离审查验证) | 本次修复、测试、实际学习证据和剩余风险 |
+| [需求与开发计划](/learning/project-requirements/) | 业务规则、已实现功能、4 周纯 Java 冲刺与二期边界 |
+| [设计与数据约定](/learning/project-design/) | 标准 8 子包结构、四表模型、权限与乐观锁、Redis/RabbitMQ 演进设计 |
+| [运行与验收](/learning/project-verification/) | 环境、运行命令、历次实测证据与验收边界 |
+| [2026-11-13 全面检查记录](/learning/project-verification/#20-2026-11-13-隔离审查验证) | 阶段隔离审查、修复与历史边界说明 |
 
 学习入口：[路线说明](/learning/start/) · [阶段计划](/learning/schedule/) · [技能清单](/learning/checklists/) · [实际学习进度](/learning/#progress)。本组项目文档记录实现与验收，课程材料记录后续学习安排。
 
-## 当前功能与职责
+## 当前功能与标准 8 子包职责
 
-- `ConsoleApp` 负责菜单、输入与输出，支持新建、查看全部、修改标题、派单、按标题关键词查询和退出。数字格式或业务输入错误会提示并返回菜单。
-- `Ticket` 负责编号、标题和派单规则：编号为正数；标题去除首尾空白后非空且不超过 50 个字符；仅待派单工单可以派给正数编号的工程师。
-- `TicketService` 通过构造器接收 `TicketRepository`，共用创建、改标题、派单和查询逻辑。创建编号为已有最大编号加 1，空仓库从 1 开始；关键词按去除首尾空白后的文字做区分大小写的包含匹配。状态筛选方法已实现，尚未接入菜单。
-- `TicketRepository` 约定 `add`、`findById`、`findAll`、`update`。新增重复编号、更新不存在编号会被拒绝；查询不存在编号时仓库返回空 `Optional`，Service 的 `findById` 则返回`null`。
-- `InMemoryTicketRepository` 使用 `LinkedHashMap` 保存运行期间的数据，程序结束后不保留。
-- `FileTicketRepository` 内部复用内存仓库：启动时从文件恢复，查询时访问内存，新增或更新时先修改内存，再保存全部工单。缺少存档文件时按空仓库启动；其他读取错误或坏存档会使控制台提示并停止启动。
-- `TicketFileStore` 以 UTF-8 和 Properties 格式读写列表，用 `count` 记录数量；加载时检查缺字段、数字和状态格式、负数量、重复编号，以及状态与处理人的一致性。加载失败不返回部分结果，包装异常时保留原始原因。
+根包 `cn.wishbottle.opsticket` 仅保留启动类 `OpsTicketApplication`（启用 `@EnableMethodSecurity`），其余业务按职责分为 8 个子包：
 
-- `OpsTicketApplication` 启动 Spring Boot；`config/TicketConfig` 注册文件仓库与 Service；`TicketController` 构造器注入 Service，支持详情、列表、关键词和创建。`dto/CreateTicketRequest` 接收创建标题，`tickets.http` 保存手动验收请求。
-- `dto/ErrorResponse`承载message；`exception/GlobalExceptionHandler`处理请求体无法读取/转换、ResponseStatusException和方法参数类型不匹配。前者固定400，第二类保留原状态及reason，第三类返回参数名并固定400。现有Controller内的异常包装保留，不代表全部错误分支已经覆盖。
-- `dto/TicketSummary`承载数据库查询的`id/title/status/assigneeId`，`TicketSummaryConverter`把DTO转换为领域`Ticket`并调用`Ticket.restore`校验状态与处理人组合。`application.properties`已开启`map-underscore-to-camel-case`，`assignee_id`可自动映射到`assigneeId`。
-- `DatabaseTicketQueryService`组织数据库只读查询，只依赖 `TicketQueryRepository`；`DatabaseTicketRepository`负责调用 `TicketMapper`。标题、摘要及领域对象沿用原有返回方式，领域对象额外检查状态与处理人；Controller负责HTTP参数与404。
-- `mapper/TicketMapper`使用`@Mapper`、`@Select`、`@Param`和`#{}`查询MySQL；`@Insert`、`@Options(useGeneratedKeys...)`与`insertTicket`已接通`POST /api/db/tickets`，`DatabaseTicketRepository.create`完成插入、主键检查和回查；`DatabaseTicketCommandService`负责校验与委托，`GlobalExceptionHandler`把外键/标题约束错误转400。
+- `config/`：`DemoSecurityConfig`（`PasswordEncoder` + `SecurityFilterChain`）、`DatabaseUserDetailsService`（实现 `UserDetailsService`，读取 MySQL `app_user` 表完成 BCrypt 登录认证）。
+- `controller/`：`DatabaseTicketController` 承接查询、创建、派单、解决、验收关闭与日志查询接口，并从 `Authentication` 读取可信操作人身份（第 1 周计划收口为 `/api/v1/tickets` 并进一步瘦身）。
+- `service/`：`DatabaseTicketQueryService` 负责工单与流水查询编排；`DatabaseTicketCommandService` 负责参数校验、委托写仓库，并在 `assign`/`resolve`/`close` 上用 `@Transactional` 绑定工单更新与写审计日志。
+- `repository/`：`TicketQueryRepository` 与 `TicketWriteRepository` 做读写接口隔离；`DatabaseTicketRepository` 实现读写委托、领域对象组装及 `create` 事务边界。
+- `mapper/`：`TicketMapper`（创建自增主键回填、摘要查询、带 `expectedVersion` 乐观锁条件更新的 `assign`/`resolve`/`close`）、`UserMapper`（按用户名查 `AppUser`）、`TicketActionLogMapper`（审计流水写入与按工单查询）。
+- `domain/`：`Ticket`、`TicketStatus` 与 `TicketSummaryConverter`（通过 `Ticket.restore` 校验状态与处理人组合规则）。
+- `dto/`：`CreateDatabaseTicketRequest`、`AssignTicketRequest`、`ResolveTicketRequest`、`CloseTicketRequest`、`TicketInsert`、`TicketSummary`、`TicketActionLogItem`、`AppUser`、`ErrorResponse`。
+- `exception/`：`GlobalExceptionHandler` 统一处理不可读请求体（400）、参数类型不匹配（400）、`ResponseStatusException`（保留原状态码）及数据库约束冲突（400）。
 
-## 快速构建与运行
+## 当前已接通的 HTTP 接口（截至 2026-11-27）
 
-使用 **JDK 21** 和 Maven。在 IDEA 中加载 `pom.xml`，确认项目 SDK 与 Maven 使用的 JDK；命令行操作在项目根目录进行：
-
-```powershell
-java -version
-javac -version
-mvn -v
-mvn clean package
-java -jar target/ops-ticket-0.1.0-SNAPSHOT.jar
-```
-
-`clean` 清理 `target`；`package` 执行编译、JUnit 测试和打包。成功显示 `BUILD SUCCESS`，生成 `target/ops-ticket-0.1.0-SNAPSHOT.jar`。JAR 已配置入口 `cn.wishbottle.opsticket.ConsoleApp`，可以用 `java -jar` 启动。
-
-以上 `mvn` 命令要求终端能够找到 Maven；也可使用 IDEA 的 Maven 面板或其自带 Maven 可执行文件。项目没有 Maven Wrapper，首次构建需要下载依赖；依赖和插件已缓存后可尝试 `mvn -o package`。新终端中应重新确认 Java 与 Maven 的 JDK。
-
-### Web 运行与接口（2026-11-07）
-
-在 IDEA 重新加载 Maven，使用 JDK21 运行 `cn.wishbottle.opsticket.OpsTicketApplication.main`，工作目录为项目根目录，默认端口8080。`TicketConfig` 创建仓库时读取 `data/tickets-app.properties`；文件缺失可空仓库启动，其他IO错误或坏存档使启动失败。修改代码后重启。
-
-| 请求 | 当前行为 | 证据 |
+| 请求 | 权限与核心行为 | 实测证据 |
 | --- | --- | --- |
-| GET /api/tickets/{id} | 文件仓库中真实工单；未知编号404，非数字路径400 | 课堂助手GET验证1/999；早期abc由用户反馈 |
-| GET /api/tickets[?keyword=...] | 不传查全部；有效关键词筛选；无匹配返回[]；空值或空白400 | 课堂助手实际GET五个场景 |
-| POST /api/tickets | JSON标题→DTO→Service创建并自动保存，返回Ticket与201；非法标题400 | 用户201截图，源码/存档核对；空白标题及数量不变由用户反馈 |
-| POST /api/db/tickets | JSON标题/deviceId/reporterId→CommandService→Repository INSERT，返回Ticket与201；外键/标题/编号错误400 | 学习者自行POST得到id=9；助手验证201/400矩阵与数据库行 |
-| POST /api/db/tickets/{id}/assign | 校验编号和目标工程师，条件更新处理人与状态；成功200，未找到404、条件冲突409 | 学习者在隔离 H2 虚构工单上反馈成功并回查；真实 MySQL 隔离集成验收待完成 |
-| GET /api/db/tickets/{id}/title | 临时只读接口经查询 Service 和仓库调用 MyBatis Mapper 查询 MySQL 的 title；查到返回JSON，无记录404，非数字路径400 | 学习者Debug反馈1=200标题JSON、999=404、abc=400；不是正式数据库业务 |
-| GET /api/db/tickets/{id} | 返回`TicketSummary`；字段含id/title/status/assigneeId，无记录404 | 学习者反馈多列映射与JSON符合预期 |
-| GET /api/db/tickets | 返回`List<TicketSummary>`；按id排序 | 学习者反馈200、编号1和3两条JSON、无编号2 |
-| GET /api/db/tickets/{id}/domain | 通过Repository查询并转换成`Ticket`；无记录404 | 源码核对；未单独记录本轮运行正文 |
-| GET /api/db/domain/tickets | 返回`List<Ticket>`；逐行调用`Ticket.restore` | 源码核对；未单独记录本轮运行正文 |
+| `POST /api/db/tickets` | `REPORTER` / `ADMIN`；从 `Authentication` 自动取 `reporterId`，MyBatis INSERT + `@Options` 回填自增主键并返回 201 | `engineer_a` 403、`reporter_a` 201 自动绑 `reporterId=1`、`reporter_b` 查该单 403 |
+| `GET /api/db/tickets/{id}` | `ADMIN` / `REPORTER`；返回 `TicketSummary`（含 `version`、`reporterId`、`assigneeId`），`REPORTER` 仅可读自己的工单 | `admin_a` 200、`reporter_b` 200、`reporter_a` 越权 403、未知 404 |
+| `POST /api/db/tickets/{id}/assign` | `ADMIN`；校验 `OPEN`、目标启用工程师与 `expectedVersion`，成功转为 `IN_PROGRESS`、版本 +1 并同事务写 `ASSIGN` 日志 | 4 号/5 号工单实测 400/403/404/409/200，错版本不写假日志 |
+| `POST /api/db/tickets/{id}/resolve` | `ENGINEER`；校验当前登录工程师为工单指派人、`IN_PROGRESS` 与 `expectedVersion`，成功转为 `RESOLVED`、版本 +1 并写 `RESOLVE` 日志 | `admin_a` 403、非指派单 403、旧版本 409、正确版本 200 |
+| `POST /api/db/tickets/{id}/close` | `REPORTER`；校验当前登录人为原报障人、`RESOLVED` 与 `expectedVersion`，成功转为 `CLOSED`、版本 +1 并写 `CLOSE` 日志 | 他人越权 403、旧版本 409、正确版本 200（真实 MySQL 跑通四态闭环） |
+| `GET /api/db/tickets/{id}/logs` | `ADMIN` / `REPORTER` / `ENGINEER`；三角色归属隔离返回按时间排序的审计流水 | `admin_a` 200、指派工程师 200、非本人报障人 403、非指派工程师 403 |
+| `GET /api/db/tickets` 及遗留调试读接口 | 列表接口尚未补齐角色隔离与动态分页；`/title`、`/domain` 等调试读接口待第 1 周收口清理 | 列入第 1 周 A2 收口优先项 |
 
-列表和创建均显式支持末尾斜杠；详情路径没有额外配置尾斜杠。GET与POST同路径按请求方法区分；不要保留两个相同GET映射。请求体转换错误、Controller抛出的ResponseStatusException和方法参数类型不匹配已由GlobalExceptionHandler统一返回带message的JSON；状态码仍按400/404区分。尚未统一全部异常分支。
+## 环境与运行
 
-在 IDEA 打开 `tickets.http`，逐条运行请求。成功 POST 每次都会新增并写文件；目前不是幂等接口。创建截图中编号2，具体编号以当时数据为准。先查列表、提交空白标题、再查列表，验证失败没有新增。2026-11-04学习者反馈重启后GET编号2恢复成功；同时反馈统一错误响应的三个场景通过，详见验收文档第15节。2026-11-07又反馈数据库临时接口1/999/abc分别符合200/404/400预期，详见第17节。2026-11-08反馈数据库多列列表接口返回编号1和3，补上`assigneeId`后输出符合预期；领域对象与Repository分层以源码核对为准，当时尚未新增Web自动测试。2026-11-09学习者编写数据库创建POST并自行请求得到id=9；助手用JDK 21启动应用验证合法201、GET列表、外键/标题/编号错误400并核对数据库行；完整矩阵不算学习者独立复跑。
-
-普通 `java -jar` 仍启动 ConsoleApp，尚未配置 Spring Boot 可执行 Web 包。本机学习时使用一个进程访问存档；不要同时运行控制台和 Web 写同一文件，两者不共享运行中的 Map，也无并发保护。正式 `/api/tickets` 数据源仍是文件；`/api/db` 下已有的查询和创建接口使用数据库，独立 JDBC Demo 也不是正式业务数据源。
-
-### MySQL 与 JDBC 环境（2026-10-28）
-
-当前学习环境为 MySQL 8.4.13 LTS 与 Connector/J 26.10.0。在 IDEA 重新加载 Maven 依赖；数据库地址、账号和密码按自己的本机环境配置。升级前已有备份，助手完成恢复、数据一致性与真实 JDBC 验证；安装路径、账号材料和回退操作保留在本地，不公开。
-
-学习者随后完成独立 JDBC 查询 Demo；正式控制台仍使用文件仓库，10月29日已跟练独立更新事务与故障回滚，正式数据库业务仍待接入。详见[运行与验收](/learning/project-verification/)。
-
-### 存档位置
-
-控制台与当前 Web 配置均使用 `data/tickets-app.properties`。这是相对于**运行时工作目录**的路径，并非相对于 JAR 所在目录；启动时会打印绝对路径。请在项目根目录运行，并确保 `data` 目录存在，保存方法不会自动创建父目录。
-
-关闭后重新启动会恢复已有工单。成功的新建、修改标题和派单会自动保存，不需要手动调用文件工具。
-
-### JDBC 查询与更新练习
-
-测试源码中的 `JdbcTicketQueryDemo` 从 `OPS_TICKET_DB_PASSWORD` 读取数据库密码；在 IDEA 对应运行配置中填写，不写入源码或公开截图。同一个连接查询待派单和处理中工单，方法自行关闭 statement/resultSet，连接由 main 关闭。它是手动运行的 main Demo，不由 `mvn test` 自动执行。
-
-`JdbcTicketUpdateDemo` 同样是手动 main Demo：`findTicketVersion` 返回当前版本，`updateTitle(Connection,long,String,long)` 只执行条件更新与影响行数检查；`main` 负责关闭自动提交、提交/回滚和连接生命周期。`simulateFailure=true` 在更新后、提交前抛出运行时异常，验证整次回滚；当前已改回 `false`，再次运行会尝试提交并使版本加一。运行前查询实际数据，不照抄旧版本。学习者已反馈提交、MySQL终端可见及故障回滚通过，本次日结只读核对，不重复操作数据库。
-
-## 验证方式
+- **核心技术栈**：JDK 21、Maven、Spring Boot 4.1.2、MyBatis Spring Boot Starter 4.1.0、Spring Security、MySQL 8.4.13 LTS（Connector/J 26.10.0）、H2（仅 `test` 作用域用于隔离事务/HTTP 测试）。
+- **数据库配置**：本机练习库 `ops_ticket_dev`，密码通过环境变量 `OPS_TICKET_DB_PASSWORD` 注入（不写入源码或公开文档）。四张表建表语句维护在 `sql/01_schema.sql`（`device`、`app_user`、`ticket`、`ticket_action_log`）。
+- **构建与测试**：
 
 ```powershell
-mvn test
+mvn clean test
+mvn compile
 ```
 
-2026-10-26 使用 JDK 21 执行离线 `package` 成功；2026-10-28 更新驱动后再次执行 `mvn test`，17 项测试全部通过。10月30日学习者反馈加入Boot配置后测试通过；日结未重跑，未新增Web自动测试。10月31日的HTTP Client练习是手动验收，没有增加JUnit数量。当时的 17 个 JUnit 测试：`TicketTest` 6 个、`TicketFileStoreTest` 2 个、`InMemoryTicketRepositoryTest` 7 个、`TicketServiceTest` 2 个。现有测试覆盖标题校验、文件往返、部分仓库契约和 Service 行为，不代表所有功能与故障场景均已自动覆盖。`update(null)` 的同类练习已跳过，不计入测试数量。
+在 IDEA 中使用 JDK 21 运行 `cn.wishbottle.opsticket.OpsTicketApplication`（默认端口 8080）。`pom.xml` 尚未接入 `spring-boot-maven-plugin`，可执行 Web Fat JAR 与内嵌 Tomcat 线程池参数配置列入第 1 周任务。
 
-2026-11-04助手使用JDK21执行离线`compile`成功；学习者通过HTTP Client验证错误JSON400、空白标题400、未知编号404及各自message。当时17项JUnit没有重跑，也没有新增Web自动测试。
+### 自动化测试现状
 
-2026-11-13 助手在隔离副本使用 JDK 21 与 H2 内存数据库执行 `mvn -o test`：**25 项通过**，其中 17 项为原有测试，8 项为本次新增的事务、接口和边界测试。17 个原有 Demo 在隔离副本中运行成功。H2 不能替代真实 MySQL 兼容性测试；本次未连接或修改你的 MySQL，也未运行会提交 MySQL 更新的 JDBC Demo。测试由助手编写和执行，不视为学习者已掌握。详见[全面检查记录](/learning/project-verification/#20-2026-11-13-隔离审查验证)。
+- `TicketTest`（6 项）：领域对象标题校验与边界。
+- `audit/DatabaseTicketTransactionTest`（4 项）：基于隔离 H2 与真实 MyBatis Mapper 验证创建事务回滚及 `assignRollsBackWhenActionLogInsertFails`（外键失败触发 `UPDATE ticket` 自动回滚）。
+- `DatabaseTicketHttpTest`：基于 H2 的只读 HTTP 集成验证。
+- 真实 MySQL 测试库的多线程并发派单测试与权限回归测试列入后续 A2/第 4 周补齐项。
 
-2026-11-15，助手在隔离副本扩充已有 HTTP 测试，核对查询分层调整前后的响应；使用 JDK 21 和 H2 执行 `mvn -o test`，现有 **25 项测试通过**。本次未连接真实 MySQL；这些助手完成的测试不代表学习者已独立掌握。
-
-`mvn test` 不会自动运行带 `main` 的 Demo。两种仓库的共用业务流程与文件重新加载可以单独运行：
-
-```powershell
-mvn test-compile
-java '-Dfile.encoding=UTF-8' -cp 'target/classes;target/test-classes' cn.wishbottle.opsticket.TicketRepositorySwitchDemo
-```
-
-这是 Windows PowerShell 示例，其他系统的 classpath 分隔符可能不同。Demo 使用系统临时目录，每次运行创建新的验收文件，不修改项目 `data` 中的存档。两种仓库都应输出编号 1、标题“投影仪无法开机”、状态 `IN_PROGRESS`、工程师 20；新建文件仓库后应恢复相同内容，数量为 1。
-
-2026-10-21 已实际编译运行该 Demo，确认两种实现的上述流程与新仓库重新加载通过。这是在同一进程内重新创建仓库；控制台关闭后重启的恢复，以及 JAR 菜单运行，学习者已反馈手动验证通过。
-
-JUnit 文件往返测试使用 `@TempDir`，不操作项目存档。早期 Demo 仍保留：`TicketFileDemo`、`TicketEmptyDemo`、`TicketRestartSaveDemo` 会写各自的演示存档；`TicketAutoSaveDemo` 每次运行会向自己的存档新增一张工单，使用前应查看路径和写入行为。
-
-## 目录
+## 目录结构
 
 ```text
 JavaProject/
-├── tickets.http                           # 手动 HTTP 请求
 ├── pom.xml
 ├── README.md
-├── docs/                                  # 需求、设计和验收说明
-├── sql/                                   # 三表及练习SQL；尚非自动迁移脚本
-├── src/
-│   ├── main/java/cn/wishbottle/opsticket/
-│   │   ├── OpsTicketApplication.java       # Web启动入口
-│   │   ├── controller/
-│   │   │   ├── TicketController.java        # 文件版查询、关键词和创建
-│   │   │   └── DatabaseTicketController.java # 数据库版查询和创建
-│   │   ├── config/TicketConfig.java        # Bean 配置
-│   │   ├── dto/、mapper/TicketMapper.java   # 请求/响应数据和数据库 SQL 映射
-│   │   ├── DatabaseTicket*Service.java       # 数据库查询和创建业务
-│   │   ├── DatabaseTicketRepository.java    # 数据库查询、创建及事务边界
-│   │   ├── exception/GlobalExceptionHandler.java # 统一错误响应
-│   │   ├── ConsoleApp.java
-│   │   ├── Ticket.java
-│   │   ├── TicketStatus.java
-│   │   ├── TicketService.java
-│   │   ├── TicketRepository.java
-│   │   ├── InMemoryTicketRepository.java
-│   │   ├── FileTicketRepository.java
-│   │   └── TicketFileStore.java
-│   └── test/java/                          # JUnit、隔离数据库测试、Demo 和练习
-├── data/                                  # 控制台存档、演示数据与坏存档样本
-│   ├── tickets-app.properties             # 控制台运行时保存
-│   ├── tickets-auto-demo.properties       # 自动保存演示使用
-│   └── ……其他演示存档与异常样本
-└── .gitignore
+├── tickets.http                                  # 手动 HTTP 验收请求
+├── docs/                                         # 需求、设计、验收与审查记录
+├── sql/                                          # 四表结构与练习 SQL
+└── src/
+    ├── main/
+    │   ├── java/cn/wishbottle/opsticket/
+    │   │   ├── OpsTicketApplication.java         # Spring Boot 启动入口
+    │   │   ├── config/                           # Spring Security 与数据库认证
+    │   │   ├── controller/                       # HTTP 接口入口
+    │   │   ├── domain/                           # Ticket、TicketStatus、领域转换器
+    │   │   ├── dto/                              # 请求/响应/插入/审计 DTO
+    │   │   ├── exception/                        # GlobalExceptionHandler
+    │   │   ├── mapper/                           # MyBatis Mapper（工单/用户/审计日志）
+    │   │   ├── repository/                       # 读写仓库接口与实现
+    │   │   └── service/                          # 查询与命令服务（@Transactional）
+    │   └── resources/application.properties
+    └── test/java/                                # JUnit、H2 事务/HTTP 测试与历史 Demo
 ```
 
-`target/`、`out/`、`.qa/`、`.idea/`、`*.class`、`*.iml` 已忽略，不提交构建产物与本机 IDE 配置。两个本地运行存档 `data/tickets-app.properties`、`data/tickets-auto-demo.properties` 也已精准忽略；正常和错误验收样本继续保留在 Git 中。
+## 已知限制（当前待收口项）
 
-## 已知限制
+- `GET /api/db/tickets` 列表接口尚未补齐三角色归属隔离与动态分页；`/api/db` 路径前缀及遗留无权限调试读接口待收口为标准 `/api/v1/tickets` 与 `/api/v1/devices`。
+- `DatabaseTicketController` 目前直接注入 `UserMapper` 并存在较多手动判空与回查分支，待引入 `@Valid`、自定义 `LoginUser`、统一返回体 `Result<T>` 并将异常分类下沉到 `Service`。
+- 认证目前为 HTTP Basic + 临时关闭 CSRF，待第 2 周升级为 Spring Security + JWT + Redis 登录态管理。
+- `ticket` 联合索引、`ticket_action_log.note` 处理说明列、创建 `X-Request-Id` 幂等防重、OpenAPI 接口文档、SLF4J + MDC 日志、可执行 Fat JAR、Redis 缓存与 RabbitMQ 异步通知/死信超时告警均列入下方 4 周计划逐步落地。
 
-- 当前正式 Web 仍使用文件仓库查询与创建；`/api/db`提供只读摘要/领域对象查询和数据库创建POST，正式业务尚未切换到数据库仓库。数据库创建已接通`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`TicketWriteRepository`和`TicketMapper.insertTicket`；数据库派单的 Mapper、仓库、Service、DTO 和 Controller 源码已写，SQL 已加入工程师角色与启用条件；派单成功路径已在隔离 H2 练习通过；操作人权限、完整版本冲突和真实 MySQL 隔离集成验证仍待完成；数据库解决/验收、HTTP改名、登录权限及处理/验收状态流尚未接入。当前文件仓库新编号来自最大编号加一，没有并发或重复请求保护。
-- 保存直接覆盖目标文件，尚无原子替换、备份或事务机制；写入中断可能损坏存档。
-- 保存失败时控制台提示并退出，不打印操作成功；此前发生的内存修改不会自动回滚。
-- 多个程序同时操作同一存档文件时没有并发保护。
-- 查询返回的新列表隔离了列表结构，但其中的工单仍可能是仓库中的原对象。调用方修改工单后必须显式更新仓库，业务操作统一走 Service。
+## 学习进度与下一步（2026-11-28 更新）
 
-## 学习进度与下一步
+2026-11-28 路线定稿：围绕纯 Java 后端（Spring Boot + MyBatis + MySQL + Redis + RabbitMQ）开展 **4 周冲刺**，放弃 Spring AI，不再在 Java 侧编写大模型调用与重度离线评测；AI / Agent 能力留待二期直接以独立 **Python（FastAPI + LangGraph）** 服务对接本项目。
 
-2026-11-15：数据库查询统一由 `DatabaseTicketQueryService → TicketQueryRepository → DatabaseTicketRepository → TicketMapper` 完成；原 HTTP 地址和摘要/领域对象返回约定保留。学习者已编写派单 Mapper、仓库、Service、DTO 和 Controller；源码中已有工程师角色/启用条件及 404/409 分支，学习者已在隔离 H2 环境完成派单成功路径并回查；失败分支的本人练习、操作人权限和完整版本冲突处理仍待完成。Python 复习与 Agent 路线继续按下方计划进行。
+| 阶段 | 计划周期 | 亲手交付 | 达标证据 |
+| --- | --- | --- | --- |
+| A1 后端业务闭环 | 已跑通主流程 | 四表建模、MyBatis 映射、四态闭环与标准 8 子包分层 | 真实 MySQL 4 号/5 号工单跑通全链路与 400/404/409 分支 |
+| A2 工程规范收口（当前） | 第 1 周 | 收口 `/api/v1/tickets` 列表三角色隔离分页与 `/api/v1/devices`、联合索引 `EXPLAIN`、`@Valid` + `LoginUser` + `Result<T>`、OpenAPI 文档、SLF4J + MDC、Fat JAR 与 Tomcat 参数 | 多角色列表权限与动态分页实测、1–5 万条造数 `EXPLAIN`、在线接口文档可调用、`java -jar` 正常启动 |
+| M1 Redis 缓存与幂等（R01–R04） | 第 2 周 | Spring Data Redis 接入、JWT + Redis 登录态/黑名单、设备与工单 Cache-Aside（防穿透/雪崩/删缓存）、`X-Request-Id` 防重幂等与限流、分布式锁对比 | 缓存命中/回源/失效与防穿透实测、重复创建拦截、JWT 登出生效 |
+| M2 RabbitMQ 异步与死信（M01–M04） | 第 3 周 | Spring AMQP 接入、`AFTER_COMMIT` 状态变更异步通知、TTL + 死信队列（DLX）工单超时未派单告警、Publisher Confirm + 手动 ACK + `messageId` 消费幂等 | 事务回滚不误发消息、超时工单自动写入升级告警日志、重复消息幂等去重 |
+| 并发测试、部署与压测交付 | 第 4 周 | 真实 MySQL 隔离回滚与多线程并发派单测试、Docker Compose 一键编排与 Linux 排错、缓存前后压测对比、《架构与接口设计文档》（含微服务演进方案） | 多线程并发派单仅 1 次成功其余 409、一键拉起全套服务与真实压测记录 |
+| 二期独立 Python Agent（后置 O02–O04） | 二期按需 | 另起独立 `ops-agent-py`（FastAPI + LangGraph），复用本项目 OpenAPI / JWT / 乐观锁 / Redis / RabbitMQ | 不阻挡纯 Java 后端交付，二期完成后形成双栈能力 |
 
-截至 11 月 9 日，已用断点区分请求体转换与业务校验，完成 ErrorResponse 和方法参数类型错误等统一处理。11月9日完成数据库创建POST：`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`、`POST /api/db/tickets`、`DataIntegrityViolationException`处理已接通；学习者自行POST得到id=9，助手验证合法201、GET列表、外键/标题/编号错误400并核对数据库行。截至当时，正式 `/api/tickets` 仍使用文件仓库；数据库派单/解决/验收、权限和AI尚未接入。
-
-11 月 13 日助手补充了数据库创建的事务保护和自动验证；这属于代码已有能力；本人已结合创建链路复盘提交和回滚，事务代理、传播及测试原理仍需巩固。随后已开始讲解创建链路、事务及数据库派单。
-
-| 阶段 | 亲手交付 | 达标证据 |
-| --- | --- | --- |
-| A Java工单业务 | 读懂现有事务与数据库创建；逐步完成派单、状态与必要鉴权 | 能独立画请求链并解释回滚；派单接口、失败分支及授权按实际结果记录 |
-| Y Python复习与应用 | 已看课程前119集、久未写；回顾字典和函数并用虚构工单做查询 | 找回手感、遇到问题按需复习；工单Agent尚待实现 |
-| B Python模型调用 | 先用虚构数据请求一个模型，返回摘要和待补充信息；模拟错误 | 保存真实调用与模拟测试各一份证据，校验结构、超时与错误；没有API时仅标契约测试 |
-| G Python只读Agent | 先对假数据接查询工具，完成查找→追问/详情→回答，记录步骤 | 真实模型发出工具调用、Python执行；无结果、坏参数、超时和步数限制可复现 |
-| C 资料与评测 | 维护少量自编设备资料，检索并引用；用固定任务集改进 | 引用可定位；区分检索、工具、生成错误，记录真实样本数、耗时与用量 |
-| L 安全联调 | Java提供经授权的只读工单接口，Python通过HTTP调用 | 隔离演示数据、真实身份与授权已验证；无权请求不能读取；超时/故障可解释 |
-
-Python原型先使用虚构工单与受控只读工具；真实工单联调前Java必须具备认证、资源范围和服务身份校验。现有业务数据、接口和代码不因方案调整而改变。Redis基础及虚构数据缓存、会话记忆列入计划，在具备相应基础后逐步实践，不阻挡首个内存版Agent。MCP、SubAgent、写工具和微服务按需后置。
-
-**下一项亲手任务**：先用已看过的Python课程少量复习字典和函数，再用2—3条虚构工单写find_ticket查询和查无结果；根据实际卡点回看对应章节。随后复用或按需要搭建模型客户端，让模型请求只读工具、程序执行并回传结果。Java线先在隔离环境验证派单失败分支，继续理解创建事务、影响行数与状态约束，不接入真实敏感数据。
+**下一项亲手任务（第 1 周起步）**：收口 `/api/v1/tickets` 列表接口的三角色归属隔离与动态条件分页，清理无权限 `/api/db` 调试读接口，并补齐 `/api/v1/devices` 与 `ticket` 高频联合索引 `EXPLAIN` 验证。

@@ -1,8 +1,8 @@
 {
   "title": "工单项目需求与开发计划",
-  "description": "最小业务闭环、A2 认证事务与纯 Java B/C/D 阶段验收计划。",
+  "description": "三角色四态业务闭环、工程规范与 Redis/RabbitMQ 演进计划（二期独立 Python Agent 后置）。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-27T00:00:00+08:00",
+  "lastmod": "2026-11-28T00:00:00+08:00",
   "weight": 170,
   "group": "project-docs",
   "draft": false
@@ -10,9 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [设计](/learning/project-design/) · [运行与验收](/learning/project-verification/)
 
-> **2026-11-27 最新核对**：第一版核心状态闭环（创建 → 派单 → 解决 → 验收关闭）、MySQL `app_user` 登录、`@PreAuthorize`、单条工单与日志的三角色归属隔离、`expectedVersion` 乐观锁、`ticket_action_log` 操作审计与 `@Transactional` 回滚测试均已实测落地；早期文件版演示代码已清理。当前收尾 `GET /api/db/tickets` 列表接口权限与 SLF4J 日志后，按纯 Java 主线进入 **B01–B09 → C01–C04（可选 D01–D02）**。下方第 1–6 节保留 2026-11-15 需求基线快照作演进记录。
-
-核对日期：2026-11-15；11月14日为计划调整和源码只读检查。11月15日数据库查询分层整理和隔离验证见本页末节。11月7日完成MyBatis单列只读接线；11月8日完成`TicketSummary`多列对象映射、`assignee_id → assigneeId`自动映射、领域`Ticket`转换和只读Repository分层；11月9日完成`CreateDatabaseTicketRequest`、`DatabaseTicketCommandService`和`POST /api/db/tickets`，学习者自行POST得到真实自增id，助手运行合法201/非法400矩阵并核对数据库行。当前正式工单业务仍使用文件仓库；数据库派单练习接口已接通并在隔离环境走通成功路径，数据库解决/验收、权限和AI尚未接入。11月13日助手补充数据库创建的事务保护和隔离自动测试，不能据此认定学习者已掌握事务。
+核对日期：2026-11-28。截至 2026-11-27，早期文件仓库与控制台演示代码已按确认清单清理并整理为标准 Spring Boot 8 子包；真实 MySQL 已跑通创建（自动绑定登录人）、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环，落地 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权、单条/日志三角色归属隔离、`expectedVersion` 乐观锁（`409`）与 `ticket_action_log` 审计表 + `@Transactional` 回滚测试（4 项全绿）。2026-11-28 路线正式定稿为 **纯 Java 后端 4 周冲刺（A2 收口 → M1 Redis → M2 RabbitMQ → 并发测试与 Docker 部署）**，放弃 Spring AI，AI / Agent 能力留待二期以独立 Python 服务对接本项目。历史章节保留当时的学习快照。
 
 ## 1. 项目背景与目标用户
 
@@ -62,10 +60,10 @@ Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表�
 
 | 操作 | 前置状态 | 成功后 | 实现状态 |
 | --- | --- | --- | --- |
-| 创建 | 无 | OPEN | 已实现 |
-| 派单 | OPEN | IN_PROGRESS | 已实现 |
-| 提交处理结果 | IN_PROGRESS | RESOLVED | 待实现 |
-| 验收通过 | RESOLVED | CLOSED | 待实现 |
+| 创建 | 无 | OPEN | 已实现（自动取登录人 `reporterId`） |
+| 派单 | OPEN | IN_PROGRESS | 已实现（`ADMIN` + `expectedVersion` + 审计日志事务） |
+| 提交处理结果 | IN_PROGRESS | RESOLVED | 已实现（指定 `ENGINEER` + `expectedVersion` + 审计日志事务；处理说明 `note` 第 1 周补齐） |
+| 验收通过 | RESOLVED | CLOSED | 已实现（原 `REPORTER` + `expectedVersion` + 审计日志事务） |
 | 验收驳回 | RESOLVED | IN_PROGRESS | 延后，首版不做 |
 
 `RESOLVED`、`CLOSED` 已定义，恢复入口可以重建这两种状态，但相应的业务流转方法尚未实现。`rename` 当前仅校验标题，完整的关闭后变更限制尚未实现。后续通过有业务含义的方法流转状态，再引入操作者权限和日志。
@@ -187,3 +185,13 @@ POST /api/db/tickets
 数据库查询统一经 `TicketQueryRepository → DatabaseTicketRepository → TicketMapper`；保留摘要 DTO 和领域对象两种已有形式，不删除练习接口或更改返回格式。摘要按原约定返回，领域对象仍经 `Ticket.restore` 校验。文件版和数据库版接口分别使用文件和 MySQL，不能因名称相近认定两者已可互换。
 
 当前数据库派单 SQL 按工单编号、OPEN 状态和目标用户的工程师角色及启用状态条件更新，并递增版本；Controller 已提供成功与 400/404/409 分支。学习者已在隔离 H2 验证成功路径；本人失败分支练习、expectedVersion 比较、登录授权与真实 MySQL 隔离集成验证仍待完成。
+
+## 21. 2026-11-25 至 11-28 四态闭环、安全事务落地与纯 Java 路线定稿
+
+- **11-25 至 11-27 实测落地**：完成 `AppUser`、`UserMapper`、`DatabaseUserDetailsService`（MySQL `app_user` + BCrypt 登录）与 `@PreAuthorize` 角色限制；贯通 `expectedVersion` 乐观锁并落地指定工程师 `resolve` 与原报障人 `close`，在真实 MySQL 跑通四态闭环；清理早期文件/控制台旧代码并归位至标准 8 子包；补齐单条详情与日志查询三角色归属隔离、`POST` 创建自动取登录人，并新建 `ticket_action_log` 表在 `assign`/`resolve`/`close` 绑定 `@Transactional` 与 H2 外键失败回滚单测（4 项全绿）。
+- **11-28 路线定稿**：明确不采用 Spring AI，取消原 Java 侧大模型与离线评测草案，将当前主线收口为 **4 周纯 Java 后端冲刺**：
+  1. **第 1 周（A2 工程收口）**：收口 `/api/v1/tickets` 列表三角色归属隔离分页与 `/api/v1/devices`、补 `ticket` 高频联合索引与 `EXPLAIN`、瘦身 Controller（`@Valid`/`LoginUser`/`Result<T>`）、接入 OpenAPI 3 / Knife4j、SLF4J + MDC 与 Fat JAR / Tomcat 参数；
+  2. **第 2 周（M1 Redis）**：JWT + Redis 登录态与黑名单、设备/工单 Cache-Aside 缓存（穿透/雪崩/删缓存）、`X-Request-Id` 防重幂等与限流、分布式锁对比；
+  3. **第 3 周（M2 RabbitMQ）**：`AFTER_COMMIT` 状态变更异步通知、TTL + 死信队列（DLX）工单超时未派单告警、Publisher Confirm + 手动 ACK + `messageId` 消费幂等；
+  4. **第 4 周（并发验证与部署交付）**：真实 MySQL 多线程并发派单测试与回滚测试、Docker Compose 一键编排、缓存前后压测对比与架构设计文档（含微服务演进方案）。
+- **二期独立 Python Agent（后置）**：未来拓展 Agent 方向时另起独立 Python（FastAPI + LangGraph）服务，直接复用本 Java 项目的 OpenAPI、JWT、乐观锁、Redis 与 RabbitMQ。

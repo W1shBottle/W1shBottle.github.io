@@ -3,7 +3,7 @@
   <header class="page-heading learning-intro folio-heading">
     <p class="folio-kicker"><span aria-hidden="true">01</span> LEARNING / 学习</p>
     <h1>在项目里，一步步学。</h1>
-    <p>{{ .Description | default "用同一个设备运维工单项目学习后端业务、AI 应用与效果验证。" }}</p>
+    <p>{{ .Description | default "用同一个设备运维工单项目打透 Java 后端业务、工程规范、Redis 与 RabbitMQ。" }}</p>
 
     <div class="learning-actions">
       <a class="learning-button learning-button-primary" href="#dashboard">查看学习进度 ↓</a>
@@ -20,11 +20,11 @@
 
   <section class="learning-route-intro" id="learning-directory" aria-labelledby="route-heading"><p class="eyebrow">ROADMAP / 按自己的节奏继续</p><h2 id="route-heading">学习路线与课程</h2>
     <dl class="learning-facts">
-      <div><dt>A → B → C</dt><dd>后端业务、AI 功能、验证改进</dd></div>
+      <div><dt>A1 → A2 → M1 → M2</dt><dd>业务闭环、工程规范、Redis 与 RabbitMQ</dd></div>
       <div><dt>{{ site.Data.learning_dashboard.stats.total }} 项必修任务</dt><dd>按实际证据逐项验收</dd></div>
       <div><dt>一个项目</dt><dd>设备运维工单平台</dd></div>
     </dl>
-  <p>先完成可靠的小业务版本，再加入 AI；旧周号只作材料索引，按实际验收继续。</p><a class="route-schedule" href="/learning/schedule/">查看阶段学习计划 →</a></section>
+  <p>先用 4 周把纯 Java 后端与主流中间件做透，二期再以独立 Python 服务拓展 Agent；旧周号只作材料索引，按实际验收继续。</p><a class="route-schedule" href="/learning/schedule/">查看阶段学习计划 →</a></section>
   {{ with .Content }}<details class="learning-context"><summary>学习计划说明与已归档进度</summary><div class="single-content learning-overview">{{ . }}</div></details>{{ end }}
 
   {{ $pages := .RegularPages.ByWeight }}

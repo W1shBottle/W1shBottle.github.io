@@ -7,7 +7,7 @@ theme: "typo-blue"
 taxonomies:
   tag: tags
 params:
-  description: "记录代码，也记录理解的过程。Java、操作系统与 AI 学习笔记。"
+  description: "记录代码，也记录理解的过程。Java 后端、操作系统与工程实践笔记。"
   theme: dark
   paginationSize: 30
   menu:

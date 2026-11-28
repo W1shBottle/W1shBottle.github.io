@@ -1,34 +1,37 @@
 {
-  "title": "Java 轻量 AI 功能、效果评测与项目交付",
-  "description": "纯 Java 主线 B01–B09、C01–C04、D01–D02 验收指南，及并发、测试与交付工程参考。",
+  "title": "Redis 缓存、RabbitMQ 异步、并发测试与交付",
+  "description": "纯 Java 后端主线 M1 Redis（R01–R04）、M2 RabbitMQ（M01–M04）、并发测试、Tomcat/Docker 交付与二期后置说明。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 60,
   "group": "course",
   "draft": false,
-  "lastmod": "2026-11-27T00:00:00+08:00"
+  "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-更新于 2026-11-27（2026-11-25 纯 Java 主线定稿）。当前唯一主线为纯 **Java 21 / Spring Boot / MyBatis / MySQL** 路线（**A1 → A2 → B01–B09 → C01–C04 + 可选进阶 D01–D02**），不引入 Kafka、Milvus、Neo4j、微调或本地推理部署。旧周号（第 14–20 单元）保留作后端工程参考；原 Python / Redis / LangGraph / Agent（Y/R/G/C05–C06）规划已归档暂不执行。
+更新于 2026-11-28（纯 Java 后端 4 周冲刺路线定稿）。当前主线为 **Java 21 / Spring Boot / MyBatis / MySQL / Redis / RabbitMQ**（**A1 → A2 → M1 Redis（R01–R04）→ M2 RabbitMQ（M01–M04）**），不采用 Spring AI；此前 11-25 草案中的 Java 侧 AI 条目（`B01–B09`、`C01–C04`、`D01–D02`）已归档，AI / Agent 方向留待二期以独立 Python 服务推进（`O02–O04`）。旧周号（第 14–20 单元）保留作并发、测试与部署参考。
 
-## B：Java 业务中的 AI 应用功能（B01–B09）
+## M1：Redis 缓存、JWT 登录态与防重幂等（R01–R04）
 
-- **B01–B07（模型接入与业务保护）**：在现有 Spring Boot 项目中接入真实模型提供方，端点、模型名与 key 仅从环境配置读取；对 `summary` / `category` / `missingInformation` 做严格 JSON / 枚举 / 长度校验；模型调用放数据库写事务外并设超时/重试上限，关闭 AI 不影响主业务；真实联调前由 Java 校验身份与工单访问权限。
-- **B08（异步触发与状态回写，联动 P03）**：用 Spring `@Async` + 自定义有界线程池，配合任务表或状态字段（`PENDING` / `DONE` / `FAILED`），在工单写事务**提交后**异步触发分析与结果回写，并做好同工单同版本防重/幂等保护。具体表结构与代码留到进入 B 阶段时再结合当时工程实现。
-- **B09（人工采纳与反馈闭环）**：落地“AI 给建议、人保留确认权”，提供**直接采纳 / 修改后采纳 / 驳回**接口，落库记录 AI 原建议与人工决策差异；任何工单写回均重新走 Java 角色权限、前置状态与 `expectedVersion` 乐观锁校验，防重复采纳与过期建议覆盖。
+- **R01（基础与接入）**：理解 String / Hash / List / ZSet 与 TTL 过期策略，通过 Docker 启动隔离 Redis 并接入 `Spring Data Redis`，配齐序列化方式与连接超时。
+- **R02（Cache-Aside 缓存）**：为设备信息与高频工单详情接入 Cache-Aside 读缓存，覆盖**空值缓存防穿透、随机 TTL 防雪崩、工单状态变更提交后删除缓存**，能清晰说明缓存与数据库一致性取舍及 Redis 不可用时的回源降级。
+- **R03（JWT 登录态、防重幂等与限流）**：把认证从 HTTP Basic 升级为 Spring Security + JWT + Redis（登出黑名单/缓存）；用 `SET key value NX EX` 拦截短时重复 `X-Request-Id` 报修请求（与 MySQL 唯一约束双保险），并为报修创建增加简易限流。
+- **R04（分布式锁对比与压测）**：结合派单场景对比 Redisson 分布式锁与 MySQL `expectedVersion` 乐观锁的适用边界；用 JMeter/Wrk 实测加缓存前后的工单详情查询 QPS 与耗时并记录真实环境条件。
 
-## C：效果评估、成本与回归改进（C01–C04）
+## M2：RabbitMQ 异步通知与死信队列 SLA 超时告警（M01–M04）
 
-- **C01–C04**：维护约 12–20 条固定虚构案例（开发集/留出集分开），记录端到端延迟、失败重试、token 用量与计价依据，每次只改提示词、上下文或解析中的一项并做前后回归。
-- **C02（效果评估修订口径）**：同时统计**离线固定案例集指标**（样本数、结构合法率、事实忠实度、可用性/修改次数、失败原因）与 **B09 交互反馈日志指标**（直接采纳率、修改后采纳率、驳回率、修改次数分布与抽样归因），两类口径分开列示并写明实际分母，不拿模拟响应充当模型效果。
+- **M01（模型与接入）**：掌握 Producer / Exchange（Direct / Topic）/ Queue / Binding / Consumer，通过 Docker 启动 RabbitMQ（含管理控制台）并接入 `spring-boot-starter-amqp` 跑通收发。
+- **M02（事务提交后异步通知）**：工单创建、派单、解决、关闭在 `@TransactionalEventListener(phase = AFTER_COMMIT)` 事务提交后发消息，验证**事务回滚不误发消息**；消费者异步写通知记录/模拟告警，同时预留标准工单事件格式供二期服务订阅。
+- **M03（TTL + 死信队列 DLX 超时告警）**：新建工单投递带 TTL 的延迟消息，到期路由至死信交换机与死信队列；消费者回查工单状态，若仍为 `OPEN` 则自动写入超时升级日志并触发告警，已派单则直接 ACK 忽略。
+- **M04（可靠性投递与消费幂等）**：开启 Publisher Confirm / Return 回调与消息持久化；消费者启用手动 ACK（`manual`）并基于 `messageId`（Redis 或去重表）实现消费幂等，验证重复投递不产生重复告警及重试超限入死信表。
 
-## D：可选进阶模块（不阻挡 A→B→C 结项）
+## 二期后置扩展边界（O01–O04，不阻挡当前主线）
 
-- **D01（历史工单轻量检索 / 轻量 RAG）**：用 MySQL 全文检索（`FULLTEXT`）或同设备/型号过滤召回 Top 3 已解决且有权限查看的历史工单注入上下文；在 C 阶段留出集做有/无检索对比回归，并保留至少 1 个误召回样本分析。
-- **D02（排查 SOP 与分类口径外置 / 轻量 Skill）**：将各设备类别排查规则与分类口径从代码抽离到外部 Markdown 或 MySQL 配置表（带版本），按类别动态拼装进 Prompt 并支持兜底降级；在不改核心业务代码前提下改规则并跑前后回归对比。
+- **O01（微服务拆分设计）**：当前保持高内聚单体，在架构文档里给出按设备域/工单域/通知域/AI 域拆分的 Spring Cloud 演进方案（Nacos、Gateway、OpenFeign、最终一致性）。
+- **O02–O04（独立 Python Agent 服务）**：二期直接采用市场主流的 **Python（FastAPI + LangGraph）** 另起服务，直接复用本项目的 OpenAPI 接口、JWT 权限护栏、乐观锁、Redis 与 RabbitMQ，实现零返工跨语言扩展。
 
 ## AI 辅助编程与本人验收
 
-工具可用于解释与审阅，但每项要自行改出一个变体、运行并解释；AI 帮写代码不等于完成产品 AI 功能。具体任务验收口径与实时进度见[技能清单与验收模板](/learning/checklists/)与[阶段学习计划](/learning/schedule/)。
+工具可用于解释、代码审阅与排错辅助，但每项任务仍需自己读懂调用链、独立改出小变体并跑通验证。具体任务验收口径与实时进度见[技能清单与验收模板](/learning/checklists/)与[阶段学习计划](/learning/schedule/)。
 
 ## 原第14—20单元：按需深入参考
 

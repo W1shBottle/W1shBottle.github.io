@@ -1,8 +1,8 @@
 {
   "title": "工单项目运行与验收",
-  "description": "实际运行证据、事务回滚测试与纯 Java AI 效果评估标准。",
+  "description": "历次实测证据、事务回滚与权限验收记录，以及后续并发/压测验收标准。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-27T00:00:00+08:00",
+  "lastmod": "2026-11-28T00:00:00+08:00",
   "weight": 190,
   "group": "project-docs",
   "draft": false
@@ -10,9 +10,7 @@
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [设计](/learning/project-design/)
 
-> **2026-11-27 最新验收记录**：已实测 MySQL `app_user` 登录（`200/401/403`）、4 号与 5 号工单四态流转与 `expectedVersion` 乐观锁（`409`）、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离（`200/403`）、`POST /api/db/tickets` 自动绑登录人，以及隔离 H2 下 `DatabaseTicketTransactionTest` 外键失败自动回滚测试（4 项全绿）与 `TicketTest`（6 项全绿）。详情见 [11 月 25 日](/posts/ops-ticket-20261125/)、[11 月 26 日](/posts/ops-ticket-20261126/)、[11 月 27 日](/posts/ops-ticket-20261127/)三篇复盘；下方保留 2026-11-15 及之前的历史验证记录。
-
-核对日期：2026-11-15；11月14日学习方案调整时仅核对文本与源码，11月15日查询分层的隔离回归记录在本页末节。本页区分历史测试、学习者反馈和待验收；第10—14节保留旧阶段，第15节记录11月4日断点与错误响应，第16节记录路线修订，第17节记录11月7日MyBatis单列查询，第18节记录11月8日多列DTO、领域对象与只读Repository，第19节记录11月9日数据库创建POST与自增主键。
+核对日期：2026-11-28。本页按时间保留历次历史测试、学习者实测反馈与验收边界；第 10—21 节为前期快照，**最新 2026-11-25 至 11-28 认证授权、乐观锁四态闭环、审计日志回滚单测及纯 Java 路线定稿核对见文末第 22、23 节**。
 
 ## 1. 环境与构建
 
@@ -516,3 +514,14 @@ G待验：真实工具调用、歧义追问、无结果、无权、错误参数�
 - 学习者此前报告工程师编号为 0 时返回 400；助手另用其他虚构工单预检成功、重复派单 409、非工程师 409 与不存在工单 404。这些助手检查不记为学习者独立复跑。
 - 现有查询 DTO 不返回 `version`，本次 GET 不能单独确认版本增量。H2 结果不能代替真实 MySQL 隔离集成、并发、完整约束或操作人授权验收。
 - 本次练习未新增 JUnit 测试文件，也未将此前助手补充的自动测试计为学习者独立编写。下一步由学习者在隔离环境练习失败分支并解释 400、404 与 409。
+
+## 22. 2026-11-25 至 11-27 认证授权、乐观锁四态闭环与事务回滚验收
+
+- **MySQL 登录与角色授权（11-25）**：学习者编写 `AppUser`、`UserMapper` 与 `DatabaseUserDetailsService`，更新 `app_user` 真实 BCrypt 哈希，实测 `GET /api/db/tickets/1` 返回 `admin_a` 200、`engineer_a` 403、`reporter_a` 401，并排查 POST CSRF 拦截后实测 `POST /assign` 返回 `admin_a` 404、`engineer_a` 403。
+- **乐观锁与真实 MySQL 四态闭环（11-26）**：学习者复验派单 `409` 并贯通 `expectedVersion`，在真实 MySQL 4 号工单实测 `assign`（400/409/200→v1）、指定工程师 `resolve`（非指派单 403/旧版本 409/200→v2）与原报障人 `close`（他人 403/旧版本 409/200→`CLOSED` v3）；先做 Git 检查点提交（`82daf90`），再由助手协助清理旧文件/控制台代码并归位标准 8 子包，Maven 离线编译与 `TicketTest` 6 项通过。
+- **查询归属隔离、操作日志与 H2 外键回滚测试（11-27）**：学习者实测单条详情归属（`admin_a` 200、`reporter_b` 200、`reporter_a` 403）、`POST` 创建自动绑登录人（`engineer_a` 403、`reporter_a` 201、他人查 403）；亲手建表 `ticket_action_log` 并实测 5 号工单传错版本 409 不写假日志、正常流转产出 3 条完整审计流水；修复并扩充 `DatabaseTicketTransactionTest` 新增 `assignRollsBackWhenActionLogInsertFails`，以 H2 外键失败验证自动回滚（4 项全绿）；修复 `findLogs` 角色比对 bug 后实测三角色归属隔离两条 403。
+
+## 23. 2026-11-28 纯 Java 后端（Redis + RabbitMQ）路线定稿核对
+
+- 本次仅更新学习计划、项目文档与博客看板/时间线，未修改 Java 业务源码，未新增任何技能验收或自动化测试结果。
+- 后续待验重点按 4 周计划推进：第 1 周列表三角色隔离分页与联合索引 `EXPLAIN`、OpenAPI/SLF4J/Fat JAR；第 2 周 Redis 缓存/JWT/幂等实测；第 3 周 RabbitMQ `AFTER_COMMIT` 通知、TTL+DLX 超时告警与手动 ACK 消费幂等实测；第 4 周真实 MySQL 多线程并发派单测试、Docker Compose 编排与缓存压测对比。

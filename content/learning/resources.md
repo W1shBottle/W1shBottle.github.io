@@ -1,21 +1,24 @@
 {
   "title": "资料索引与排错手册",
-  "description": "按阶段查官方资料、选择兼容版本，定位Java、SQL、Web和AI调用问题。",
+  "description": "按阶段查官方资料、选择兼容版本，定位 Java、SQL、Web、Redis 与 RabbitMQ 常见问题。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 80,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-27T00:00:00+08:00"
+  "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于 2026 年 10 月 12 日，2026 年 11 月 25 日已定稿为纯 **Java 21 / Spring Boot / MyBatis / MySQL** 主线（`A1 → A2 → B01–B09 → C01–C04`，可选 `D01–D02`）；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
+这份索引用来在自学时快速找到当前任务需要的材料。一次只打开当前主题的章节，优先用项目中的小实验验证理解。原资料入口整理于 2026 年 10 月 12 日，2026 年 11 月 28 日已定稿为纯 **Java 21 / Spring Boot / MyBatis / MySQL / Redis / RabbitMQ** 主线（`A1 → A2 → M1 Redis → M2 RabbitMQ`，二期独立 Python Agent 后置）；外部网站内容和版本可能继续更新，正文练习不依赖付费课程。
 
 ## 当前主线参考与视频入口
 
-- [按阶段看网课与做练习](/learning/schedule/#按阶段看网课与做练习)：按当前卡点挑选 1–2 节事务、安全、异步与测试参考，不要求刷完大课。
-- [Spring Security 官方参考](https://docs.spring.io/spring-security/reference/index.html)：核对 `UserDetailsService`、`BCryptPasswordEncoder`、`@PreAuthorize` 与 CSRF 边界。
-- [Spring 事务与异步执行参考](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)：对照 `@Transactional` 代理规则及 B08 `@Async` 有界线程池配置。
-- [Spring AI 结构化输出与工具边界参考](https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html)：作为 B 阶段结构化校验与降级设计参照（不代表必须引入完整框架）。
+- [按阶段看网课与做练习](/learning/schedule/#按阶段看网课与做练习)：按当前卡点挑选 1–2 节事务、索引、Redis 与 RabbitMQ 参考，不要求刷完大课。
+- [Spring Security 官方参考](https://docs.spring.io/spring-security/reference/index.html)：核对 `UserDetailsService`、`BCryptPasswordEncoder`、`@PreAuthorize` 与 JWT/过滤器链。
+- [Spring 事务官方参考](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)：对照 `@Transactional` 代理规则、`@TransactionalEventListener(AFTER_COMMIT)` 与回滚边界。
+- [MySQL 8.4 EXPLAIN 参考](https://dev.mysql.com/doc/refman/8.4/en/using-explain.html)：核对联合索引最左匹配、回表、覆盖索引与执行计划字段。
+- [Spring Data Redis 官方参考](https://docs.spring.io/spring-data/redis/reference/)：落地 Cache-Aside 缓存、序列化与防重幂等键。
+- [RabbitMQ 官方 Tutorials](https://www.rabbitmq.com/tutorials) & [Spring AMQP 官方参考](https://docs.spring.io/spring-amqp/reference/)：落地 Exchange/Queue、Publisher Confirm、手动 ACK 与 TTL+DLX 死信队列。
+- [SpringDoc OpenAPI 3 文档](https://springdoc.org/) & [Spring Boot Embedded Web Servers](https://docs.spring.io/spring-boot/reference/web/servlet.html#web.servlet.embedded-container)：自动生成在线接口文档并配置内嵌 Tomcat 线程池参数。
 
 ## 按阶段选择资料
 
@@ -95,17 +98,15 @@ Spring Boot管理的依赖优先跟随其依赖管理清单。若使用本机MyS
 
 每次看完参考代码，关闭它并改变一项需求：标题上限、筛选条件、状态操作或查询字段。能根据变化调整实现，才算从复制过渡到理解。
 
-## AI接入时才需要的资料与排错
+## Redis 与 RabbitMQ 接入排错速查
 
-先读所选提供方的官方API文档，核对请求协议、模型名、结构化输出支持、错误码、用量字段与计费；目前提供方未选择，key/端点/预算仍待配置。Python客户端可先查提供方的官方SDK或Python标准库HTTP文档；Java HttpClient作为可选对照，不必先安装Agent框架。
-
-概念参考：[结构化输出与校验](https://docs.spring.io/spring-ai/reference/api/structured-output/converters.html)、[应用端工具执行](https://docs.spring.io/spring-ai/reference/api/tools.html)。这些链接用于理解，并不代表项目已安装Spring AI。
+二期若启用独立 Python Agent，再另查对应模型提供方 SDK 与 LangGraph 官方文档；当前纯 Java 阶段优先排查 Redis 与 RabbitMQ 常见故障：
 
 | 现象 | 先检查 | 验证边界 |
 | --- | --- | --- |
-| 模型401/403 | key是否配置、端点与账号模型权限；不打印key | 记录错误类别，人工业务继续 |
-| 429/5xx/超时 | 额度、限流、服务状态、总超时与重试次数 | 用本地替身验错误分支，真API另记结果 |
-| 返回非JSON或缺字段 | 提供方协议、输出schema、Java解析与校验 | 原始失败脱敏留样，不把文本直接写库 |
-| 看似正确但事实不符 | 输入事实、模糊信息、prompt版本 | 纳入固定评估集，不用一次成功掩盖错误 |
-| 用量/费用缺失 | 提供方是否返回用量、价格和币种来源 | 标未知或有依据估算，不能填0当免费 |
-| Agent查到别人数据 | 工具是否真正复用Service授权、会话身份和范围 | 先关闭工具入口并修权限，模型提示词不能代替鉴权 |
+| Redis 连接失败或超时 | Docker 容器状态、端口映射、密码与 `spring.data.redis.timeout` | 模拟停掉 Redis 验证业务是否按设计回源 MySQL 或给出明确降级 |
+| 缓存读到乱码或反序列化失败 | `RedisTemplate` 键/值序列化器（推荐 Key 用 String、Value 用 JSON） | 写一条实体再读回核对类型与中文 |
+| 更新工单后读到旧数据 | 是否在数据库更新之后删除缓存、缓存键名是否与查询一致 | 先查缓存 → 改状态 → 再查确认拿到新状态与版本 |
+| 事务回滚却发出 MQ 消息 | 是否把 `convertAndSend` 直接写在未提交的 `@Transactional` 方法里 | 改用 `@TransactionalEventListener(phase = AFTER_COMMIT)` 并用外键失败用例验证不发消息 |
+| 死信队列未触发超时告警 | 原队列 `x-dead-letter-exchange` / `x-dead-letter-routing-key` 与 TTL 单位（毫秒） | 设短 TTL（如 10 秒）观察管理台消息流转与消费者日志 |
+| 消费者重复处理同一消息 | 是否开启手动 ACK、是否在消费端按 `messageId` 去重 | 手动重放同 `messageId` 验证不重复写通知或告警日志 |

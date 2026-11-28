@@ -1,18 +1,18 @@
 {
   "title": "工单项目设计与数据约定",
-  "description": "Spring Boot 标准分层、四表模型与事务设计，及早期演进快照。",
+  "description": "标准 8 子包架构、四表结构、权限与乐观锁契约，以及 Redis/RabbitMQ 与二期对接边界。",
   "date": "2026-10-21T00:00:00+08:00",
-  "lastmod": "2026-11-27T00:00:00+08:00",
+  "lastmod": "2026-11-28T00:00:00+08:00",
   "weight": 180,
   "group": "project-docs",
   "draft": false
 }
 
-> **2026-11-27 最新核对**：早期控制台与文件仓库类已清理，现统一为 Spring Boot 8 子包结构（`config`/`controller`/`domain`/`dto`/`exception`/`mapper`/`repository`/`service`）；数据表新增 `ticket_action_log`，`assign`/`resolve`/`close` 在同一 `@Transactional` 事务内执行 `expectedVersion` 条件更新与审计日志插入，身份与角色归属均从 `Authentication` 读取。下方第 1 节起保留早期文件/控制台及阶段接线快照。
+> 2026-11-15：入门用的 HelloController 已按学习者要求移除；第 14、15 节保留当时的学习快照。
 
 [返回项目首页](/learning/project-docs/) · [需求](/learning/project-requirements/) · [运行与验收](/learning/project-verification/)
 
-核对日期：2026-11-15；数据库查询分层整理见本页末节，11月14日的学习路线调整保留原记录。第1—9节记录原控制台及可复用结构；第10—12节为数据库/Web/AI/Agent目标；第13—17节保留历史接线快照；第18节记录11月8日多列DTO、领域对象与只读Repository分层；第19节记录11月9日数据库创建POST、自增主键与约束错误处理。正式 Web 仍连接 Service 与文件仓库；`/api/db`提供查询、创建和派单练习接口，派单成功路径已在隔离 H2 练习，数据库解决/验收及权限尚未闭环。
+核对日期：2026-11-28。第 1—9 节保留早期控制台与文件仓库学习快照（对应旧代码已于 2026-11-26 先 Git 存档后清理，项目已切换为标准 Spring Boot 8 子包数据库架构）；第 10—20 节保留阶段演进快照；**当前真实结构、认证授权、乐观锁、审计日志事务及 2026-11-28 纯 Java（Redis + RabbitMQ）演进设计请以文末第 21 节为准**。
 
 2026-10-28 环境补充：本机数据库为 MySQL 8.4.13，驱动为 Connector/J 26.10.0。独立 JdbcTicketQueryDemo 已完成参数化状态查询、SQL NULL读取和方法提取；它直接查询练习库，没有接入下图的正式Service/Repository。正式业务仍使用内存/文件仓库；10月29日更新事务跟练见第13节。环境维护与验收见[运行与验收第 10 节](/learning/project-verification/#10-2026-10-28-mysql-升级验收)。
 
@@ -400,3 +400,26 @@ TicketMapper → MyBatis → MySQL
 一条条件 UPDATE 同时设置处理人、`IN_PROGRESS` 与版本加一；条件包括工单编号、`OPEN` 状态和目标用户为已启用工程师。影响行数为 1 返回 200；为 0 时另查工单，未找到返回 404，其余条件不满足返回 409。`version + 1` 未比较 `expectedVersion`；目标工程师条件也不等于操作人认证授权。更新和分类查询是不同操作，并发时错误分类仍需设计。
 
 数据库查询结果由 MyBatis 映射为 `TicketSummary`；摘要查询直接返回它，领域查询经 `TicketSummaryConverter` 和 `Ticket.restore` 构造 `Ticket`。`CreateDatabaseTicketRequest`、`TicketInsert`、`TicketSummary` 分别承载创建输入、待插入数据及生成主键、查询结果。
+
+## 21. 2026-11-25 至 11-28 当前架构与纯 Java（Redis + RabbitMQ）演进设计
+
+### 当前标准 8 子包结构（已清理早期文件与控制台旧代码）
+
+```text
+HTTP Client → Spring Security (DatabaseUserDetailsService + BCrypt + @PreAuthorize)
+  → controller/DatabaseTicketController
+  → service/DatabaseTicketQueryService | DatabaseTicketCommandService (@Transactional)
+  → repository/TicketQueryRepository | TicketWriteRepository → DatabaseTicketRepository
+  → mapper/TicketMapper | UserMapper | TicketActionLogMapper
+  → MySQL (device / app_user / ticket / ticket_action_log)
+```
+
+- **认证与三角色归属隔离**：登录走 `app_user` 表 BCrypt 校验；操作人一律由服务端 `Authentication` 确定；`findSummary`、`findLogs`、`resolve`、`close` 均已落实按 `reporterId`/`assigneeId` 的归属拦截，`create` 自动绑定登录人为 `reporterId`。
+- **乐观锁与审计日志事务**：`assign`/`resolve`/`close` 在 SQL `WHERE` 中同时校验 `id`、前置状态、归属/工程师资格与 `version = #{expectedVersion}`，并在 `Service` 层通过 `@Transactional` 与 `TicketActionLogMapper.insertLog` 同事务执行（H2 外键失败回滚单测已验证自动回滚）。
+
+### 2026-11-28 演进设计（4 周纯 Java 冲刺 + 二期 Python Agent 预留）
+
+1. **A2 规范收口（第 1 周）**：路径收敛至 `/api/v1/tickets` 与 `/api/v1/devices`，清理无权限调试接口；列表补齐三角色归属过滤与动态分页；补高频联合索引并通过 `EXPLAIN` 验证；引入 `@Valid`、自定义 `LoginUser`（移除 Controller 对 `UserMapper` 的直接依赖）、统一响应体 `Result<T>`、业务异常下沉 Service、OpenAPI 3 / Knife4j 文档、SLF4J + MDC `requestId`、可执行 Fat JAR 与内嵌 Tomcat 参数配置。
+2. **M1 Redis 设计（第 2 周）**：Spring Security 升级为 **JWT + Redis**（登出黑名单/缓存）；设备与高频工单详情落地 **Cache-Aside**（空值防穿透、随机 TTL 防雪崩、写后删缓存）；创建工单落地 `X-Request-Id` + Redis `SET NX EX` 防重幂等（与数据库唯一约束双保险）及简易限流。
+3. **M2 RabbitMQ 设计（第 3 周）**：工单写事务通过 `@TransactionalEventListener(phase = AFTER_COMMIT)` 发送 Topic 事件消息，保证事务回滚不误发消息；采用 **TTL + 死信队列（DLX）** 实现工单超期未派单自动升级告警；开启 Publisher Confirm/Return、消息持久化、消费者手动 ACK 与基于 `messageId` 的消费幂等。
+4. **二期独立 Python Agent 边界（后置）**：不在 Java 侧引入 Spring AI 或大模型调用；二期另起独立 `ops-agent-py`（Python + FastAPI + LangGraph）服务，通过本项目的 OpenAPI 受控接口、JWT 身份透传、Redis 与 RabbitMQ 工单事件无缝衔接，保持业务与智能体彻底解耦。

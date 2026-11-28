@@ -1,20 +1,18 @@
 {
   "title": "设备工单的数据与接口约定",
-  "description": "现有三表与计划中的动作日志、最小接口、权限和只读AI建议边界。",
+  "description": "四表结构、RESTful 接口契约、权限与乐观锁规则、Redis/RabbitMQ 约定与二期 Python Agent 边界。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 100,
   "group": "tools",
   "draft": false,
-  "lastmod": "2026-11-27T00:00:00+08:00"
+  "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-2026-11-27 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 `POST /api/db/tickets`（自动取登录人）、`assign`/`resolve`/`close` 四态闭环 + `expectedVersion` 乐观锁、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离，以及 `ticket_action_log` + `@Transactional` 事务与 H2 外键失败回滚测试。当前待收尾 `GET /api/db/tickets` 列表接口权限与 SLF4J 日志，随后进入纯 Java **B 阶段（B01–B09）**。
+2026-11-28 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 `POST /api/db/tickets`（自动取登录人）、`assign`/`resolve`/`close` 四态闭环 + `expectedVersion` 乐观锁、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离，以及 `ticket_action_log` + `@Transactional` 事务与 H2 外键失败回滚测试。当前按 4 周纯 Java 后端路线推进：**第 1 周收口 `/api/v1` 规范接口与联合索引 → 第 2 周 M1 Redis → 第 3 周 M2 RabbitMQ → 第 4 周并发测试与 Docker 部署**，二期再以独立 Python 服务对接 Agent 能力。
 
 ## 当前样本和状态
 
-`ops_ticket_dev` 已有 `device`、`app_user`、`ticket`；建表依据项目 `sql/01_schema.sql`。用户/设备实际编号为1至4、1至3：reporter_a=1、engineer_a=2、admin_a=3、reporter_b=4；投影仪=1且已停用，空调=2，打印机=3。学习记录确认工单1“空调不制冷”已派给2，状态IN_PROGRESS。之后的插入和查询以实际 SELECT 为准，不能假定打印机工单一定是2或已插入。
-
-旧教材中的工单101/102/103是另设的教学样本，**不是当前库的现状**。需要时在隔离测试库创建，不覆盖开发数据来凑教材输出；自增编号允许有空洞。
+`ops_ticket_dev` 已有 `device`、`app_user`、`ticket`、`ticket_action_log` 四张表；建表依据项目 `sql/01_schema.sql`。用户/设备实际编号为 1 至 4、1 至 3：`reporter_a=1`、`engineer_a=2`、`admin_a=3`、`reporter_b=4`；投影仪=1（已停用）、空调=2、打印机=3。所有实测均以真实 `SELECT` 为准，旧教材中的 101/102/103 仅作隔离教学样本。
 
 ## 第一版的角色与流程
 
@@ -22,78 +20,53 @@
 报修人创建 OPEN → 管理员派单 IN_PROGRESS → 指定工程师解决 RESOLVED → 原报修人验收 CLOSED
 ```
 
-REPORTER看自己的工单；ENGINEER看分给自己的工单；ADMIN看全部。创建身份来自会话；不能由请求自报actorId或reporterId。派单必须目标用户存在、启用且为ENGINEER，设备须在创建时启用。FK只保证存在，CHECK只保证定义的行内约束，不自动实现上述权限与业务规则。
+- `REPORTER` 只能看自己创建的工单与日志；`ENGINEER` 只能看指派给自己的工单与日志；`ADMIN` 查看全部。
+- 操作人身份一律由服务端认证上下文获取，绝不信任请求体自报的 `reporterId` 或 `actorId`。
+- 派单要求目标用户存在、启用且角色为 `ENGINEER`；创建要求目标设备启用。外键只保证引用存在，CHECK 只保证单行约束，不能替代业务权限与状态机校验。
 
-首版不做退回、评论、附件、任意状态设置、复杂设备后台或公开注册。三类演示账号和设备通过明确的初始化流程准备；密码占位 `NOT_A_LOGIN_HASH` 不可登录，登录阶段用Spring Security PasswordEncoder生成哈希。
+## 表结构与演进约定
 
-## 表与字段
-
-| 表/记录 | 当前或计划 | 用途 |
+| 表 | 当前状态 | 字段与演进约定 |
 | --- | --- | --- |
-| app_user | 已有SQL | id、username、password_hash、role、enabled |
-| device | 已有SQL | id、code、name、location、enabled；停用保留历史 |
-| ticket | 已有SQL | id、title、description、device_id、reporter_id、assignee_id、status、version、created_at、updated_at |
-| ticket_action_log | A1计划新增 | 工单状态动作、操作者、前后状态、note、时间；resolve的处理说明写note，与状态同事务 |
-| 创建请求去重信息 | A2在ticket_action_log补充 | CREATE动作使用request_key、request_hash，按(actor_id, action, request_key)唯一；保存对应ticket_id；非创建动作不要求request_key；当前尚无此实现 |
-| ticket_comment / ticket_resolution | 延后 | 首版不必为评论或多轮处理新增表；已有教材案例仅供扩展参考 |
+| `app_user` | 已有 SQL | `id`、`username`、`password_hash`（BCrypt）、`role`、`enabled` |
+| `device` | 已有 SQL | `id`、`code`、`name`、`location`、`enabled`；第 1 周按需补 `device_type`、`model` 字段以贴合设备运维场景 |
+| `ticket` | 已有 SQL | `id`、`title`、`description`、`device_id`、`reporter_id`、`assignee_id`、`status`、`version`、`created_at`、`updated_at`；第 1 周补 `(reporter_id, status, created_at)`、`(assignee_id, status, created_at)`、`(status, created_at)` 联合索引 |
+| `ticket_action_log` | 已有 SQL | `id`、`ticket_id`、`actor_id`、`action`、`from_status`、`to_status`、`created_at`；第 1 周补 `note` 处理说明、`from_status` 允许 `NULL`（记录 `CREATE`）及 `(ticket_id, created_at)` 索引 |
+| 幂等防重 / 通知记录 | 第 2–3 周补齐 | 创建防重采用 `X-Request-Id`（Redis `SET NX EX` + 数据库唯一约束双保险）；MQ 消费按 `messageId` 去重并记录通知/SLA 超时告警流水 |
 
-编号Java用long/Long、数据库BIGINT。数据库新增ID由AUTO_INCREMENT产生，不照搬文件仓库的maxId+1；创建命令与已持久化对象可分开建模，得到真实ID后再构造对象。不为了实现旧 `void add(Ticket)` 签名让数据库插入虚假编号；到接库时有意识地调整契约。
+编号在 Java 中用 `long`/`Long`，MySQL 用 `BIGINT AUTO_INCREMENT`。待派单处理人为 SQL `NULL`（Java `Long null`）。开发库 `ops_ticket_dev`，集成/并发测试使用独立 `ops_ticket_test`。
 
-待派单处理人是SQL NULL，对应Java Long null，不是0。数据库目前允许description默认空字符串；Web创建要求trim后1—2000长度，这是未来应用规则，要与现有演示数据/迁移明确区分。标题沿用trim后1—50，Java当前按String.length计；补充字符/emoji与数据库字符长度的差异在Web校验任务中统一约定并测边界，不宣称天然一致。
-
-开发库ops_ticket_dev，测试用独立ops_ticket_test，恢复演练用新库；测试账号不应写开发库。数据和脚本保留来源，DDL迁移不能当普通事务回滚演示。
-
-## A 阶段最小接口（待实现）
+## 目标 RESTful 接口契约（第 1 周由 `/api/db` 收口至 `/api/v1`）
 
 | 请求 | 输入与成功结果 | 核心规则 |
 | --- | --- | --- |
-| POST /api/tickets | title、description、deviceId；A2加入requestKey；首次201返回ticketId；同键同内容重试200返回原ticketId，最新状态/版本从GET详情取得 | 当前报修人；启用设备；同一人的同键同内容返回原ticketId，可查详情取最新状态；不同内容409 |
-| GET /api/tickets | status、keyword、deviceId、page、size；items/total | 先限制当前用户可见范围，再一致筛选与计数；稳定排序 |
-| GET /api/tickets/{id} | 详情和必要动作记录 | 角色与归属限制同列表 |
-| POST /api/tickets/{id}/assign | engineerId、expectedVersion | ADMIN、OPEN、启用ENGINEER；成功IN_PROGRESS |
-| POST /api/tickets/{id}/resolve | content、expectedVersion | 当前处理人、IN_PROGRESS；非空处理说明；成功RESOLVED |
-| POST /api/tickets/{id}/accept | expectedVersion | 原报修人、RESOLVED；成功CLOSED |
-| GET /api/devices | 可报修设备列表 | 已登录；创建时服务端再次检查是否启用 |
-| GET /api/users/engineers | 启用工程师的最小id/name列表 | 仅管理员派单需要；不返回密码或整张用户表 |
+| `POST /api/v1/auth/login`、`logout` | 登录签发 JWT（第 2 周接 Redis 黑名单） | Spring Security + BCrypt；淘汰 HTTP Basic |
+| `GET /api/v1/devices` | 可报修启用设备列表（走 Redis 缓存） | 已登录可读；创建工单时服务端二次核验启用状态 |
+| `POST /api/v1/tickets` | `title`、`description`、`deviceId` + Header `X-Request-Id`；成功 201 | `REPORTER`/`ADMIN`；身份取自 `LoginUser`；同 `X-Request-Id` 防重幂等 |
+| `GET /api/v1/tickets` | `status`、`keyword`、`deviceId`、`page`、`size`；返回分页 `items`/`total` | 按三角色自动加数据归属过滤；稳定排序 `created_at DESC, id DESC` |
+| `GET /api/v1/tickets/{id}` | 工单详情（含 `version`、`reporterId`、`assigneeId`） | 角色与资源归属校验，防越权读取 |
+| `GET /api/v1/tickets/{id}/logs` | 工单操作流水列表 | 三角色归属隔离与详情一致 |
+| `POST /api/v1/tickets/{id}/assign` | `engineerId`、`expectedVersion` | `ADMIN`、`OPEN`、启用 `ENGINEER`；同事务写 `ASSIGN` 日志 |
+| `POST /api/v1/tickets/{id}/resolve` | `note`（处理说明）、`expectedVersion` | 指定 `ENGINEER`、`IN_PROGRESS`；同事务写 `RESOLVE` 日志 |
+| `POST /api/v1/tickets/{id}/close` | `expectedVersion` | 原 `REPORTER`、`RESOLVED`；同事务写 `CLOSE` 日志 |
 
-列表page从1开始，size默认10、限制1—100；排序created_at DESC,id DESC。第一版采用普通分页，记录并发新增导致后页移动的限制。时间统一记录本地业务时区Asia/Shanghai；LocalDateTime本身无时区，部署须保持约定。
+统一响应包装体：`Result<T>(code, message, data, requestId)`。状态码约定：参数校验失败 `400`、未认证 `401`、角色或资源越权 `403`、资源不存在 `404`、状态/版本/重复键冲突 `409`、服务内部错误 `500`（不暴露堆栈与凭证，返回 `requestId` 便于日志定位）。
 
-状态码：校验400，未认证401，禁止访问403，资源不存在404，状态/旧版本/请求键冲突409，意外故障500。缺CSRF的写请求可能先403，权限测试应带有效认证和CSRF再验证越权，不能把所有403都当授权正确。
+## Redis 与 RabbitMQ 契约约定（第 2–3 周）
 
-## A2 工程规则
+### Redis 键空间约定（M1）
+- `device:detail:{id}` / `ticket:detail:{id}`：Cache-Aside 读缓存，空值短 TTL 防穿透、正常值带随机偏移 TTL 防雪崩；工单写操作提交后删除对应缓存键。
+- `idemp:ticket:create:{userId}:{requestKey}`：创建防重键（`SET NX EX`），短时重复提交直接拦截。
+- `auth:jwt:blacklist:{jti}`：JWT 主动登出黑名单，TTL 与 Token 剩余有效期一致。
 
-Session Cookie + Spring Security，同源最小页面；formLogin使用username/password表单及有效CSRF token，不先引入JWT。使用框架密码编码，不自己写加密；页面隐藏按钮不替代授权。
+### RabbitMQ 事件与死信约定（M2）
+- **状态变更事件（Topic Exchange）**：路由键 `ticket.created` / `ticket.assigned` / `ticket.resolved` / `ticket.closed`，仅在数据库事务 `@TransactionalEventListener(phase = AFTER_COMMIT)` 后发送，消息体含 `messageId`、`ticketId`、`eventType`、`version`、`occurredAt`。
+- **SLA 超时延迟队列（TTL + DLX）**：工单创建时投递延迟消息，超时进入死信队列；消费者回查工单状态，仍为 `OPEN` 则写入超时升级日志并触发告警，已派单则直接手动 ACK 忽略。
+- **可靠性与幂等**：开启 Publisher Confirm/Return + 消息持久化；消费者开启手动 ACK 并基于 `messageId` 去重防重复消费。
 
-状态变化使用带id、预期状态、版本和适当归属条件的UPDATE，检查影响行数；成功后同事务写动作记录。任何日志写失败都须回滚状态/版本。0行不是成功，不能继续插成功日志。创建去重在ticket_action_log用(actor_id, action, request_key)唯一约束和request_hash；创建工单与CREATE日志同事务。同键同内容返回原ticketId，不同内容409；唯一冲突后按事务失败处理并在正确事务边界重读。派单/解决/验收不建通用幂等框架，重复或旧版本返回409且不追加日志。确切迁移和重读实现到A2任务学习。
+## 二期独立 Python Agent 联调边界（后置 O02–O04）
 
-外部模型调用不在业务数据库事务里执行，不拿着锁等待模型。日志带requestId与错误原因，避免记录密码、Cookie、API key和完整敏感描述。
-
-## B 阶段 AI 契约（待实现）
-
-`POST /api/tickets/{id}/ai-assistance` 由路径id定位当前用户有权访问的已有工单，服务端读取description和必要设备信息，不接收客户端自报身份或整张工单，输出受约束的 `summary`、`category`、`missingInformation`；category限定DISPLAY/PRINTING/HVAC/OTHER/UNKNOWN。输入/输出限长；仅整理描述和提出补充信息，不生成维修操作指令，不调用派单/解决/验收写接口。
-
-Java先按已有详情规则校验当前用户对工单的访问权，再读取真实description；负责上下文限长、结构解析和枚举/字段验证。模型给出正确JSON也可能语义错误，必须由用户审阅；人工后续操作仍走原业务校验。超时、限流、无效JSON、缺字段时返回可理解的建议不可用提示，保留原输入，人工业务仍可继续。模型功能可用配置关闭。
-
-待配置：提供方、API端点、模型名、环境变量key、单次超时、最大输入/输出与调用预算、费用币种/价格依据。未填之前只做本地契约和故障测试，标记真实模型未验证。
-
-## G Python只读Agent与C知识检索边界（主线计划）
-
-RAG资料导入须有来源、版本和访问范围；检索结果给可定位引用，无依据时明确不足。工具Agent第一步只读：允许的查询函数复用Service授权，不暴露任意SQL执行，身份不取模型参数；限制调用数量、步骤、总时长和上下文，异常有明确停止路径。
-
-以后若增加写工具，先展示动作参数和必要确认；执行时再次校验权限、参数、状态、版本和重复请求。模型输出、检索文档和聊天内容均不是授权凭证。B入门版不要求RAG；G工具Agent与C知识检索是后续明确里程碑。框架按需选一个，多Agent后置。
-
-## 首版建议的使用边界
-
-B首版只展示/复制参考，不提供直接回写按钮。现有rename只在控制台，不能视为已有HTTP修改接口；以后若加入人工采纳改标题，须单独定义报修人归属、允许状态、expectedVersion和日志同事务的HTTP接口，再实施并验收。
-
-## G任务与执行记录（尚未实现）
-
-任务状态：PENDING/RUNNING/WAITING_INPUT/SUCCEEDED/FAILED。任务归属当前认证用户；任务和每步记录持久化，保存model/promptVersion、工具参数/结果摘要、耗时与错误。查询任务也要检查归属。
-
-等待信息后继续同一任务；重启后明确恢复或标记中断，不永远停留RUNNING。工具回放重新鉴权并按需读取最新状态；不把数据库事务跨越远端模型调用。具体API/表在进入G时逐项设计，不预先生成全套空实现。
-
-## Python与Java联调约定（计划）
-
-Python原型先使用虚构工单，不要求用户登录；这不等于正式权限。联调时通过Java提供的受控只读HTTP接口访问隔离演示数据，明确请求/响应、超时、404与错误；不要让Python Agent直接操作业务数据库或执行任意SQL。
-
-真实用户数据必须先完成Java认证、用户资源归属校验和服务间可信身份传递；模型参数、上下文及文档都不能充当身份或权限。跨服务时不将用户Cookie当作通用服务凭据，需单独设计受信委派与校验。未完成这些条件前不公开服务，也不连接真实敏感工单。
+未来启动独立 `ops-agent-py`（Python + FastAPI + LangGraph）服务时，严格遵守三条边界：
+1. **不直连业务库**：Python Agent 只能通过本 Java 项目的受控 REST API（对照 OpenAPI 契约）或订阅 RabbitMQ 工单事件交互，禁止由模型拼 SQL 或直接写 MySQL。
+2. **权限透传与最小权限**：调用 Java 只读查询工具时携带可信身份凭据，由 Java 端执行三角色数据归属隔离；模型输出、提示词或检索文档均不构成授权。
+3. **人工确认与乐观锁写回**：Agent 只产出结构化诊断建议与引用来源，任何涉及派单或状态变更的操作必须由人工确认并走 Java 的 `expectedVersion` 乐观锁与事务审计接口。

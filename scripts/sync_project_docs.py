@@ -11,10 +11,10 @@ import re
 from urllib.parse import urlsplit
 
 PAGES = [
-    ("README.md", "project-docs", "设备运维工单项目文档", "当前控制台、JDBC与Web练习进度，Java＋AI路线和运行入口。", 160),
-    ("docs/requirements.md", "project-requirements", "工单项目需求与开发计划", "最小业务闭环、阶段验收与后续 AI、Agent 任务。", 170),
-    ("docs/design.md", "project-design", "工单项目设计与数据约定", "现有类、存档与Web入门设计，以及待实施的数据库业务和AI边界。", 180),
-    ("docs/verification.md", "project-verification", "工单项目运行与验收", "实际运行证据、后端验收与模型效果评估标准。", 190),
+    ("README.md", "project-docs", "设备运维工单项目文档", "纯 Java 后端（Spring Boot + MyBatis + MySQL + Redis + RabbitMQ）当前实现、接口与 4 周冲刺进度。", 160),
+    ("docs/requirements.md", "project-requirements", "工单项目需求与开发计划", "三角色四态业务闭环、工程规范与 Redis/RabbitMQ 演进计划（二期独立 Python Agent 后置）。", 170),
+    ("docs/design.md", "project-design", "工单项目设计与数据约定", "标准 8 子包架构、四表结构、权限与乐观锁契约，以及 Redis/RabbitMQ 与二期对接边界。", 180),
+    ("docs/verification.md", "project-verification", "工单项目运行与验收", "历次实测证据、事务回滚与权限验收记录，以及后续并发/压测验收标准。", 190),
 ]
 LINKS = {
     "docs/requirements.md": "/learning/project-requirements/",

@@ -13,9 +13,9 @@
   {{ $dash := site.Data.learning_dashboard }}
   {{ $currentStage := index (where $dash.groups "id" $dash.current_group) 0 }}
   <div class="hero-copy">
-    <p class="kicker"><span class="hero-section-number" aria-hidden="true">00</span><span class="hero-live-pill"><i class="hero-live-dot" aria-hidden="true"></i>{{ with $currentStage }}正在推进 · {{ .code }} {{ .title }}{{ else }}Java 与 AI 应用学习中{{ end }}</span></p>
+    <p class="kicker"><span class="hero-section-number" aria-hidden="true">00</span><span class="hero-live-pill"><i class="hero-live-dot" aria-hidden="true"></i>{{ with $currentStage }}正在推进 · {{ .code }} {{ .title }}{{ else }}Java 后端项目学习中{{ end }}</span></p>
     <h1><span class="hero-greeting-line hero-greeting-muted">你好，</span><span class="hero-greeting-line">我是<span class="hero-name">许愿瓶<svg class="hero-pencil-line" viewBox="0 0 220 15" aria-hidden="true" focusable="false"><path d="M3 10 C52 2 119 5 163 9 S199 11 216 5" pathLength="1"/></svg></span><span class="greeting-dot">。</span></span></h1>
-    <p class="hero-description">把遇到的问题想明白，<br class="hero-break">把学到的东西做成项目。<br>这里记录我的 Java 实践、操作系统笔记和 AI 探索。</p>
+    <p class="hero-description">把遇到的问题想明白，<br class="hero-break">把学到的东西做成项目。<br>这里记录我的 Java 后端实践、操作系统笔记与后续 Agent 探索。</p>
     <div class="inline-links"><a href="/learning/#dashboard">查看学习进度 <span aria-hidden="true">↗</span></a><a href="https://github.com/W1shBottle" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a><a href="/about/">关于我 <span aria-hidden="true">↗</span></a></div>
     <div class="hero-footer"><a href="#latest-notes">往下读 <span aria-hidden="true">↓</span></a><span>{{ len $posts }} 篇记录 <i aria-hidden="true">·</i> {{ len site.Data.wish.collections }} 个系列</span></div>
   </div>
@@ -23,8 +23,8 @@
     <div class="project-card-heading"><span>PROJECT / 01</span>{{ with $dash }}<time datetime="{{ .updated }}">{{ time.Format "2006.01.02" .updated }}</time>{{ end }}</div>
     <p class="kicker"><span class="status-dot" aria-hidden="true"></span>正在做的项目{{ with $currentStage }}<span class="project-week">{{ .code }} / {{ .title }}</span>{{ end }}</p>
     <h2>设备运维工单平台</h2>
-    <p>沿用一个工单项目，先完成后端业务，再加入 AI 功能并验证效果。</p>
-    <p class="stack mono">Java 21 / Spring Boot / MyBatis / MySQL</p>
+    <p>围绕同一个工单项目，打透纯 Java 后端、Redis 与 RabbitMQ 中间件（二期独立 Python Agent 后置）。</p>
+    <p class="stack mono">Java 21 / Spring Boot / MyBatis / MySQL / Redis / RabbitMQ</p>
     {{ $timeline := site.Data.learning_progress }}
     {{ $latest := index (where (sort $timeline.entries "date" "desc") "project" $timeline.current_project) 0 }}
     <ol class="steps"><li class="done"><span class="dot"></span>MyBatis 四态闭环与标准分包</li><li class="done"><span class="dot"></span>MySQL 登录与乐观锁校验</li><li class="current"><span class="dot"></span>{{ $latest.title }}<small>{{ time.Format "2006.01.02" $latest.date }} · 最近记录</small></li></ol>
