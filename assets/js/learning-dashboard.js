@@ -315,4 +315,93 @@
   });
   window.addEventListener('hashchange', revealTarget);
   revealTarget();
+
+  // Progressive enhancement for the course directory below:
+  // Without JS, all 5 groups remain visible with normal anchor links.
+  // With JS, clicking any group switches its panel in-place like the stage explorer above.
+  const dirRoot = document.querySelector('[data-learning-directory-tabs]');
+  const dirNav = dirRoot?.querySelector('[data-learning-group-tabs]');
+  if (dirRoot && dirNav) {
+    const dirLinks = [...dirNav.querySelectorAll('a[href^="#"]')];
+    const dirMap = new Map();
+
+    dirLinks.forEach(link => {
+      const id = link.dataset.groupId || decodeURIComponent(link.hash.slice(1));
+      const panel = document.getElementById(id);
+      if (!panel || !dirRoot.contains(panel)) return;
+      dirMap.set(id, { link, panel });
+    });
+
+    if (dirMap.size) {
+      dirNav.setAttribute('role', 'tablist');
+      const ids = [...dirMap.keys()];
+
+      function activateGroup(targetId, animate = true) {
+        if (!dirMap.has(targetId)) return;
+        dirMap.forEach(({ link, panel }, id) => {
+          const selected = id === targetId;
+          link.setAttribute('aria-selected', String(selected));
+          link.setAttribute('tabindex', selected ? '0' : '-1');
+          link.classList.toggle('is-selected', selected);
+          if (selected) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+          panel.hidden = !selected;
+          if (selected && animate && !motion.matches) {
+            panel.classList.remove('is-entering');
+            void panel.offsetWidth;
+            panel.classList.add('is-entering');
+          }
+        });
+      }
+
+      dirMap.forEach(({ link, panel }, id) => {
+        const tabId = `dir-tab-${id}`;
+        link.id = tabId;
+        link.setAttribute('role', 'tab');
+        link.setAttribute('aria-controls', id);
+        link.setAttribute('aria-selected', 'false');
+        link.setAttribute('tabindex', '-1');
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', tabId);
+
+        link.addEventListener('click', event => {
+          event.preventDefault();
+          activateGroup(id, true);
+        });
+
+        link.addEventListener('keydown', event => {
+          const pos = ids.indexOf(id);
+          let nextPos = -1;
+          if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextPos = (pos + 1) % ids.length;
+          else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextPos = (pos - 1 + ids.length) % ids.length;
+          else if (event.key === 'Home') nextPos = 0;
+          else if (event.key === 'End') nextPos = ids.length - 1;
+          if (nextPos >= 0) {
+            event.preventDefault();
+            const nextId = ids[nextPos];
+            activateGroup(nextId, true);
+            dirMap.get(nextId)?.link.focus();
+          }
+        });
+      });
+
+      dirRoot.dataset.tabsReady = 'true';
+
+      function syncGroupFromHash(shouldScroll = false) {
+        let hashId = '';
+        try { hashId = decodeURIComponent(location.hash.slice(1)); } catch { return false; }
+        if (!dirMap.has(hashId)) return false;
+        activateGroup(hashId, false);
+        if (shouldScroll) {
+          requestAnimationFrame(() => dirNav.scrollIntoView({ block: 'start' }));
+        }
+        return true;
+      }
+
+      if (!syncGroupFromHash(false)) {
+        activateGroup(ids[0], false);
+      }
+      window.addEventListener('hashchange', () => syncGroupFromHash(true));
+    }
+  }
 })();

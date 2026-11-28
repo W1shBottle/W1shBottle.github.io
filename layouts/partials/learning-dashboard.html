@@ -8,8 +8,8 @@
   </div>
   <div class="journey-overview">
     <article class="journey-total" aria-labelledby="journey-total-title">
-      <div class="journey-total-top"><span class="journey-project-label">{{ .project }} · Java + AI</span><span class="journey-badge {{ if eq .stats.accepted .stats.total }}badge-complete{{ else }}badge-active{{ end }}"><i aria-hidden="true"></i>{{ if eq .stats.accepted .stats.total }}已完成{{ else }}进行中{{ end }}</span></div>
-      <h3 id="journey-total-title">Java 后端与 AI 应用</h3>
+      <div class="journey-total-top"><span class="journey-project-label">{{ .project }} · 纯 Java 后端</span><span class="journey-badge {{ if eq .stats.accepted .stats.total }}badge-complete{{ else }}badge-active{{ end }}"><i aria-hidden="true"></i>{{ if eq .stats.accepted .stats.total }}已完成{{ else }}进行中{{ end }}</span></div>
+      <h3 id="journey-total-title">Java 后端工程与中间件</h3>
       <p class="journey-total-description">围绕同一个工单项目，逐步实现与验收。</p>
       <div class="journey-total-score"><div><strong>{{ .stats.percent }}<span>%</span></strong><span>整体任务验收</span></div><span><b>{{ .stats.accepted }}</b> / {{ .stats.total }} 项已验收</span></div>
       {{ partial "learning-meter.html" (dict "stats" .stats "label" "整体学习计划") }}
@@ -69,9 +69,9 @@
     </details>
     {{ end }}
   </div>
-  <details class="journey-optional"><summary><span>按需探索</span><span>轻量 RAG / 外部 SOP / MCP 等 {{ len .optional_tasks }} 项，不计入总进度</span><span class="journey-expand" aria-hidden="true">⌄</span></summary><p>遇到真实业务需求再选，不因为尚未学习而扣减主线进度。</p><ol class="journey-tasks">{{ range .optional_tasks }}{{ partial "learning-task.html" . }}{{ end }}</ol></details>
+  <details class="journey-optional"><summary><span>按需探索</span><span>微服务拆分 / 二期独立 Python Agent 等 {{ len .optional_tasks }} 项，不计入总进度</span><span class="journey-expand" aria-hidden="true">⌄</span></summary><p>遇到真实业务需求再选，不因为尚未学习而扣减主线进度。</p><ol class="journey-tasks">{{ range .optional_tasks }}{{ partial "learning-task.html" . }}{{ end }}</ol></details>
   <div class="journey-bottom-meta"><span>依据实际验收记录</span><span>更新于 <time datetime="{{ .updated }}">{{ time.Format "2006.01.02" .updated }}</time></span></div>
-  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需扩展不计入分母；其余 {{ .stats.total }} 项包含 Java 基础、A1 核心后端、A2 工程与交付、B Java AI 业务功能、C 验证与工程化，以及贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>进度条分为已验收与跟练两段。“已开始”是这两类任务的合计，表示涉及过，并不代表整项完成；同一任务持续多次练习时，数字可能不变，但学习笔记和时间线会记录具体变化。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
+  <details class="journey-method" id="progress-method"><summary>这些百分比怎么算？</summary><div><p>整体 = 已验收任务数 ÷ 必修任务总数；阶段 = 本阶段已验收数 ÷ 本阶段任务数。各任务按一项计数，整体不取各阶段百分比的平均值。百分比四舍五入到整数，精确数量同时保留。</p><p>当前 {{ .total_items }} 项清单中，{{ len .optional_tasks }} 项按需/后置扩展不计入分母；其余 {{ .stats.total }} 项包含起步 Java 基础、A1 后端业务闭环、A2 工程规范与交付、M1 Redis 缓存与幂等、M2 RabbitMQ 异步与死信，以及贯穿学习。阶段有 0% 也可能已有多项跟练，不能据此判断没有进展。</p><p>进度条分为已验收与跟练两段。“已开始”是这两类任务的合计，表示涉及过，并不代表整项完成；同一任务持续多次练习时，数字可能不变，但学习笔记和时间线会记录具体变化。</p><p>数据来自<a href="/learning/checklists/">技能 To-do List</a>；勾选前核对该项要求与实际证据，不凭文件数量、上课天数或 AI 生成的代码计分。这是任务验收比例，不是熟练度、开发工时或代码完成率；各项难度并不相同，进度也不是预计剩余时间。</p><p>以后整理学习笔记时同步验收状态，页面随发布更新；展开与收起只改变展示。任务范围调整时，分母与比例也会变化。</p></div></details>
 </section>
 {{ $script := resources.Get "js/learning-dashboard.js" | minify | fingerprint }}<script defer src="{{ $script.RelPermalink }}"></script>
 {{ end }}
