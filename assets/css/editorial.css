@@ -135,8 +135,8 @@
 }
 .home-main .small-insight .insight-label { font:500 11.5px var(--font-mono); color:var(--accent); white-space:nowrap; }
 .home-main .small-insight p { font-size:14.5px; line-height:1.8; color:var(--ink); flex:1; }
-.home-main .small-insight > a { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border:1px solid var(--editorial-rule); border-radius:999px; font-size:12px; white-space:nowrap; color:var(--muted); transition:border-color .18s ease,color .18s ease; }
-.home-main .small-insight > a:hover { border-color:var(--accent); color:var(--accent); }
+.home-main .small-insight > a { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border:1px solid var(--editorial-rule); border-radius:999px; background:var(--folio-inset,transparent); font-size:12px; white-space:nowrap; color:var(--muted); transition:border-color .18s ease,color .18s ease,background-color .18s ease; }
+.home-main .small-insight > a:hover { border-color:var(--accent); color:var(--accent); background:var(--folio-hover-surface,transparent); }
 
 /* De-boxified unified editorial series index (zero bulky boxes, zero void on expand!) */
 .home-main .series-section { padding-top:36px; border-top:0; }

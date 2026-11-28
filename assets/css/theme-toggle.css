@@ -3,12 +3,12 @@
   position:relative; display:grid; place-items:center; flex:0 0 36px;
   width:36px; height:36px; min-width:36px; min-height:36px;
   padding:0; margin:0 4px 0 8px; align-self:center;
-  border:1px solid var(--line); border-radius:50%; background:var(--surface);
+  border:1px solid var(--line); border-radius:50%; background:var(--folio-inset,transparent);
   color:var(--content-primary); cursor:pointer; overflow:visible;
   touch-action:manipulation; view-transition-name:wish-theme-lamp;
   transition:background-color 300ms ease,border-color 220ms ease;
 }
-.site-head .theme-lamp:hover { border-color:var(--content-secondary); }
+.site-head .theme-lamp:hover { border-color:var(--content-secondary); background:var(--folio-hover-surface,var(--surface)); }
 .site-head .theme-lamp:focus-visible { outline:2px solid var(--editorial-accent,var(--accent)); outline-offset:5px; }
 .theme-lamp-icon { display:block; width:19px; height:19px; overflow:visible; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 .theme-lamp-sun,.theme-lamp-moon { transform-origin:12px 12px; transition:opacity 240ms ease,transform 500ms cubic-bezier(.34,1.35,.64,1); }

@@ -196,7 +196,7 @@
   border: 1px solid var(--line);
   border-radius: 13px;
   color: var(--content-primary);
-  background: var(--glass-solid);
+  background: var(--folio-inset, var(--glass));
   font: inherit;
 }
 
@@ -286,7 +286,8 @@
 .jobs-sources {
   margin: 30px 0;
   padding: 20px 24px;
-  background: var(--surface);
+  background: var(--folio-inset, var(--surface));
+  border: 1px solid var(--line);
   border-radius: 20px;
 }
 
@@ -439,7 +440,7 @@
   border-radius: 999px;
   min-width: 32px;
   min-height: 32px;
-  background: var(--surface);
+  background: var(--folio-inset, var(--surface));
   border-color: var(--glass-edge);
   padding: 3px 9px;
 }
