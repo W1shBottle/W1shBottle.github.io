@@ -8,9 +8,9 @@
   "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-更新于 2026-11-28（纯 Java 后端 4 周冲刺路线定稿）。围绕同一个**设备运维工单平台**，基于 **Java 21 / Spring Boot / MyBatis / MySQL / Redis / RabbitMQ** 推进 **A1 → A2 → M1 Redis（R01–R04）→ M2 RabbitMQ（M01–M04）**，不采用 Spring AI；AI / Agent 能力留待二期直接以独立 **Python（FastAPI + LangGraph）** 服务对接本项目。完整阶段任务见[阶段日程](/learning/schedule/)与[技能清单](/learning/checklists/)。
+更新于 2026-11-28（纯 Java 后端统一周号定稿：第 1–17 周）。围绕同一个**设备运维工单平台**，基于 **Java 21 / Spring Boot / MyBatis / MySQL / Redis / RabbitMQ** 推进 **A1 → A2 → M1 Redis（R01–R04）→ M2 RabbitMQ（M01–M04）**，不采用 Spring AI；AI / Agent 能力留待二期直接以独立 **Python（FastAPI + LangGraph）** 服务对接本项目。完整周次与阶段任务见[阶段日程](/learning/schedule/)与[技能清单](/learning/checklists/)。
 
-每周以可验证的小成果为目标，每天约 3 小时；旧教材中的“第几周”仅保留为章节索引，实际顺序以新版[阶段日程](/learning/schedule/)为准。课后答案是局部参考，不把看过或生成的代码计为已掌握。
+全站与本地统一采用一套 **第 1–17 周** 编号（不再区分新旧周号），每天约 3 小时，按实际验收推进。课后答案是局部参考，不把看过或生成的代码计为已掌握。
 
 ## 路线总览
 
@@ -22,10 +22,10 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| [阶段日程](/learning/schedule/) | 纯 Java 4 周冲刺计划、当前实测进度、阶段门槛与下一步 |
-| [Java与数据库](/learning/java-sql/) | Java/SQL 基础与 JDBC 查询、事务参考 |
-| [Web与权限](/learning/web-security/) | HTTP 接口、MyBatis、四态流转、认证授权与错误处理 |
-| [工程交付与测试参考](/learning/testing-delivery/) | 并发、测试、日志与部署交付参考 |
+| [阶段日程](/learning/schedule/) | 第 1–17 周统一学习计划、当前第 14 周接续点与阶段门槛 |
+| [Java与数据库](/learning/java-sql/) | 第 1–6 周：Java/SQL 基础与 JDBC 查询、事务参考 |
+| [Web与权限](/learning/web-security/) | 第 7–13 周：HTTP 接口、MyBatis、四态流转、认证授权与错误处理 |
+| [工程收口与中间件交付](/learning/testing-delivery/) | 第 14–17 周：A2 收口、Redis、RabbitMQ、并发测试与部署交付 |
 | [投递与面试](/learning/spring-applications/) | 岗位核对、能力证据表达与求职节奏 |
 | [资料与排错](/learning/resources/) | 按阶段查官方文档与常见故障定位 |
 | [技能 To-do List 与验收模板](/learning/checklists/) | 分阶段技术栈、主线 46 项与后置/按需 5 项验收状态 |
@@ -37,7 +37,7 @@
 
 - **已完成跟练与实测**：真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环；落地 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权、`GET` 单条与日志的三角色归属隔离、`POST` 创建自动取登录人；在三条状态操作上实测 `expectedVersion` 乐观锁（`409`）；新建 `ticket_action_log` 表并用 `@Transactional` 绑定状态变更与审计日志，在隔离 H2 中编写外键失败回滚测试（4 项全绿）。
 - **主线验收口径**：主线 46 项中已正式验收保持 **6 项（`J01–J06`）**，跟练待巩固保持 **22 项**，待学 **18 项**。
-- **下一步（第 1 周优先）**：收口 `/api/v1/tickets` 列表三角色归属隔离与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`；引入 `@Valid`、自定义 `LoginUser`、统一返回体 `Result<T>`、OpenAPI 接口文档、SLF4J + MDC 日志及可执行 Fat JAR / Tomcat 参数配置，随后依次接入 Redis 与 RabbitMQ。
+- **下一步（第 14 周优先）**：收口 `/api/v1/tickets` 列表三角色归属隔离与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`；引入 `@Valid`、自定义 `LoginUser`、统一返回体 `Result<T>`、OpenAPI 接口文档、SLF4J + MDC 日志及可执行 Fat JAR / Tomcat 参数配置，随后按第 15–17 周依次完成 Redis、RabbitMQ 与并发部署交付。
 
 ## 纯 Java 后端核心交付边界
 

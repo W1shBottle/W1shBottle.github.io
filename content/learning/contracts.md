@@ -8,7 +8,7 @@
   "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-2026-11-28 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 `POST /api/db/tickets`（自动取登录人）、`assign`/`resolve`/`close` 四态闭环 + `expectedVersion` 乐观锁、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离，以及 `ticket_action_log` + `@Transactional` 事务与 H2 外键失败回滚测试。当前按 4 周纯 Java 后端路线推进：**第 1 周收口 `/api/v1` 规范接口与联合索引 → 第 2 周 M1 Redis → 第 3 周 M2 RabbitMQ → 第 4 周并发测试与 Docker 部署**，二期再以独立 Python 服务对接 Agent 能力。
+2026-11-28 核对：项目已清理早期控制台与文件仓库演示代码并按标准 8 子包分层；真实 MySQL 已跑通 `POST /api/db/tickets`（自动取登录人）、`assign`/`resolve`/`close` 四态闭环 + `expectedVersion` 乐观锁、`GET /api/db/tickets/{id}` 与 `GET /api/db/tickets/{id}/logs` 三角色归属隔离，以及 `ticket_action_log` + `@Transactional` 事务与 H2 外键失败回滚测试。当前按统一第 14–17 周推进：**第 14 周收口 `/api/v1` 规范接口与联合索引 → 第 15 周 M1 Redis → 第 16 周 M2 RabbitMQ → 第 17 周并发测试与 Docker 部署**，二期再以独立 Python 服务对接 Agent 能力。
 
 ## 当前样本和状态
 
@@ -29,18 +29,18 @@
 | 表 | 当前状态 | 字段与演进约定 |
 | --- | --- | --- |
 | `app_user` | 已有 SQL | `id`、`username`、`password_hash`（BCrypt）、`role`、`enabled` |
-| `device` | 已有 SQL | `id`、`code`、`name`、`location`、`enabled`；第 1 周按需补 `device_type`、`model` 字段以贴合设备运维场景 |
-| `ticket` | 已有 SQL | `id`、`title`、`description`、`device_id`、`reporter_id`、`assignee_id`、`status`、`version`、`created_at`、`updated_at`；第 1 周补 `(reporter_id, status, created_at)`、`(assignee_id, status, created_at)`、`(status, created_at)` 联合索引 |
-| `ticket_action_log` | 已有 SQL | `id`、`ticket_id`、`actor_id`、`action`、`from_status`、`to_status`、`created_at`；第 1 周补 `note` 处理说明、`from_status` 允许 `NULL`（记录 `CREATE`）及 `(ticket_id, created_at)` 索引 |
-| 幂等防重 / 通知记录 | 第 2–3 周补齐 | 创建防重采用 `X-Request-Id`（Redis `SET NX EX` + 数据库唯一约束双保险）；MQ 消费按 `messageId` 去重并记录通知/SLA 超时告警流水 |
+| `device` | 已有 SQL | `id`、`code`、`name`、`location`、`enabled`；第 14 周按需补 `device_type`、`model` 字段以贴合设备运维场景 |
+| `ticket` | 已有 SQL | `id`、`title`、`description`、`device_id`、`reporter_id`、`assignee_id`、`status`、`version`、`created_at`、`updated_at`；第 14 周补 `(reporter_id, status, created_at)`、`(assignee_id, status, created_at)`、`(status, created_at)` 联合索引 |
+| `ticket_action_log` | 已有 SQL | `id`、`ticket_id`、`actor_id`、`action`、`from_status`、`to_status`、`created_at`；第 14 周补 `note` 处理说明、`from_status` 允许 `NULL`（记录 `CREATE`）及 `(ticket_id, created_at)` 索引 |
+| 幂等防重 / 通知记录 | 第 15–16 周补齐 | 创建防重采用 `X-Request-Id`（Redis `SET NX EX` + 数据库唯一约束双保险）；MQ 消费按 `messageId` 去重并记录通知/SLA 超时告警流水 |
 
 编号在 Java 中用 `long`/`Long`，MySQL 用 `BIGINT AUTO_INCREMENT`。待派单处理人为 SQL `NULL`（Java `Long null`）。开发库 `ops_ticket_dev`，集成/并发测试使用独立 `ops_ticket_test`。
 
-## 目标 RESTful 接口契约（第 1 周由 `/api/db` 收口至 `/api/v1`）
+## 目标 RESTful 接口契约（第 14 周由 `/api/db` 收口至 `/api/v1`）
 
 | 请求 | 输入与成功结果 | 核心规则 |
 | --- | --- | --- |
-| `POST /api/v1/auth/login`、`logout` | 登录签发 JWT（第 2 周接 Redis 黑名单） | Spring Security + BCrypt；淘汰 HTTP Basic |
+| `POST /api/v1/auth/login`、`logout` | 登录签发 JWT（第 15 周接 Redis 黑名单） | Spring Security + BCrypt；淘汰 HTTP Basic |
 | `GET /api/v1/devices` | 可报修启用设备列表（走 Redis 缓存） | 已登录可读；创建工单时服务端二次核验启用状态 |
 | `POST /api/v1/tickets` | `title`、`description`、`deviceId` + Header `X-Request-Id`；成功 201 | `REPORTER`/`ADMIN`；身份取自 `LoginUser`；同 `X-Request-Id` 防重幂等 |
 | `GET /api/v1/tickets` | `status`、`keyword`、`deviceId`、`page`、`size`；返回分页 `items`/`total` | 按三角色自动加数据归属过滤；稳定排序 `created_at DESC, id DESC` |
@@ -52,7 +52,7 @@
 
 统一响应包装体：`Result<T>(code, message, data, requestId)`。状态码约定：参数校验失败 `400`、未认证 `401`、角色或资源越权 `403`、资源不存在 `404`、状态/版本/重复键冲突 `409`、服务内部错误 `500`（不暴露堆栈与凭证，返回 `requestId` 便于日志定位）。
 
-## Redis 与 RabbitMQ 契约约定（第 2–3 周）
+## Redis 与 RabbitMQ 契约约定（第 15–16 周）
 
 ### Redis 键空间约定（M1）
 - `device:detail:{id}` / `ticket:detail:{id}`：Cache-Aside 读缓存，空值短 TTL 防穿透、正常值带随机偏移 TTL 防雪崩；工单写操作提交后删除对应缓存键。

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "updated": "2026-11-28",
-  "stage": "方案定稿为纯 Java 后端 4 周冲刺（A2 收口 → Redis → RabbitMQ），二期独立 Python Agent 后置",
+  "stage": "统一第 1–17 周纯 Java 后端路线：当前第 14 周 A2 工程收口，第 15–17 周推进 Redis、RabbitMQ 与并发部署",
   "projects": {
     "ops-ticket": "设备运维工单"
   },
@@ -222,9 +222,9 @@
       "kind": "plan-update",
       "status": "in-progress",
       "title": "路线调整：聚焦纯 Java 后端（补齐 Redis 与 RabbitMQ），AI 留待二期 Python 独立服务",
-      "summary": "结合杭州 Java 后端日常与暑期实习招聘要求，取消原 Java 侧大模型与重度评测计划（不采用 Spring AI），将主线定稿为 4 周纯 Java 后端冲刺：A2 工程收口（接口规范/分页/索引/OpenAPI/SLF4J/Tomcat）→ M1 Redis 缓存与幂等 → M2 RabbitMQ 异步通知与死信队列超时告警 → 并发测试与 Docker 部署；Python Agent 与微服务拆分设计列为二期后置扩展。",
-      "verification": "本次仅调整学习方案、技能清单与看板分组，未改动 Java 项目源码、未新增学习打卡或技能验收；主线必修由 51 项调整为 46 项（另有 5 项按需/后置），既有 6 项已验收（J01–J06）与 22 项跟练中均保持不变。",
-      "next": "启动第 1 周 A2 工程规范收口：将 /api/db/tickets 收口为 /api/v1/tickets 并补齐列表三角色归属隔离与动态分页、/api/v1/devices 与联合索引 EXPLAIN，同时推进 @Valid、LoginUser、Result<T>、OpenAPI 文档与 SLF4J 日志。"
+      "summary": "结合杭州 Java 后端日常与暑期实习招聘要求，取消原 Java 侧大模型与重度评测计划（不采用 Spring AI），全站统一采用第 1–17 周编号（不再区分新旧周号）：第 14 周 A2 工程收口（接口规范/分页/索引/OpenAPI/SLF4J/Tomcat）→ 第 15 周 M1 Redis 缓存与幂等 → 第 16 周 M2 RabbitMQ 异步通知与死信队列超时告警 → 第 17 周并发测试与 Docker 部署；Python Agent 与微服务拆分设计列为二期后置扩展。",
+      "verification": "本次仅调整学习方案、统一周号、更新技能清单与看板分组，未改动 Java 项目源码、未新增学习打卡或技能验收；主线必修由 51 项调整为 46 项（另有 5 项按需/后置），既有 6 项已验收（J01–J06）与 22 项跟练中均保持不变。",
+      "next": "启动第 14 周 A2 工程规范收口：将 /api/db/tickets 收口为 /api/v1/tickets 并补齐列表三角色归属隔离与动态分页、/api/v1/devices 与联合索引 EXPLAIN，同时推进 @Valid、LoginUser、Result<T>、OpenAPI 文档与 SLF4J 日志。"
     }
   ],
   "current_project": "ops-ticket"

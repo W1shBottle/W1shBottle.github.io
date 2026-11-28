@@ -11,7 +11,7 @@ import re
 from urllib.parse import urlsplit
 
 PAGES = [
-    ("README.md", "project-docs", "设备运维工单项目文档", "纯 Java 后端（Spring Boot + MyBatis + MySQL + Redis + RabbitMQ）当前实现、接口与 4 周冲刺进度。", 160),
+    ("README.md", "project-docs", "设备运维工单项目文档", "纯 Java 后端（Spring Boot + MyBatis + MySQL + Redis + RabbitMQ）当前实现、接口与第 1–17 周统一进度。", 160),
     ("docs/requirements.md", "project-requirements", "工单项目需求与开发计划", "三角色四态业务闭环、工程规范与 Redis/RabbitMQ 演进计划（二期独立 Python Agent 后置）。", 170),
     ("docs/design.md", "project-design", "工单项目设计与数据约定", "标准 8 子包架构、四表结构、权限与乐观锁契约，以及 Redis/RabbitMQ 与二期对接边界。", 180),
     ("docs/verification.md", "project-verification", "工单项目运行与验收", "历次实测证据、事务回滚与权限验收记录，以及后续并发/压测验收标准。", 190),

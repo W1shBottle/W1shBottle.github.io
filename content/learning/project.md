@@ -16,7 +16,7 @@
 
 - **A1 核心业务**：已在真实 MySQL 跑通创建、派单（`assign`）、解决（`resolve`）、验收关闭（`close`）四态闭环，完成早期控制台/文件版旧代码清理并整理为标准 Spring Boot 8 子包分层。
 - **A2 工程化（当前阶段）**：已实测 Spring Security + MySQL `app_user` 登录、`@PreAuthorize` 角色授权、`GET` 单条与日志的三角色归属隔离、`POST` 创建自动取登录人、`expectedVersion` 乐观锁（`409`）、`ticket_action_log` 审计表 + `@Transactional` 事务绑定与 H2 外键失败回滚测试（4 项全绿）。当前收尾列表分页权限、Controller 瘦身、OpenAPI 文档、SLF4J 日志与 Fat JAR 后进入 M1/M2。
-- **M1 Redis / M2 RabbitMQ / 二期 Python Agent**：尚未开始编码，按 4 周计划逐步推进。
+- **M1 Redis / M2 RabbitMQ / 二期 Python Agent**：尚未开始编码，按第 14–17 周统一计划逐步推进。
 
 ## 目标与阶段
 

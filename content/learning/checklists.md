@@ -8,7 +8,7 @@
   "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-更新：2026-11-28（方案调整：聚焦纯 Java 后端 4 周冲刺，将 **Redis（R01–R04）** 与 **RabbitMQ（M01–M04）** 纳入主线，放弃 Spring AI，不再在 Java 侧编写大模型调用与离线评测；AI / Agent 方向留待二期以独立 Python 服务对接本项目，与微服务拆分概念一并列为后置扩展 `O01–O04`）。此前 11-25 草案中的 Java 侧 AI 条目（`B01–B09`、`C01–C04`、`D01–D02`）已移入历史归档，不再计入当前活跃看板分母。主线必修由 51 项调整为 **46 项**（另设 5 项按需/后置），原有 **6 项已验收（`J01–J06`）** 与 **22 项跟练中** 均保持不变，待学 18 项。
+更新：2026-11-28（方案与周号统一：全站统一使用第 1–17 周编号，将 **Redis（R01–R04）** 与 **RabbitMQ（M01–M04）** 纳入第 15–16 周主线，放弃 Spring AI，不再在 Java 侧编写大模型调用与离线评测；AI / Agent 方向留待二期以独立 Python 服务对接本项目，与微服务拆分概念一并列为后置扩展 `O01–O04`）。此前 11-25 草案中的 Java 侧 AI 条目（`B01–B09`、`C01–C04`、`D01–D02`）已移入历史归档，不再计入当前活跃看板分母。主线必修由 51 项调整为 **46 项**（另设 5 项按需/后置），原有 **6 项已验收（`J01–J06`）** 与 **22 项跟练中** 均保持不变，待学 18 项。
 
 ## 怎样看这份清单
 
@@ -30,8 +30,8 @@
 | A2（当前） | Bean Validation、统一响应、Spring Security、OpenAPI | `@Valid` 参数合法、`Result<T>`、MySQL 登录认证、三角色资源归属、Swagger/Knife4j 文档 | 已实测 MySQL `app_user` 登录、`@PreAuthorize`、单条/日志三角色归属与创建自动绑登录人；列表分页、Controller 瘦身与 OpenAPI 文档收尾中 |
 | A2（当前） | Spring 事务、`expectedVersion` 乐观锁、审计日志、SLF4J | 状态变更与 `ticket_action_log` 同事务、版本冲突 409、MDC `requestId` 链路日志 | 已实测三动作乐观锁 `409`、流水提交与 H2 外键失败回滚（4 项全绿）；SLF4J 与真实 MySQL 并发/回滚测试待补 |
 | A2 | Tomcat、Fat JAR、Docker Compose、Linux 基础 | `spring-boot-maven-plugin`、内嵌 Tomcat 线程参数、一键编排与 Linux 排错 | 待学；补齐 Web 服务器与部署基础 |
-| M1 | Redis（Spring Data Redis） | Cache-Aside（防穿透/雪崩/一致性）、JWT 登录态与黑名单、`X-Request-Id` 防重幂等、分布式锁对比 | 待学；第 2 周核心实战 |
-| M2 | RabbitMQ（Spring AMQP） | `AFTER_COMMIT` 异步通知解耦、TTL + 死信队列（DLX）超时告警、Confirm + 手动 ACK + 消费幂等 | 待学；第 3 周核心实战 |
+| M1 | Redis（Spring Data Redis） | Cache-Aside（防穿透/雪崩/一致性）、JWT 登录态与黑名单、`X-Request-Id` 防重幂等、分布式锁对比 | 待学；第 15 周核心实战 |
+| M2 | RabbitMQ（Spring AMQP） | `AFTER_COMMIT` 异步通知解耦、TTL + 死信队列（DLX）超时告警、Confirm + 手动 ACK + 消费幂等 | 待学；第 16 周核心实战 |
 | 二期（后置） | 微服务概念 + Python（FastAPI + LangGraph）Agent | 架构拆分设计；独立 Python Agent 服务直接复用本项目 OpenAPI / JWT / Redis / RabbitMQ | 后置扩展，不阻挡当前纯 Java 主线 |
 
 ## J：已有 Java 与工具基础
@@ -131,9 +131,9 @@ J07—J10作为沿途巩固项，不要求全部重新验收后才继续当前We
 
 ## 今天只看这一小段
 
-1. **第 1 周（A2 收口与规范化，当前优先）**：收口 `/api/v1/tickets` 列表三角色权限与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`；瘦身 Controller（`@Valid`、`LoginUser`、`Result<T>`），接入 OpenAPI 3 / Knife4j、SLF4J + MDC 与 Fat JAR / Tomcat 参数配置。
-2. **第 2—3 周（M1 Redis + M2 RabbitMQ）**：依次完成 JWT + Redis、Cache-Aside 缓存、幂等防重，以及 RabbitMQ `AFTER_COMMIT` 异步通知、TTL + 死信队列 SLA 超时告警、Confirm + 手动 ACK + 消费幂等。
-3. **第 4 周（并发验证、Docker 部署与压测）**：补真实 MySQL 多线程并发派单测试、Docker Compose 一键编排与缓存压测对比；全程并行每日力扣 Hot 100 与核心八股整理。
+1. **第 14 周（A2 收口与规范化，当前优先）**：收口 `/api/v1/tickets` 列表三角色权限与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`；瘦身 Controller（`@Valid`、`LoginUser`、`Result<T>`），接入 OpenAPI 3 / Knife4j、SLF4J + MDC 与 Fat JAR / Tomcat 参数配置。
+2. **第 15—16 周（M1 Redis + M2 RabbitMQ）**：依次完成 JWT + Redis、Cache-Aside 缓存、幂等防重，以及 RabbitMQ `AFTER_COMMIT` 异步通知、TTL + 死信队列 SLA 超时告警、Confirm + 手动 ACK + 消费幂等。
+3. **第 17 周（并发验证、Docker 部署与压测）**：补真实 MySQL 多线程并发派单测试、Docker Compose 一键编排与缓存压测对比；全程并行每日力扣 Hot 100 与核心八股整理。
 
 不因更新计划更改任何已有验收勾选。
 
@@ -156,15 +156,15 @@ Git提交编号或本地版本备份：
 
 ## 阶段进度与能力证据
 
-2026-11-28 定稿按纯 Java 后端主线 **起步（J）→ A1（S/W）→ A2（E）→ M1 Redis（R）→ M2 RabbitMQ（M）→ 贯穿（P）** 执行，二期独立 Python Agent 与微服务拆分概念列为后置扩展（`O01–O04`）；旧周号仅为教材索引，不用日历替你勾完成。每项填写“项目有没有实现”和“本人如何证明理解”两列。看过、跟写、独立完成和运行验证分别记录，AI 生成不自动计入掌握。
+2026-11-28 定稿按统一第 1–17 周的纯 Java 后端主线 **起步（J）→ A1（S/W）→ A2（E）→ M1 Redis（R）→ M2 RabbitMQ（M）→ 贯穿（P）** 执行，二期独立 Python Agent 与微服务拆分概念列为后置扩展（`O01–O04`）；不用日历替你勾完成。每项填写“项目有没有实现”和“本人如何证明理解”两列。看过、跟写、独立完成和运行验证分别记录，AI 生成不自动计入掌握。
 
 | 阶段检查 | 项目实现证据 | 本人能力证据 | 当前结论 |
 | --- | --- | --- | --- |
 | A0 SQL/JDBC | JOIN筛选、统计/分页、SQL事务/版本竞争、JDBC查询/更新回滚已有跟练反馈 | 独立解释与新业务变体继续巩固 | 已切入正式 Spring Boot + MyBatis 项目 |
 | A1 数据库/HTTP 闭环 | 真实 MySQL 已跑通创建、派单、解决、验收关闭四态闭环，清理早期文件代码并完成标准 8 子包分层 | 已实测 4 号/5 号工单全链路与 400/404/409 分支，独立变体继续验收 | 主流程已跑通，进入 A2 工程化 |
-| A2 工程规范与交付（当前） | 已落地 MySQL `app_user` 登录、`@PreAuthorize`、单条/日志三角色归属隔离、创建自动绑登录人、`expectedVersion` 乐观锁、`ticket_action_log` + `@Transactional` 与 H2 外键回滚测试（4 项全绿） | 已实测多角色 `200/401/403/409`、修复 `findLogs` 角色比对 bug 并手写外键回滚测试 | 当前阶段，收尾列表分页、Controller 瘦身、OpenAPI、SLF4J 与 Fat JAR |
-| M1 Redis 缓存与幂等（R01–R04） | Spring Data Redis、JWT+Redis、Cache-Aside 缓存、创建幂等防重与压测 | 解释穿透/雪崩/一致性、分布式锁 vs 乐观锁并实测压测对比 | 第 2 周主攻 |
-| M2 RabbitMQ 异步与死信（M01–M04） | `AFTER_COMMIT` 异步通知、TTL+DLX 超时告警、Confirm+手动 ACK+消费幂等 | 验证事务回滚不误发、超时告警与重复消息幂等去重 | 第 3 周主攻 |
+| A2 工程规范与交付（当前） | 已落地 MySQL `app_user` 登录、`@PreAuthorize`、单条/日志三角色归属隔离、创建自动绑登录人、`expectedVersion` 乐观锁、`ticket_action_log` + `@Transactional` 与 H2 外键回滚测试（4 项全绿） | 已实测多角色 `200/401/403/409`、修复 `findLogs` 角色比对 bug 并手写外键回滚测试 | 当前第 14 周，收尾列表分页、Controller 瘦身、OpenAPI、SLF4J 与 Fat JAR |
+| M1 Redis 缓存与幂等（R01–R04） | Spring Data Redis、JWT+Redis、Cache-Aside 缓存、创建幂等防重与压测 | 解释穿透/雪崩/一致性、分布式锁 vs 乐观锁并实测压测对比 | 第 15 周主攻 |
+| M2 RabbitMQ 异步与死信（M01–M04） | `AFTER_COMMIT` 异步通知、TTL+DLX 超时告警、Confirm+手动 ACK+消费幂等 | 验证事务回滚不误发、超时告警与重复消息幂等去重 | 第 16 周主攻 |
 | O 二期后置扩展（O01–O04） | 微服务拆分设计；独立 Python（FastAPI + LangGraph）Agent 服务对接本项目 | 不阻挡纯 Java 后端交付，后续双栈拓展 | 后置扩展 |
 
 已有Java/Maven/文件仓库成果不要求重复做完；若某概念无法解释，只补对应小练习。跳过同质断言可以记录已理解，但不能将未执行的关键事务或压测验证写成通过。

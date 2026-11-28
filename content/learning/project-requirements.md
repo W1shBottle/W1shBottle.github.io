@@ -62,7 +62,7 @@ Java 当前没有用户实体、登录或权限检查；SQL 已有 app_user 表�
 | --- | --- | --- | --- |
 | 创建 | 无 | OPEN | 已实现（自动取登录人 `reporterId`） |
 | 派单 | OPEN | IN_PROGRESS | 已实现（`ADMIN` + `expectedVersion` + 审计日志事务） |
-| 提交处理结果 | IN_PROGRESS | RESOLVED | 已实现（指定 `ENGINEER` + `expectedVersion` + 审计日志事务；处理说明 `note` 第 1 周补齐） |
+| 提交处理结果 | IN_PROGRESS | RESOLVED | 已实现（指定 `ENGINEER` + `expectedVersion` + 审计日志事务；处理说明 `note` 第 14 周补齐） |
 | 验收通过 | RESOLVED | CLOSED | 已实现（原 `REPORTER` + `expectedVersion` + 审计日志事务） |
 | 验收驳回 | RESOLVED | IN_PROGRESS | 延后，首版不做 |
 
@@ -189,9 +189,9 @@ POST /api/db/tickets
 ## 21. 2026-11-25 至 11-28 四态闭环、安全事务落地与纯 Java 路线定稿
 
 - **11-25 至 11-27 实测落地**：完成 `AppUser`、`UserMapper`、`DatabaseUserDetailsService`（MySQL `app_user` + BCrypt 登录）与 `@PreAuthorize` 角色限制；贯通 `expectedVersion` 乐观锁并落地指定工程师 `resolve` 与原报障人 `close`，在真实 MySQL 跑通四态闭环；清理早期文件/控制台旧代码并归位至标准 8 子包；补齐单条详情与日志查询三角色归属隔离、`POST` 创建自动取登录人，并新建 `ticket_action_log` 表在 `assign`/`resolve`/`close` 绑定 `@Transactional` 与 H2 外键失败回滚单测（4 项全绿）。
-- **11-28 路线定稿**：明确不采用 Spring AI，取消原 Java 侧大模型与离线评测草案，将当前主线收口为 **4 周纯 Java 后端冲刺**：
-  1. **第 1 周（A2 工程收口）**：收口 `/api/v1/tickets` 列表三角色归属隔离分页与 `/api/v1/devices`、补 `ticket` 高频联合索引与 `EXPLAIN`、瘦身 Controller（`@Valid`/`LoginUser`/`Result<T>`）、接入 OpenAPI 3 / Knife4j、SLF4J + MDC 与 Fat JAR / Tomcat 参数；
-  2. **第 2 周（M1 Redis）**：JWT + Redis 登录态与黑名单、设备/工单 Cache-Aside 缓存（穿透/雪崩/删缓存）、`X-Request-Id` 防重幂等与限流、分布式锁对比；
-  3. **第 3 周（M2 RabbitMQ）**：`AFTER_COMMIT` 状态变更异步通知、TTL + 死信队列（DLX）工单超时未派单告警、Publisher Confirm + 手动 ACK + `messageId` 消费幂等；
-  4. **第 4 周（并发验证与部署交付）**：真实 MySQL 多线程并发派单测试与回滚测试、Docker Compose 一键编排、缓存前后压测对比与架构设计文档（含微服务演进方案）。
+- **11-28 路线定稿**：明确不采用 Spring AI，取消原 Java 侧大模型与离线评测草案，全站统一采用 **第 1–17 周** 编号，接下来第 14–17 周收口纯 Java 后端：
+  1. **第 14 周（A2 工程收口）**：收口 `/api/v1/tickets` 列表三角色归属隔离分页与 `/api/v1/devices`、补 `ticket` 高频联合索引与 `EXPLAIN`、瘦身 Controller（`@Valid`/`LoginUser`/`Result<T>`）、接入 OpenAPI 3 / Knife4j、SLF4J + MDC 与 Fat JAR / Tomcat 参数；
+  2. **第 15 周（M1 Redis）**：JWT + Redis 登录态与黑名单、设备/工单 Cache-Aside 缓存（穿透/雪崩/删缓存）、`X-Request-Id` 防重幂等与限流、分布式锁对比；
+  3. **第 16 周（M2 RabbitMQ）**：`AFTER_COMMIT` 状态变更异步通知、TTL + 死信队列（DLX）工单超时未派单告警、Publisher Confirm + 手动 ACK + `messageId` 消费幂等；
+  4. **第 17 周（并发验证与部署交付）**：真实 MySQL 多线程并发派单测试与回滚测试、Docker Compose 一键编排、缓存前后压测对比与架构设计文档（含微服务演进方案）。
 - **二期独立 Python Agent（后置）**：未来拓展 Agent 方向时另起独立 Python（FastAPI + LangGraph）服务，直接复用本 Java 项目的 OpenAPI、JWT、乐观锁、Redis 与 RabbitMQ。

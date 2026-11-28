@@ -1,5 +1,5 @@
 {
-  "title": "第7至13周 Web接口与登录权限",
+  "title": "第 7 至 13 周 Web 接口与登录权限",
   "description": "以Spring Boot和MyBatis完成核心工单闭环，补充认证、权限与错误处理。",
   "date": "2026-10-12T12:00:00+08:00",
   "weight": 50,
@@ -8,7 +8,7 @@
   "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-2026-11-28 同步说明：本页为 A1/A2 的 Web 与权限教材，旧周号仅为材料索引。截至 2026-11-27，项目已清理早期文件仓库与控制台演示代码并整理为标准 8 子包分层，真实 MySQL 已跑通四态闭环、Spring Security 数据库登录、三角色单条/日志归属隔离、`expectedVersion` 乐观锁及 `ticket_action_log` 事务回滚测试。当前最新 4 周纯 Java 冲刺路线（A2 收口 → Redis → RabbitMQ）请以[阶段日程](/learning/schedule/)与[数据接口约定](/learning/contracts/)为准。
+2026-11-28 同步说明：本页对应统一周号 **第 7–13 周**（Web 接口、MyBatis、四态流转与 Spring Security 权限）。截至 2026-11-27，项目已清理早期文件仓库与控制台演示代码并整理为标准 8 子包分层，真实 MySQL 已跑通四态闭环、Spring Security 数据库登录、三角色单条/日志归属隔离、`expectedVersion` 乐观锁及 `ticket_action_log` 事务回滚测试。接下来从 **第 14 周（A2 工程规范收口）** 继续，详见[阶段日程](/learning/schedule/)与[数据接口约定](/learning/contracts/)。
 
 ## 现行最小任务顺序
 

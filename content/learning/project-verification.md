@@ -524,4 +524,4 @@ G待验：真实工具调用、歧义追问、无结果、无权、错误参数�
 ## 23. 2026-11-28 纯 Java 后端（Redis + RabbitMQ）路线定稿核对
 
 - 本次仅更新学习计划、项目文档与博客看板/时间线，未修改 Java 业务源码，未新增任何技能验收或自动化测试结果。
-- 后续待验重点按 4 周计划推进：第 1 周列表三角色隔离分页与联合索引 `EXPLAIN`、OpenAPI/SLF4J/Fat JAR；第 2 周 Redis 缓存/JWT/幂等实测；第 3 周 RabbitMQ `AFTER_COMMIT` 通知、TTL+DLX 超时告警与手动 ACK 消费幂等实测；第 4 周真实 MySQL 多线程并发派单测试、Docker Compose 编排与缓存压测对比。
+- 后续待验重点按统一第 14–17 周推进：第 14 周列表三角色隔离分页与联合索引 `EXPLAIN`、OpenAPI/SLF4J/Fat JAR；第 15 周 Redis 缓存/JWT/幂等实测；第 16 周 RabbitMQ `AFTER_COMMIT` 通知、TTL+DLX 超时告警与手动 ACK 消费幂等实测；第 17 周真实 MySQL 多线程并发派单测试、Docker Compose 编排与缓存压测对比。

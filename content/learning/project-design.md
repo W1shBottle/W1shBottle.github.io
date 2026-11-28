@@ -417,9 +417,9 @@ HTTP Client → Spring Security (DatabaseUserDetailsService + BCrypt + @PreAutho
 - **认证与三角色归属隔离**：登录走 `app_user` 表 BCrypt 校验；操作人一律由服务端 `Authentication` 确定；`findSummary`、`findLogs`、`resolve`、`close` 均已落实按 `reporterId`/`assigneeId` 的归属拦截，`create` 自动绑定登录人为 `reporterId`。
 - **乐观锁与审计日志事务**：`assign`/`resolve`/`close` 在 SQL `WHERE` 中同时校验 `id`、前置状态、归属/工程师资格与 `version = #{expectedVersion}`，并在 `Service` 层通过 `@Transactional` 与 `TicketActionLogMapper.insertLog` 同事务执行（H2 外键失败回滚单测已验证自动回滚）。
 
-### 2026-11-28 演进设计（4 周纯 Java 冲刺 + 二期 Python Agent 预留）
+### 2026-11-28 演进设计（第 14–17 周纯 Java 后端 + 二期 Python Agent 预留）
 
-1. **A2 规范收口（第 1 周）**：路径收敛至 `/api/v1/tickets` 与 `/api/v1/devices`，清理无权限调试接口；列表补齐三角色归属过滤与动态分页；补高频联合索引并通过 `EXPLAIN` 验证；引入 `@Valid`、自定义 `LoginUser`（移除 Controller 对 `UserMapper` 的直接依赖）、统一响应体 `Result<T>`、业务异常下沉 Service、OpenAPI 3 / Knife4j 文档、SLF4J + MDC `requestId`、可执行 Fat JAR 与内嵌 Tomcat 参数配置。
-2. **M1 Redis 设计（第 2 周）**：Spring Security 升级为 **JWT + Redis**（登出黑名单/缓存）；设备与高频工单详情落地 **Cache-Aside**（空值防穿透、随机 TTL 防雪崩、写后删缓存）；创建工单落地 `X-Request-Id` + Redis `SET NX EX` 防重幂等（与数据库唯一约束双保险）及简易限流。
-3. **M2 RabbitMQ 设计（第 3 周）**：工单写事务通过 `@TransactionalEventListener(phase = AFTER_COMMIT)` 发送 Topic 事件消息，保证事务回滚不误发消息；采用 **TTL + 死信队列（DLX）** 实现工单超期未派单自动升级告警；开启 Publisher Confirm/Return、消息持久化、消费者手动 ACK 与基于 `messageId` 的消费幂等。
+1. **A2 规范收口（第 14 周）**：路径收敛至 `/api/v1/tickets` 与 `/api/v1/devices`，清理无权限调试接口；列表补齐三角色归属过滤与动态分页；补高频联合索引并通过 `EXPLAIN` 验证；引入 `@Valid`、自定义 `LoginUser`（移除 Controller 对 `UserMapper` 的直接依赖）、统一响应体 `Result<T>`、业务异常下沉 Service、OpenAPI 3 / Knife4j 文档、SLF4J + MDC `requestId`、可执行 Fat JAR 与内嵌 Tomcat 参数配置。
+2. **M1 Redis 设计（第 15 周）**：Spring Security 升级为 **JWT + Redis**（登出黑名单/缓存）；设备与高频工单详情落地 **Cache-Aside**（空值防穿透、随机 TTL 防雪崩、写后删缓存）；创建工单落地 `X-Request-Id` + Redis `SET NX EX` 防重幂等（与数据库唯一约束双保险）及简易限流。
+3. **M2 RabbitMQ 设计（第 16 周）**：工单写事务通过 `@TransactionalEventListener(phase = AFTER_COMMIT)` 发送 Topic 事件消息，保证事务回滚不误发消息；采用 **TTL + 死信队列（DLX）** 实现工单超期未派单自动升级告警；开启 Publisher Confirm/Return、消息持久化、消费者手动 ACK 与基于 `messageId` 的消费幂等。
 4. **二期独立 Python Agent 边界（后置）**：不在 Java 侧引入 Spring AI 或大模型调用；二期另起独立 `ops-agent-py`（Python + FastAPI + LangGraph）服务，通过本项目的 OpenAPI 受控接口、JWT 身份透传、Redis 与 RabbitMQ 工单事件无缝衔接，保持业务与智能体彻底解耦。

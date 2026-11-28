@@ -8,7 +8,7 @@
   "lastmod": "2026-11-28T00:00:00+08:00"
 }
 
-> 2026-11-28 同步说明：本页“第几周”为早期 Java 基础与 SQL/JDBC 教材单元，不作为当前工期。项目已迁入标准 8 子包并跑通真实 MySQL 四态闭环、Spring Security 登录、乐观锁与操作日志事务回滚；当前最新 4 周纯 Java 冲刺计划（A2 收口 → Redis → RabbitMQ）请以[阶段日程](/learning/schedule/)与[技能清单](/learning/checklists/)为准。
+> 2026-11-28 同步说明：本页对应统一周号 **第 1–6 周**（Java 基础与 SQL/JDBC，已走完并切入数据库版）。当前已推进至第 14 周 A2 工程收口，完整第 1–17 周路线见[阶段日程](/learning/schedule/)与[技能清单](/learning/checklists/)。
 
 ## 当前代码位置与历史教材说明
 

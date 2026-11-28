@@ -10,6 +10,6 @@
 
 此前 11-25 草案中的 Java 侧 AI 条目（`B01–B09`、`C01–C04`、`D01–D02`）已归档暂不执行，既有全部验收勾选（`J01–J06`）与跟练记录保持不变。
 
-下一次先启动 **第 1 周 A2 工程规范收口**：收口 `/api/v1/tickets` 列表三角色归属隔离与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`，瘦身 Controller 并接入 OpenAPI 接口文档与 SLF4J 日志。
+下一次先启动 **第 14 周（A2 工程规范收口）**：收口 `/api/v1/tickets` 列表三角色归属隔离与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`，瘦身 Controller 并接入 OpenAPI 接口文档与 SLF4J 日志。
 
-[技能清单](/learning/checklists/) · [4 周冲刺日程](/learning/schedule/) · [11 月 27 日操作日志与事务回滚复盘](/posts/ops-ticket-20261127/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)
+[技能清单](/learning/checklists/) · [第 1–17 周学习计划](/learning/schedule/) · [11 月 27 日操作日志与事务回滚复盘](/posts/ops-ticket-20261127/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)

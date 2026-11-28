@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "f72f9e8552cb7fd92e00d7bcac0bae31fa5fe365a571162fa91a2ad101b8580b",
+  "source_sha256": "42df7839ee0471165b13985bcec840419edb82aec9799a24dc745a83091b97a0",
   "updated": "2026-11-28",
   "project": "设备运维工单",
-  "stage": "方案定稿为纯 Java 后端 4 周冲刺（A2 收口 → Redis → RabbitMQ），二期独立 Python Agent 后置",
+  "stage": "统一第 1–17 周纯 Java 后端路线：当前第 14 周 A2 工程收口，第 15–17 周推进 Redis、RabbitMQ 与并发部署",
   "current_group": "engineering",
   "focus_tasks": [
     {
@@ -28,7 +28,7 @@
       "description": "接入 SpringDoc OpenAPI 3 / Knife4j 自动生成在线接口文档，编写《系统架构与接口设计文档》（含 ER 图、四态图、错误码与微服务演进设计），规范 SQL 与 README。"
     }
   ],
-  "next": "启动第 1 周 A2 工程规范收口：将 /api/db/tickets 收口为 /api/v1/tickets 并补齐列表三角色归属隔离与动态分页、/api/v1/devices 与联合索引 EXPLAIN，同时推进 @Valid、LoginUser、Result<T>、OpenAPI 文档与 SLF4J 日志。",
+  "next": "启动第 14 周 A2 工程规范收口：将 /api/db/tickets 收口为 /api/v1/tickets 并补齐列表三角色归属隔离与动态分页、/api/v1/devices 与联合索引 EXPLAIN，同时推进 @Valid、LoginUser、Result<T>、OpenAPI 文档与 SLF4J 日志。",
   "note": null,
   "stats": {
     "accepted": 6,
