@@ -10,7 +10,7 @@ series_order: 2
 chapter_title: "Map 集合与工单存档恢复"
 ---
 
-> 这是“设备运维工单开发”系列第 2 篇，承接[上一篇的工单封装、Git 与派单规则](/posts/ops-ticket-20261012/)。项目对应博客的[Java 实习学习路线](/learning/)，最新功能说明见[项目文档](/learning/project-docs/)。学生管理系统的旧笔记仍保留在[原系列](/series/#java)。
+> 这是“设备运维工单开发”系列第 2 篇，承接[上一篇的工单封装、Git 与派单规则](/posts/ops-ticket-20261012/)。项目对应博客的[Java 实习学习路线](/learning/)，最新功能说明见[项目文档](/learning/project-docs/)。
 
 今天从按状态筛选继续，先把工单集合改为按编号管理，再完成单张工单的文件保存、读取、类型转换与对象恢复。
 

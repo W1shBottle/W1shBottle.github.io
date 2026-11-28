@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source_sha256": "ddb1a73e486d3cedc080797656e212790590794938f384afcff2ffdf2f0d6700",
+  "source_sha256": "737bde7b41f471ea378cfb6acc429a80030d0b65bedb487ee41c47560d36416a",
   "updated": "2026-11-27",
   "project": "设备运维工单",
   "stage": "查询归属隔离、操作审计日志与 @Transactional 回滚闭环完成，准备收尾 A2 进入 B 阶段",

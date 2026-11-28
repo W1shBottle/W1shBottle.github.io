@@ -13,20 +13,8 @@
       "class": "java"
     },
     {
-      "id": "java",
-      "number": "02",
-      "title": "学生管理系统",
-      "subtitle": "集合增删改查、文件读写与第一个控制台项目。",
-      "tags": [
-        "Java"
-      ],
-      "label": "JAVA / PRACTICE",
-      "class": "java",
-      "series": "student-management"
-    },
-    {
       "id": "systems",
-      "number": "03",
+      "number": "02",
       "title": "操作系统期末复习",
       "subtitle": "为校内期末考试整理，复习进程、内存管理与相关考点。",
       "tags": [
@@ -38,7 +26,7 @@
     },
     {
       "id": "ai",
-      "number": "04",
+      "number": "03",
       "title": "AI 学习笔记",
       "subtitle": "从分词到图网络，慢慢把概念串起来。",
       "tags": [
@@ -50,7 +38,7 @@
     },
     {
       "id": "cumt-algorithms-final",
-      "number": "05",
+      "number": "04",
       "title": "cumt算法设计与分析期末考速通笔记",
       "subtitle": "按专题持续更新复杂度、分治、贪心与动态规划，整理考场知识点、例题和解法。",
       "tags": [

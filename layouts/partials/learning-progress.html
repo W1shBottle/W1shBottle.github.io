@@ -10,7 +10,7 @@
     <div><span>当前阶段</span><strong>{{ .stage }}</strong><p>下一步：{{ $latest.next }}</p></div>
     <div class="progress-count"><strong>{{ len $entries }}</strong><span>条学习记录</span></div>
   </div>
-  <p class="progress-note">按实际练习与验证记录进度。项目从学生管理系统延续到设备运维工单，每条保留当时的学习状态。</p>
+  <p class="progress-note">按实际练习与验证记录进度，围绕设备运维工单项目持续推进，每条保留当时的学习状态。</p>
   <div class="progress-filters" role="group" aria-label="按学习项目筛选" hidden>
     <button type="button" data-project-filter="all" aria-pressed="true">全部记录</button>
     {{ range $key, $label := .projects }}<button type="button" data-project-filter="{{ $key }}" aria-pressed="false">{{ $label }}</button>{{ end }}
