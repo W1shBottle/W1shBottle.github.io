@@ -1,15 +1,15 @@
 {
   "title": "学习",
-  "description": "基于 Java / Spring Boot / MyBatis / MySQL 的设备运维工单与轻量 AI 功能：A1→A2→B01–B09→C01–C04，另设可选进阶 D01–D02。",
+  "description": "基于 Java / Spring Boot / MyBatis / MySQL / Redis / RabbitMQ 的设备运维工单后端路线：A1 → A2 → M1 Redis → M2 RabbitMQ，二期独立 Python Agent 后置。",
   "date": "2026-10-12T12:00:00+08:00",
-  "lastmod": "2026-11-27T00:00:00+08:00",
+  "lastmod": "2026-11-28T00:00:00+08:00",
   "draft": false
 }
 
-以现有 **Java / Spring Boot / MyBatis / MySQL** 设备运维工单系统作为唯一主线（**A1 → A2 → B01–B09 → C01–C04 + 可选进阶 D01–D02**）：先完成数据库业务、权限、事务与版本冲突闭环，再轻量落地模型调用、`@Async` 事务后异步分析回写、人工采纳与反馈日志闭环及效果评估，不引入 Kafka、Milvus、Neo4j、微调或本地推理部署。
+以现有 **Java 21 / Spring Boot / MyBatis / MySQL / Redis / RabbitMQ** 设备运维工单系统作为纯 Java 后端主线（**A1 业务闭环 → A2 工程规范与交付 → M1 Redis 缓存与幂等 → M2 RabbitMQ 异步解耦与死信队列**）：先把权限、事务、乐观锁、索引、缓存、消息队列、接口文档与部署压测彻底打透，不采用 Spring AI；AI / Agent 能力留待二期直接以独立 **Python（FastAPI + LangGraph）** 服务对接本项目的 OpenAPI、JWT、Redis 与 RabbitMQ。
 
-此前并行记录的 Python / Redis / Python Agent 条目已归档暂不执行，现有全部验收勾选保持不变。
+此前 11-25 草案中的 Java 侧 AI 条目（`B01–B09`、`C01–C04`、`D01–D02`）已归档暂不执行，既有全部验收勾选（`J01–J06`）与跟练记录保持不变。
 
-下一次先收尾 A2 剩余小边界（列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 **B 阶段：Java AI 业务功能（B01–B09）**。
+下一次先启动 **第 1 周 A2 工程规范收口**：收口 `/api/v1/tickets` 列表三角色归属隔离与动态分页、补 `/api/v1/devices` 与联合索引 `EXPLAIN`，瘦身 Controller 并接入 OpenAPI 接口文档与 SLF4J 日志。
 
-[技能清单](/learning/checklists/) · [11 月 27 日操作日志与事务回滚复盘](/posts/ops-ticket-20261127/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)
+[技能清单](/learning/checklists/) · [4 周冲刺日程](/learning/schedule/) · [11 月 27 日操作日志与事务回滚复盘](/posts/ops-ticket-20261127/) · [项目文档](/learning/project-docs/) · [连续阅读版](/learning/downloads/reader.html) · [下载自学包](/learning/downloads/java-internship-self-study.zip)

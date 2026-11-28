@@ -3,17 +3,15 @@
   "current_group": "engineering",
   "focus_tasks": [
     "E03",
-    "E04",
-    "E07"
+    "E07",
+    "E09"
   ],
   "optional_ids": [
     "P05",
-    "D01",
-    "D02",
-    "O04",
-    "O05",
-    "O06",
-    "O07"
+    "O01",
+    "O02",
+    "O03",
+    "O04"
   ],
   "groups": [
     {
@@ -33,43 +31,43 @@
         "S",
         "W"
       ],
-      "description": "从 SQL 与 JDBC，走到真实数据库支撑的 HTTP 业务。"
+      "description": "从 SQL 与 JDBC，走到真实数据库支撑的 HTTP 四态业务与索引实测。"
     },
     {
       "id": "engineering",
       "code": "A2",
-      "title": "工程与交付",
+      "title": "工程规范与交付",
       "prefixes": [
         "E"
       ],
-      "description": "补齐认证授权、事务、并发版本校验、测试与部署，交付可靠的小版本。"
+      "description": "补齐三角色归属分页、参数校验、统一响应、OpenAPI 文档、SLF4J 日志、Tomcat/Docker 部署与并发测试。"
     },
     {
-      "id": "ai",
-      "code": "B",
-      "title": "Java AI 业务功能",
+      "id": "redis",
+      "code": "M1",
+      "title": "Redis 缓存与幂等",
       "prefixes": [
-        "B"
+        "R"
       ],
-      "description": "基于现有 Java / Spring Boot / MyBatis / MySQL 落地模型调用、结构校验、异步触发回写与人工采纳闭环。"
+      "description": "围绕设备与工单场景落地 Cache-Aside 缓存、JWT 登录态、防重幂等、限流与缓存压测对比。"
     },
     {
-      "id": "evaluation",
-      "code": "C",
-      "title": "效果评估与回归",
+      "id": "rabbitmq",
+      "code": "M2",
+      "title": "RabbitMQ 异步与死信",
       "prefixes": [
-        "C"
+        "M"
       ],
-      "description": "结合固定案例集与 B09 人工反馈采纳率统计，记录成本、失败案例与单因子回归改进。"
+      "description": "落地事务提交后异步通知、TTL + 死信队列（DLX）工单超时告警、Confirm/手动 ACK 与消费幂等。"
     },
     {
       "id": "practice",
       "code": "贯穿",
-      "title": "基础与项目表达",
+      "title": "算法、八股与表达",
       "prefixes": [
         "P"
       ],
-      "description": "算法、并发运行时（含 B08 线程池联动）与独立修改穿插进行，不阻挡主线推进。"
+      "description": "力扣 Hot 100、JUC/JVM/Tomcat/网络基础与项目表达全程并行推进。"
     }
   ]
 }

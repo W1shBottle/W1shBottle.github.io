@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "source_sha256": "737bde7b41f471ea378cfb6acc429a80030d0b65bedb487ee41c47560d36416a",
-  "updated": "2026-11-27",
+  "source_sha256": "f72f9e8552cb7fd92e00d7bcac0bae31fa5fe365a571162fa91a2ad101b8580b",
+  "updated": "2026-11-28",
   "project": "设备运维工单",
-  "stage": "查询归属隔离、操作审计日志与 @Transactional 回滚闭环完成，准备收尾 A2 进入 B 阶段",
+  "stage": "方案定稿为纯 Java 后端 4 周冲刺（A2 收口 → Redis → RabbitMQ），二期独立 Python Agent 后置",
   "current_group": "engineering",
   "focus_tasks": [
     {
@@ -11,33 +11,33 @@
       "title": "角色与资源归属授权",
       "status": "practicing",
       "optional": false,
-      "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测，操作人身份均从 `Authentication` 读取；`GET /api/db/tickets` 列表接口权限与遗留调试读接口清理仍待补齐。"
-    },
-    {
-      "id": "E04",
-      "title": "业务事务",
-      "status": "practicing",
-      "optional": false,
-      "description": "已亲手建出 `ticket_action_log` 表，在 `assign`/`resolve`/`close` 上用 `@Transactional` 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；真实 MySQL 测试库回滚验证与事务传播深入仍待补齐。"
+      "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步收口 `/api/v1/tickets` 列表三角色隔离分页、补 `/api/v1/devices` 并清理无权限 `/api/db` 调试接口。"
     },
     {
       "id": "E07",
-      "title": "日志与排错",
+      "title": "SLF4J 规范日志与排错",
       "status": "planned",
       "optional": false,
-      "description": "用日志框架记录 requestId、业务结果和错误原因；能从异常链追到错误SQL/配置，不记录密码、Cookie和密钥；保存一次复现→根因→修复→回归记录。"
+      "description": "接入 SLF4J + `OncePerRequestFilter` 注入 MDC `requestId`，记录关键业务结果与异常链，严禁输出密码、Token 与密钥；沉淀一次完整的复现→根因→修复→回归排错记录。"
+    },
+    {
+      "id": "E09",
+      "title": "OpenAPI 接口文档与技术交付文档",
+      "status": "planned",
+      "optional": false,
+      "description": "接入 SpringDoc OpenAPI 3 / Knife4j 自动生成在线接口文档，编写《系统架构与接口设计文档》（含 ER 图、四态图、错误码与微服务演进设计），规范 SQL 与 README。"
     }
   ],
-  "next": "收尾 A2 剩余小边界（列表接口权限、SLF4J 日志与基础集成验证），随后正式进入 B 阶段 Java AI 业务功能（B01–B09）。",
-  "note": "/posts/ops-ticket-20261127/",
+  "next": "启动第 1 周 A2 工程规范收口：将 /api/db/tickets 收口为 /api/v1/tickets 并补齐列表三角色归属隔离与动态分页、/api/v1/devices 与联合索引 EXPLAIN，同时推进 @Valid、LoginUser、Result<T>、OpenAPI 文档与 SLF4J 日志。",
+  "note": null,
   "stats": {
     "accepted": 6,
     "practicing": 22,
-    "planned": 23,
-    "total": 51,
-    "percent": 12,
-    "accepted_width": 11.7647,
-    "practicing_width": 43.1373
+    "planned": 18,
+    "total": 46,
+    "percent": 13,
+    "accepted_width": 13.0435,
+    "practicing_width": 47.8261
   },
   "groups": [
     {
@@ -138,7 +138,7 @@
         "S",
         "W"
       ],
-      "description": "从 SQL 与 JDBC，走到真实数据库支撑的 HTTP 业务。",
+      "description": "从 SQL 与 JDBC，走到真实数据库支撑的 HTTP 四态业务与索引实测。",
       "tasks": [
         {
           "id": "S01",
@@ -152,7 +152,7 @@
           "title": "表设计与约束",
           "status": "practicing",
           "optional": false,
-          "description": "画 device/app_user/ticket 关系；解释主键、自增、外键、唯一、NOT NULL、CHECK 和 NULL。能指出外键不检查 ENGINEER 角色、CHECK 不代替合法状态迁移。"
+          "description": "画 device/app_user/ticket/ticket_action_log 关系；解释主键、自增、外键、唯一、NOT NULL、CHECK 和 NULL。能指出外键不检查 ENGINEER 角色、CHECK 不代替合法状态迁移。"
         },
         {
           "id": "S03",
@@ -173,14 +173,14 @@
           "title": "事务与影响行数",
           "status": "practicing",
           "optional": false,
-          "description": "已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；数据库派单已有OPEN前置条件，expectedVersion比较与完整并发控制仍待实现。"
+          "description": "已练COMMIT/ROLLBACK、CHECK失败不自动撤销前一语句、条件更新及双连接version竞争；反馈A=1/B=0。Java条件更新、提交与模拟故障回滚已跟练；数据库状态流已接入乐观锁与操作日志事务，独立复盘继续巩固。"
         },
         {
           "id": "S06",
-          "title": "索引与 EXPLAIN 入门",
+          "title": "索引与 EXPLAIN 实测",
           "status": "planned",
           "optional": false,
-          "description": "围绕一个列表查询说明索引作用、代价与执行计划；保留样本量和结果，不能靠很少数据声称高性能。基础可沿途学，深度调优不挡 B。"
+          "description": "为 `ticket` 和 `ticket_action_log` 设计高频查询联合索引（如 `(reporter_id, status, created_at)`、`(assignee_id, status, created_at)`），造 1—5 万条测试数据执行 `EXPLAIN`，对比优化前后 `type/key/rows` 并保留真实样本与记录。"
         },
         {
           "id": "W01",
@@ -201,28 +201,28 @@
           "title": "HTTP 和 JSON",
           "status": "practicing",
           "optional": false,
-          "description": "文件版GET/POST已有200/201/400/404证据；用断点观察setter/getter、缺字段与错误JSON。学习者反馈重启恢复及统一错误响应通过；另用Apifox在隔离H2完成派单POST和前后GET，独立解释与本人失败分支练习继续验收。"
+          "description": "文件版GET/POST已有200/201/400/404证据；用断点观察setter/getter、缺字段与错误JSON。学习者反馈重启恢复及统一错误响应通过；数据库版四态接口均已通过 Apifox 实测，独立解释继续验收。"
         },
         {
           "id": "W04",
           "title": "Spring Boot/MVC 与依赖注入",
           "status": "practicing",
           "optional": false,
-          "description": "已有Bean与构造器注入、请求DTO和RestControllerAdvice；学习者编写两个异常处理方法，助手源码核对及compile通过。文件版及数据库查询/创建 HTTP 已接通；独立解释对象/调用链、权限仍待验收。"
+          "description": "已有Bean与构造器注入、请求DTO和RestControllerAdvice；文件版及数据库查询/创建/流转 HTTP 已接通；独立解释对象/调用链、权限与分层边界继续验收。"
         },
         {
           "id": "W05",
           "title": "MyBatis",
           "status": "practicing",
           "optional": false,
-          "description": "`TicketMapper` 与 `UserMapper`、`TicketActionLogMapper` 已落地参数绑定、下划线转驼峰映射、创建主键回填、带 `expectedVersion` 条件更新的 `assign`/`resolve`/`close` 及审计日志插入，并在真实 MySQL 跑通全链路；独立编写新 SQL 与真实 MySQL 隔离集成测试继续验收。"
+          "description": "`TicketMapper`、`UserMapper`、`TicketActionLogMapper` 已落地参数绑定、下划线转驼峰映射、创建主键回填、带 `expectedVersion` 条件更新的 `assign`/`resolve`/`close` 及审计日志插入，并在真实 MySQL 跑通全链路；补充动态条件分页 SQL 与真实 MySQL 隔离集成测试继续验收。"
         },
         {
           "id": "W06",
           "title": "分层与核心状态流",
           "status": "practicing",
           "optional": false,
-          "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环与 `ticket_action_log` 操作审计，并按 `controller/service/repository/mapper/domain/dto/config/exception` 规范分包（清理与分包由助手协助）；列表接口权限收尾与独立变体继续验收。"
+          "description": "已在真实 MySQL 跑通创建、派单（`assign`）、指定工程师解决（`resolve`）、原报障人验收关闭（`close`）四态闭环与 `ticket_action_log` 操作审计，并按 `controller/service/repository/mapper/domain/dto/config/exception` 规范分包（清理与分包由助手协助）；列表权限收尾、Controller 瘦身与独立变体继续验收。"
         }
       ],
       "stats": {
@@ -238,81 +238,81 @@
     {
       "id": "engineering",
       "code": "A2",
-      "title": "工程与交付",
+      "title": "工程规范与交付",
       "prefixes": [
         "E"
       ],
-      "description": "补齐认证授权、事务、并发版本校验、测试与部署，交付可靠的小版本。",
+      "description": "补齐三角色归属分页、参数校验、统一响应、OpenAPI 文档、SLF4J 日志、Tomcat/Docker 部署与并发测试。",
       "tasks": [
         {
           "id": "E01",
-          "title": "参数校验与异常响应",
+          "title": "参数校验与统一响应",
           "status": "practicing",
           "optional": false,
-          "description": "ErrorResponse与两类Advice已实现，错误JSON400、空白标题400、未知编号404及message由学习者反馈通过；路径参数类型错误已跟练，Bean Validation、状态冲突与其他异常尚待补齐，不据三项通过认定整项掌握。"
+          "description": "已有 `ErrorResponse` 与 `GlobalExceptionHandler`；待接入 `spring-boot-starter-validation`（`@Valid`）、统一包装响应体 `Result<T>(code, message, data, requestId)`，并将 404/403/409 语义异常分类下沉到 Service 层。"
         },
         {
           "id": "E02",
-          "title": "认证",
+          "title": "认证与登录态",
           "status": "practicing",
           "optional": false,
-          "description": "已完成 Spring Security 引入、`BCryptPasswordEncoder`、`DatabaseUserDetailsService`（MySQL `app_user` 表）、Basic Auth 实测（`200/403/401`）与 `POST` 的 CSRF 拦截排错；浏览器 Session Cookie 登录、注销及恢复 CSRF 校验仍待验收。SQL 里的 `NOT_A_LOGIN_HASH` 不能直接作为登录密码。"
+          "description": "已完成 Spring Security 引入、`BCryptPasswordEncoder`、`DatabaseUserDetailsService`（MySQL `app_user` 表）、Basic Auth 实测（`200/403/401`）与 `POST` 的 CSRF 排错；下一步引入自定义 `LoginUser`（去掉 Controller 越层查 `UserMapper`）并升级为 JWT + Redis 登录态管理。"
         },
         {
           "id": "E03",
           "title": "角色与资源归属授权",
           "status": "practicing",
           "optional": false,
-          "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测，操作人身份均从 `Authentication` 读取；`GET /api/db/tickets` 列表接口权限与遗留调试读接口清理仍待补齐。"
+          "description": "已完成 `GET` 单条工单与日志查询的三角色归属隔离、`POST` 创建自动取登录人、管理员派单、指定工程师解决与原报障人验收关闭实测；下一步收口 `/api/v1/tickets` 列表三角色隔离分页、补 `/api/v1/devices` 并清理无权限 `/api/db` 调试接口。"
         },
         {
           "id": "E04",
-          "title": "业务事务",
+          "title": "业务事务与审计日志",
           "status": "practicing",
           "optional": false,
-          "description": "已亲手建出 `ticket_action_log` 表，在 `assign`/`resolve`/`close` 上用 `@Transactional` 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；真实 MySQL 测试库回滚验证与事务传播深入仍待补齐。"
+          "description": "已亲手建出 `ticket_action_log` 表，在 `assign`/`resolve`/`close` 上用 `@Transactional` 绑定状态更新与写日志（实测 5 号工单 3 条流水提交），并亲手在隔离 H2 写出外键失败回滚测试（4 项全绿）；下一步补 `note` 处理说明列与真实 MySQL 隔离测试库回滚验证。"
         },
         {
           "id": "E05",
-          "title": "重复请求和并发冲突",
+          "title": "乐观锁、防重幂等与并发冲突",
           "status": "practicing",
           "optional": false,
-          "description": "已在 `assign`/`resolve`/`close` 三条状态操作上亲手接入并实测 `expectedVersion` 乐观锁（旧版本返回 `409`、成功递增版本）；创建防重 `requestKey`/唯一约束与双线程真实并发竞争测试仍待完成。"
+          "description": "已在 `assign`/`resolve`/`close` 三条状态操作上亲手接入并实测 `expectedVersion` 乐观锁（旧版本返回 `409`、成功递增版本）；下一步结合 `X-Request-Id` 与数据库唯一约束/Redis 实现创建幂等防重，并补真实多线程并发竞争测试。"
         },
         {
           "id": "E06",
-          "title": "有意义的测试",
+          "title": "集成测试与并发测试",
           "status": "planned",
           "optional": false,
-          "description": "保留现有JUnit；补少量关键规则、接口权限和真实MySQL集成测试。能区分单元/集成测试、Mock/真实依赖，隔离测试库，不以断言数量衡量质量。"
+          "description": "保留现有 JUnit；基于真实 MySQL 隔离测试库补齐权限、事务回滚与多线程并发派单测试（验证并发竞争仅 1 次成功其余 409），区分单元/集成测试与 Mock/真实依赖。"
         },
         {
           "id": "E07",
-          "title": "日志与排错",
+          "title": "SLF4J 规范日志与排错",
           "status": "planned",
           "optional": false,
-          "description": "用日志框架记录 requestId、业务结果和错误原因；能从异常链追到错误SQL/配置，不记录密码、Cookie和密钥；保存一次复现→根因→修复→回归记录。"
+          "description": "接入 SLF4J + `OncePerRequestFilter` 注入 MDC `requestId`，记录关键业务结果与异常链，严禁输出密码、Token 与密钥；沉淀一次完整的复现→根因→修复→回归排错记录。"
         },
         {
           "id": "E08",
-          "title": "配置、Linux与运行环境",
+          "title": "Tomcat、Fat JAR 与 Docker/Linux 部署",
           "status": "planned",
           "optional": false,
-          "description": "用环境变量区分开发/测试配置；掌握目录、进程、端口、文件权限、日志查看、启动/停止；在另一环境运行JAR、重启读回数据并排查一次连接/端口错误。"
+          "description": "在 `pom.xml` 补齐 `spring-boot-maven-plugin` 打可执行 Fat JAR，显式配置内嵌 Tomcat 线程与连接队列参数；编写 `docker-compose.yml` 一键拉起 MySQL/Redis/RabbitMQ/应用，并在 Linux 环境下完成启动与日志/端口排错。"
         },
         {
           "id": "E09",
-          "title": "数据与交付文档",
+          "title": "OpenAPI 接口文档与技术交付文档",
           "status": "planned",
           "optional": false,
-          "description": "区分建表/迁移/种子/故意失败SQL；用新库做备份恢复核对，不覆盖开发库。README写清实际版本、配置、启动、测试、演示和限制。"
+          "description": "接入 SpringDoc OpenAPI 3 / Knife4j 自动生成在线接口文档，编写《系统架构与接口设计文档》（含 ER 图、四态图、错误码与微服务演进设计），规范 SQL 与 README。"
         },
         {
           "id": "E10",
-          "title": "Git协作基本流程",
+          "title": "Git 协作基本流程",
           "status": "planned",
           "optional": false,
-          "description": "在练习分支完成一项修改，检查diff，处理一次受控合并冲突；会区分工作区/暂存区/提交并保留有意义记录，不盲目回退未提交成果。"
+          "description": "在练习分支完成一项修改，检查 diff，处理一次受控合并冲突；会区分工作区/暂存区/提交并保留有意义记录，不盲目回退未提交成果。"
         }
       ],
       "stats": {
@@ -326,124 +326,89 @@
       }
     },
     {
-      "id": "ai",
-      "code": "B",
-      "title": "Java AI 业务功能",
+      "id": "redis",
+      "code": "M1",
+      "title": "Redis 缓存与幂等",
       "prefixes": [
-        "B"
+        "R"
       ],
-      "description": "基于现有 Java / Spring Boot / MyBatis / MySQL 落地模型调用、结构校验、异步触发回写与人工采纳闭环。",
+      "description": "围绕设备与工单场景落地 Cache-Aside 缓存、JWT 登录态、防重幂等、限流与缓存压测对比。",
       "tasks": [
         {
-          "id": "B01",
-          "title": "模型 API 基础",
+          "id": "R01",
+          "title": "Redis 基础数据结构与 Spring 接入",
           "status": "planned",
           "optional": false,
-          "description": "理解模型、提示词、上下文、token、输入/输出用量；知道 API 调用、轻量检索、Agent 和模型训练是不同工作。能够解释本功能为何需要模型及其限制。"
+          "description": "掌握 String/Hash/List/ZSet 与 TTL 过期策略；Docker 启动隔离 Redis 实例，通过 `Spring Data Redis` 完成读写、序列化与连接超时配置。"
         },
         {
-          "id": "B02",
-          "title": "Java 模型客户端",
+          "id": "R02",
+          "title": "设备与工单 Cache-Aside 缓存",
           "status": "planned",
           "optional": false,
-          "description": "在现有 Spring Boot 项目中用 Java HTTP 客户端或官方 SDK 接一个真实模型提供方；端点、模型名与 key 仅从环境配置读取，明确设置连接与读取超时。先用虚构数据，未配置时标记真实调用未验证。"
+          "description": "查询设备与高频工单详情先查 Redis、未命中回源 MySQL 并回填缓存；落地空值缓存防穿透、随机 TTL 防雪崩、工单状态变更后删除缓存，能口述缓存与数据库一致性取舍及故障回落策略。"
         },
         {
-          "id": "B03",
-          "title": "结构化输出",
+          "id": "R03",
+          "title": "JWT 登录态、创建幂等防重与限流",
           "status": "planned",
           "optional": false,
-          "description": "约定 `summary`/`category`/`missingInformation`，校验 JSON 类型、必填、枚举、长度和数量；分类只允许 `DISPLAY`/`PRINTING`/`HVAC`/`OTHER`/`UNKNOWN`。能解释合法 JSON 不保证内容正确。"
+          "description": "将 JWT 登录态/登出黑名单接入 Redis；利用 `SET key value NX EX` 拦截短时重复 `X-Request-Id` 报修请求（与 MySQL 唯一约束双保险），并为报修创建接口增加简易频控限流。"
         },
         {
-          "id": "B04",
-          "title": "提示与上下文设计",
+          "id": "R04",
+          "title": "分布式锁对比与缓存压测验证",
           "status": "planned",
           "optional": false,
-          "description": "先只给虚构工单；真实业务联调时只给有权读取且必要的内容，明确任务与输出格式；信息少则输出 `UNKNOWN`/待补充，不凭空补事实。工单文字是输入数据，不能给模型提权。"
-        },
-        {
-          "id": "B05",
-          "title": "超时、错误与降级",
-          "status": "planned",
-          "optional": false,
-          "description": "处理超时、拒答、429/5xx、错误 JSON 和缺字段；有上限的总耗时、重试与调用次数。关闭 AI 后创建、派单、处理和验收仍能运行；模型网络调用必须放在数据库写事务外。"
-        },
-        {
-          "id": "B06",
-          "title": "调用记录与费用",
-          "status": "planned",
-          "optional": false,
-          "description": "记录模型/提示版本、耗时、错误类别、tokens 和重试次数；区分真实账单与估算，价格或用量未知就写未知；设置个人实验预算，不能默认无限调用。"
-        },
-        {
-          "id": "B07",
-          "title": "业务接入与验证",
-          "status": "planned",
-          "optional": false,
-          "description": "接入工单业务前，Java 端必须校验详情权限、操作人身份与资源范围，无权工单不发模型请求；真实模型调用证据与模拟故障证据分开记录。"
-        },
-        {
-          "id": "B08",
-          "title": "异步触发与状态回写",
-          "status": "planned",
-          "optional": false,
-          "description": "基于 Spring `@Async` + 自定义有界线程池（明确核心/最大线程数、队列上限与拒绝策略），配合任务表或状态字段（`PENDING`/`DONE`/`FAILED`），在工单写事务**提交之后**异步触发 AI 分析并回写结果；具备同工单同版本的防重/幂等保护，联动贯穿模块 P03。验收须给出事务回滚不误触发、`PENDING→DONE` 与 `PENDING→FAILED` 实测、同工单同版本重复触发幂等证据及有界线程池原理口述；不引入 Kafka/MQ，不宣称分布式可靠消息。"
-        },
-        {
-          "id": "B09",
-          "title": "人工采纳与反馈闭环",
-          "status": "planned",
-          "optional": false,
-          "description": "落地“AI 给建议、人保留确认权”，提供**直接采纳 / 修改后采纳 / 驳回**接口，并将 AI 原建议、人工最终决策、修改差异与驳回原因写入反馈日志。验收须覆盖三条动作路径、无权角色 403 拒绝、同一建议重复采纳幂等、以及工单版本变化后旧建议被 `expectedVersion` 拦截返回 409；AI 建议本身不具备自动写权限。"
+          "description": "结合派单/抢单场景理解 Redisson 分布式锁与数据库 `expectedVersion` 乐观锁的适用边界；使用 JMeter/Wrk 实测加 Redis 缓存前后的工单详情查询 QPS 与耗时对比并保留真实条件与数据。"
         }
       ],
       "stats": {
         "accepted": 0,
         "practicing": 0,
-        "planned": 9,
-        "total": 9,
+        "planned": 4,
+        "total": 4,
         "percent": 0,
         "accepted_width": 0.0,
         "practicing_width": 0.0
       }
     },
     {
-      "id": "evaluation",
-      "code": "C",
-      "title": "效果评估与回归",
+      "id": "rabbitmq",
+      "code": "M2",
+      "title": "RabbitMQ 异步与死信",
       "prefixes": [
-        "C"
+        "M"
       ],
-      "description": "结合固定案例集与 B09 人工反馈采纳率统计，记录成本、失败案例与单因子回归改进。",
+      "description": "落地事务提交后异步通知、TTL + 死信队列（DLX）工单超时告警、Confirm/手动 ACK 与消费幂等。",
       "tasks": [
         {
-          "id": "C01",
-          "title": "固定案例与基线",
+          "id": "M01",
+          "title": "RabbitMQ 核心模型与 Spring AMQP 接入",
           "status": "planned",
           "optional": false,
-          "description": "准备约 12—20 个虚构案例，包含明确、模糊、无依据、长输入、诱导越权；开发集和留出集分开，先记录人工阅读整理摘要的基线。"
+          "description": "理解 Producer/Exchange（Direct/Topic）/Queue/Binding/Consumer，通过 Docker 启动 RabbitMQ（含管理控制台）并接入 `spring-boot-starter-amqp` 跑通消息收发。"
         },
         {
-          "id": "C02",
-          "title": "效果评估",
+          "id": "M02",
+          "title": "事务提交后异步通知解耦",
           "status": "planned",
           "optional": false,
-          "description": "采用离线固定集与交互反馈双口径。① 离线固定案例（开发集/留出集分开）记录真实样本数、结构合法率、事实忠实度、建议可用性/修改次数，保留失败例和人工判定理由；② 纳入 B09 反馈日志的真实采纳率（直接采纳 / 修改后采纳 / 驳回占比）与修改次数分布统计，并抽样归因。两类指标分开列示并标明实际分母，不只挑成功截图，无真实模型调用不将模拟结果计为效果数据。"
+          "description": "工单创建、派单、解决、关闭通过 `@TransactionalEventListener(phase = AFTER_COMMIT)` 发布事件到 RabbitMQ，验证事务回滚时不误发消息；消费者异步写入站内通知/模拟告警，并预留标准事件格式供后续服务订阅。"
         },
         {
-          "id": "C03",
-          "title": "延迟、用量与成本",
+          "id": "M03",
+          "title": "TTL 与死信队列（DLX）实现 SLA 超时告警",
           "status": "planned",
           "optional": false,
-          "description": "记录端到端耗时、失败/重试、输入输出 token 及计价依据；说明小样本限制，没有实测不写提升比例或并发规模。"
+          "description": "新建工单发送带 TTL 的延迟消息，到期路由至死信交换机与死信队列；消费者回查工单状态，若仍为 `OPEN` 则写入超时升级日志并触发告警，已派单则直接 ACK 忽略。"
         },
         {
-          "id": "C04",
-          "title": "失败分析与回归",
+          "id": "M04",
+          "title": "消息可靠性投递与消费端幂等",
           "status": "planned",
           "optional": false,
-          "description": "选一个真实问题，只改提示、上下文或解析中的一项；重跑固定集和留出集，解释改善与退化，并证明 AI 失败仍不影响业务。"
+          "description": "开启生产者 Publisher Confirm/Return 回调与消息持久化；消费者启用手动 ACK（`manual`）并基于 `messageId`（Redis 或去重表）实现消费幂等，验证重复投递不产生重复告警及异常重试超限落入死信表。"
         }
       ],
       "stats": {
@@ -459,53 +424,53 @@
     {
       "id": "practice",
       "code": "贯穿",
-      "title": "基础与项目表达",
+      "title": "算法、八股与表达",
       "prefixes": [
         "P"
       ],
-      "description": "算法、并发运行时（含 B08 线程池联动）与独立修改穿插进行，不阻挡主线推进。",
+      "description": "力扣 Hot 100、JUC/JVM/Tomcat/网络基础与项目表达全程并行推进。",
       "tasks": [
         {
           "id": "P01",
-          "title": "数据结构与算法",
+          "title": "数据结构与算法（力扣 Hot 100）",
           "status": "practicing",
           "optional": false,
-          "description": "已有数组/次数统计/两数之和；补复杂度解释、字符串、哈希、栈队列、二分的常见场景，能独立写一个变体而不只背答案。"
+          "description": "已有数组/次数统计/两数之和；每日坚持 1—2 道力扣 Hot 100 高频题（哈希、链表、双指针、二叉树、二分、滑动窗口与常见 DP），兼练 ACM 输入输出模式。"
         },
         {
           "id": "P02",
-          "title": "Java基础查漏",
+          "title": "Java 基础、集合与 JVM 查漏",
           "status": "planned",
           "optional": false,
-          "description": "equals/hashCode、不可变性、继承与组合、常用泛型/注解；对应集合键、DTO和业务对象解释使用原因，不为背设计模式增加层数。"
+          "description": "重点复盘 `HashMap`/`ConcurrentHashMap`、equals/hashCode、泛型注解、JVM 内存结构与垃圾回收基础，整理成自己的八股笔记。"
         },
         {
           "id": "P03",
-          "title": "并发与运行时入门",
+          "title": "JUC 并发、线程池与 Tomcat 模型",
           "status": "planned",
           "optional": false,
-          "description": "理解线程/进程、共享状态、竞态、锁和有界线程池；区分Java锁与数据库条件更新；会看基本JVM内存/GC现象；联动 B08 的 `@Async` 与自定义有界线程池实践。先支撑当前排错，深入JMM/JVM调优后置。"
+          "description": "掌握线程/锁、`synchronized`/`ReentrantLock`、自定义有界 `ThreadPoolExecutor` 7 参数与拒绝策略，结合本项目讲清 Tomcat BIO/NIO 线程模型与数据库乐观锁的边界。"
         },
         {
           "id": "P04",
-          "title": "网络与操作系统基础",
+          "title": "计算机网络与操作系统基础",
           "status": "planned",
           "optional": false,
-          "description": "用一次请求解释DNS、TCP、HTTP/HTTPS、Cookie、端口、超时；理解文件路径/权限、进程资源，不背脱离项目的大段术语。"
+          "description": "围绕一次工单 HTTP 请求讲清 DNS、TCP 三次握手/四次挥手、HTTP/HTTPS、Cookie 与 JWT、超时；熟悉 Linux 进程、端口、内存与日志排错命令。"
         },
         {
           "id": "P06",
-          "title": "AI辅助编程能力",
+          "title": "AI 辅助编程与独立排错能力",
           "status": "practicing",
           "optional": false,
-          "description": "每次记录助手给了什么；自己读调用链、改一处需求并验证、定位一个错误；能脱离答案解释。使用AI写代码不等于开发了产品AI功能。"
+          "description": "每次记录工具给了什么；坚持自己读调用链、手写小变体并实测验证、独立定位错误。"
         },
         {
           "id": "P07",
-          "title": "项目表达与岗位匹配",
+          "title": "项目表达、八股笔记与实习投递",
           "status": "planned",
           "optional": false,
-          "description": "用5—8分钟讲清业务、自己的贡献、事务/权限、AI效果与限制；整理一个故障案例。投递核对杭州、本科、毕业届别/实习资格、出勤与连续月数。"
+          "description": "用 5—8 分钟脱稿讲清业务、权限隔离、事务回滚、Redis/RabbitMQ 设计与至少一个真实故障排查；完成 MySQL/Redis/RabbitMQ/JUC/JVM 核心笔记并按节奏准备投递。"
         }
       ],
       "stats": {
@@ -521,54 +486,40 @@
   ],
   "optional_tasks": [
     {
-      "id": "D01",
-      "title": "历史工单轻量检索（轻量 RAG）",
-      "status": "planned",
-      "optional": true,
-      "description": "使用 MySQL 全文检索（`FULLTEXT`）或同设备/型号条件过滤，召回 Top 3 已解决（`RESOLVED`/`CLOSED`）且当前有权限查看的历史工单注入上下文，要求建议标明引用工单编号，查无依据则明确说明而非硬凑。验收须在 C 阶段同一批**留出集**上完成有/无检索对比回归，记录真实分母下的建议可用性、引用准确度、耗时与 token 增量变化，并保留至少 1 个误召回或无效召回样本分析。"
-    },
-    {
-      "id": "D02",
-      "title": "排查 SOP 与分类口径外置（轻量 Skill）",
-      "status": "planned",
-      "optional": true,
-      "description": "将各设备类别的排查规则（SOP）与分类口径从硬编码代码中抽离到外部 Markdown 文件或 MySQL 配置表（带版本标识），运行时按工单/设备类别动态加载拼装进 Prompt，未命中或配置异常时安全降级到默认兜底口径。验收须在不改核心业务 Java 代码的前提下修改一条外部规则并验证生效、记录命中版本，在固定集与留出集上做修改前后回归对比（含是否引发退化），不引入多 Agent 框架或模型微调。"
-    },
-    {
       "id": "P05",
       "title": "最小页面能力",
       "status": "planned",
       "optional": true,
-      "description": "学够HTML/CSS/JavaScript/fetch，展示登录、列表/详情、操作与AI建议，能看浏览器网络请求和错误；使用页面骨架可注明来源，不要求现在转全栈框架。"
+      "description": "按需用简单 HTML/CSS/JS/fetch 展示登录、工单列表与操作，不要求投入大型前端框架，不阻挡后端交付。"
+    },
+    {
+      "id": "O01",
+      "title": "微服务拆分设计与 Spring Cloud 概念",
+      "status": "planned",
+      "optional": true,
+      "description": "不在当前阶段硬拆单体，但在架构文档中完成设备域/工单域/通知域/AI 域的拆分设计，理解 Nacos、Gateway、OpenFeign 与最终一致性。"
+    },
+    {
+      "id": "O02",
+      "title": "Python FastAPI + LangGraph 独立 Agent 服务",
+      "status": "planned",
+      "optional": true,
+      "description": "二期另起独立 `ops-agent-py` 服务，直接复用本项目的 OpenAPI 接口、JWT 权限、Redis 与 RabbitMQ。"
+    },
+    {
+      "id": "O03",
+      "title": "Agent 受控工具调用、轻量 RAG 与人工采纳联调",
+      "status": "planned",
+      "optional": true,
+      "description": "在 Python 侧落地受控只读 Tool Calling（带步数/超时护栏）与设备资料/历史工单检索引用，写回工单操作由人工确认并经 Java 接口校验权限与 `expectedVersion`。"
     },
     {
       "id": "O04",
-      "title": "写工具与用户确认",
+      "title": "MCP、多 Agent 与系统评测进阶",
       "status": "planned",
       "optional": true,
-      "description": "展示具体动作/参数/版本，确认后重新验证权限与状态、防重复；不能把模型建议或一句宽泛同意当成永久写权限。"
-    },
-    {
-      "id": "O05",
-      "title": "部署和性能扩展",
-      "status": "planned",
-      "optional": true,
-      "description": "需要可复现容器环境再学Docker/Compose；按需深入缓存和性能调优；有可靠异步需求才学消息队列与重复消费。没有场景就先不加。"
-    },
-    {
-      "id": "O06",
-      "title": "MCP",
-      "status": "planned",
-      "optional": true,
-      "description": "把一个已有受控工具通过MCP暴露，验证发现/调用和错误；理解MCP是接入协议，鉴权仍由应用执行。"
-    },
-    {
-      "id": "O07",
-      "title": "SubAgent与模型路由",
-      "status": "planned",
-      "optional": true,
-      "description": "在单Agent基线上定义一项独立子任务或按任务选模型/备用模型，比较完成率、交接错误、延迟和成本，保留无收益结果。"
+      "description": "在单 Agent 可靠联调后，按需扩展 MCP 协议、多 Agent 协作与系统评测。"
     }
   ],
-  "total_items": 58
+  "total_items": 51
 }
